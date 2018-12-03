@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: ffadmin
+server:
+  port: 8081
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8762/eureka/
