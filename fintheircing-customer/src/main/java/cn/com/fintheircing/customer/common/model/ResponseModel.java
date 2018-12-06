@@ -15,6 +15,9 @@ public class ResponseModel<T> {
 		this.msg = msg;
 		this.data = data;
 	}
+	
+	public ResponseModel() {
+	}
 
 	public static <T> ResponseModel<T> sucessWithEmptyData(String tranId) {
 		return sucess(tranId, null);
