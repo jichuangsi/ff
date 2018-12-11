@@ -25,6 +25,7 @@ public class SendSmsCommandReceiver {
 	@RabbitListener(queuesToDeclare = {
 			@Queue(value = "${custom.mq.consumer.queue-name.sendSms}") })
 	public void process(String jsonData) {
+		System.out.println(jsonData);
 		logger.debug("Receive sendSms mq msg :"+ jsonData);
 		SendSmsModel sendSmsModel = JSONObject.parseObject(jsonData,SendSmsModel.class);
 		if(SendSmsModel.VALCODE_TYPE.equalsIgnoreCase(sendSmsModel.getType())) {
