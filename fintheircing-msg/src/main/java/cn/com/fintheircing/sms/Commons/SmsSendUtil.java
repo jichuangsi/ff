@@ -64,7 +64,7 @@ public class SmsSendUtil {
             return sendSmsResponse.getCode() != null &&
                     sendSmsResponse.getCode().equals("OK");
         }catch (Exception ex){
-            throw new RuntimeException("短信发送出现异常！", ex);
+            throw new RuntimeException("短信发送异常！", ex);
         }
     }
 
