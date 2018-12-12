@@ -16,4 +16,11 @@ public class ResultCode {
 	public static final String TOKEN_CHECK_ERR_MSG = "token校验异常";
 	public static final String SYS_ERROR_MSG = "系统繁忙";
 	public static final String SYS_BUSY_MSG = "系统繁忙";
+
+	public static final String IP_VALIDATE_ERR = "非法访问";
+	public static final String IP_BLACK_VISIT = "黑名单用户，非法访问";
+	public static final String LOGIN_USER_NOTEXIST = "用户账号密码不匹配";
+	public static final String LOGIN_USER_STOP = "此号已被冻结";
+	public static final String LOGIN_USER_ERR = "用户登录失败";
+	public static final String LOGIN_TOKEN_ERR = "token转换失败";
 }
