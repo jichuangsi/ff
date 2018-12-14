@@ -16,4 +16,10 @@ public class ResultCode {
 	public static final String TOKEN_CHECK_ERR_MSG = "token校验异常";
 	public static final String SYS_ERROR_MSG = "系统繁忙";
 	public static final String SYS_BUSY_MSG = "系统繁忙";
+
+	public static final String IP_VISIT_ERR = "非法访问";
+	public static final String Login_VALIDATE_ERR = "账号或者密码错误";
+	public static final String POWER_VISIT_ERR = "无权限访问";
+	public static final String LOGIN_TOKEN_ERR = "token生成失败";
+	public static final String LOGIN_ADMIN_ERR = "管理员登录失败";
 }
