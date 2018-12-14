@@ -33,16 +33,16 @@ public class UserLoginController {
     @PostMapping("/userLogin")
     public ResponseModel userLogin(@Validated @RequestBody UserForLoginModel model, HttpServletRequest request) throws LoginException{
         if(request==null){
-            throw new LoginException(ResultCode.IP_VALIDATE_ERR);
+            return ResponseModel.fail("",ResultCode.IP_VALIDATE_ERR);
         }
         if(loginService.isExistBlack(WebCommonUtils.getClientIp(request))){
-            throw new LoginException(ResultCode.IP_BLACK_VISIT);
+            return ResponseModel.fail("",ResultCode.IP_BLACK_VISIT);
         }
         String token =  request.getHeader("token");
         try {
             token = loginService.userLogin(model,token);
         } catch (LoginException e) {
-            throw new LoginException(e.getMessage());
+            return ResponseModel.fail("",e.getMessage());
         }
         Map<String,String> map = new HashMap<String,String>();
         map.put("token",token);

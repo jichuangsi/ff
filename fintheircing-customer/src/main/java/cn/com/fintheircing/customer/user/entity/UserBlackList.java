@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class BlackList extends AbstractEntity{
+public class UserBlackList extends AbstractEntity{
 
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";

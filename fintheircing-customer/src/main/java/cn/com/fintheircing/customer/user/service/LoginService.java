@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -38,10 +39,12 @@ public class LoginService {
     @Value("${custom.token.longTime}")
     private long longTime;
 
+    @Transactional
     public Boolean isExistBlack(String ipAddress){
         return blackListRepository.countBlackListByIpAddress(ipAddress)>0;
     }
 
+    @Transactional
     public String userLogin(UserForLoginModel model,String oldtoken) throws LoginException{
         UserForLoginModel user = registerService.getUserForLogin(model);
         if(user==null){
