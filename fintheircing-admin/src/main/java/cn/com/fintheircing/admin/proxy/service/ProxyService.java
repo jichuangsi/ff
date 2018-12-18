@@ -20,6 +20,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class ProxyService {
         return pageInfo;
     }
 
+    @Transactional(rollbackFor=Exception.class)
     public void saveProxy(AdminLoginModel adminLoginModel , ProxyModel proxyModel) throws ProxyException{
         AdminClientInfo info = MappingModel2EntityConverter.CONVERTERFORPROXYMODEL(proxyModel);
         info.setBossId(adminLoginModel.getAdminId());
@@ -70,6 +73,16 @@ public class ProxyService {
         loginInfo.setLoginName(info.getUserName());
         loginInfo.setPwd(pwd);
         adminClientLoginInfoRepository.save(loginInfo);
+        if(StringUtils.isEmpty(proxyModel.getMonthCommission())||StringUtils.isEmpty(proxyModel.getDayCommission())
+                ||StringUtils.isEmpty(proxyModel.getBackCommission())){
+            throw new ProxyException(ResultCode.COMMISSION_NULL_ERR);
+        }
+        Commission commission = new Commission();
+        commission.setBackCommission(proxyModel.getBackCommission());
+        commission.setDayCommission(proxyModel.getDayCommission());
+        commission.setMonthCommission(proxyModel.getMonthCommission());
+        commission.setSalemanId(info.getUuid());
+        commissionRepository.save(commission);
     }
 
     public ProxyModel getCommissions(IdModel ids){

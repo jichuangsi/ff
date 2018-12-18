@@ -24,4 +24,5 @@ public class ResultCode {
 	public static final String LOGIN_ADMIN_ERR = "管理员登录失败";
 
 	public static final String UPDATE_ERR = "修改失败";
+	public static final String COMMISSION_NULL_ERR = "请填写分成";
 }

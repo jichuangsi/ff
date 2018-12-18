@@ -91,6 +91,12 @@ public class ProxyController {
                 ||model.getPageIndex()==null||model.getPageSize()==null){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
-        return ResponseModel.sucess("",null);
+        return ResponseModel.sucess("",proxyService.getEmployee(model));
     }
+
+/*    @ApiOperation(value = "查看所属代理的邀请页面", notes = "")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/getSpread")
+    public ResponseModel*/
 }
