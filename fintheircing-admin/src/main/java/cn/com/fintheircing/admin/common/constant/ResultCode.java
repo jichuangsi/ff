@@ -22,4 +22,6 @@ public class ResultCode {
 	public static final String POWER_VISIT_ERR = "无权限访问";
 	public static final String LOGIN_TOKEN_ERR = "token生成失败";
 	public static final String LOGIN_ADMIN_ERR = "管理员登录失败";
+
+	public static final String UPDATE_ERR = "修改失败";
 }

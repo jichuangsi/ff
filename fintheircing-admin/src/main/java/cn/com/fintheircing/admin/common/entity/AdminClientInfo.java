@@ -15,7 +15,7 @@ public class AdminClientInfo extends AbstractEntity {
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
-    private String position;
+    private Integer position;
     private String status;
     private String name;
     private String proxyNum;
@@ -49,11 +49,11 @@ public class AdminClientInfo extends AbstractEntity {
         this.uuid = uuid;
     }
 
-    public String getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 

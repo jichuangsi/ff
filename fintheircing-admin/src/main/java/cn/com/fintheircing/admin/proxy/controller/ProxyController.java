@@ -2,6 +2,8 @@ package cn.com.fintheircing.admin.proxy.controller;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.proxy.exception.ProxyException;
+import cn.com.fintheircing.admin.proxy.model.IdModel;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
 import cn.com.fintheircing.admin.common.model.AdminLoginModel;
@@ -9,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -36,10 +39,58 @@ public class ProxyController {
     @ApiImplicitParams({
     })
     @PostMapping("/saveChildProxy")
-    public ResponseModel saveChildProxy(@ModelAttribute AdminLoginModel admin , @RequestBody ProxyModel proxyModel){
+    public ResponseModel saveChildProxy(@ModelAttribute AdminLoginModel admin , @RequestBody ProxyModel proxyModel) throws ProxyException{
 
-
+        if (StringUtils.isEmpty(proxyModel.getProxyName())
+                ||StringUtils.isEmpty(proxyModel.getLinkMan())||StringUtils.isEmpty(proxyModel.getLinkPhone())){
+            return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
+        }
+        try {
+            proxyService.saveProxy(admin,proxyModel);
+        } catch (ProxyException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
         return ResponseModel.sucessWithEmptyData("");
     }
 
+
+    @ApiOperation(value = "查看该佣金比例", notes = "")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/getCommission")
+    public ResponseModel<ProxyModel> getCommission(@RequestBody IdModel model){
+        if(model==null||model.getIds()==null||!(model.getIds().size()>0)){
+            return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
+        }
+        return ResponseModel.sucess("",proxyService.getCommissions(model));
+    }
+
+    @ApiOperation(value = "修改佣金比例", notes = "")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/updateCommission")
+    public ResponseModel updateCommission(@RequestBody ProxyModel model){
+        if(StringUtils.isEmpty(model.getBackCommission())||StringUtils.isEmpty(model.getDayCommission())
+                ||StringUtils.isEmpty(model.getMonthCommission())||StringUtils.isEmpty(model.getProxyId())){
+            return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
+        }
+        try {
+            proxyService.updateCommission(model);
+        } catch (ProxyException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "查看所属员工", notes = "")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/getEmployee")
+    public ResponseModel getEmployee(@RequestBody ProxyModel model){
+        if(model==null||StringUtils.isEmpty(model.getProxyId())
+                ||model.getPageIndex()==null||model.getPageSize()==null){
+            return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
+        }
+        return ResponseModel.sucess("",null);
+    }
 }

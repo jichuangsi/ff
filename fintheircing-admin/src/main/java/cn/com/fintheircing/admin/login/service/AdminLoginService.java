@@ -3,7 +3,6 @@ package cn.com.fintheircing.admin.login.service;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.JWTCommonUtils;
-import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientInfoMapper;
 import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;
 import cn.com.fintheircing.admin.login.dao.repository.IBlackListRepository;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
@@ -33,8 +32,6 @@ public class AdminLoginService {
     @Resource
     private IBlackListRepository blackListRepository;
 
-    @Resource
-    private IAdminClientInfoMapper adminClientInfoMapper;
     @Resource
     private IAdminClientLoginInfoMapper adminClientLoginInfoMapper;
     @Resource

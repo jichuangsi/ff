@@ -1,12 +1,13 @@
 package cn.com.fintheircing.admin.proxy.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProxyModel {
     private String proxyId;
     private String proxyNum;
     private String proxyName;
-    private String proxyPosition;
+    private Integer proxyPosition;
     private String linkMan;
     private String linkPhone;
     private String status;
@@ -15,6 +16,24 @@ public class ProxyModel {
     private Double dayCommission;
     private Double monthCommission;
     private Double backCommission;
+    private Date createdTime;
+    private Date updateTime;
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Double getDayCommission() {
         return dayCommission;
@@ -91,11 +110,11 @@ public class ProxyModel {
         this.proxyName = proxyName;
     }
 
-    public String getProxyPosition() {
+    public Integer getProxyPosition() {
         return proxyPosition;
     }
 
-    public void setProxyPosition(String proxyPosition) {
+    public void setProxyPosition(Integer proxyPosition) {
         this.proxyPosition = proxyPosition;
     }
 
