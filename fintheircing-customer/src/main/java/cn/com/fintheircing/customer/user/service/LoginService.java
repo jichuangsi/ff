@@ -1,7 +1,6 @@
 package cn.com.fintheircing.customer.user.service;
 
 import cn.com.fintheircing.customer.common.constant.ResultCode;
-import cn.com.fintheircing.customer.common.utils.JWTCommonUtils;
 import cn.com.fintheircing.customer.user.dao.repository.IBlackListRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.exception.LoginException;
@@ -32,7 +31,7 @@ public class LoginService {
     @Resource
     private IBlackListRepository blackListRepository;
     @Resource
-    private JWTCommonUtils jwtCommonUtils;
+    private TokenService tokenService;
 
     @Value("${custom.token.prefix}")
     private String tokrnPre;
@@ -56,7 +55,7 @@ public class LoginService {
         String userJson = JSON.toJSONString(user);
         String token = "";
         try {
-            token = jwtCommonUtils.creatToken(userJson);
+            token = tokenService.createdToken(userJson);
         } catch (UnsupportedEncodingException e) {
             logger.error(ResultCode.LOGIN_TOKEN_ERR);
         }

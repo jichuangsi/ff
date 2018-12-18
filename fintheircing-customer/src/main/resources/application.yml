@@ -75,6 +75,8 @@ custom:
   token:
     prefix: token_val_
     claim: userModel
-    HMAC256: secret
+    secret: secret
     longTime: 30
+    alg: HS512
+    survival: 360000
         

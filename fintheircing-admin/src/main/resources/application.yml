@@ -34,3 +34,9 @@ custom:
   admin:
     prefix: admin_val_
     longTime: 30
+    pwd: 111111
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

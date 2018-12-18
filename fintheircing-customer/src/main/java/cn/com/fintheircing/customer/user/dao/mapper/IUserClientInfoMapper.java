@@ -1,10 +1,8 @@
 package cn.com.fintheircing.customer.user.dao.mapper;
 
 
-import org.apache.ibatis.annotations.Select;
-
-
 import cn.com.fintheircing.customer.user.model.UserForLoginModel;
+import org.apache.ibatis.annotations.Select;
 
 public interface IUserClientInfoMapper {
 

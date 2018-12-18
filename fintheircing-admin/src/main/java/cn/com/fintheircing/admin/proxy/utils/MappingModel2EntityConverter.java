@@ -4,6 +4,7 @@ import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.UUID;
 
 public final class MappingModel2EntityConverter {
@@ -12,9 +13,6 @@ public final class MappingModel2EntityConverter {
 
     public static  final AdminClientInfo CONVERTERFORPROXYMODEL(ProxyModel proxyModel){
         AdminClientInfo admin = new AdminClientInfo();
-        admin.setBackCommission(proxyModel.getBackCommission());  //返佣
-        admin.setDayCommission(proxyModel.getDayCommission());  //日收佣
-        admin.setMonthCommission(proxyModel.getMonthCommission());  //月收佣
         admin.setUuid(StringUtils.isEmpty(proxyModel.getProxyId())?
                 UUID.randomUUID().toString().replace("-",""):proxyModel.getProxyId());  //id
         admin.setPhone(proxyModel.getLinkPhone());  //联系电话
@@ -24,6 +22,9 @@ public final class MappingModel2EntityConverter {
         admin.setUserName(proxyModel.getProxyName());   //代理名称
         admin.setProxyNum(proxyModel.getProxyNum());   //代理代码
         admin.setRemarks(proxyModel.getRemarks());  //备注
+        admin.setCreatedTime(proxyModel.getCreatedTime()==null
+                ?new Date():proxyModel.getCreatedTime());
+        admin.setUpdatedTime(new Date());
         return  admin;
     }
 }

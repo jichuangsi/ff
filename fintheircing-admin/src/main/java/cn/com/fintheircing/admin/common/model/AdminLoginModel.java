@@ -13,7 +13,7 @@ public class AdminLoginModel {
 
 
     private String adminId;
-    private String position;
+    private Integer position;
     private String adminName;
     private String status;
 
@@ -49,11 +49,11 @@ public class AdminLoginModel {
         this.pwd = pwd;
     }
 
-    public String getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
