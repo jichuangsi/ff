@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.todotask.model;
+package cn.com.fintheircing.admin.common.model;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -12,9 +12,18 @@ public class AdminLoginModel {
     private String pwd;
 
 
+    private String adminId;
     private String position;
     private String adminName;
     private String status;
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
 
     public String getStatus() {
         return status;

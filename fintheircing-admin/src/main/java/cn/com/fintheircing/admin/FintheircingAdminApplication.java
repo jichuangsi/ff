@@ -9,4 +9,6 @@ public class FintheircingAdminApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FintheircingAdminApplication.class, args);
 	}
+
+
 }

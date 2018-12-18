@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.todotask.entity;
+package cn.com.fintheircing.admin.login.entity;
 
 import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;

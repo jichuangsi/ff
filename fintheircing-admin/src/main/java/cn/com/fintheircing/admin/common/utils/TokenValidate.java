@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.common.utils;
 
-import cn.com.fintheircing.admin.todotask.model.AdminLoginModel;
+import cn.com.fintheircing.admin.common.model.AdminLoginModel;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;

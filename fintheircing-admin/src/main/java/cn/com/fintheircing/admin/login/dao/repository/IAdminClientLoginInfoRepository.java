@@ -1,6 +1,6 @@
-package cn.com.fintheircing.admin.todotask.dao.repository;
+package cn.com.fintheircing.admin.login.dao.repository;
 
-import cn.com.fintheircing.admin.todotask.entity.AdminClientLoginInfo;
+import cn.com.fintheircing.admin.login.entity.AdminClientLoginInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IAdminClientLoginInfoRepository extends JpaRepository<AdminClientLoginInfo,String> {
