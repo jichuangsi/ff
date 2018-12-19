@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.common.utils;
 
-import cn.com.fintheircing.admin.common.model.AdminLoginModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -16,12 +16,12 @@ public class TokenValidate {
     @Value("${custom.token.claim}")
     private    String tokenClaim;
 
-    public AdminLoginModel translateToken(String token) throws UnsupportedEncodingException {
+    public UserTokenInfo translateToken(String token) throws UnsupportedEncodingException {
         if (!StringUtils.isEmpty(token)) {
             DecodedJWT jwt = JWT.decode(token);
             String user = jwt.getClaim(tokenClaim).asString();
             //model.addAttribute(userClaim, JSONObject.parseObject(roles,UserInfoForToken.class));
-            return JSONObject.parseObject(user,AdminLoginModel.class);
+            return JSONObject.parseObject(user,UserTokenInfo.class);
         }
         return null;
     }

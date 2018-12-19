@@ -2,13 +2,14 @@ package cn.com.fintheircing.admin.proxy.controller;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
 import cn.com.fintheircing.admin.proxy.model.IdModel;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
-import cn.com.fintheircing.admin.common.model.AdminLoginModel;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.StringUtils;
@@ -26,9 +27,10 @@ public class ProxyController {
 
     @ApiOperation(value = "查询代理商列表", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getProxyList")
-    public ResponseModel<PageInfo<ProxyModel>> getProxyList(@ModelAttribute AdminLoginModel admin, @RequestBody ProxyModel proxyModel){
+    public ResponseModel<PageInfo<ProxyModel>> getProxyList(@ModelAttribute UserTokenInfo admin, @RequestBody ProxyModel proxyModel){
         if(proxyModel.getPageIndex()==null||proxyModel.getPageIndex()==0
                 ||proxyModel.getPageSize()==null||proxyModel.getPageSize()==0)
             return ResponseModel.fail("", ResultCode.PARAM_ERR_MSG);
@@ -37,9 +39,10 @@ public class ProxyController {
 
     @ApiOperation(value = "添加子代理商", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveChildProxy")
-    public ResponseModel saveChildProxy(@ModelAttribute AdminLoginModel admin , @RequestBody ProxyModel proxyModel) throws ProxyException{
+    public ResponseModel saveChildProxy(@ModelAttribute UserTokenInfo admin , @RequestBody ProxyModel proxyModel) throws ProxyException{
 
         if (StringUtils.isEmpty(proxyModel.getProxyName())
                 ||StringUtils.isEmpty(proxyModel.getLinkMan())||StringUtils.isEmpty(proxyModel.getLinkPhone())){

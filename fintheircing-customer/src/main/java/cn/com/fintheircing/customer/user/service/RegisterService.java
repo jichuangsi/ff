@@ -1,21 +1,5 @@
 package cn.com.fintheircing.customer.user.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSONObject;
-
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
@@ -26,9 +10,22 @@ import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistExcption;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
-import cn.com.fintheircing.customer.user.model.UserForLoginModel;
+import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import cn.com.fintheircing.customer.user.service.feign.model.CreateTodoTaskModel;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RegisterService {
@@ -109,6 +106,7 @@ public class RegisterService {
 			userClientInfo.setPhone(phoneNo);
 			userClientInfo.setStatus(UserClientInfo.STATUS_INIT);
 			userClientInfo.setCer(UserClientInfo.CER_NOT);
+			userClientInfo.setRole(UserClientInfo.ROLE_USER);//添加区别用户管理员
 			userClientInfo = userInfoRepository.save(userClientInfo);
 			
 			//新增登录信息
@@ -132,7 +130,7 @@ public class RegisterService {
 	}
 	
 	//登录时获取用户信息
-	public UserForLoginModel getUserForLogin(UserForLoginModel model) {
+	public UserTokenInfo getUserForLogin(UserTokenInfo model) {
 		model.setPwd(CommonUtil.toSha256(model.getPwd()));
 		return userClientInfoMapper.find(model);
 	}

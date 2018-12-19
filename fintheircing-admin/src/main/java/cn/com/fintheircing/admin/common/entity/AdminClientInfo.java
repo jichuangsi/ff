@@ -11,6 +11,8 @@ public class AdminClientInfo extends AbstractEntity {
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
 
+    public final static String ROLE_ADMIN = "0";
+
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -23,7 +25,15 @@ public class AdminClientInfo extends AbstractEntity {
     private String phone;
     private String remarks;  //备注
     private String bossId;  //上级id
+    private String role;  //固定字段，管理员
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getProxyNum() {
         return proxyNum;

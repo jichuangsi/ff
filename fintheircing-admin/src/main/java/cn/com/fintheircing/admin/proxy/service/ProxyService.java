@@ -3,7 +3,7 @@ package cn.com.fintheircing.admin.proxy.service;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.entity.Position;
-import cn.com.fintheircing.admin.common.model.AdminLoginModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.login.entity.AdminClientLoginInfo;
 import cn.com.fintheircing.admin.proxy.dao.mapper.IAdminClientInfoMapper;
 import cn.com.fintheircing.admin.proxy.dao.mapper.ICommissionMapper;
@@ -46,7 +46,7 @@ public class ProxyService {
     private IAdminClientInfoMapper adminClientInfoMapper;
 
 
-    public PageInfo<ProxyModel> getProxyList(AdminLoginModel adminLoginModel , ProxyModel proxyModel){
+    public PageInfo<ProxyModel> getProxyList(UserTokenInfo adminLoginModel , ProxyModel proxyModel){
         PageHelper.startPage(proxyModel.getPageIndex(),proxyModel.getPageSize());
         List<ProxyModel> proxyModels = new ArrayList<>();
         PageInfo pageInfo = new PageInfo(proxyModels);
@@ -54,9 +54,10 @@ public class ProxyService {
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public void saveProxy(AdminLoginModel adminLoginModel , ProxyModel proxyModel) throws ProxyException{
+    public void saveProxy(UserTokenInfo adminLoginModel , ProxyModel proxyModel) throws ProxyException{
         AdminClientInfo info = MappingModel2EntityConverter.CONVERTERFORPROXYMODEL(proxyModel);
-        info.setBossId(adminLoginModel.getAdminId());
+        info.setRole(AdminClientInfo.ROLE_ADMIN);
+        info.setBossId(adminLoginModel.getUuid());
         if(proxyModel.getProxyPosition()==null) {
             if (adminLoginModel.getPosition() < Position.POSITION_PROXY_TWO) {
                 info.setPosition(adminLoginModel.getPosition() + 1);

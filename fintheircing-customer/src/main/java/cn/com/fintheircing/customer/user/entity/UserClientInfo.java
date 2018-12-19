@@ -1,12 +1,11 @@
 package cn.com.fintheircing.customer.user.entity;
 
+import cn.com.fintheircing.customer.common.entity.AbstractEntity;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import cn.com.fintheircing.customer.common.entity.AbstractEntity;
 
 @Entity
 public class UserClientInfo extends AbstractEntity {
@@ -17,6 +16,8 @@ public class UserClientInfo extends AbstractEntity {
 
 	public static final String CER_NOT = "0";
 	public static final String CER_PASS = "1";
+
+	public static final String ROLE_USER = "1";
 
 	@Id
 	@GeneratedValue(generator = "paymentableGenerator")
@@ -33,6 +34,15 @@ public class UserClientInfo extends AbstractEntity {
 	 * 未实名时使用手机号，实名后使用实名姓名
 	 */
 	private String displayname;
+	private String role;  //固定字段，用户
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public String getUuid() {
 		return uuid;

@@ -75,7 +75,7 @@ custom:
   token:
     prefix: token_val_
     claim: userModel
-    secret: secret
+    secret: FF79@34$123de
     longTime: 30
     alg: HS512
     survival: 360000

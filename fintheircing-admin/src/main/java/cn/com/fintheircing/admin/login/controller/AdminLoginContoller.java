@@ -2,9 +2,9 @@ package cn.com.fintheircing.admin.login.controller;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.WebCommonUtils;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
-import cn.com.fintheircing.admin.common.model.AdminLoginModel;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/adminLogin")
+@RequestMapping("/login")
 @Api("管理员登录controller")
 public class AdminLoginContoller {
 
@@ -31,8 +31,8 @@ public class AdminLoginContoller {
     @ApiOperation(value = "管理员登录", notes = "")
     @ApiImplicitParams({
     })
-    @PostMapping("/login")
-    public ResponseModel login(@Validated @RequestBody AdminLoginModel model , HttpServletRequest request) throws AdminLoginException {
+    @PostMapping("/adminLogin")
+    public ResponseModel login(@Validated @RequestBody UserTokenInfo model , HttpServletRequest request) throws AdminLoginException {
         if(request==null||adminLoginService.isExistBlack(WebCommonUtils.getClientIp(request))){
             return  ResponseModel.fail("",ResultCode.IP_VISIT_ERR);
         }

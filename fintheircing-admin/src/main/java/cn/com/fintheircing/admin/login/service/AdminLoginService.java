@@ -1,20 +1,18 @@
 package cn.com.fintheircing.admin.login.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
-import cn.com.fintheircing.admin.common.utils.JWTCommonUtils;
 import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;
 import cn.com.fintheircing.admin.login.dao.repository.IBlackListRepository;
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
-import cn.com.fintheircing.admin.common.model.AdminLoginModel;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -35,20 +33,18 @@ public class AdminLoginService {
     @Resource
     private IAdminClientLoginInfoMapper adminClientLoginInfoMapper;
     @Resource
-    private JWTCommonUtils jwtCommonUtils;
+    private TokenService tokenService;
 
     @Resource
     private RedisTemplate redisTemplate;
 
 
-    @Transactional
     public Boolean isExistBlack(String ip){
         return blackListRepository.countBlackListByIpAddress(ip)>0;
     }
 
 
-    @Transactional
-    public String adminLogin( AdminLoginModel model) throws AdminLoginException{
+    public String adminLogin( UserTokenInfo model) throws AdminLoginException{
         model = adminClientLoginInfoMapper.selectAdminLoginModel(changeAdmin(model));
         if(model==null){
             throw new AdminLoginException(ResultCode.Login_VALIDATE_ERR);
@@ -60,16 +56,16 @@ public class AdminLoginService {
         String userJson = JSON.toJSONString(model);
         String token = "";
         try {
-            token = jwtCommonUtils.creatToken(userJson);
+            token = tokenService.createdToken(userJson);
         } catch (UnsupportedEncodingException e) {
             logger.error(ResultCode.LOGIN_TOKEN_ERR);
         }
         if(StringUtils.isEmpty(token)) throw new AdminLoginException(ResultCode.LOGIN_ADMIN_ERR);
-        redisTemplate.opsForValue().set(tokrnPre+model.getAdminName(),userJson,longTime, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(tokrnPre+model.getUuid(),userJson,longTime, TimeUnit.MINUTES);
         return token;
     }
 
-    private AdminLoginModel changeAdmin(AdminLoginModel model){
+    private UserTokenInfo changeAdmin(UserTokenInfo model){
         model.setPwd(CommonUtil.toSha256(model.getPwd()));
         return model;
     }
