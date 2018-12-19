@@ -10,7 +10,7 @@ import cn.com.fintheircing.eureka.constant.ResultCode;
 import cn.com.fintheircing.eureka.util.CommonUtils;
 
 @Component
-public class UrlAcessControlFilter extends AbstractGatewayFilterFactory<Object> {
+public class UrlAcessControlFilterFactory extends AbstractGatewayFilterFactory<Object> {
 	
 	@Value("${app.token.ingoreTokenUrls}")
 	private String[] ingoreTokenUrls;
