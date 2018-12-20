@@ -47,7 +47,7 @@ public class AdminLoginService {
     public String adminLogin( UserTokenInfo model) throws AdminLoginException{
         model = adminClientLoginInfoMapper.selectAdminLoginModel(changeAdmin(model));
         if(model==null){
-            throw new AdminLoginException(ResultCode.Login_VALIDATE_ERR);
+            throw new AdminLoginException(ResultCode.LOGIN_ADMIN_ERR);
         }
         if(StringUtils.isEmpty(model.getStatus())||
                 AdminClientInfo.STATUS_NOTEXIST.equals(model.getStatus())){

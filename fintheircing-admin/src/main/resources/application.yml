@@ -37,6 +37,11 @@ custom:
     prefix: token_val_
     longTime: 30
     pwd: 111111
+    inviteLink: http://m.newplay.me/login
+    codeWidth: 300
+    codeHeight: 300
+    picFormat: jpg
+    picSavePath: D://codeImg
 pagehelper:
   helperDialect: mysql
   reasonable: true

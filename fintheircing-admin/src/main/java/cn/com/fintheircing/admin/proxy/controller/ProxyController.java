@@ -4,8 +4,7 @@ import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
-import cn.com.fintheircing.admin.proxy.model.IdModel;
-import cn.com.fintheircing.admin.proxy.model.ProxyModel;
+import cn.com.fintheircing.admin.proxy.model.*;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -34,6 +33,8 @@ public class ProxyController {
         if(proxyModel.getPageIndex()==null||proxyModel.getPageIndex()==0
                 ||proxyModel.getPageSize()==null||proxyModel.getPageSize()==0)
             return ResponseModel.fail("", ResultCode.PARAM_ERR_MSG);
+        /*admin.setUuid("123");
+        admin.setPosition(PositionCode.POSITION_MANAGE.getIndex());*/
         return ResponseModel.sucess("",proxyService.getProxyList(admin,proxyModel));
     }
 
@@ -85,21 +86,48 @@ public class ProxyController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
-    @ApiOperation(value = "查看所属员工", notes = "")
+    @ApiOperation(value = "查看下属员工", notes = "")
     @ApiImplicitParams({
     })
     @PostMapping("/getEmployee")
-    public ResponseModel getEmployee(@RequestBody ProxyModel model){
-        if(model==null||StringUtils.isEmpty(model.getProxyId())
+    public ResponseModel getEmployee(@RequestBody EmployeeModel model){
+        if(model==null||StringUtils.isEmpty(model.getId())
                 ||model.getPageIndex()==null||model.getPageSize()==null){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
         return ResponseModel.sucess("",proxyService.getEmployee(model));
     }
 
-/*    @ApiOperation(value = "查看所属代理的邀请页面", notes = "")
+    @ApiOperation(value = "查看下属代理和员工的邀请页面", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getSpread")
-    public ResponseModel*/
+    public ResponseModel<PageInfo<SpreadModel>> getSpread(@ModelAttribute UserTokenInfo userInfo,@RequestBody SpreadModel spreadModel){
+
+        return ResponseModel.sucess("",proxyService.getSpreaads(userInfo,spreadModel));
+    }
+
+
+    //没合同数据，没写
+    @ApiOperation(value = "查看下属代理的佣金明细页面", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getCommissionDetail")
+    public ResponseModel getCommissionDetail(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractDetailModel contract){
+
+        return ResponseModel.sucess("",null);
+    }
+
+    //没合同数据，没写
+    @ApiOperation(value = "查看下属代理的管理费明细页面", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getManageDetail")
+    public ResponseModel getManageDetail(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractDetailModel contract){
+
+        return ResponseModel.sucess("",null);
+    }
 }

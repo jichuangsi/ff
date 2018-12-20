@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.proxy.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,12 +13,31 @@ public class ProxyModel {
     private String linkPhone;
     private String status;
     private String remarks;
-    private List<ProxyModel> proxyModels;
+    private List<ProxyModel> proxyModels = new ArrayList<ProxyModel>();
     private Double dayCommission;
     private Double monthCommission;
     private Double backCommission;
     private Date createdTime;
     private Date updateTime;
+    private String bossId;
+
+    private String beginTime;
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getBossId() {
+        return bossId;
+    }
+
+    public void setBossId(String bossId) {
+        this.bossId = bossId;
+    }
 
     public Date getCreatedTime() {
         return createdTime;

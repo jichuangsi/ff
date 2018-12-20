@@ -9,10 +9,6 @@ import javax.persistence.Id;
 @Entity
 public class Position {
 
-    public static final Integer POSITION_MANAGE = 0;
-    public static final Integer POSITION_PROXY_ONE = 1;
-    public static final Integer POSITION_PROXY_TWO = 2;
-    public static final Integer POSITION_EMP= 3;
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
