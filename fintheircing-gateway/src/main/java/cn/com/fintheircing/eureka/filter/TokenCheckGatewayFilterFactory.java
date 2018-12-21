@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -69,19 +68,19 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 
 				final String accessToken = request.getHeaders().getFirst(headerName);
 				if (!StringUtils.isEmpty(accessToken)) {
-					final JWTVerifier verifier = JWT.require(tokenAlgorithm).build();
-					/**
+					/*final JWTVerifier verifier = JWT.require(tokenAlgorithm).build();
+					*//**
 					 * 这个验证将过期token也打回去了
-					 */
-					verifier.verify(accessToken);// 校验有效性
+					 *//*
+					verifier.verify(accessToken);// 校验有效性*/
 					// todo 校验有效期
 					// 如果在redis里面找不到，则看token中的过期时间是否超过，若超过，则返回过期，若没超过，则将token写入redis（设置超时时间）
 					if(!redisTemplate.hasKey(getTokenKey(accessToken))){
-					/*	if(checkToken(verifier,accessToken)){*/
+						if(checkToken(accessToken)){
 							redisTemplate.opsForValue().set(getTokenKey(accessToken),accessToken,dieTime,TimeUnit.MINUTES);
-						/*}else{
+						}else{
 							return  CommonUtils.buildResponse(exchange, ResultCode.TOKEN_CHECK_ERR, ResultCode.TOKEN_OVER_MSG);
-						}*/
+						}
 					}
 					//在redis里面找到对应的token，则刷新在redis里缓存token的时间
 					else{
@@ -120,13 +119,16 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 			return null;
 	}
 
-	private  boolean checkToken(JWTVerifier verifier,String token) {
-		DecodedJWT jwt = verifier.verify(token);
-		Date expiresAt = jwt.getExpiresAt();
-		if(expiresAt.getTime()>new Date().getTime()){
+	private boolean checkToken(String token) {
+		JWTVerifier verifier = JWT.require(tokenAlgorithm).build();
+		try {
+			verifier.verify(token);
 			return true;
+		} catch (JWTVerificationException e) {
+			e.printStackTrace();
+			return false;
 		}
-		return false;
+
 	}
 
 }
