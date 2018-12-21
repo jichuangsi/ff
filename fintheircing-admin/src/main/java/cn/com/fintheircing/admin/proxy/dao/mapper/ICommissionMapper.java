@@ -8,6 +8,7 @@ public interface ICommissionMapper {
 
     @Update("<script>UPDATE `commission` SET " +
             "`back_commission` = #{backCommission}, `day_commission` = #{dayCommission}," +
-            " `month_commission` = #{monthCommission}  WHERE `saleman_id` = #{proxyId}</script>")
+            " `month_commission` = #{monthCommission},update_user_id = #{proxyId}," +
+            "update_user_name = #{proxyName},updated_time=#{updateTime}  WHERE `saleman_id` = #{proxyId}  and delete_flag=0</script>")
     int updateCommission(ProxyModel proxyModel);
 }

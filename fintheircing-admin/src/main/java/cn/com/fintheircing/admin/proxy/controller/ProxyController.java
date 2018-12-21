@@ -35,7 +35,11 @@ public class ProxyController {
             return ResponseModel.fail("", ResultCode.PARAM_ERR_MSG);
         /*admin.setUuid("123");
         admin.setPosition(PositionCode.POSITION_MANAGE.getIndex());*/
-        return ResponseModel.sucess("",proxyService.getProxyList(admin,proxyModel));
+        try {
+            return ResponseModel.sucess("",proxyService.getProxyList(admin,proxyModel));
+        } catch (ProxyException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
     }
 
     @ApiOperation(value = "添加子代理商", notes = "")
@@ -50,7 +54,10 @@ public class ProxyController {
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
         try {
-            proxyService.saveProxy(admin,proxyModel);
+            String result = proxyService.saveProxy(admin,proxyModel);
+            if(!"success".equals(result)){
+                return ResponseModel.fail("",result);
+            }
         } catch (ProxyException e) {
             return ResponseModel.fail("",e.getMessage());
         }
@@ -66,20 +73,25 @@ public class ProxyController {
         if(model==null||model.getIds()==null||!(model.getIds().size()>0)){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
-        return ResponseModel.sucess("",proxyService.getCommissions(model));
+        try {
+            return ResponseModel.sucess("",proxyService.getCommissions(model));
+        } catch (ProxyException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
     }
 
     @ApiOperation(value = "修改佣金比例", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateCommission")
-    public ResponseModel updateCommission(@RequestBody ProxyModel model){
+    public ResponseModel updateCommission(@ModelAttribute UserTokenInfo userInfo,@RequestBody ProxyModel model){
         if(StringUtils.isEmpty(model.getBackCommission())||StringUtils.isEmpty(model.getDayCommission())
                 ||StringUtils.isEmpty(model.getMonthCommission())||StringUtils.isEmpty(model.getProxyId())){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
         try {
-            proxyService.updateCommission(model);
+            proxyService.updateCommission(userInfo,model);
         } catch (ProxyException e) {
             return ResponseModel.fail("",e.getMessage());
         }
@@ -88,14 +100,15 @@ public class ProxyController {
 
     @ApiOperation(value = "查看下属员工", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getEmployee")
-    public ResponseModel getEmployee(@RequestBody EmployeeModel model){
+    public ResponseModel getEmployee(@ModelAttribute UserTokenInfo userInfo,@RequestBody EmployeeModel model){
         if(model==null||StringUtils.isEmpty(model.getId())
                 ||model.getPageIndex()==null||model.getPageSize()==null){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
-        return ResponseModel.sucess("",proxyService.getEmployee(model));
+        return ResponseModel.sucess("",proxyService.getEmployee(userInfo,model));
     }
 
     @ApiOperation(value = "查看下属代理和员工的邀请页面", notes = "")
@@ -105,7 +118,7 @@ public class ProxyController {
     @PostMapping("/getSpread")
     public ResponseModel<PageInfo<SpreadModel>> getSpread(@ModelAttribute UserTokenInfo userInfo,@RequestBody SpreadModel spreadModel){
 
-        return ResponseModel.sucess("",proxyService.getSpreaads(userInfo,spreadModel));
+        return ResponseModel.sucess("",proxyService.getSpreads(userInfo,spreadModel));
     }
 
 

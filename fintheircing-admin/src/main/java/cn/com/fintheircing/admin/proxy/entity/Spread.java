@@ -16,7 +16,7 @@ public class Spread extends AbstractEntity {
     private String salemanId;  //销售人员
     private String inviteCode;  //邀请码
     private String spreadLink;  //邀请链接
-    private String spreadCodePic;  //二维码邀请
+    private byte[] spreadCodePic;  //二维码邀请
 
     public String getId() {
         return id;
@@ -50,11 +50,11 @@ public class Spread extends AbstractEntity {
         this.spreadLink = spreadLink;
     }
 
-    public String getSpreadCodePic() {
+    public byte[] getSpreadCodePic() {
         return spreadCodePic;
     }
 
-    public void setSpreadCodePic(String spreadCodePic) {
+    public void setSpreadCodePic(byte[] spreadCodePic) {
         this.spreadCodePic = spreadCodePic;
     }
 }

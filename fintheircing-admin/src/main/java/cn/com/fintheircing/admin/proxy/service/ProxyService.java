@@ -4,6 +4,7 @@ import cn.com.fintheircing.admin.common.constant.PositionCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
+import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.MatrixToImageWriter;
 import cn.com.fintheircing.admin.login.entity.AdminClientLoginInfo;
 import cn.com.fintheircing.admin.proxy.dao.mapper.IAdminClientInfoMapper;
@@ -12,6 +13,7 @@ import cn.com.fintheircing.admin.proxy.dao.mapper.ISpreadMapper;
 import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientInfoRepository;
 import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientLoginInfoRepository;
 import cn.com.fintheircing.admin.proxy.dao.repository.ICommissionRepository;
+import cn.com.fintheircing.admin.proxy.dao.repository.ISpreadRepository;
 import cn.com.fintheircing.admin.proxy.entity.Commission;
 import cn.com.fintheircing.admin.proxy.entity.Spread;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
@@ -26,14 +28,18 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
 
 @Service
 public class ProxyService {
@@ -51,6 +57,8 @@ public class ProxyService {
     @Value("${custom.admin.picSavePath}")
     private String picSavePath;
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     @Resource
     private IAdminClientInfoRepository adminClientInfoRepository;
@@ -64,14 +72,18 @@ public class ProxyService {
     private IAdminClientInfoMapper adminClientInfoMapper;
     @Resource
     private ISpreadMapper spreadMapper;
+    @Resource
+    private ISpreadRepository spreadRepository;
 
     //获取代理信息列表
-    public PageInfo<ProxyModel> getProxyList(UserTokenInfo userInfo , ProxyModel proxyModel){
+    public PageInfo<ProxyModel> getProxyList(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
         proxyModel.setProxyId(userInfo.getUuid());
         PageInfo<ProxyModel> pageInfo = new PageInfo<ProxyModel>();
         if(PositionCode.POSITION_MANAGE.getIndex().equals(userInfo.getPosition())){
             pageInfo = manageProxy(userInfo,proxyModel);
         }else {
+            proxyModel.setProxyPosition(userInfo.getPosition());
+            proxyModel.setProxyId(userInfo.getUuid());
             pageInfo = commonProxy(proxyModel);
         }
         return pageInfo;
@@ -79,76 +91,123 @@ public class ProxyService {
 
     //保存代理或员工
     @Transactional(rollbackFor=Exception.class)
-    public void saveProxy(UserTokenInfo adminLoginModel , ProxyModel proxyModel) throws ProxyException{
+    public String saveProxy(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
         AdminClientInfo info = MappingModel2EntityConverter.CONVERTERFORPROXYMODEL(proxyModel);
         info.setRole(AdminClientInfo.ROLE_ADMIN);
-        info.setBossId(adminLoginModel.getUuid());
-        if(proxyModel.getProxyPosition()==null) {
-            if (adminLoginModel.getPosition() < PositionCode.POSITION_PROXY_TWO.getIndex()) {
-                info.setPosition(adminLoginModel.getPosition() + 1);
-            } else {
-                throw new ProxyException(ResultCode.POWER_VISIT_ERR);
-            }
-        } else{
+        info.setBossId(userInfo.getUuid());
+        if((proxyModel.getProxyPosition()==null||
+                !PositionCode.POSITION_EMP.getIndex().equals(proxyModel.getProxyPosition()))
+                &&userInfo.getPosition() < PositionCode.POSITION_PROXY_TWO.getIndex()) {
+            info.setPosition(userInfo.getPosition() + 1);
+        } else if(PositionCode.POSITION_EMP.getIndex().equals(proxyModel.getProxyPosition())){//添加员工，可以小改，添加管理员
             info.setPosition(proxyModel.getProxyPosition());
+        } else {
+            throw new ProxyException(ResultCode.POWER_VISIT_ERR);
         }
         info.setStatus(AdminClientInfo.STATUS_EXIST);
+        info.setRole(AdminClientInfo.ROLE_ADMIN);
+        info.setProxyNum(createdInvitCode(0,PositionCode.getName(info.getPosition())));
+        info.setCreatorId(userInfo.getUuid());
+        info.setCreatorName(userInfo.getUserName());
+        info.setUpdatedTime(new Date());
+        info.setUpdateUserId(userInfo.getUuid());
+        info.setUpdateUserName(userInfo.getUserName());
         info = adminClientInfoRepository.save(info);
         AdminClientLoginInfo loginInfo = new AdminClientLoginInfo();
         loginInfo.setAdminClientId(info.getUuid());
         loginInfo.setLoginName(info.getUserName());
-        loginInfo.setPwd(pwd);
+        loginInfo.setPwd(changePwd(pwd));
+        loginInfo.setCreatedTime(new Date());
+        loginInfo.setCreatorId(userInfo.getUuid());
+        loginInfo.setCreatorName(userInfo.getUserName());
+        loginInfo.setUpdatedTime(new Date());
+        loginInfo.setUpdateUserId(userInfo.getUuid());
+        loginInfo.setUpdateUserName(userInfo.getUserName());
         adminClientLoginInfoRepository.save(loginInfo);
-        if(StringUtils.isEmpty(proxyModel.getMonthCommission())||StringUtils.isEmpty(proxyModel.getDayCommission())
-                ||StringUtils.isEmpty(proxyModel.getBackCommission())){
-            throw new ProxyException(ResultCode.COMMISSION_NULL_ERR);
+
+        //差邀请页表没填
+        Spread spread = createdNewSpread(info);
+        spread.setCreatedTime(new Date());
+        spread.setCreatorId(userInfo.getUuid());
+        spread.setCreatorName(userInfo.getUserName());
+        spread.setUpdatedTime(new Date());
+        spread.setUpdateUserId(userInfo.getUuid());
+        spread.setUpdateUserName(userInfo.getUserName());
+        spreadRepository.save(spread);
+
+        if(proxyModel.getMonthCommission()==null||proxyModel.getMonthCommission()==0||
+                proxyModel.getDayCommission()==null||proxyModel.getDayCommission()==0
+                ||proxyModel.getBackCommission()==null||proxyModel.getBackCommission()==0){
+            return ResultCode.COMMISSION_NULL_ERR;
         }
         Commission commission = new Commission();
         commission.setBackCommission(proxyModel.getBackCommission());
         commission.setDayCommission(proxyModel.getDayCommission());
         commission.setMonthCommission(proxyModel.getMonthCommission());
         commission.setSalemanId(info.getUuid());
+        commission.setCreatedTime(new Date());
+        commission.setCreatorId(userInfo.getUuid());
+        commission.setCreatorName(userInfo.getUserName());
+        commission.setUpdatedTime(new Date());
+        commission.setUpdateUserId(userInfo.getUuid());
+        commission.setUpdateUserName(userInfo.getUserName());
         commissionRepository.save(commission);
-        //差邀请页表没填
+        return "success";
     }
 
 
     //获取个人收佣信息
-    public ProxyModel getCommissions(IdModel ids){
+    public ProxyModel getCommissions(IdModel ids) throws ProxyException{
         ProxyModel proxyModel = new ProxyModel();
         Commission commission = commissionRepository.findCommissionBySalemanId(ids.getIds().get(0));
 
-        proxyModel.setBackCommission(commission.getBackCommission());
-        proxyModel.setDayCommission(commission.getDayCommission());
-        proxyModel.setMonthCommission(commission.getMonthCommission());
-        proxyModel.setProxyId(commission.getSalemanId());
+        if(commission!=null) {
+            proxyModel.setBackCommission(commission.getBackCommission());
+            proxyModel.setDayCommission(commission.getDayCommission());
+            proxyModel.setMonthCommission(commission.getMonthCommission());
+            proxyModel.setProxyId(commission.getSalemanId());
+        }else {
+            throw new ProxyException(ResultCode.SELECT_NULL_MSG);
+        }
         return proxyModel;
 
     }
 
 
     //修改个人收佣信息
-    public void updateCommission(ProxyModel model) throws ProxyException{
-       if( !(commissionMapper.updateCommission(model)>0)){
+    public void updateCommission(UserTokenInfo userInfo,ProxyModel model) throws ProxyException{
+        try {
+            model.setProxyId(userInfo.getUuid());
+            model.setUpdateTime(new Date());
+            model.setProxyName(userInfo.getUserName());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ProxyException(ResultCode.POWER_VISIT_ERR);
+        }
+        if( !(commissionMapper.updateCommission(model)>0)){
            throw new ProxyException(ResultCode.UPDATE_ERR);
        }
     }
 
     //获取员工信息列表
-    public PageInfo<EmployeeModel> getEmployee(EmployeeModel model){
+    public PageInfo<EmployeeModel> getEmployee(UserTokenInfo userInfo,EmployeeModel model){
         PageHelper.startPage(model.getPageIndex(),model.getPageSize());
+        model.setId(userInfo.getUuid());
         List<EmployeeModel> employeeModels = adminClientInfoMapper.selectEmp(model);
         PageInfo<EmployeeModel> page = new PageInfo<EmployeeModel>(employeeModels);
         return page;
     }
     //获取邀请页面信息
-    public PageInfo<SpreadModel> getSpreaads(UserTokenInfo userInfo,SpreadModel spreadModel){
+    public PageInfo<SpreadModel> getSpreads(UserTokenInfo userInfo,SpreadModel spreadModel){
         PageHelper.startPage(spreadModel.getPageIndex(),spreadModel.getPageSize());
-        List<SpreadModel> spreadModels = new ArrayList<>();
+        spreadModel.setId(userInfo.getUuid());
+        List<SpreadModel> spreadModels = new ArrayList<SpreadModel>();
         if(PositionCode.POSITION_EMP.getIndex().equals(spreadModel.getPosition())){
-            spreadModels = null;//获取员工的列表
+            spreadModel.setPosition(userInfo.getPosition());
+            spreadModels = spreadMapper.getSpreadEmp(spreadModel);
         }else{
-            spreadModels = null;//获取代理的列表
+            spreadModel.setPosition(userInfo.getPosition());
+            spreadModels = spreadMapper.getSpreadProxy(spreadModel);
         }
         PageInfo<SpreadModel> page = new PageInfo<>(spreadModels);
         return page;
@@ -161,12 +220,12 @@ public class ProxyService {
     private List<ProxyModel> getTreeProxyModels(UserTokenInfo userInfo,List<ProxyModel> ps){
         List<ProxyModel> proxyModels = new ArrayList<ProxyModel>();
         ps.forEach(model -> {
-            if(userInfo.getUuid().equals(model.getBossId())){
-                for (ProxyModel proxyModel:ps) {
-                    if (model.getProxyId().equals(proxyModel.getBossId())){
-                        model.getProxyModels().add(proxyModel);
-                    }
+            for (ProxyModel proxyModel:ps) {
+                if (model.getProxyId().equals(proxyModel.getBossId())){
+                    model.getProxyModels().add(proxyModel);
                 }
+            }
+            if(PositionCode.POSITION_PROXY_ONE.getIndex().equals(model.getProxyPosition())){
                 proxyModels.add(model);
             }
         });
@@ -175,18 +234,23 @@ public class ProxyService {
 
 
     //手动给管理员分页
-    private PageInfo<ProxyModel> manageProxy(UserTokenInfo userInfo,ProxyModel proxyModel){
+    private PageInfo<ProxyModel> manageProxy(UserTokenInfo userInfo,ProxyModel proxyModel) throws ProxyException{
         List<ProxyModel> proxyModels = getTreeProxyModels(userInfo,adminClientInfoMapper.selectProxy(proxyModel));
-        PageInfo<ProxyModel> page = new PageInfo<>();
-        page.setPageNum(proxyModel.getPageIndex());
-        page.setPageSize(proxyModel.getPageSize());
-        page.setTotal(proxyModels.size());
         List<ProxyModel> list = new ArrayList<ProxyModel>();
+        if((proxyModel.getPageIndex()-1)*proxyModel.getPageSize()>proxyModels.size()){
+            throw new ProxyException(ResultCode.SELECT_OVER_MSG);
+        }
+        int j = proxyModels.size()>(proxyModel.getPageIndex()-1)*proxyModel.getPageSize()+proxyModel.getPageSize()
+                ?(proxyModel.getPageIndex()-1)*proxyModel.getPageSize()+proxyModel.getPageSize():proxyModels.size();
         for (int i = (proxyModel.getPageIndex()-1)*proxyModel.getPageSize()
-             ;i<(proxyModel.getPageIndex()-1)*proxyModel.getPageSize()+proxyModel.getPageSize();i++){
+             ;i<j;i++){
             list.add(proxyModels.get(i));
         }
-        page.setList(list);
+        PageHelper.startPage(proxyModel.getPageIndex(),proxyModel.getPageSize());
+        PageInfo<ProxyModel> page = new PageInfo<ProxyModel>(list);
+        page.setTotal(proxyModels.size());
+        page.setPageSize(proxyModel.getPageSize());
+        page.setPageNum(proxyModel.getPageIndex());
         return page;
     }
 
@@ -201,12 +265,39 @@ public class ProxyService {
     //生成新的邀请
     private Spread createdNewSpread(AdminClientInfo info) throws ProxyException{
         Spread spread = new Spread();
-        spread.setSalemanId(info.getUuid());
-        String invitCode = createdInvitCode(0,PositionCode.getName(info.getPosition()));
-        spread.setInviteCode(invitCode);
-        spread.setSpreadLink(getNewInviteLink(invitCode,info.getProxyNum()));
-        String path = getNewCodePic(spread.getSpreadLink(),invitCode);
+        InputStream is = null;
+        File file = null;
+        ByteArrayOutputStream outputStream = null;
+        try {
+            spread.setSalemanId(info.getUuid());;
+            spread.setInviteCode(info.getProxyNum());
+            spread.setSpreadLink(getNewInviteLink(info.getProxyNum(),info.getProxyNum()));
+            String path = getNewCodePic(spread.getSpreadLink(),info.getProxyNum());
+            file = new File(path);
+            is = new FileInputStream(file);
+            outputStream = new ByteArrayOutputStream();
+            byte[] bytes = new byte[100];
+            int rc = 0;
+            while ((rc=is.read(bytes,0,100))>0){
+                outputStream.write(bytes,0,rc);
+            }
+            byte[] piccodes = outputStream.toByteArray();
+            spread.setSpreadCodePic(piccodes);
 
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new ProxyException(ResultCode.INVITCODE_PIC_MSG);
+        } finally {
+            try {
+                outputStream.close();
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(file.exists()&&file.isFile()){
+                file.delete();
+            }
+        }
         return spread;
     }
 
@@ -217,9 +308,7 @@ public class ProxyService {
         }
         time++;
         StringBuffer sb = new StringBuffer(positionName);
-        for(int i =0;i<5;i++){
-            sb.append(new Random(new Date().getTime()).nextInt(10));
-        }
+        sb.append((int)((Math.random()*9+1)*10000));
         String invitCode = sb.toString();
         if(spreadMapper.countInvit(invitCode)>0){
             invitCode = createdInvitCode(time,positionName);
@@ -234,7 +323,7 @@ public class ProxyService {
         sb.append(invite);
         sb.append("&proxyNum=");
         sb.append(proxyNum);
-        return invite;
+        return sb.toString();
     }
 
     //生成二维码
@@ -242,6 +331,10 @@ public class ProxyService {
         Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
         hints.put(EncodeHintType.CHARACTER_SET, "utf-8"); // 内容所使用字符集编码
         BitMatrix bitMatrix = null;
+        File filePath = new File(picSavePath);
+        if(!filePath.exists()){
+            filePath.mkdir();
+        }
         String path = picSavePath+File.separator+ code+"."+picFormat;
         try {
             bitMatrix = new MultiFormatWriter().encode(invite,
@@ -250,8 +343,13 @@ public class ProxyService {
         File outputFile = new File(path);
         MatrixToImageWriter.writeToFile(bitMatrix, picFormat, outputFile);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new ProxyException(ResultCode.INVITCODE_PIC_MSG);
         }
         return path;
+    }
+
+    private String changePwd(String pwd){
+        return CommonUtil.toSha256(pwd);
     }
 }

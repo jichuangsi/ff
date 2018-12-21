@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.proxy.entity;
 
+import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Commission {
+public class Commission extends AbstractEntity{
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")

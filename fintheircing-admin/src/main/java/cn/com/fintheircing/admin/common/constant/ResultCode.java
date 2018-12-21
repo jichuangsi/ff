@@ -27,4 +27,6 @@ public class ResultCode {
 	public static final String COMMISSION_NULL_ERR = "请填写分成";
 	public static final String INVITCODE_GET_MSG = "请重新申请邀请码";
 	public static final String INVITCODE_PIC_MSG = "二维码生成失败";
+	public static final String SELECT_NULL_MSG = "查无此信息";
+	public static final String SELECT_OVER_MSG = "下标越界";
 }

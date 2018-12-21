@@ -41,7 +41,7 @@ custom:
     codeWidth: 300
     codeHeight: 300
     picFormat: jpg
-    picSavePath: D://codeImg
+    picSavePath: F://codeImg
 pagehelper:
   helperDialect: mysql
   reasonable: true
