@@ -4,7 +4,7 @@ import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.utils.WebCommonUtils;
 import cn.com.fintheircing.customer.user.exception.LoginException;
-import cn.com.fintheircing.customer.user.model.UserForLoginModel;
+import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
@@ -31,14 +31,14 @@ public class UserLoginController {
     @ApiOperation(value = "用户登录", notes = "")
     @ApiImplicitParams({})
     @PostMapping("/userLogin")
-    public ResponseModel userLogin(@Validated @RequestBody UserForLoginModel model, HttpServletRequest request) throws LoginException{
+    public ResponseModel userLogin(@Validated @RequestBody UserTokenInfo model, HttpServletRequest request) throws LoginException{
         if(request==null){
             return ResponseModel.fail("",ResultCode.IP_VALIDATE_ERR);
         }
         if(loginService.isExistBlack(WebCommonUtils.getClientIp(request))){
             return ResponseModel.fail("",ResultCode.IP_BLACK_VISIT);
         }
-        String token =  request.getHeader("token");
+        String token =  "";
         try {
             token = loginService.userLogin(model,token);
         } catch (LoginException e) {

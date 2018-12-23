@@ -8,11 +8,21 @@ import javax.persistence.Id;
 
 @Entity
 public class Position {
+
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String id;
+    private Integer position;
     private String positionName;
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 
     public String getId() {
         return id;

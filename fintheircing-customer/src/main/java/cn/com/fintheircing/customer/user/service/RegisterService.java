@@ -1,7 +1,5 @@
 package cn.com.fintheircing.customer.user.service;
 
-import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
-import cn.com.fintheircing.admin.todotask.model.TaskModel;
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
@@ -12,7 +10,7 @@ import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistExcption;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
-import cn.com.fintheircing.customer.user.model.UserForLoginModel;
+import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import cn.com.fintheircing.customer.user.service.feign.model.CreateTodoTaskModel;
 import com.alibaba.fastjson.JSONObject;
@@ -108,6 +106,7 @@ public class RegisterService {
 			userClientInfo.setPhone(phoneNo);
 			userClientInfo.setStatus(UserClientInfo.STATUS_INIT);
 			userClientInfo.setCer(UserClientInfo.CER_NOT);
+			userClientInfo.setRole(UserClientInfo.ROLE_USER);//添加区别用户管理员
 			userClientInfo = userInfoRepository.save(userClientInfo);
 			
 			//新增登录信息
@@ -118,20 +117,20 @@ public class RegisterService {
 			userClientLoginInfoRepository.save(userClientLoginInfo);
 			
 			//创建待办注册审核任务
-			TaskModel model = new TaskModel();
+			CreateTodoTaskModel model = new CreateTodoTaskModel();
 			model.setTaskType(CreateTodoTaskModel.TASK_TYPE_REG);
-			model.setTaskId(userClientInfo.getUuid());
+			model.setRegisterUserId(userClientInfo.getUuid());
 			model.setPhoneNo(phoneNo);
-			model.setUserName(phoneNo);
-			ResponseModel<CreateRegTodoTaskModel> reponse = todoTaskService.createRegTodoTask(model);
+			ResponseModel<Object> reponse = todoTaskService.createRegTodoTask(model);
 			if(!ResultCode.SUCESS.equals(reponse.getCode())) {
 				throw new RegisterheckExistExcption("注册审核暂时停止");
 			}
 		}
+
 	}
 	
 	//登录时获取用户信息
-	public UserForLoginModel getUserForLogin(UserForLoginModel model) {
+	public UserTokenInfo getUserForLogin(UserTokenInfo model) {
 		model.setPwd(CommonUtil.toSha256(model.getPwd()));
 		return userClientInfoMapper.find(model);
 	}

@@ -17,6 +17,8 @@ public class UserClientInfo extends AbstractEntity {
 	public static final String CER_NOT = "0";
 	public static final String CER_PASS = "1";
 
+	public static final String ROLE_USER = "1";
+
 	@Id
 	@GeneratedValue(generator = "paymentableGenerator")
 	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -27,19 +29,19 @@ public class UserClientInfo extends AbstractEntity {
 	private String userName;
 	private String phone;
 	private String status;
-	private String cer;//是否实名认证
+	private String cer;
 	/**
 	 * 未实名时使用手机号，实名后使用实名姓名
 	 */
 	private String displayname;
-	private String source;//来源
+	private String role;  //固定字段，用户
 
-	public String getSource() {
-		return source;
+	public String getRole() {
+		return role;
 	}
 
-	public void setSource(String source) {
-		this.source = source;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getUuid() {

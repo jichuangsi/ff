@@ -10,7 +10,6 @@ public class ResultCode {
 	public static final String SYS_BUSY = "0051";//熔断
 	
 	public static final String SUCESS_MSG = "成功";
-	public static final String FIELD_MSG = "失败";
 	public static final String PARAM_MISS_MSG = "缺少参数";
 	public static final String PARAM_ERR_MSG = "参数不正确";
 	public static final String TOKEN_MISS_MSG = "缺少token";
@@ -19,10 +18,15 @@ public class ResultCode {
 	public static final String SYS_BUSY_MSG = "系统繁忙";
 
 	public static final String IP_VISIT_ERR = "非法访问";
-	public static final String Login_VALIDATE_ERR = "账号或者密码错误";
+	public static final String LOGIN_VALIDATE_ERR = "账号或者密码错误";
 	public static final String POWER_VISIT_ERR = "无权限访问";
 	public static final String LOGIN_TOKEN_ERR = "token生成失败";
 	public static final String LOGIN_ADMIN_ERR = "管理员登录失败";
-	public static final String USER_EXITS = "用户不存在";
 
+	public static final String UPDATE_ERR = "修改失败";
+	public static final String COMMISSION_NULL_ERR = "请填写分成";
+	public static final String INVITCODE_GET_MSG = "请重新申请邀请码";
+	public static final String INVITCODE_PIC_MSG = "二维码生成失败";
+	public static final String SELECT_NULL_MSG = "查无此信息";
+	public static final String SELECT_OVER_MSG = "下标越界";
 }

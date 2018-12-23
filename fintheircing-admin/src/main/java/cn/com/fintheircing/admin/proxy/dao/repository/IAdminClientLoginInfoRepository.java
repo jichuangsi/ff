@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.login.dao.repository;
+package cn.com.fintheircing.admin.proxy.dao.repository;
 
 import cn.com.fintheircing.admin.login.entity.AdminClientLoginInfo;
 import org.springframework.data.jpa.repository.JpaRepository;

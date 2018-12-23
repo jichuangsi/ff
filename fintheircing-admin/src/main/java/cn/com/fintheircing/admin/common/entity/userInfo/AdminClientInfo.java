@@ -1,46 +1,40 @@
-package cn.com.fintheircing.admin.common.entity.userInfo;
+package cn.com.fintheircing.admin.common.entity;
 
-import javax.persistence.Column;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "AdminClientInfo")
-public class AdminClientInfo  {
+public class AdminClientInfo extends AbstractEntity {
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
+
+    public final static String ROLE_ADMIN = "0";
+
     @Id
-    String uuid;
-    String userId;
-    @Column(name = "position")
-    private String position;//职位 现在不显示在页面不用管
-    @Column(name = "status")
-    private String status;//状态
-    @Column(name = "proxyNum")//代理商编号
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+    private String uuid;
+    private Integer position;
+    private String status;
+    private String name;
     private String proxyNum;
-    @Column(name = "userName")
-    private String proxyName;//代理商名称
-    @Column(name = "remarks")
+    private String userName;
+    private String phone;
     private String remarks;  //备注
-    @Column(name = "bossId")
-    private String bossId;  //
+    private String bossId;  //上级id
+    private String role;  //固定字段，管理员
 
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
-
-        public String getUuid() {
-            return uuid;
-        }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public String getRole() {
+        return role;
     }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getProxyNum() {
         return proxyNum;
     }
@@ -49,11 +43,27 @@ public class AdminClientInfo  {
         this.proxyNum = proxyNum;
     }
 
-    public String getPosition() {
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
@@ -63,6 +73,22 @@ public class AdminClientInfo  {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getRemarks() {
@@ -81,11 +107,4 @@ public class AdminClientInfo  {
         this.bossId = bossId;
     }
 
-    public String getProxyName() {
-        return proxyName;
-    }
-
-    public void setProxyName(String proxyName) {
-        this.proxyName = proxyName;
-    }
 }

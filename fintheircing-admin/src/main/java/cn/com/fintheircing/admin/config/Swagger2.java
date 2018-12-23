@@ -39,7 +39,8 @@ public class Swagger2 {
 		return new Docket(DocumentationType.SWAGGER_2).enable(enableSwagger).apiInfo(apiInfo()).select()
 				// 为当前包路径
 				.apis(basePackage("cn.com.fintheircing.admin.todotask.controller" + splitor
-						+ "cn.com.fintheircing.admin.user.controller"))
+						+ "cn.com.fintheircing.admin.login.controller"+ splitor
+						+"cn.com.fintheircing.admin.proxy.controller"))
 				.paths(PathSelectors.any()).build();
 	}
 
