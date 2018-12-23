@@ -6,7 +6,6 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /** 短信发送工具类 */
@@ -17,23 +16,13 @@ public class SmsSendUtil {
     private static final String PRODUCT = "Dysmsapi";
     /** 产品域名,开发者无需替换 */
     private static final String DOMAIN = "dysmsapi.aliyuncs.com";
-    // 签名KEY
-    @Value("${sms.accessKeyId}")
-    private String accessKeyId;
-    // 签名密钥
-    @Value("${sms.accessKeySecret}")
-    private String accessKeySecret;
-    @Value("${sms.signName}")
-    private String signName;
-    @Value("${sms.templateCode}")
-    private String templateCode;
     /**
      * 短信发送方法
      * @param phoneNum 手机号码
      * @param code 短信内容
      * @return true: 发送成功， false：发送失败
      */
-    public  boolean send(String phoneNum, String code){
+    public  String send(String phoneNum, String code,String signName,String templateCode,String accessKeyId,String accessKeySecret){
         try {
             /** 可自助调整超时时间 */
             System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -57,15 +46,13 @@ public class SmsSendUtil {
              * 可选: 模板中的变量替换JSON串,
              * 如模板内容为"亲爱的${name},您的验证码为${code}"
              */
-            request.setTemplateParam( "{\"code\":\""+code+"\"}");
+            request.setTemplateParam( "{\"code\":" + code + "}");
             // 此处可能会抛出异常，注意catch
             SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
             /** 判断短信是否发送成功 */
-            return sendSmsResponse.getCode() != null &&
-                    sendSmsResponse.getCode().equals("OK");
+            return sendSmsResponse.getMessage();
         }catch (Exception ex){
             throw new RuntimeException("短信发送异常！", ex);
         }
     }
-
 }

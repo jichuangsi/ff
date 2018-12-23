@@ -1,8 +1,10 @@
 package cn.com.fintheircing.admin.login.dao.mapper;
 
 import cn.com.fintheircing.admin.common.model.AdminLoginModel;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+@Mapper
 public interface IAdminClientLoginInfoMapper {
     @Select("<script>select t1.position as position,t1.`status` as `status`," +
             "t1.userName as adminName,t1.uuid as adminId from admin_client_info t1" +

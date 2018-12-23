@@ -1,13 +1,14 @@
-package cn.com.fintheircing.customer.user.entity;
+package cn.com.fintheircing.admin.common.entity;
 
-import cn.com.fintheircing.customer.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="UserClientInfo")
 public class UserClientInfo extends AbstractEntity {
 
 	public static final String STATUS_INIT = "0";
@@ -19,52 +20,43 @@ public class UserClientInfo extends AbstractEntity {
 
 	@Id
 	@GeneratedValue(generator = "paymentableGenerator")
+	@GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
+	String id;
+	@GeneratedValue(generator = "paymentableGenerator")
 	@GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
-	private String uuid;
-	/**
-	 * 用户名，使用手机号作为用户名
-	 */
-	private String userName;
-	private String phone;
+	String userId;
 	private String status;
 	private String cer;//是否实名认证
 	/**
 	 * 未实名时使用手机号，实名后使用实名姓名
 	 */
 	private String displayname;
-	private String source;//来源
+	private String Source;//来源
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
 	public String getSource() {
-		return source;
+		return Source;
 	}
 
 	public void setSource(String source) {
-		this.source = source;
+		Source = source;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getId() {
+		return id;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
 
 	public String getStatus() {
 		return status;

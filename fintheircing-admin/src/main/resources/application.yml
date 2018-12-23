@@ -34,3 +34,15 @@ custom:
   admin:
     prefix: admin_val_
     longTime: 30
+
+    #分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+mybatis:
+  type-aliases-package: cn.com.fintheircing.admin.UserManag.entity
+  mapper-locations: classpath:mapping/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true

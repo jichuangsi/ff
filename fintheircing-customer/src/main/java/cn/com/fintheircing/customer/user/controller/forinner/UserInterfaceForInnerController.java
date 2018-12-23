@@ -9,4 +9,5 @@ package cn.com.fintheircing.customer.user.controller.forinner;
  */
 public class UserInterfaceForInnerController {
 
+
 }

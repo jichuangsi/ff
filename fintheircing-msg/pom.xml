@@ -80,6 +80,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>cn.com.fintheircing</groupId>
+			<artifactId>Fintheircing-customer</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>cn.com.fintheircing</groupId>-->
 			<!--<artifactId>Fintheircing-admin</artifactId>-->

@@ -1,17 +1,19 @@
 package cn.com.fintheircing.customer.user.service.feign;
 
-import org.springframework.stereotype.Component;
-
-import cn.com.fintheircing.customer.common.constant.ResultCode;
+import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
+import cn.com.fintheircing.admin.todotask.model.TaskModel;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
-import cn.com.fintheircing.customer.user.service.feign.model.CreateTodoTaskModel;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TodoTaskServiceFallBack implements ITodoTaskService {
 
 	@Override
-	public ResponseModel<Object> createRegTodoTask(CreateTodoTaskModel model) {
-		return new ResponseModel<Object>("", ResultCode.SYS_BUSY, ResultCode.SYS_BUSY_MSG, null);
+	public ResponseModel<CreateRegTodoTaskModel> createRegTodoTask(TaskModel model) {
+		CreateRegTodoTaskModel Regmodel =new CreateRegTodoTaskModel();
+		Regmodel.setPhoneNo(model.getPhoneNo());
+		Regmodel.setRegisterUserId(model.getTaskId());
+		Regmodel.setTaskType(model.getTaskType());
+		return ResponseModel.sucess("",Regmodel);
 	}
-
 }

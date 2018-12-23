@@ -1,6 +1,13 @@
 package cn.com.fintheircing.sms.service;
 
-public interface ISmsSendService {
-	void sendValCodeSms(String phone, String valCode);
+import cn.com.fintheircing.sms.model.mesModel;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+public interface ISmsSendService {
+	@Transactional
+	void sendValCodeSms(String phone, String valCode,String tasktype);
+
+	List<mesModel> findAllMessage();
 }

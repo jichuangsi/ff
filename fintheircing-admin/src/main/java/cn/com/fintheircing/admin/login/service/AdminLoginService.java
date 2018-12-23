@@ -1,17 +1,17 @@
 package cn.com.fintheircing.admin.login.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.entity.userInfo.AdminClientInfo;
+import cn.com.fintheircing.admin.common.model.AdminLoginModel;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.JWTCommonUtils;
-import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientInfoMapper;
 import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;
 import cn.com.fintheircing.admin.login.dao.repository.IBlackListRepository;
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
-import cn.com.fintheircing.admin.common.model.AdminLoginModel;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -30,12 +30,9 @@ public class AdminLoginService {
     @Value("${custom.admin.longTime}")
     private long longTime;
     Logger logger = LoggerFactory.getLogger(getClass());
-    @Resource
+    @Autowired
     private IBlackListRepository blackListRepository;
-
-    @Resource
-    private IAdminClientInfoMapper adminClientInfoMapper;
-    @Resource
+    @Autowired
     private IAdminClientLoginInfoMapper adminClientLoginInfoMapper;
     @Resource
     private JWTCommonUtils jwtCommonUtils;

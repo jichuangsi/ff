@@ -1,21 +1,7 @@
 package cn.com.fintheircing.customer.user.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSONObject;
-
+import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
+import cn.com.fintheircing.admin.todotask.model.TaskModel;
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
@@ -29,6 +15,19 @@ import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserForLoginModel;
 import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import cn.com.fintheircing.customer.user.service.feign.model.CreateTodoTaskModel;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RegisterService {
@@ -119,16 +118,16 @@ public class RegisterService {
 			userClientLoginInfoRepository.save(userClientLoginInfo);
 			
 			//创建待办注册审核任务
-			CreateTodoTaskModel model = new CreateTodoTaskModel();
+			TaskModel model = new TaskModel();
 			model.setTaskType(CreateTodoTaskModel.TASK_TYPE_REG);
-			model.setRegisterUserId(userClientInfo.getUuid());
+			model.setTaskId(userClientInfo.getUuid());
 			model.setPhoneNo(phoneNo);
-			ResponseModel<Object> reponse = todoTaskService.createRegTodoTask(model);
+			model.setUserName(phoneNo);
+			ResponseModel<CreateRegTodoTaskModel> reponse = todoTaskService.createRegTodoTask(model);
 			if(!ResultCode.SUCESS.equals(reponse.getCode())) {
 				throw new RegisterheckExistExcption("注册审核暂时停止");
 			}
 		}
-
 	}
 	
 	//登录时获取用户信息
