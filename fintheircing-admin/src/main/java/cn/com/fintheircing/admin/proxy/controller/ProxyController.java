@@ -1,6 +1,7 @@
 package cn.com.fintheircing.admin.proxy.controller;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;

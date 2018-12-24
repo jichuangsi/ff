@@ -29,4 +29,5 @@ public class ResultCode {
 	public static final String INVITCODE_PIC_MSG = "二维码生成失败";
 	public static final String SELECT_NULL_MSG = "查无此信息";
 	public static final String SELECT_OVER_MSG = "下标越界";
+	public static final String DELETE_FAIL_MSG = "删除失败";
 }

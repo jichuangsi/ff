@@ -3,11 +3,12 @@ package cn.com.fintheircing.admin.proxy.entity;
 import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity
+/**
+ * 购买商品合同
+ */
 public class Manage extends AbstractEntity {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")

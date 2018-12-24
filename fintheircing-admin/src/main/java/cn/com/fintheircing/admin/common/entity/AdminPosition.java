@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Position {
+public class AdminPosition {
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")

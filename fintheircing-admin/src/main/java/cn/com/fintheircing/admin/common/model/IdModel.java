@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.proxy.model;
+package cn.com.fintheircing.admin.common.model;
 
 import java.util.List;
 

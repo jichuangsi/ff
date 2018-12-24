@@ -17,4 +17,5 @@ public class ResultCode {
 	public static final String SYS_ERROR_MSG = "系统繁忙";
 	public static final String SYS_BUSY_MSG = "系统繁忙";
 	public static final String TOKEN_OVER_MSG = "token超时";
+	public static final String POWER_VISIT_MSG = "无权访问该路径";
 }
