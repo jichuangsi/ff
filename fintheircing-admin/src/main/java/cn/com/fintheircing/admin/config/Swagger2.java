@@ -40,7 +40,8 @@ public class Swagger2 {
 				// 为当前包路径
 				.apis(basePackage("cn.com.fintheircing.admin.todotask.controller" + splitor
 						+ "cn.com.fintheircing.admin.login.controller"+ splitor
-						+"cn.com.fintheircing.admin.proxy.controller"))
+						+"cn.com.fintheircing.admin.proxy.controller"+ splitor
+						+"cn.com.fintheircing.admin.promisedUrls.controller"))
 				.paths(PathSelectors.any()).build();
 	}
 

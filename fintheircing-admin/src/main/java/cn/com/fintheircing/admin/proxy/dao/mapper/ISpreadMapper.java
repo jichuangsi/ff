@@ -8,11 +8,11 @@ import java.util.List;
 public interface ISpreadMapper {
 
 
-    @Select("<script>select count(1) from spread where invite_code=#{code}</script>")
+    @Select("<script>select count(1) from proxy_spread where invite_code=#{code}</script>")
     int countInvit(String code);
 
     @Select("<script>select t2.user_name as proxyName,t2.proxy_num as proxyNum,t1.invite_code as spreadNum,t1.spread_link as spreadLink" +
-            " ,t1.spread_code_pic as qRcode from spread t1 RIGHT JOIN(" +//
+            " ,t1.spread_code_pic as qRcode from proxy_spread t1 RIGHT JOIN(" +//
             " select uuid,proxy_num,user_name,boss_id from admin_client_info " +
             " where not(uuid=#{id}) " +
             "and not(position=3) and not(position=0) and delete_flag=0" +

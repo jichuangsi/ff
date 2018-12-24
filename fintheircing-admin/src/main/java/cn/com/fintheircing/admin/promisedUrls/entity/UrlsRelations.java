@@ -14,7 +14,7 @@ public class UrlsRelations extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private Integer position;
-    private Integer role;
+    private String role;
     private String urlId;
 
     public String getUuid() {
@@ -33,11 +33,11 @@ public class UrlsRelations extends AbstractEntity{
         this.position = position;
     }
 
-    public Integer getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Integer role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

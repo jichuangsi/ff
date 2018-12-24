@@ -12,7 +12,7 @@ public interface IUrlsRelationsMapper {
     @Select("<script>select t1.uuid as id,t1.position as position," +
             "t1.role as role,t2.url_name as urlName," +
             "t2.url as url from urls_relations t1 " +
-            "LEFT JOIN permised_urls t2 on t1.url_id=t2.uuid " +
+            "LEFT JOIN urls_permised t2 on t1.url_id=t2.uuid " +
             "where t1.delete_flag=\"0\"</script>")
     List<UrlsModel> selectAllRelations();
 

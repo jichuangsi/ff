@@ -6,7 +6,7 @@ public class UrlsModel {
     private String urlName;
 
     private Integer position;
-    private Integer role;
+    private String role;
 
     public Integer getPosition() {
         return position;
@@ -16,11 +16,11 @@ public class UrlsModel {
         this.position = position;
     }
 
-    public Integer getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Integer role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

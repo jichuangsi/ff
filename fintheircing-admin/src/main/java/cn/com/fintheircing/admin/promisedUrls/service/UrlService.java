@@ -11,6 +11,7 @@ import cn.com.fintheircing.admin.promisedUrls.dao.repository.IUrlsRelationsRepos
 import cn.com.fintheircing.admin.promisedUrls.entity.UrlsPermised;
 import cn.com.fintheircing.admin.promisedUrls.entity.UrlsRelations;
 import cn.com.fintheircing.admin.promisedUrls.exception.UrlException;
+import cn.com.fintheircing.admin.promisedUrls.model.JsonMap;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.model.UrlsModel;
 import cn.com.fintheircing.admin.promisedUrls.utils.MappingEntity2ModelConverter;
@@ -165,30 +166,30 @@ public class UrlService {
         List<UrlsModel> employ = new ArrayList<UrlsModel>();
         List<UrlsModel> user = new ArrayList<UrlsModel>();
         urlsModels.forEach(model->{
-            if (PositionCode.POSITION_MANAGE.equals(model.getPosition())
+            if (PositionCode.POSITION_MANAGE.getIndex().equals(model.getPosition())
                     &&"1".equals(model.getRole())){
                 user.add(model);
-            }else if (PositionCode.POSITION_PROXY_ONE.equals(model.getPosition())
+            }else if (PositionCode.POSITION_PROXY_ONE.getIndex().equals(model.getPosition())
                     &&"0".equals(model.getRole())){
                 proxyOne.add(model);
-            }else if (PositionCode.POSITION_PROXY_TWO.equals(model.getPosition())
+            }else if (PositionCode.POSITION_PROXY_TWO.getIndex().equals(model.getPosition())
                     &&"0".equals(model.getRole())){
                 proxyTwo.add(model);
-            }else if (PositionCode.POSITION_EMP.equals(model.getPosition())
+            }else if (PositionCode.POSITION_EMP.getIndex().equals(model.getPosition())
                     &&"0".equals(model.getRole())){
                 employ.add(model);
-            }else if (PositionCode.POSITION_MANAGE.equals(model.getPosition())
+            }else if (PositionCode.POSITION_MANAGE.getIndex().equals(model.getPosition())
                     &&"0".equals(model.getRole())){
                 manage.add(model);
             }
         });
-        Map<String,List<UrlsModel>> map = new HashMap<>();
-        map.put(manageKey,manage);
-        map.put(proxyOneKey,proxyOne);
-        map.put(proxyTwoKey,proxyTwo);
-        map.put(employKey,employ);
-        map.put(userKey,user);
-        String json = JSON.toJSONString(map);
+        JsonMap jsonMap = new JsonMap();
+        jsonMap.getMap().put(manageKey,manage);
+        jsonMap.getMap().put(proxyOneKey,proxyOne);
+        jsonMap.getMap().put(proxyTwoKey,proxyTwo);
+        jsonMap.getMap().put(employKey,employ);
+        jsonMap.getMap().put(userKey,user);
+        String json = JSON.toJSONString(jsonMap);
         logger.debug(json);
 /*        map = JSONObject.parseObject(json,Map.class);*/
         redisTemplate.opsForValue().set(searchKey,json);
@@ -198,8 +199,9 @@ public class UrlService {
 
     public Boolean checkUrl(TranferUrlModel model) {
         String json = redisTemplate.opsForValue().get(searchKey);
-        Map<String, List<UrlsModel>> map = JSONObject.parseObject(json, Map.class);
-        String key = positionKey + model.getPosition() + roleKey + model.getRole();
+        JsonMap jsonMap = JSONObject.parseObject(json, JsonMap.class);
+        Map<String, List<UrlsModel>> map = jsonMap.getMap();
+        String key = positionKey + model.getPosition() +"_"+ roleKey + model.getRole();
         List<UrlsModel> models = map.get(key);
         Boolean flag = false;
         if (models != null && models.size() > 0){
