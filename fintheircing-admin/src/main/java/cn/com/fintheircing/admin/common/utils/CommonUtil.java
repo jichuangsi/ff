@@ -1,8 +1,14 @@
 package cn.com.fintheircing.admin.common.utils;
 
+import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.system.exception.SystemException;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,5 +57,17 @@ public class CommonUtil {
 			stringBuffer.append(temp);
 		}
 		return stringBuffer.toString();
+	}
+
+	public static long getlongTime(String date,String sdformat) throws SystemException{
+		SimpleDateFormat sdf = new SimpleDateFormat(sdformat);
+		long longTime = 0;
+		try {
+			Date time = sdf.parse(date);
+			longTime = time.getTime();
+		} catch (ParseException e) {
+			throw new SystemException(ResultCode.DATE_FORMATE_MSG);
+		}
+		return longTime;
 	}
 }

@@ -51,6 +51,9 @@ custom:
     proxyTwoKey: position_2_role_0
     employKey: position_3_role_0
     userKey: position_0_role_1
+  system:
+    sdformat: yyyyMMdd-HH:mm:ss
+    hms: -00:00:00
 pagehelper:
   helperDialect: mysql
   reasonable: true

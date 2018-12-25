@@ -15,6 +15,15 @@ public class AdminPosition {
     private String id;
     private Integer position;
     private String positionName;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public Integer getPosition() {
         return position;
