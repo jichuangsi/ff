@@ -14,11 +14,11 @@ import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientInfoRepository
 import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientLoginInfoRepository;
 import cn.com.fintheircing.admin.proxy.dao.repository.ICommissionRepository;
 import cn.com.fintheircing.admin.proxy.dao.repository.ISpreadRepository;
-import cn.com.fintheircing.admin.proxy.entity.Commission;
-import cn.com.fintheircing.admin.proxy.entity.Spread;
+import cn.com.fintheircing.admin.proxy.entity.ProxyCommission;
+import cn.com.fintheircing.admin.proxy.entity.ProxySpread;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
 import cn.com.fintheircing.admin.proxy.model.EmployeeModel;
-import cn.com.fintheircing.admin.proxy.model.IdModel;
+import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import cn.com.fintheircing.admin.proxy.model.SpreadModel;
 import cn.com.fintheircing.admin.proxy.utils.MappingModel2EntityConverter;
@@ -126,7 +126,7 @@ public class ProxyService {
         adminClientLoginInfoRepository.save(loginInfo);
 
         //差邀请页表没填
-        Spread spread = createdNewSpread(info);
+        ProxySpread spread = createdNewSpread(info);
         spread.setCreatedTime(new Date());
         spread.setCreatorId(userInfo.getUuid());
         spread.setCreatorName(userInfo.getUserName());
@@ -140,7 +140,7 @@ public class ProxyService {
                 ||proxyModel.getBackCommission()==null||proxyModel.getBackCommission()==0){
             return ResultCode.COMMISSION_NULL_ERR;
         }
-        Commission commission = new Commission();
+        ProxyCommission commission = new ProxyCommission();
         commission.setBackCommission(proxyModel.getBackCommission());
         commission.setDayCommission(proxyModel.getDayCommission());
         commission.setMonthCommission(proxyModel.getMonthCommission());
@@ -159,7 +159,7 @@ public class ProxyService {
     //获取个人收佣信息
     public ProxyModel getCommissions(IdModel ids) throws ProxyException{
         ProxyModel proxyModel = new ProxyModel();
-        Commission commission = commissionRepository.findCommissionBySalemanId(ids.getIds().get(0));
+        ProxyCommission commission = commissionRepository.findCommissionBySalemanId(ids.getIds().get(0));
 
         if(commission!=null) {
             proxyModel.setBackCommission(commission.getBackCommission());
@@ -263,8 +263,8 @@ public class ProxyService {
     }
 
     //生成新的邀请
-    private Spread createdNewSpread(AdminClientInfo info) throws ProxyException{
-        Spread spread = new Spread();
+    private ProxySpread createdNewSpread(AdminClientInfo info) throws ProxyException{
+        ProxySpread spread = new ProxySpread();
         InputStream is = null;
         File file = null;
         ByteArrayOutputStream outputStream = null;

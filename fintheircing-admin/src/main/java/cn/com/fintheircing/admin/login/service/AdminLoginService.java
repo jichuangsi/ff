@@ -61,7 +61,7 @@ public class AdminLoginService {
             logger.error(ResultCode.LOGIN_TOKEN_ERR);
         }
         if(StringUtils.isEmpty(token)) throw new AdminLoginException(ResultCode.LOGIN_ADMIN_ERR);
-        redisTemplate.opsForValue().set(tokrnPre+model.getUuid(),userJson,longTime, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(tokrnPre+model.getUuid(),token,longTime, TimeUnit.MINUTES);
         return token;
     }
 
