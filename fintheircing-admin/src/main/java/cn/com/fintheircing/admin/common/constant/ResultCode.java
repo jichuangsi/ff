@@ -31,4 +31,9 @@ public class ResultCode {
 	public static final String SELECT_NULL_MSG = "查无此信息";
 	public static final String SELECT_OVER_MSG = "下标越界";
 	public static final String DELETE_FAIL_MSG = "删除失败";
+
+	public static final String DATE_FORMATE_MSG = "日期格式不正确";
+	public static final String DATE_INVIDATE_MSG = "日期不合法";
+	public static final String VISIT_VALIDITY_MSG = "非法访问，请从页面进行访问";
+	public static final String PIC_UPLODE_MSG = "图片上传错误";
 }

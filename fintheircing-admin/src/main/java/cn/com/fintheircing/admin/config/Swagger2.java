@@ -41,7 +41,8 @@ public class Swagger2 {
 				.apis(basePackage("cn.com.fintheircing.admin.todotask.controller" + splitor
 						+ "cn.com.fintheircing.admin.login.controller"+ splitor
 						+"cn.com.fintheircing.admin.proxy.controller"+ splitor
-						+"cn.com.fintheircing.admin.promisedUrls.controller"))
+						+"cn.com.fintheircing.admin.promisedUrls.controller"+ splitor
+						+"cn.com.fintheircing.admin.system.controller"))
 				.paths(PathSelectors.any()).build();
 	}
 
