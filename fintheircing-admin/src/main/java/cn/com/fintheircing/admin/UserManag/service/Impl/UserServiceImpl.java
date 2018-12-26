@@ -1,9 +1,12 @@
 package cn.com.fintheircing.admin.UserManag.service.Impl;
 
-import cn.com.fintheircing.admin.Repository.*;
+import cn.com.fintheircing.admin.Repository.AdminClientInfoRepository;
+import cn.com.fintheircing.admin.Repository.AskMoneyInfoRepository;
+import cn.com.fintheircing.admin.Repository.UserClientInfoRepository;
+import cn.com.fintheircing.admin.Repository.contactInfoRepository;
 import cn.com.fintheircing.admin.UserManag.Excption.UserServiceException;
+import cn.com.fintheircing.admin.UserManag.dao.mapper.userMapper;
 import cn.com.fintheircing.admin.UserManag.mapper.fundsAskMapper;
-import cn.com.fintheircing.admin.UserManag.mapper.userMapper;
 import cn.com.fintheircing.admin.UserManag.model.AdminClientInfModel;
 import cn.com.fintheircing.admin.UserManag.model.AskMoneyInfoModel;
 import cn.com.fintheircing.admin.UserManag.model.ContactInfoModel;
@@ -45,7 +48,7 @@ public class UserServiceImpl implements UserService {
         try {
             List<AdminClientInfModel> all = usermapper.findAll(Model);
             if (all==null||all.size()==0){
-                throw new UserServiceException(ResultCode.USER_EXITS);
+                throw new UserServiceException(ResultCode.PARAM_MISS_MSG);
             }else {
 
                 return all;

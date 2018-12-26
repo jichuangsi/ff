@@ -1,5 +1,7 @@
 package cn.com.fintheircing.customer.user.service;
 
+import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
+import cn.com.fintheircing.admin.todotask.model.TaskModel;
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
@@ -9,6 +11,7 @@ import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistExcption;
+import cn.com.fintheircing.customer.user.model.OnlineUserInfo;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
@@ -23,6 +26,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -117,12 +121,12 @@ public class RegisterService {
 			userClientLoginInfoRepository.save(userClientLoginInfo);
 			
 			//创建待办注册审核任务
-			CreateTodoTaskModel model = new CreateTodoTaskModel();
+			TaskModel model = new TaskModel();
 			model.setTaskType(CreateTodoTaskModel.TASK_TYPE_REG);
-			model.setRegisterUserId(userClientInfo.getUuid());
+			model.setTaskId(userClientInfo.getUuid());
 			model.setPhoneNo(phoneNo);
-			ResponseModel<Object> reponse = todoTaskService.createRegTodoTask(model);
-			if(!ResultCode.SUCESS.equals(reponse.getCode())) {
+			ResponseModel<CreateRegTodoTaskModel> regTodoTask = todoTaskService.createRegTodoTask(model);
+			if(!ResultCode.SUCESS.equals(regTodoTask.getCode())) {
 				throw new RegisterheckExistExcption("注册审核暂时停止");
 			}
 		}
@@ -133,6 +137,17 @@ public class RegisterService {
 	public UserTokenInfo getUserForLogin(UserTokenInfo model) {
 		model.setPwd(CommonUtil.toSha256(model.getPwd()));
 		return userClientInfoMapper.find(model);
+	}
+
+	//获取记录用户信息
+	public List<OnlineUserInfo> findAllRecoding(String operating, String loginName) {
+
+		return userClientInfoMapper.findAllRecoding( operating,  loginName);
+	}
+	//删除用户记录
+	public int deleteRecoding(String userId) {
+
+		return userClientInfoMapper.deleteRecoding( userId);
 	}
 
 	// 生成随机数字

@@ -30,7 +30,6 @@ custom:
       prefix: token_val_
       claim: userModel
       HMAC256: secret
-      longTime: 30
+      longTime: 180000
   admin:
     prefix: admin_val_
-    longTime: 30
