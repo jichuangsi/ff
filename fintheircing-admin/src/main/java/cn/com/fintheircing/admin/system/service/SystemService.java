@@ -4,6 +4,7 @@ import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
+import cn.com.fintheircing.admin.system.dao.mapper.ISystemBrandMapper;
 import cn.com.fintheircing.admin.system.dao.mapper.ISystemHolidayMapper;
 import cn.com.fintheircing.admin.system.dao.repository.ISystemBrandRepository;
 import cn.com.fintheircing.admin.system.dao.repository.ISystemHolidayRepository;
@@ -25,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SystemService {
@@ -45,6 +43,8 @@ public class SystemService {
     private ISystemHolidayMapper systemHolidayMapper;
     @Resource
     private ISystemBrandRepository systemBrandRepository;
+    @Resource
+    private ISystemBrandMapper systemBrandMapper;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -73,9 +73,19 @@ public class SystemService {
 
     //修改假期
     public void updateHoliday(UserTokenInfo userInfo,HolidayModel model) throws SystemException{
-        SystemHoliday systemHoliday = MappingModel2EntityConverter.CONVERTERFORHOLIDAYMODEL(userInfo,model);
+        SystemHoliday systemHoliday = systemHolidayRepository.findByUuid(model.getId());
+        if(SystemHoliday.STATUS_ACTIVE.equals(model.getStatus())
+                ||SystemHoliday.STATUS_DISABLED.equals(model.getStatus())){
+            systemHoliday.setStatus(model.getStatus());
+        }else {
+            throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
+        }
         systemHoliday.setBeginTime(CommonUtil.getlongTime(model.getStart()+hms,sdformat));
         systemHoliday.setEndTime(CommonUtil.getlongTime(model.getEnd()+hms,sdformat));
+        systemHoliday.setRemarks(model.getRemarks());
+        systemHoliday.setUpdatedTime(new Date());
+        systemHoliday.setUpdateUserId(userInfo.getUuid());
+        systemHoliday.setUpdateUserName(userInfo.getUserName());
         systemHolidayRepository.save(systemHoliday);
     }
 
@@ -109,6 +119,7 @@ public class SystemService {
     public void saveBrand(UserTokenInfo userInfo, BrandModel model,MultipartFile file) throws SystemException{
         SystemBrand systemBrand = MappingModel2EntityConverter.CONVERTERFORBRANDMODEL(userInfo,model);
         try {
+            systemBrand.setStatus(SystemBrand.STATUS_ACTIVE);
             systemBrand.setContent(file.getBytes());
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -116,4 +127,54 @@ public class SystemService {
         }
         systemBrandRepository.save(systemBrand);
     }
+
+    //删除轮播图
+    public Boolean deleteBrands(UserTokenInfo userInfo,IdModel ids){
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("name",userInfo.getUserName());
+        params.put("id",userInfo.getUuid());
+        params.put("time",new Date());
+        params.put("list",ids.getIds());
+        return systemBrandMapper.deleteBrands(params)>0;
+    }
+
+   /* //修改轮播图不修改图片，仅修改其他字段
+    public void updateBrand(UserTokenInfo userInfo,BrandModel model) throws SystemException{
+        SystemBrand systemBrand = systemBrandRepository.findByUuid(model.getUuid());
+        if ((SystemBrand.APPLYON_PC.equals(model.getApplyOn())
+                ||SystemBrand.APPLYON_APP.equals(model.getApplyOn()))
+                &&(SystemBrand.STATUS_ACTIVE.equals(model.getStatus())
+                ||SystemBrand.STATUS_DISABLED.equals(model.getStatus()))){
+            systemBrand.setApplyOn(model.getApplyOn());
+            systemBrand.setStatus(model.getStatus());
+        }else {
+            throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
+        }
+        systemBrand.setBrandName(model.getName());
+        systemBrand.setUpdateUserName(userInfo.getUserName());
+        systemBrand.setUpdateUserId(userInfo.getUuid());
+        systemBrand.setUpdatedTime(new Date());
+        systemBrandRepository.save(systemBrand);
+    }*/
+
+   public void updateBrand(MultipartFile file ,BrandModel model,UserTokenInfo userInfo) throws SystemException{
+       SystemBrand systemBrand = systemBrandRepository.findByUuid(model.getUuid());
+       try {
+           systemBrand.setContent(file.getBytes());
+           systemBrand.setUpdatedTime(new Date());
+           systemBrand.setUpdateUserId(userInfo.getUuid());
+           systemBrand.setUpdateUserName(userInfo.getUserName());
+           systemBrandRepository.save(systemBrand);
+       } catch (IOException e) {
+           logger.error(e.getMessage());
+           throw new SystemException(ResultCode.PIC_UPLODE_MSG);
+       }
+   }
+
+   public PageInfo<BrandModel> getPageBrands(BrandModel model){
+       PageHelper.startPage(model.getPageIndex(),model.getPageSize());
+       List<BrandModel> brandModels = new ArrayList<>();
+       PageInfo<BrandModel> pageInfo = new PageInfo<BrandModel>(brandModels);
+       return pageInfo;
+   }
 }
