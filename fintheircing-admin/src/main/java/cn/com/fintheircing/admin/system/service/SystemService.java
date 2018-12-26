@@ -82,6 +82,9 @@ public class SystemService {
         }
         systemHoliday.setBeginTime(CommonUtil.getlongTime(model.getStart()+hms,sdformat));
         systemHoliday.setEndTime(CommonUtil.getlongTime(model.getEnd()+hms,sdformat));
+        if(systemHoliday.getBeginTime()>=systemHoliday.getEndTime()){
+            throw new SystemException(ResultCode.DATE_INVIDATE_MSG);
+        }
         systemHoliday.setRemarks(model.getRemarks());
         systemHoliday.setUpdatedTime(new Date());
         systemHoliday.setUpdateUserId(userInfo.getUuid());
@@ -119,7 +122,7 @@ public class SystemService {
     public void saveBrand(UserTokenInfo userInfo, BrandModel model,MultipartFile file) throws SystemException{
         SystemBrand systemBrand = MappingModel2EntityConverter.CONVERTERFORBRANDMODEL(userInfo,model);
         try {
-            systemBrand.setStatus(SystemBrand.STATUS_ACTIVE);
+           /* systemBrand.setStatus(SystemBrand.STATUS_ACTIVE);*/
             systemBrand.setContent(file.getBytes());
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -171,10 +174,8 @@ public class SystemService {
        }
    }
 
-   public PageInfo<BrandModel> getPageBrands(BrandModel model){
-       PageHelper.startPage(model.getPageIndex(),model.getPageSize());
-       List<BrandModel> brandModels = new ArrayList<>();
-       PageInfo<BrandModel> pageInfo = new PageInfo<BrandModel>(brandModels);
-       return pageInfo;
+   public List<BrandModel> getPageBrands(BrandModel model){
+       List<BrandModel> brandModels = systemBrandMapper.selectBrand();
+       return brandModels;
    }
 }

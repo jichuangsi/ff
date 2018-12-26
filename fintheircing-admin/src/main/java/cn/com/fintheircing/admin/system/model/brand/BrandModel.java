@@ -7,27 +7,8 @@ public class BrandModel {
     private String applyOn;
     private long createdTime;
     private long updateTime;
-    private String status;
+ /*   private String status;
 
-
-    private Integer pageIndex;
-    private Integer pageSize;
-
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
 
     public String getStatus() {
         return status;
@@ -35,7 +16,7 @@ public class BrandModel {
 
     public void setStatus(String status) {
         this.status = status;
-    }
+    }*/
 
     public String getUuid() {
         return uuid;
