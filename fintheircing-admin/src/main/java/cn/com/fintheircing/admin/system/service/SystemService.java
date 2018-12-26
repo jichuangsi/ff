@@ -74,22 +74,26 @@ public class SystemService {
     //修改假期
     public void updateHoliday(UserTokenInfo userInfo,HolidayModel model) throws SystemException{
         SystemHoliday systemHoliday = systemHolidayRepository.findByUuid(model.getId());
-        if(SystemHoliday.STATUS_ACTIVE.equals(model.getStatus())
-                ||SystemHoliday.STATUS_DISABLED.equals(model.getStatus())){
-            systemHoliday.setStatus(model.getStatus());
-        }else {
-            throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
+        if (systemHoliday!=null) {
+            if (SystemHoliday.STATUS_ACTIVE.equals(model.getStatus())
+                    || SystemHoliday.STATUS_DISABLED.equals(model.getStatus())) {
+                systemHoliday.setStatus(model.getStatus());
+            } else {
+                throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
+            }
+            systemHoliday.setBeginTime(CommonUtil.getlongTime(model.getStart() + hms, sdformat));
+            systemHoliday.setEndTime(CommonUtil.getlongTime(model.getEnd() + hms, sdformat));
+            if (systemHoliday.getBeginTime() >= systemHoliday.getEndTime()) {
+                throw new SystemException(ResultCode.DATE_INVIDATE_MSG);
+            }
+            systemHoliday.setRemarks(model.getRemarks());
+            systemHoliday.setUpdatedTime(new Date());
+            systemHoliday.setUpdateUserId(userInfo.getUuid());
+            systemHoliday.setUpdateUserName(userInfo.getUserName());
+            systemHolidayRepository.save(systemHoliday);
+        }else{
+            throw new SystemException(ResultCode.SELECT_NULL_MSG);
         }
-        systemHoliday.setBeginTime(CommonUtil.getlongTime(model.getStart()+hms,sdformat));
-        systemHoliday.setEndTime(CommonUtil.getlongTime(model.getEnd()+hms,sdformat));
-        if(systemHoliday.getBeginTime()>=systemHoliday.getEndTime()){
-            throw new SystemException(ResultCode.DATE_INVIDATE_MSG);
-        }
-        systemHoliday.setRemarks(model.getRemarks());
-        systemHoliday.setUpdatedTime(new Date());
-        systemHoliday.setUpdateUserId(userInfo.getUuid());
-        systemHoliday.setUpdateUserName(userInfo.getUserName());
-        systemHolidayRepository.save(systemHoliday);
     }
 
     //批量删除假期
@@ -162,20 +166,28 @@ public class SystemService {
 
    public void updateBrand(MultipartFile file ,BrandModel model,UserTokenInfo userInfo) throws SystemException{
        SystemBrand systemBrand = systemBrandRepository.findByUuid(model.getUuid());
-       try {
-           systemBrand.setContent(file.getBytes());
-           systemBrand.setUpdatedTime(new Date());
-           systemBrand.setUpdateUserId(userInfo.getUuid());
-           systemBrand.setUpdateUserName(userInfo.getUserName());
-           systemBrandRepository.save(systemBrand);
-       } catch (IOException e) {
-           logger.error(e.getMessage());
-           throw new SystemException(ResultCode.PIC_UPLODE_MSG);
+       if(systemBrand!=null) {
+           try {
+               systemBrand.setContent(file.getBytes());
+               systemBrand.setUpdatedTime(new Date());
+               systemBrand.setUpdateUserId(userInfo.getUuid());
+               systemBrand.setUpdateUserName(userInfo.getUserName());
+               systemBrandRepository.save(systemBrand);
+           } catch (IOException e) {
+               logger.error(e.getMessage());
+               throw new SystemException(ResultCode.PIC_UPLODE_MSG);
+           }
+       }else {
+           throw new SystemException(ResultCode.SELECT_NULL_MSG);
        }
    }
 
-   public List<BrandModel> getPageBrands(BrandModel model){
+   public List<BrandModel> getBrands(){
        List<BrandModel> brandModels = systemBrandMapper.selectBrand();
+       brandModels.forEach(brandMode->{
+           brandMode.setCreatedTime(brandMode.getBeiginTime().getTime());
+           brandMode.setUpdateTime(brandMode.getModifyTime().getTime());
+       });
        return brandModels;
    }
 }

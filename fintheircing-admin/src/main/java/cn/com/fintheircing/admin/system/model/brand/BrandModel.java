@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.system.model.brand;
 
+import java.util.Date;
+
 public class BrandModel {
 
     private String uuid;
@@ -7,6 +9,9 @@ public class BrandModel {
     private String applyOn;
     private long createdTime;
     private long updateTime;
+
+    private Date beiginTime;
+    private Date modifyTime;
  /*   private String status;
 
 
@@ -17,6 +22,22 @@ public class BrandModel {
     public void setStatus(String status) {
         this.status = status;
     }*/
+
+    public Date getBeiginTime() {
+        return beiginTime;
+    }
+
+    public void setBeiginTime(Date beiginTime) {
+        this.beiginTime = beiginTime;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 
     public String getUuid() {
         return uuid;
