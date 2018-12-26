@@ -100,7 +100,7 @@ public class systemController {
         }
     }
 
-    @ApiOperation(value = "保存轮播图", notes = "")
+    @ApiOperation(value = "保存轮播图,此处要form表单保存", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
@@ -118,6 +118,50 @@ public class systemController {
     }
 
 
+    @ApiOperation(value = "删除轮播图", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @DeleteMapping("/deleteBrands")
+    public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo,IdModel model){
+        if(!IsManage(userInfo)){
+            return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
+        }
+        if(!systemService.deleteBrands(userInfo,model)){
+            return ResponseModel.fail("",ResultCode.DELETE_FAIL_MSG);
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+
+    @ApiOperation(value = "修改轮播图", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateBrand")
+    public ResponseModel updateBrand(@RequestParam MultipartFile file,@ModelAttribute UserTokenInfo userInfo, BrandModel model){
+        if(!IsManage(userInfo)){
+            return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
+        }
+        try {
+            systemService.updateBrand(file,model,userInfo);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "获取轮播图列表", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getBrands")
+    public ResponseModel<PageInfo<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo,@RequestBody BrandModel model){
+        if(!IsManage(userInfo)){
+            return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
+        }
+        return ResponseModel.sucess("",systemService.getPageBrands(model));
+    }
 
     private Boolean IsManage(UserTokenInfo userInfo){
         if (PositionCode.POSITION_MANAGE.getIndex().equals(userInfo.getPosition())){

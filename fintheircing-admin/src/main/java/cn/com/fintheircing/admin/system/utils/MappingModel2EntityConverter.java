@@ -37,9 +37,17 @@ public final class MappingModel2EntityConverter {
         return systemHoliday;
     }
 
-    public static final SystemBrand CONVERTERFORBRANDMODEL(UserTokenInfo userInfo, BrandModel model){
+    public static final SystemBrand CONVERTERFORBRANDMODEL(UserTokenInfo userInfo, BrandModel model) throws SystemException{
         SystemBrand systemBrand = new SystemBrand();
-        systemBrand.setApplyOn(model.getApplyOn());
+        if ((SystemBrand.APPLYON_PC.equals(model.getApplyOn())
+                ||SystemBrand.APPLYON_APP.equals(model.getApplyOn()))
+                &&(SystemBrand.STATUS_ACTIVE.equals(model.getStatus())
+                ||SystemBrand.STATUS_DISABLED.equals(model.getStatus()))){
+            systemBrand.setApplyOn(model.getApplyOn());
+            systemBrand.setStatus(model.getStatus());
+        }else {
+            throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
+        }
         systemBrand.setBrandName(model.getName());
         systemBrand.setUuid(model.getUuid());
         if (model.getCreatedTime()==0) {
