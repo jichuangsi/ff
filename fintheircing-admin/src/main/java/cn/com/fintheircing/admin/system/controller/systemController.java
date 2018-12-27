@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/system")
@@ -123,7 +124,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @DeleteMapping("/deleteBrands")
-    public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo,IdModel model){
+    public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo,@RequestBody IdModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
@@ -134,7 +135,7 @@ public class systemController {
     }
 
 
-    @ApiOperation(value = "修改轮播图", notes = "")
+    @ApiOperation(value = "修改轮播图form表单提交", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
@@ -156,11 +157,11 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getBrands")
-    public ResponseModel<PageInfo<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo,@RequestBody BrandModel model){
+    public ResponseModel<List<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
-        return ResponseModel.sucess("",systemService.getPageBrands(model));
+        return ResponseModel.sucess("",systemService.getBrands());
     }
 
     private Boolean IsManage(UserTokenInfo userInfo){

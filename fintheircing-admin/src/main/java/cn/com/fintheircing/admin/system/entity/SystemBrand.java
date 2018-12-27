@@ -13,8 +13,8 @@ public class SystemBrand extends AbstractEntity{
     public static final String APPLYON_PC = "0";
     public static final String APPLYON_APP = "1";
 
-    public static final String STATUS_ACTIVE = "0";
-    public static final String STATUS_DISABLED = "1";
+/*    public static final String STATUS_ACTIVE = "0";
+    public static final String STATUS_DISABLED = "1";*/
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
@@ -23,7 +23,7 @@ public class SystemBrand extends AbstractEntity{
     private String brandName;
     private byte[] content;
     private String applyOn;
-    private String status;
+/*    private String status;
 
     public String getStatus() {
         return status;
@@ -31,7 +31,7 @@ public class SystemBrand extends AbstractEntity{
 
     public void setStatus(String status) {
         this.status = status;
-    }
+    }*/
 
     public String getUuid() {
         return uuid;
