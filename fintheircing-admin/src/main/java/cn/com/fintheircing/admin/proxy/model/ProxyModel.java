@@ -8,7 +8,7 @@ public class ProxyModel {
     private String proxyId;
     private String proxyNum;
     private String proxyName;
-    private Integer proxyPosition;
+    private Integer roleGrade;
     private String linkMan;
     private String linkPhone;
     private String status;
@@ -130,12 +130,12 @@ public class ProxyModel {
         this.proxyName = proxyName;
     }
 
-    public Integer getProxyPosition() {
-        return proxyPosition;
+    public Integer getRoleGrade() {
+        return roleGrade;
     }
 
-    public void setProxyPosition(Integer proxyPosition) {
-        this.proxyPosition = proxyPosition;
+    public void setRoleGrade(Integer roleGrade) {
+        this.roleGrade = roleGrade;
     }
 
     public String getLinkMan() {

@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.login.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.common.entity.SystemBlackList;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;
@@ -11,12 +12,14 @@ import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -39,9 +42,7 @@ public class AdminLoginService {
     private RedisTemplate redisTemplate;
 
 
-    public Boolean isExistBlack(String ip){
-        return blackListRepository.countBlackListByIpAddress(ip)>0;
-    }
+
 
 
     public String adminLogin( UserTokenInfo model) throws AdminLoginException{
@@ -63,6 +64,22 @@ public class AdminLoginService {
         if(StringUtils.isEmpty(token)) throw new AdminLoginException(ResultCode.LOGIN_ADMIN_ERR);
         redisTemplate.opsForValue().set(tokrnPre+model.getUuid(),token,longTime, TimeUnit.MINUTES);
         return token;
+    }
+
+    //查是否存在黑名单
+    public Boolean isExistBlackList(String ip){
+        List<SystemBlackList> systemBlackLists = getBlackList();
+        for (SystemBlackList s:systemBlackLists){
+            if (s.getIpAddress().equals(ip)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Cacheable(cacheNames = "black_list")
+    public List<SystemBlackList> getBlackList(){
+        return blackListRepository.findAll();
     }
 
     private UserTokenInfo changeAdmin(UserTokenInfo model){

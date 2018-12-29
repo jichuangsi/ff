@@ -1,14 +1,15 @@
 package cn.com.fintheircing.admin.proxy.dao.mapper;
 
-import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.Map;
 
 public interface ICommissionMapper {
 
 
     @Update("<script>UPDATE proxy_commission SET " +
             "`back_commission` = #{backCommission}, `day_commission` = #{dayCommission}," +
-            " `month_commission` = #{monthCommission},update_user_id = #{proxyId}," +
-            "update_user_name = #{proxyName},updated_time=#{updateTime}  WHERE `saleman_id` = #{proxyId}  and delete_flag=0</script>")
-    int updateCommission(ProxyModel proxyModel);
+            " `month_commission` = #{monthCommission},update_user_id = #{updateId}," +
+            "update_user_name = #{updateName},updated_time=#{updateTime}  WHERE `saleman_id` = #{saleId}  and delete_flag=0</script>")
+    int updateCommission(Map<String,Object> params);
 }

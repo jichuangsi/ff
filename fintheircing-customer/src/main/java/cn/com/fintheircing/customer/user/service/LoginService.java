@@ -1,7 +1,6 @@
 package cn.com.fintheircing.customer.user.service;
 
 import cn.com.fintheircing.customer.common.constant.ResultCode;
-import cn.com.fintheircing.customer.user.dao.repository.IBlackListRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
@@ -28,8 +27,6 @@ public class LoginService {
     @Resource
     private RedisTemplate<String, String> redisTemplate;
     @Resource
-    private IBlackListRepository blackListRepository;
-    @Resource
     private TokenService tokenService;
 
     @Value("${custom.token.prefix}")
@@ -37,11 +34,8 @@ public class LoginService {
     @Value("${custom.token.longTime}")
     private long longTime;
 
-    public Boolean isExistBlack(String ipAddress){
-        return blackListRepository.countBlackListByIpAddress(ipAddress)>0;
-    }
 
-    public String userLogin(UserTokenInfo model, String oldtoken) throws LoginException{
+    public String userLogin(UserTokenInfo model) throws LoginException{
         UserTokenInfo user = registerService.getUserForLogin(model);
         if(user==null){
             throw new LoginException(ResultCode.LOGIN_USER_NOTEXIST);

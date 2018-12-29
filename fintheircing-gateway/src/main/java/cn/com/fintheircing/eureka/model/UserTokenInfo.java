@@ -14,8 +14,9 @@ public class UserTokenInfo {
     private String phone;
     private String status;
     private String userName;
-    private Integer position;
     private String displayname;
+    private Integer roleGrade; //区别管理和用户
+    private String roleName;;
 
     private String role;
 
@@ -75,12 +76,20 @@ public class UserTokenInfo {
         this.userName = userName;
     }
 
-    public Integer getPosition() {
-        return position;
+    public Integer getRoleGrade() {
+        return roleGrade;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
+    public void setRoleGrade(Integer roleGrade) {
+        this.roleGrade = roleGrade;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public String getDisplayname() {

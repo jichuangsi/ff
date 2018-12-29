@@ -17,7 +17,7 @@ public final class MappingModel2EntityConverter {
                 UUID.randomUUID().toString().replace("-",""):proxyModel.getProxyId());  //id
         admin.setPhone(proxyModel.getLinkPhone());  //联系电话
         admin.setName(proxyModel.getLinkMan());   //联系人
-        admin.setPosition(proxyModel.getProxyPosition());  //代理职位
+       admin.setRoleGrade(proxyModel.getRoleGrade());  //角色
         admin.setStatus(proxyModel.getStatus());   //状态
         admin.setUserName(proxyModel.getProxyName());   //代理名称
         admin.setProxyNum(proxyModel.getProxyNum());   //代理代码

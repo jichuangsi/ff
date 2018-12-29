@@ -1,6 +1,5 @@
-package cn.com.fintheircing.admin.promisedUrls.entity;
+package cn.com.fintheircing.admin.common.entity;
 
-import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -8,13 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class UrlsRelations extends AbstractEntity{
+public class AdminRole  extends AbstractEntity{
+
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
-    private String roleId;
-    private String urlId;
+    private Integer roleGrade;
+    private String roleName;
 
     public String getUuid() {
         return uuid;
@@ -24,19 +24,19 @@ public class UrlsRelations extends AbstractEntity{
         this.uuid = uuid;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
-    public String getUrlId() {
-        return urlId;
+    public Integer getRoleGrade() {
+        return roleGrade;
     }
 
-    public void setUrlId(String urlId) {
-        this.urlId = urlId;
+    public void setRoleGrade(Integer roleGrade) {
+        this.roleGrade = roleGrade;
     }
 }

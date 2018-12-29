@@ -44,13 +44,8 @@ custom:
     picSavePath: F://codeImg
   urlKey:
     searchKey: url_val_search
-    positionKey: position_
     roleKey: role_
-    manageKey: position_0_role_0
-    proxyOneKey: position_1_role_0
-    proxyTwoKey: position_2_role_0
-    employKey: position_3_role_0
-    userKey: position_0_role_1
+
   system:
     sdformat: yyyyMMdd-HH:mm:ss
     hms: -00:00:00

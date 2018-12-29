@@ -5,23 +5,33 @@ public class UrlsModel {
     private String url;
     private String urlName;
 
-    private Integer position;
-    private String role;
+    private Integer roleGrade;
+    private String roleName;
 
-    public Integer getPosition() {
-        return position;
+    private String roleId;
+
+    public Integer getRoleGrade() {
+        return roleGrade;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
+    public void setRoleGrade(Integer roleGrade) {
+        this.roleGrade = roleGrade;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
     public String getId() {

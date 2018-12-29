@@ -1,8 +1,9 @@
 package cn.com.fintheircing.admin.proxy.service;
 
-import cn.com.fintheircing.admin.common.constant.PositionCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.constant.RoleCode;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.MatrixToImageWriter;
@@ -18,7 +19,6 @@ import cn.com.fintheircing.admin.proxy.entity.ProxyCommission;
 import cn.com.fintheircing.admin.proxy.entity.ProxySpread;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
 import cn.com.fintheircing.admin.proxy.model.EmployeeModel;
-import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import cn.com.fintheircing.admin.proxy.model.SpreadModel;
 import cn.com.fintheircing.admin.proxy.utils.MappingModel2EntityConverter;
@@ -36,10 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProxyService {
@@ -79,10 +76,10 @@ public class ProxyService {
     public PageInfo<ProxyModel> getProxyList(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
         proxyModel.setProxyId(userInfo.getUuid());
         PageInfo<ProxyModel> pageInfo = new PageInfo<ProxyModel>();
-        if(PositionCode.POSITION_MANAGE.getIndex().equals(userInfo.getPosition())){
+        if(RoleCode.ROLE_MANAGE.getIndex().equals(userInfo.getRoleGrade())){
             pageInfo = manageProxy(userInfo,proxyModel);
         }else {
-            proxyModel.setProxyPosition(userInfo.getPosition());
+            proxyModel.setRoleGrade(userInfo.getRoleGrade());
             proxyModel.setProxyId(userInfo.getUuid());
             pageInfo = commonProxy(proxyModel);
         }
@@ -93,20 +90,19 @@ public class ProxyService {
     @Transactional(rollbackFor=Exception.class)
     public String saveProxy(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
         AdminClientInfo info = MappingModel2EntityConverter.CONVERTERFORPROXYMODEL(proxyModel);
-        info.setRole(AdminClientInfo.ROLE_ADMIN);
         info.setBossId(userInfo.getUuid());
-        if((proxyModel.getProxyPosition()==null||
-                !PositionCode.POSITION_EMP.getIndex().equals(proxyModel.getProxyPosition()))
-                &&userInfo.getPosition() < PositionCode.POSITION_PROXY_TWO.getIndex()) {
-            info.setPosition(userInfo.getPosition() + 1);
-        } else if(PositionCode.POSITION_EMP.getIndex().equals(proxyModel.getProxyPosition())){//添加员工，可以小改，添加管理员
-            info.setPosition(proxyModel.getProxyPosition());
-        } else {
+        /*userInfo.setRoleGrade(1);*/
+        if(RoleCode.ROLE_EMP.getIndex()==proxyModel.getRoleGrade()) {//添加员工
+           info.setRoleGrade(proxyModel.getRoleGrade());
+        } else if(proxyModel.getRoleGrade()==userInfo.getRoleGrade()+1){//非添加员工，只能创建低于自己一级
+            info.setRoleGrade(userInfo.getRoleGrade() + 1);
+        }/*else if (proxyModel.getRoleGrade()==100){   //后要注释，模拟注册系统管理员
+            info.setRoleGrade(RoleCode.ROLE_MANAGE.getIndex());
+        }*/ else {
             throw new ProxyException(ResultCode.POWER_VISIT_ERR);
         }
         info.setStatus(AdminClientInfo.STATUS_EXIST);
-        info.setRole(AdminClientInfo.ROLE_ADMIN);
-        info.setProxyNum(createdInvitCode(0,PositionCode.getName(info.getPosition())));
+        info.setProxyNum(createdInvitCode(0, RoleCode.getName(info.getRoleGrade())));
         info.setCreatorId(userInfo.getUuid());
         info.setCreatorName(userInfo.getUserName());
         info.setUpdatedTime(new Date());
@@ -139,19 +135,20 @@ public class ProxyService {
                 proxyModel.getDayCommission()==null||proxyModel.getDayCommission()==0
                 ||proxyModel.getBackCommission()==null||proxyModel.getBackCommission()==0){
             return ResultCode.COMMISSION_NULL_ERR;
+        }else {
+            ProxyCommission commission = new ProxyCommission();
+            commission.setBackCommission(proxyModel.getBackCommission());
+            commission.setDayCommission(proxyModel.getDayCommission());
+            commission.setMonthCommission(proxyModel.getMonthCommission());
+            commission.setSalemanId(info.getUuid());
+            commission.setCreatedTime(new Date());
+            commission.setCreatorId(userInfo.getUuid());
+            commission.setCreatorName(userInfo.getUserName());
+            commission.setUpdatedTime(new Date());
+            commission.setUpdateUserId(userInfo.getUuid());
+            commission.setUpdateUserName(userInfo.getUserName());
+            commissionRepository.save(commission);
         }
-        ProxyCommission commission = new ProxyCommission();
-        commission.setBackCommission(proxyModel.getBackCommission());
-        commission.setDayCommission(proxyModel.getDayCommission());
-        commission.setMonthCommission(proxyModel.getMonthCommission());
-        commission.setSalemanId(info.getUuid());
-        commission.setCreatedTime(new Date());
-        commission.setCreatorId(userInfo.getUuid());
-        commission.setCreatorName(userInfo.getUserName());
-        commission.setUpdatedTime(new Date());
-        commission.setUpdateUserId(userInfo.getUuid());
-        commission.setUpdateUserName(userInfo.getUserName());
-        commissionRepository.save(commission);
         return "success";
     }
 
@@ -176,15 +173,20 @@ public class ProxyService {
 
     //修改个人收佣信息
     public void updateCommission(UserTokenInfo userInfo,ProxyModel model) throws ProxyException{
+        Map<String,Object> params = new HashMap<String,Object>();
         try {
-            model.setProxyId(userInfo.getUuid());
-            model.setUpdateTime(new Date());
-            model.setProxyName(userInfo.getUserName());
+            params.put("backCommission",model.getBackCommission());
+            params.put("dayCommission",model.getDayCommission());
+            params.put("monthCommission",model.getMonthCommission());
+            params.put("updateId",userInfo.getUuid());
+            params.put("updateName",userInfo.getUserName());
+            params.put("updateTime",new Date());
+            params.put("saleId",model.getProxyId());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ProxyException(ResultCode.POWER_VISIT_ERR);
         }
-        if( !(commissionMapper.updateCommission(model)>0)){
+        if( !(commissionMapper.updateCommission(params)>0)){
            throw new ProxyException(ResultCode.UPDATE_ERR);
        }
     }
@@ -202,11 +204,11 @@ public class ProxyService {
         PageHelper.startPage(spreadModel.getPageIndex(),spreadModel.getPageSize());
         spreadModel.setId(userInfo.getUuid());
         List<SpreadModel> spreadModels = new ArrayList<SpreadModel>();
-        if(PositionCode.POSITION_EMP.getIndex().equals(spreadModel.getPosition())){
-            spreadModel.setPosition(userInfo.getPosition());
+        if(RoleCode.ROLE_EMP.getIndex().equals(spreadModel.getPosition())){
+            spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadEmp(spreadModel);
         }else{
-            spreadModel.setPosition(userInfo.getPosition());
+            spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadProxy(spreadModel);
         }
         PageInfo<SpreadModel> page = new PageInfo<>(spreadModels);
@@ -225,7 +227,7 @@ public class ProxyService {
                     model.getProxyModels().add(proxyModel);
                 }
             }
-            if(PositionCode.POSITION_PROXY_ONE.getIndex().equals(model.getProxyPosition())){
+            if(RoleCode.ROLE_PROXY_ONE.getIndex().equals(model.getRoleGrade())){
                 proxyModels.add(model);
             }
         });

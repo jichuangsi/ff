@@ -35,7 +35,7 @@ public class ProxyController {
                 ||proxyModel.getPageSize()==null||proxyModel.getPageSize()==0)
             return ResponseModel.fail("", ResultCode.PARAM_ERR_MSG);
         /*admin.setUuid("123");
-        admin.setPosition(PositionCode.POSITION_MANAGE.getIndex());*/
+        admin.setPosition(RoleCode.POSITION_MANAGE.getIndex());*/
         try {
             return ResponseModel.sucess("",proxyService.getProxyList(admin,proxyModel));
         } catch (ProxyException e) {
@@ -118,7 +118,10 @@ public class ProxyController {
     })
     @PostMapping("/getSpread")
     public ResponseModel<PageInfo<SpreadModel>> getSpread(@ModelAttribute UserTokenInfo userInfo,@RequestBody SpreadModel spreadModel){
-
+        if (spreadModel.getPageIndex()==0||spreadModel.getPageIndex()==null
+                ||spreadModel.getPageSize()==0||spreadModel.getPageSize()==null){
+            return ResponseModel.fail("",ResultCode.PARAM_MISS_MSG);
+        }
         return ResponseModel.sucess("",proxyService.getSpreads(userInfo,spreadModel));
     }
 

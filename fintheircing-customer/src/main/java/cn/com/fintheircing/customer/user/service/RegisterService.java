@@ -2,13 +2,14 @@ package cn.com.fintheircing.customer.user.service;
 
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
+import cn.com.fintheircing.customer.common.constant.RoleCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserClientInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
-import cn.com.fintheircing.customer.user.exception.RegisterheckExistExcption;
+import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
@@ -51,16 +52,16 @@ public class RegisterService {
 	private String smsMqDestName;
 
 	// 根据手机号获取验证码
-	public String getValCode(String phoneNo) throws RegisterheckExistExcption {
+	public String getValCode(String phoneNo) throws RegisterheckExistException {
 
 		synchronized (phoneNo.intern()) {
 			// 使用手机号作为用户名
 			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
-				throw new RegisterheckExistExcption(phoneNo + "已存在");
+				throw new RegisterheckExistException(phoneNo + "已存在");
 			}
 			// 看缓存中是否存在发送验证码记录
 			if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
-				throw new RegisterheckExistExcption(valZSendInterSeconds + "秒内只能发送一次");
+				throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
 			}
 			String code = getRandomNumCode(valCodeLength);
 			Map<String, String> dataMap = new HashMap<>();
@@ -77,24 +78,24 @@ public class RegisterService {
 
 	// 新增注册
 	@Transactional
-	public void register(RegisterModel registerModel) throws RegisterheckExistExcption {
+	public void register(RegisterModel registerModel) throws RegisterheckExistException {
 		String phoneNo = registerModel.getPhoneNo();
 		String pwd = registerModel.getPwd();
 		String valCode = registerModel.getValCode();
 		synchronized (phoneNo.intern()) {
 			// 使用手机号作为用户名
 			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
-				throw new RegisterheckExistExcption(phoneNo + "已存在");
+				throw new RegisterheckExistException(phoneNo + "已存在");
 			}
 
 			// 取缓存中是否存在发送验证码记录
 			String valCodeInCache = redisTemplate.opsForValue().get(valsmsPre + phoneNo);
 			// 对比验证码
 			if (StringUtils.isEmpty(valCodeInCache)) {
-				throw new RegisterheckExistExcption("验证码不存在或已过期");
+				throw new RegisterheckExistException("验证码不存在或已过期");
 			}
 			if (!valCodeInCache.equals(valCode)) {
-				throw new RegisterheckExistExcption("验证码不正确");
+				throw new RegisterheckExistException("验证码不正确");
 			}
 			//删除验证码缓存
 			redisTemplate.delete(valsmsPre + phoneNo);
@@ -106,7 +107,7 @@ public class RegisterService {
 			userClientInfo.setPhone(phoneNo);
 			userClientInfo.setStatus(UserClientInfo.STATUS_INIT);
 			userClientInfo.setCer(UserClientInfo.CER_NOT);
-			userClientInfo.setRole(UserClientInfo.ROLE_USER);//添加区别用户管理员
+			userClientInfo.setRoleGrade(RoleCode.ROLE_USER.getIndex());//添加区别用户管理员
 			userClientInfo = userInfoRepository.save(userClientInfo);
 			
 			//新增登录信息
@@ -114,6 +115,7 @@ public class RegisterService {
 			userClientLoginInfo.setLoginName(phoneNo);//手机号做登录名
 			//对登录密码做SHA256处理
 			userClientLoginInfo.setPwd(CommonUtil.toSha256(pwd));
+			userClientLoginInfo.setClientInfoId(userClientInfo.getUuid());//登录信息和用户信息关联
 			userClientLoginInfoRepository.save(userClientLoginInfo);
 			
 			//创建待办注册审核任务
@@ -123,7 +125,7 @@ public class RegisterService {
 			model.setPhoneNo(phoneNo);
 			ResponseModel<Object> reponse = todoTaskService.createRegTodoTask(model);
 			if(!ResultCode.SUCESS.equals(reponse.getCode())) {
-				throw new RegisterheckExistExcption("注册审核暂时停止");
+				throw new RegisterheckExistException("注册审核暂时停止");
 			}
 		}
 

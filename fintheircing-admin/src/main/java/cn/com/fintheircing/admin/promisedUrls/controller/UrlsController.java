@@ -1,11 +1,12 @@
 package cn.com.fintheircing.admin.promisedUrls.controller;
 
-import cn.com.fintheircing.admin.common.constant.PositionCode;
+import cn.com.fintheircing.admin.common.constant.RoleCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.promisedUrls.exception.UrlException;
+import cn.com.fintheircing.admin.promisedUrls.model.RoleModel;
 import cn.com.fintheircing.admin.promisedUrls.model.UrlsModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import io.swagger.annotations.Api;
@@ -99,8 +100,7 @@ public class UrlsController {
      * @param userInfo
      * @return
      */
-    @ApiOperation(value = "找出所有的url的id，position[0(管理员)" +
-            ",1(一级代理),2(二级代理),3(员工)],role[0(管理人员),1(普通用户)]", notes = "")
+    @ApiOperation(value = "找出所有的url的id", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
@@ -113,6 +113,17 @@ public class UrlsController {
         return ResponseModel.sucess("",urlService.getAllUrls());
     }
 
+
+    //还没写
+    @ApiOperation(value = "找出所有的角色position和角色", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getAllRoles")
+    public ResponseModel<List<RoleModel>> getAllRoles(){
+
+        return ResponseModel.sucessWithEmptyData("");
+    }
 
 
 
@@ -150,7 +161,7 @@ public class UrlsController {
     }
 
     private Boolean IsManage(UserTokenInfo userInfo){
-        if (PositionCode.POSITION_MANAGE.getIndex().equals(userInfo.getPosition())){
+        if (RoleCode.ROLE_MANAGE.getIndex().equals(userInfo.getRoleGrade())){
             return true;
         }
         return false;
