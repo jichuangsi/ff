@@ -1,29 +1,28 @@
-package cn.com.fintheircing.admin.UserManag.service.Impl;
+package cn.com.fintheircing.admin.usermanag.service.Impl;
 
 import cn.com.fintheircing.admin.Repository.AdminClientInfoRepository;
 import cn.com.fintheircing.admin.Repository.AskMoneyInfoRepository;
 import cn.com.fintheircing.admin.Repository.UserClientInfoRepository;
 import cn.com.fintheircing.admin.Repository.contactInfoRepository;
 import cn.com.fintheircing.admin.UserManag.Excption.UserServiceException;
-import cn.com.fintheircing.admin.UserManag.dao.mapper.userMapper;
 import cn.com.fintheircing.admin.UserManag.mapper.fundsAskMapper;
-import cn.com.fintheircing.admin.UserManag.model.AdminClientInfModel;
 import cn.com.fintheircing.admin.UserManag.model.AskMoneyInfoModel;
 import cn.com.fintheircing.admin.UserManag.model.ContactInfoModel;
 import cn.com.fintheircing.admin.UserManag.service.UserService;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.entity.AskMoneyInfo;
 import cn.com.fintheircing.admin.common.entity.Contact.contactInfo;
 import cn.com.fintheircing.admin.common.entity.UserClientInfo;
-import cn.com.fintheircing.admin.common.entity.userInfo.AdminClientInfo;
 import cn.com.fintheircing.admin.common.utils.EntityToModel;
 import cn.com.fintheircing.admin.common.utils.ModelToEntity;
+import cn.com.fintheircing.admin.usermanag.dao.mapper.userMapper;
+import cn.com.fintheircing.admin.usermanag.model.AdminClientInfModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 @Service
 @Transactional
@@ -88,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AdminClientInfModel changeStatus(String id) throws UserServiceException {
         try {
-            AdminClientInfo oneByUuid = adminClientInfoRepository.findOneById(id);
+            AdminClientInfo oneByUuid = adminClientInfoRepository.findOneByUuid(id);
 
             if (StringUtils.isEmpty(id)){
                 throw new UserServiceException(ResultCode.PARAM_MISS_MSG);
@@ -143,7 +142,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AdminClientInfModel returnStatus(String id) throws UserServiceException{
         try {
-            AdminClientInfo oneByUuid = adminClientInfoRepository.findOneById(id);
+            AdminClientInfo oneByUuid = adminClientInfoRepository.findOneByUuid(id);
 
             if (StringUtils.isEmpty(id)){
                 throw new UserServiceException(ResultCode.PARAM_MISS_MSG);
@@ -238,24 +237,24 @@ public class UserServiceImpl implements UserService {
         return EntityToModel.coverContactInfo(all);
     }
 
-    private List<AdminClientInfModel> convertQuestionList(List<AdminClientInfo> userInfos){
-        List<AdminClientInfModel> models = new ArrayList<>();
-        List<UserClientInfo> clientInfos=null;
-        userInfos.forEach(userInfo -> {
-            //根据手机号查询UserClientInfo
-            UserClientInfo oneByUuid = userClientInfoRepository.findOneByUserId(userInfo.getUserId());
-            clientInfos.add(oneByUuid);
-            EntityToModel.coverUserClientInfo(oneByUuid);
-        });
-//        models.add(EntityToModel.coverUserInfo(userInfos,oneByUuid));
-        return models;
-    }
+//    private List<AdminClientInfModel> convertQuestionList(List<AdminClientInfo> userInfos){
+//        List<AdminClientInfModel> models = new ArrayList<>();
+//        List<UserClientInfo> clientInfos=null;
+//        userInfos.forEach(userInfo -> {
+//            //根据手机号查询UserClientInfo
+//            UserClientInfo oneByUuid = userClientInfoRepository.findOneByUserId(userInfo.getUserId());
+//            clientInfos.add(oneByUuid);
+//            EntityToModel.coverUserClientInfo(oneByUuid);
+//        });
+////        models.add(EntityToModel.coverUserInfo(userInfos,oneByUuid));
+//        return models;
+//    }
 
     private AdminClientInfModel convertQuestionList(AdminClientInfo userInfo){
         AdminClientInfModel model =new AdminClientInfModel();
             //根据手机号查询UserClientInfo
-        UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(userInfo.getUserId());
-         return EntityToModel.coverUserInfo(userInfo,oneByPhone);
+        UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(userInfo.getUuid());
+         return EntityToModel.coverAdminClientInfo(userInfo,oneByPhone);
 
     }
     private AdminClientInfModel convertentity(AdminClientInfModel userInfo){
@@ -264,7 +263,7 @@ public class UserServiceImpl implements UserService {
         UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(userInfo.getPhone());
         AdminClientInfo adminClientInfo = ModelToEntity.cover2entity(userInfo);
         AdminClientInfo save = adminClientInfoRepository.save(adminClientInfo);
-       return EntityToModel.coverUserInfo(save,oneByPhone);
+       return EntityToModel.coverAdminClientInfo(save,oneByPhone);
 
     }
 }

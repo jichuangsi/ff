@@ -1,5 +1,6 @@
-package cn.com.fintheircing.admin.common.entity;
+package cn.com.fintheircing.admin.common.entity.userInfo;
 
+import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -21,9 +22,10 @@ public class AdminClientInfo extends AbstractEntity {
     private String status;
     private String name;
     private String proxyNum;
-    private String userName;
-    private String phone;
-    private String remarks;  //备注
+    /**
+     * 备注
+     */
+    private String remarks;
     private String bossId;  //上级id
     private String role;  //固定字段，管理员
 
@@ -41,14 +43,6 @@ public class AdminClientInfo extends AbstractEntity {
 
     public void setProxyNum(String proxyNum) {
         this.proxyNum = proxyNum;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getUuid() {
@@ -81,14 +75,6 @@ public class AdminClientInfo extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getRemarks() {

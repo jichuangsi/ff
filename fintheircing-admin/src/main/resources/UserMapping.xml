@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.fintheircing.admin.usermanag.dao.userMapper">
+    <select id="findByConfition"  resultType="AdminClientInfModel" parameterType="cn.com.fintheircing.admin.usermanag.model.AdminClientInfModel">
+        SELECT
+        u.user_name AS queryModel.userName,
+        u.user_Id AS queryModel.userId,
+        u.id AS queryModel.id,
+        a.proxyNum AS queryModel.proxyId,
+        u.phone AS queryModel.phone,
+        u.source As queryModel.source,
+        u.create_time AS queryModel.createTime,
+        u.cer AS queryModel.cer,
+        a.proxyName As queryModel.proxyName,
+        FROM AdminClientInfo a left join UserClientInfo u on a.userid = u.userid
+        <where>
+            <if test="queryModel!=null">
+                <if test="queryModel.userId!=null and queryModel.userId!=''">
+                    and u.userId = #{%queryModel.userId%}
+                </if>
+                <if test="queryModel.proxyNum!=null and queryModel.proxyNum!=''">
+                    AND a.proxyNum  = #{%queryModel.proxyNum%}
+                </if>
+                <if test="queryModel.phone!=null and queryModel.phone!=''">
+                    AND u.phone  = #{%queryModel.phone%}
+                </if>
+                <if test="queryModel.userName!=null and queryModel.userName!=''">
+                    AND u.userName  = #{%queryModel.userName%}
+                </if>
+                <if test="queryModel.created_time!=null and queryModel.created_time!=''">
+                    AND u.created_time  &gt;= #{start_time}
+                </if>
+                <if test="queryModel.created_time!=null and queryModel.created_time!=''">
+                    AND u.created_time  &lt;=#{end_time}
+                </if>
+
+                <if test="queryModel.bossid!=null and queryModel.bossid!=''">
+                    AND a.bossid  = #{%queryModel.bossid%}
+                </if>
+
+                <if test="queryModel.uuid!=null and queryModel.uuid!=''">
+                    AND u.uuid  = #{%queryModel.uuid%}
+                </if>
+            </if>
+        </where>
+    </select>
+</mapper>
