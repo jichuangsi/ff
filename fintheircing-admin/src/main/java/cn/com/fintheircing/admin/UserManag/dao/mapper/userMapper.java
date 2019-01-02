@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.UserManag.dao.mapper;
+package cn.com.fintheircing.admin.usermanag.dao.mapper;
 
 import cn.com.fintheircing.admin.UserManag.model.AdminClientInfModel;
 import org.apache.ibatis.annotations.Mapper;

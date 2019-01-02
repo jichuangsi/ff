@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.UserManag.dao.mapper;
+package cn.com.fintheircing.admin.usermanag.dao.mapper;
 
 import cn.com.fintheircing.admin.UserManag.model.AskMoneyInfoModel;
 import cn.com.fintheircing.admin.common.entity.AskMoneyInfo;

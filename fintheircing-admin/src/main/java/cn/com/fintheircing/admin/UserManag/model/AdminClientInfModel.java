@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.UserManag.model;
+package cn.com.fintheircing.admin.usermanag.model;
 
 import cn.com.fintheircing.admin.common.model.AbstractEntityModel;
 
