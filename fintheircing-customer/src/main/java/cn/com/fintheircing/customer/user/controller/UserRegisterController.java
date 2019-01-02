@@ -33,6 +33,7 @@ public class UserRegisterController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "phoneNo", value = "手机号", required = true, dataType = "String") })
 	@GetMapping("/{phoneNo}")
+	@CrossOrigin
 	public ResponseModel<String> getRegisterValCode(@PathVariable String phoneNo) {
 
 		if (StringUtils.isEmpty(phoneNo) || !CommonUtil.isPhone(phoneNo)) {
@@ -52,6 +53,7 @@ public class UserRegisterController {
 	@ApiImplicitParams({
 			})
 	@PostMapping("/register")
+	@CrossOrigin
 	public ResponseModel<String> register(@Validated @RequestBody RegisterModel registerModel) {
 		
 		try {

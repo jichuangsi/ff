@@ -1,8 +1,10 @@
 package cn.com.fintheircing.admin.feign;
 
+import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
+import cn.com.fintheircing.admin.system.service.SystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @Api("开放feign")
@@ -22,6 +25,8 @@ public class FeignController {
 
     @Resource
     private AdminLoginService adminLoginService;
+    @Resource
+    private SystemService systemService;
 
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
@@ -41,5 +46,12 @@ public class FeignController {
     @RequestMapping("/isExistBlackList")
     public Boolean isExistBlackList(@RequestParam String ip){
         return adminLoginService.isExistBlackList(ip);
+    }
+
+    @ApiOperation(value = "传递role角色", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getRoles")
+    public List<RoleModel> getRoles(){
+        return systemService.getRoles();
     }
 }

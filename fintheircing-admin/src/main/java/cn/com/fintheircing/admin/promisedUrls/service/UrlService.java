@@ -1,13 +1,12 @@
 package cn.com.fintheircing.admin.promisedUrls.service;
 
-import cn.com.fintheircing.admin.common.constant.RoleCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.constant.RoleCodes;
 import cn.com.fintheircing.admin.common.entity.AdminRole;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.promisedUrls.dao.mapper.IPermisedUrlsMapper;
 import cn.com.fintheircing.admin.promisedUrls.dao.mapper.IUrlsRelationsMapper;
-import cn.com.fintheircing.admin.promisedUrls.dao.repository.IAdminRoleRepository;
 import cn.com.fintheircing.admin.promisedUrls.dao.repository.IPermisedUrlsRepository;
 import cn.com.fintheircing.admin.promisedUrls.dao.repository.IUrlsRelationsRepository;
 import cn.com.fintheircing.admin.promisedUrls.entity.UrlsPermised;
@@ -17,6 +16,8 @@ import cn.com.fintheircing.admin.promisedUrls.model.JsonMap;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.model.UrlsModel;
 import cn.com.fintheircing.admin.promisedUrls.utils.MappingEntity2ModelConverter;
+import cn.com.fintheircing.admin.system.dao.repository.IAdminRoleRepository;
+import cn.com.fintheircing.admin.system.service.SystemService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class UrlService {
     private RedisTemplate<String,String> redisTemplate;
     @Resource
     private IAdminRoleRepository adminRoleRepository;
+    @Resource
+    private SystemService systemService;
 
 
     @Value("${custom.urlKey.searchKey}")
@@ -156,19 +159,19 @@ public class UrlService {
         for (AdminRole adminRole:roles) {
             List<UrlsModel> urlsModel = new ArrayList<UrlsModel>();
             urlsModels.forEach(model -> {
-                if (RoleCode.ROLE_MANAGE.getIndex().equals(adminRole.getRoleGrade())) {
+                if (RoleCodes.ROLE_KEY_STRING.get("M")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
-                } else if (RoleCode.ROLE_PROXY_ONE.getIndex().equals(adminRole.getRoleGrade())) {
+                } else if (RoleCodes.ROLE_KEY_STRING.get("A")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
-                } else if (RoleCode.ROLE_PROXY_TWO.getIndex().equals(adminRole.getRoleGrade())) {
+                } else if (RoleCodes.ROLE_KEY_STRING.get("S")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
-                } else if (RoleCode.ROLE_EMP.getIndex().equals(adminRole.getRoleGrade())) {
+                } else if (RoleCodes.ROLE_KEY_STRING.get("E")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
-                } else if (RoleCode.ROLE_FINANCE.getIndex().equals(adminRole.getRoleGrade())) {
+                } else if (RoleCodes.ROLE_KEY_STRING.get("R")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
-                } else if (RoleCode.ROLE_RISK.getIndex().equals(adminRole.getRoleGrade())) {
+                } else if (RoleCodes.ROLE_KEY_STRING.get("F")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
-                } else if (RoleCode.ROLE_USER.getIndex().equals(adminRole.getRoleGrade())) {
+                } else if (RoleCodes.ROLE_KEY_STRING.get("U")==adminRole.getRoleGrade()) {
                     urlsModel.add(model);
                 }
             });

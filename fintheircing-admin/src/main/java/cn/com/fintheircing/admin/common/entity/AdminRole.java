@@ -15,6 +15,15 @@ public class AdminRole  extends AbstractEntity{
     private String uuid;
     private Integer roleGrade;
     private String roleName;
+    private String roleSign;
+
+    public String getRoleSign() {
+        return roleSign;
+    }
+
+    public void setRoleSign(String roleSign) {
+        this.roleSign = roleSign;
+    }
 
     public String getUuid() {
         return uuid;

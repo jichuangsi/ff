@@ -1,13 +1,15 @@
 package cn.com.fintheircing.admin.common.constant;
 
-public enum RoleCode {
-    ROLE_MANAGE("M",0),ROLE_PROXY_ONE("A",1),ROLE_PROXY_TWO("S",2)
-    ,ROLE_EMP("E",3),ROLE_RISK("R",4),ROLE_FINANCE("F",5),ROLE_USER("U",6);
+
+//合约操作
+public enum  ControlCode {
+    CONTROL_CRETE("创建合约",0),CONTROL_PROMISED("追加保证金",1),CONTROL_SHUT("终止操盘",2)
+    ,CONTROL_PAYINTEREST("自动付息",3),CONTROL_OPERATE("追加操盘",4),CONTROL_GAIN("提取利润",5);
 
     private String name;
     private Integer index;
 
-    private RoleCode(String name, Integer index){
+    private ControlCode(String name, Integer index){
         this.name = name;
         this.index = index;}
 
@@ -27,7 +29,7 @@ public enum RoleCode {
         this.index = index;
     }
     public static String getName(Integer index) {
-        for (RoleCode c : RoleCode.values()) {
+        for (ControlCode c : ControlCode.values()) {
             if (c.getIndex() == index) {
                 return c.name;
             }
@@ -35,8 +37,8 @@ public enum RoleCode {
         return null;
     }
 
-    public static RoleCode getPosition(String name) {
-        for (RoleCode c : RoleCode.values()) {
+    public static ControlCode getPosition(String name) {
+        for (ControlCode c : ControlCode.values()) {
             if (c.getName().equalsIgnoreCase(name)) {
                 return c;
             }
