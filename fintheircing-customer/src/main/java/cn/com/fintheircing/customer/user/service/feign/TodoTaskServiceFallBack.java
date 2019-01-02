@@ -1,19 +1,25 @@
 package cn.com.fintheircing.customer.user.service.feign;
 
-import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
-import cn.com.fintheircing.admin.todotask.model.TaskModel;
+import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
+import cn.com.fintheircing.customer.user.service.feign.model.CreateTodoTaskModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TodoTaskServiceFallBack implements ITodoTaskService {
 
+	Logger logger  = LoggerFactory.getLogger(getClass());
+
 	@Override
-	public ResponseModel<CreateRegTodoTaskModel> createRegTodoTask(TaskModel model) {
-		CreateRegTodoTaskModel Regmodel =new CreateRegTodoTaskModel();
-		Regmodel.setPhoneNo(model.getPhoneNo());
-		Regmodel.setRegisterUserId(model.getTaskId());
-		Regmodel.setTaskType(model.getTaskType());
-		return ResponseModel.sucess("",Regmodel);
+	public ResponseModel<Object> createRegTodoTask(CreateTodoTaskModel model) {
+		return new ResponseModel<Object>("", ResultCode.SYS_BUSY, ResultCode.SYS_BUSY_MSG, null);
+	}
+
+	@Override
+	public Boolean isExistBlackList(String ip) {
+		logger.error(ResultCode.SYS_BUSY_BLACK);
+		return true;
 	}
 }

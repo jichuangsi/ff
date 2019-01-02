@@ -53,7 +53,7 @@ public class SystemService {
         SystemHoliday newHoliday = new SystemHoliday();
 
         newHoliday.setBeginTime(CommonUtil.getlongTime(model.getStart()+hms,sdformat));
-        newHoliday.setEndTime(CommonUtil.getlongTime(model.getEnd()+hms,sdformat));
+        newHoliday.setEndTime(CommonUtil.getEndLongTime(model.getEnd()+hms,sdformat));
         if(newHoliday.getBeginTime()>=newHoliday.getEndTime()){
             throw new SystemException(ResultCode.DATE_INVIDATE_MSG);
         }
@@ -82,7 +82,7 @@ public class SystemService {
                 throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
             }
             systemHoliday.setBeginTime(CommonUtil.getlongTime(model.getStart() + hms, sdformat));
-            systemHoliday.setEndTime(CommonUtil.getlongTime(model.getEnd() + hms, sdformat));
+            systemHoliday.setEndTime(CommonUtil.getEndLongTime(model.getEnd() + hms, sdformat));
             if (systemHoliday.getBeginTime() >= systemHoliday.getEndTime()) {
                 throw new SystemException(ResultCode.DATE_INVIDATE_MSG);
             }

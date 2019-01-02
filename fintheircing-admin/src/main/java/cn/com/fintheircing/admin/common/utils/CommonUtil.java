@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,5 +70,16 @@ public class CommonUtil {
 			throw new SystemException(ResultCode.DATE_FORMATE_MSG);
 		}
 		return longTime;
+	}
+
+	public static long getEndLongTime(String date,String sdformat) throws SystemException{
+		long time = getlongTime(date,sdformat);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date(time));
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime().getTime();
 	}
 }

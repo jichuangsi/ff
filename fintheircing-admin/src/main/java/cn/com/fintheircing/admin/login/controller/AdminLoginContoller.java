@@ -33,7 +33,7 @@ public class AdminLoginContoller {
     })
     @PostMapping("/adminLogin")
     public ResponseModel login(@Validated @RequestBody UserTokenInfo model , HttpServletRequest request) throws AdminLoginException {
-        if(request==null||adminLoginService.isExistBlack(WebCommonUtils.getClientIp(request))){
+        if(request==null||adminLoginService.isExistBlackList(WebCommonUtils.getClientIp(request))){
             return  ResponseModel.fail("",ResultCode.IP_VISIT_ERR);
         }
         String token = null;

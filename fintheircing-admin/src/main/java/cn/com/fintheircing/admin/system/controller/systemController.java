@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.system.controller;
 
-import cn.com.fintheircing.admin.common.constant.PositionCode;
+import cn.com.fintheircing.admin.common.constant.RoleCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
@@ -165,7 +165,7 @@ public class systemController {
     }
 
     private Boolean IsManage(UserTokenInfo userInfo){
-        if (PositionCode.POSITION_MANAGE.getIndex().equals(userInfo.getPosition())){
+        if (RoleCode.ROLE_MANAGE.getIndex().equals(userInfo.getRoleGrade())){
             return true;
         }
         return false;

@@ -1,11 +1,13 @@
 package cn.com.fintheircing.admin.promisedUrls.service;
 
-import cn.com.fintheircing.admin.common.constant.PositionCode;
+import cn.com.fintheircing.admin.common.constant.RoleCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.entity.AdminRole;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.promisedUrls.dao.mapper.IPermisedUrlsMapper;
 import cn.com.fintheircing.admin.promisedUrls.dao.mapper.IUrlsRelationsMapper;
+import cn.com.fintheircing.admin.promisedUrls.dao.repository.IAdminRoleRepository;
 import cn.com.fintheircing.admin.promisedUrls.dao.repository.IPermisedUrlsRepository;
 import cn.com.fintheircing.admin.promisedUrls.dao.repository.IUrlsRelationsRepository;
 import cn.com.fintheircing.admin.promisedUrls.entity.UrlsPermised;
@@ -41,22 +43,12 @@ public class UrlService {
     private IUrlsRelationsMapper urlsRelationsMapper;
     @Resource
     private RedisTemplate<String,String> redisTemplate;
+    @Resource
+    private IAdminRoleRepository adminRoleRepository;
 
 
-    @Value("${custom.urlKey.manageKey}")
-    private String manageKey;
-    @Value("${custom.urlKey.proxyOneKey}")
-    private String proxyOneKey;
-    @Value("${custom.urlKey.proxyTwoKey}")
-    private String proxyTwoKey;
-    @Value("${custom.urlKey.employKey}")
-    private String employKey;
-    @Value("${custom.urlKey.userKey}")
-    private String userKey;
     @Value("${custom.urlKey.searchKey}")
     private String searchKey;
-    @Value("${custom.urlKey.positionKey}")
-    private String positionKey;
     @Value("${custom.urlKey.roleKey}")
     private String roleKey;
 
@@ -128,8 +120,7 @@ public class UrlService {
         relations.setUpdateUserId(userInfo.getUuid());
         relations.setUpdateUserName(userInfo.getUserName());
 
-        relations.setPosition(model.getPosition());
-        relations.setRole(model.getRole());
+        relations.setRoleId(model.getRoleId());
         relations.setUrlId(model.getId());
         urlsRelationsRepository.save(relations);
     }
@@ -160,35 +151,29 @@ public class UrlService {
 
     public void selectAllUrls(){
         List<UrlsModel> urlsModels = urlsRelationsMapper.selectAllRelations();
-        List<UrlsModel> manage = new ArrayList<UrlsModel>();
-        List<UrlsModel> proxyOne = new ArrayList<UrlsModel>();
-        List<UrlsModel> proxyTwo = new ArrayList<UrlsModel>();
-        List<UrlsModel> employ = new ArrayList<UrlsModel>();
-        List<UrlsModel> user = new ArrayList<UrlsModel>();
-        urlsModels.forEach(model->{
-            if (PositionCode.POSITION_MANAGE.getIndex().equals(model.getPosition())
-                    &&"1".equals(model.getRole())){
-                user.add(model);
-            }else if (PositionCode.POSITION_PROXY_ONE.getIndex().equals(model.getPosition())
-                    &&"0".equals(model.getRole())){
-                proxyOne.add(model);
-            }else if (PositionCode.POSITION_PROXY_TWO.getIndex().equals(model.getPosition())
-                    &&"0".equals(model.getRole())){
-                proxyTwo.add(model);
-            }else if (PositionCode.POSITION_EMP.getIndex().equals(model.getPosition())
-                    &&"0".equals(model.getRole())){
-                employ.add(model);
-            }else if (PositionCode.POSITION_MANAGE.getIndex().equals(model.getPosition())
-                    &&"0".equals(model.getRole())){
-                manage.add(model);
-            }
-        });
         JsonMap jsonMap = new JsonMap();
-        jsonMap.getMap().put(manageKey,manage);
-        jsonMap.getMap().put(proxyOneKey,proxyOne);
-        jsonMap.getMap().put(proxyTwoKey,proxyTwo);
-        jsonMap.getMap().put(employKey,employ);
-        jsonMap.getMap().put(userKey,user);
+        List<AdminRole> roles = adminRoleRepository.findAll();
+        for (AdminRole adminRole:roles) {
+            List<UrlsModel> urlsModel = new ArrayList<UrlsModel>();
+            urlsModels.forEach(model -> {
+                if (RoleCode.ROLE_MANAGE.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                } else if (RoleCode.ROLE_PROXY_ONE.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                } else if (RoleCode.ROLE_PROXY_TWO.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                } else if (RoleCode.ROLE_EMP.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                } else if (RoleCode.ROLE_FINANCE.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                } else if (RoleCode.ROLE_RISK.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                } else if (RoleCode.ROLE_USER.getIndex().equals(adminRole.getRoleGrade())) {
+                    urlsModel.add(model);
+                }
+            });
+            jsonMap.getMap().put(roleKey+adminRole.getRoleGrade(),urlsModel);
+        }
         String json = JSON.toJSONString(jsonMap);
         logger.debug(json);
 /*        map = JSONObject.parseObject(json,Map.class);*/
@@ -201,7 +186,7 @@ public class UrlService {
         String json = redisTemplate.opsForValue().get(searchKey);
         JsonMap jsonMap = JSONObject.parseObject(json, JsonMap.class);
         Map<String, List<UrlsModel>> map = jsonMap.getMap();
-        String key = positionKey + model.getPosition() +"_"+ roleKey + model.getRole();
+        String key = roleKey+model.getRoleGrade();
         List<UrlsModel> models = map.get(key);
         Boolean flag = false;
         if (models != null && models.size() > 0){

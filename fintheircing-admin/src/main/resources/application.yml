@@ -29,7 +29,28 @@ custom:
   token:
       prefix: token_val_
       claim: userModel
-      HMAC256: secret
-      longTime: 180000
+      secret: FF79@34$123de
+      longTime: 30
+      alg: HS512
+      survival: 360000
   admin:
-    prefix: admin_val_
+    prefix: token_val_
+    longTime: 30
+    pwd: 111111
+    inviteLink: http://m.newplay.me/login
+    codeWidth: 300
+    codeHeight: 300
+    picFormat: jpg
+    picSavePath: F://codeImg
+  urlKey:
+    searchKey: url_val_search
+    roleKey: role_
+
+  system:
+    sdformat: yyyyMMdd-HH:mm:ss
+    hms: -00:00:00
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

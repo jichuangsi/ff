@@ -6,6 +6,7 @@ import cn.com.fintheircing.customer.common.utils.WebCommonUtils;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.LoginService;
+import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -27,27 +28,27 @@ public class UserLoginController {
 
     @Resource
     private LoginService loginService;
+    @Resource
+    private ITodoTaskService todoTaskService;
 
     @ApiOperation(value = "用户登录", notes = "")
     @ApiImplicitParams({})
     @PostMapping("/userLogin")
-    public ResponseModel userLogin(@Validated @RequestBody UserTokenInfo model, HttpServletRequest request) throws LoginException {
-        if (request == null) {
-            return ResponseModel.fail("", ResultCode.IP_VALIDATE_ERR);
+    public ResponseModel userLogin(@Validated @RequestBody UserTokenInfo model, HttpServletRequest request) throws LoginException{
+        if(request==null){
+            return ResponseModel.fail("",ResultCode.IP_VALIDATE_ERR);
         }
-        if (loginService.isExistBlack(WebCommonUtils.getClientIp(request))) {
-            return ResponseModel.fail("", ResultCode.IP_BLACK_VISIT);
+        if(todoTaskService.isExistBlackList(WebCommonUtils.getClientIp(request))){
+            return ResponseModel.fail("",ResultCode.IP_BLACK_VISIT);
         }
-        String token = "";
+        String token =  "";
         try {
             token = loginService.userLogin(model);
         } catch (LoginException e) {
-            return ResponseModel.fail("", e.getMessage());
+            return ResponseModel.fail("",e.getMessage());
         }
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("token", token);
-        return ResponseModel.sucess("", map);
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("token",token);
+        return ResponseModel.sucess("",map);
     }
-
-
 }

@@ -5,7 +5,7 @@ package cn.com.fintheircing.customer.user.controller;
 
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
-import cn.com.fintheircing.customer.user.exception.RegisterheckExistExcption;
+import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.RegisterService;
@@ -41,7 +41,7 @@ public class UserRegisterController {
 		
 		try {
 			registerService.getValCode(phoneNo);
-		} catch (RegisterheckExistExcption e) {
+		} catch (RegisterheckExistException e) {
 			return ResponseModel.fail("", e.getMessage());
 		}
 
@@ -56,7 +56,7 @@ public class UserRegisterController {
 		
 		try {
 			registerService.register(registerModel);
-		} catch (RegisterheckExistExcption e) {
+		} catch (RegisterheckExistException e) {
 			return ResponseModel.fail("", e.getMessage());
 		}
 		return ResponseModel.sucessWithEmptyData("");

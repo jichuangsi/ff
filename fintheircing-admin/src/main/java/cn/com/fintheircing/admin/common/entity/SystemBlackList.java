@@ -1,6 +1,5 @@
-package cn.com.fintheircing.customer.user.entity;
+package cn.com.fintheircing.admin.common.entity;
 
-import cn.com.fintheircing.customer.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -8,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class UserBlackList extends AbstractEntity{
+public class SystemBlackList extends AbstractEntity {
 
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
