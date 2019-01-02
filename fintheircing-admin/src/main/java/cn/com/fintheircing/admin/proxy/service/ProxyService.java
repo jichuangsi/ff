@@ -1,7 +1,7 @@
 package cn.com.fintheircing.admin.proxy.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
-import cn.com.fintheircing.admin.common.constant.RoleCode;
+import cn.com.fintheircing.admin.common.constant.RoleCodes;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
@@ -76,7 +76,7 @@ public class ProxyService {
     public PageInfo<ProxyModel> getProxyList(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
         proxyModel.setProxyId(userInfo.getUuid());
         PageInfo<ProxyModel> pageInfo = new PageInfo<ProxyModel>();
-        if(RoleCode.ROLE_MANAGE.getIndex().equals(userInfo.getRoleGrade())){
+        if(RoleCodes.ROLE_KEY_STRING.get("M").equals(userInfo.getRoleGrade())){
             pageInfo = manageProxy(userInfo,proxyModel);
         }else {
             proxyModel.setRoleGrade(userInfo.getRoleGrade());
@@ -92,7 +92,7 @@ public class ProxyService {
         AdminClientInfo info = MappingModel2EntityConverter.CONVERTERFORPROXYMODEL(proxyModel);
         info.setBossId(userInfo.getUuid());
         /*userInfo.setRoleGrade(1);*/
-        if(RoleCode.ROLE_EMP.getIndex()==proxyModel.getRoleGrade()) {//添加员工
+        if(RoleCodes.ROLE_KEY_STRING.get("E")==proxyModel.getRoleGrade()) {//添加员工
            info.setRoleGrade(proxyModel.getRoleGrade());
         } else if(proxyModel.getRoleGrade()==userInfo.getRoleGrade()+1){//非添加员工，只能创建低于自己一级
             info.setRoleGrade(userInfo.getRoleGrade() + 1);
@@ -102,7 +102,7 @@ public class ProxyService {
             throw new ProxyException(ResultCode.POWER_VISIT_ERR);
         }
         info.setStatus(AdminClientInfo.STATUS_EXIST);
-        info.setProxyNum(createdInvitCode(0, RoleCode.getName(info.getRoleGrade())));
+        info.setProxyNum(createdInvitCode(0, RoleCodes.ROLE_KEY_INTEGER.get(info.getRoleGrade())));
         info.setCreatorId(userInfo.getUuid());
         info.setCreatorName(userInfo.getUserName());
         info.setUpdatedTime(new Date());
@@ -204,7 +204,7 @@ public class ProxyService {
         PageHelper.startPage(spreadModel.getPageIndex(),spreadModel.getPageSize());
         spreadModel.setId(userInfo.getUuid());
         List<SpreadModel> spreadModels = new ArrayList<SpreadModel>();
-        if(RoleCode.ROLE_EMP.getIndex().equals(spreadModel.getPosition())){
+        if(RoleCodes.ROLE_KEY_STRING.get("E").equals(spreadModel.getPosition())){
             spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadEmp(spreadModel);
         }else{
@@ -227,7 +227,7 @@ public class ProxyService {
                     model.getProxyModels().add(proxyModel);
                 }
             }
-            if(RoleCode.ROLE_PROXY_ONE.getIndex().equals(model.getRoleGrade())){
+            if(RoleCodes.ROLE_KEY_STRING.get("A").equals(model.getRoleGrade())){
                 proxyModels.add(model);
             }
         });

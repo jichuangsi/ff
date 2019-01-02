@@ -1,12 +1,11 @@
 package cn.com.fintheircing.admin.promisedUrls.controller;
 
-import cn.com.fintheircing.admin.common.constant.RoleCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.constant.RoleCodes;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.promisedUrls.exception.UrlException;
-import cn.com.fintheircing.admin.promisedUrls.model.RoleModel;
 import cn.com.fintheircing.admin.promisedUrls.model.UrlsModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import io.swagger.annotations.Api;
@@ -161,7 +160,7 @@ public class UrlsController {
     }
 
     private Boolean IsManage(UserTokenInfo userInfo){
-        if (RoleCode.ROLE_MANAGE.getIndex().equals(userInfo.getRoleGrade())){
+        if (RoleCodes.ROLE_KEY_STRING.get("M").equals(userInfo.getRoleGrade())){
             return true;
         }
         return false;

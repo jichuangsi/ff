@@ -1,11 +1,15 @@
 package cn.com.fintheircing.admin.system.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.entity.AdminRole;
 import cn.com.fintheircing.admin.common.model.IdModel;
+import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
+import cn.com.fintheircing.admin.system.dao.mapper.IAdminRoleMapper;
 import cn.com.fintheircing.admin.system.dao.mapper.ISystemBrandMapper;
 import cn.com.fintheircing.admin.system.dao.mapper.ISystemHolidayMapper;
+import cn.com.fintheircing.admin.system.dao.repository.IAdminRoleRepository;
 import cn.com.fintheircing.admin.system.dao.repository.ISystemBrandRepository;
 import cn.com.fintheircing.admin.system.dao.repository.ISystemHolidayRepository;
 import cn.com.fintheircing.admin.system.entity.SystemBrand;
@@ -20,6 +24,7 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +50,10 @@ public class SystemService {
     private ISystemBrandRepository systemBrandRepository;
     @Resource
     private ISystemBrandMapper systemBrandMapper;
+    @Resource
+    private IAdminRoleMapper adminRoleMapper;
+    @Resource
+    private IAdminRoleRepository adminRoleRepository;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -189,5 +198,65 @@ public class SystemService {
            brandMode.setUpdateTime(brandMode.getModifyTime().getTime());
        });
        return brandModels;
+   }
+
+
+
+   public void saveRoles(){
+      if( !isExistRoles()){
+          AdminRole master = new AdminRole();
+          master.setRoleGrade(0);
+          master.setRoleName("系统管理员");
+          master.setRoleSign("M");
+          saveAdminRole(master);
+          AdminRole proxyOne = new AdminRole();
+          proxyOne.setRoleGrade(1);
+          proxyOne.setRoleName("一级代理商");
+          proxyOne.setRoleSign("A");
+          saveAdminRole(proxyOne);
+          AdminRole proxyTwo = new AdminRole();
+          proxyTwo.setRoleGrade(2);
+          proxyTwo.setRoleName("二级代理商");
+          proxyTwo.setRoleSign("S");
+          saveAdminRole(proxyTwo);
+          AdminRole employee = new AdminRole();
+          employee.setRoleGrade(3);
+          employee.setRoleName("员工");
+          employee.setRoleSign("E");
+          saveAdminRole(employee);
+          AdminRole risk = new AdminRole();
+          risk.setRoleGrade(4);
+          risk.setRoleName("风控");
+          risk.setRoleSign("R");
+          saveAdminRole(risk);
+          AdminRole finance = new AdminRole();
+          finance.setRoleGrade(5);
+          finance.setRoleName("财务");
+          finance.setRoleSign("F");
+          saveAdminRole(finance);
+          AdminRole user = new AdminRole();
+          user.setRoleGrade(6);
+          user.setRoleName("用户");
+          user.setRoleSign("U");
+          saveAdminRole(user);
+      }
+   }
+
+
+   @Cacheable(value = "isExistRoles")
+   public Boolean isExistRoles(){
+       return adminRoleMapper.selectCountAll()>0;
+   }
+
+   private void saveAdminRole(AdminRole adminRole){
+       adminRole.setCreatedTime(new Date());
+       adminRole.setUpdatedTime(new Date());
+       adminRoleRepository.save(adminRole);
+   }
+
+
+   @Cacheable("roles")
+   public List<RoleModel> getRoles(){
+       return adminRoleMapper.selectAllRole();
    }
 }

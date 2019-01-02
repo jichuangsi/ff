@@ -1,19 +1,17 @@
 package cn.com.fintheircing.customer.user.service;
 
 import cn.com.fintheircing.customer.common.CommonUtil;
-import cn.com.fintheircing.customer.common.constant.ResultCode;
-import cn.com.fintheircing.customer.common.constant.RoleCode;
-import cn.com.fintheircing.customer.common.model.ResponseModel;
+import cn.com.fintheircing.customer.common.constant.RoleCodes;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserClientInfoMapper;
+import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
+import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
-import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
-import cn.com.fintheircing.customer.user.service.feign.model.CreateTodoTaskModel;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -37,8 +36,10 @@ public class RegisterService {
 	private IUserClientLoginInfoRepository userClientLoginInfoRepository;
 	@Resource
 	private IUserClientInfoMapper userClientInfoMapper;
+	/*@Resource
+	private ITodoTaskService todoTaskService;*/
 	@Resource
-	private ITodoTaskService todoTaskService;
+	private IUserAccountRepository userAccountRepository;
 	@Resource
 	private RedisTemplate<String, String> redisTemplate;
 	@Resource
@@ -77,7 +78,7 @@ public class RegisterService {
 	}
 
 	// 新增注册
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public void register(RegisterModel registerModel) throws RegisterheckExistException {
 		String phoneNo = registerModel.getPhoneNo();
 		String pwd = registerModel.getPwd();
@@ -107,7 +108,9 @@ public class RegisterService {
 			userClientInfo.setPhone(phoneNo);
 			userClientInfo.setStatus(UserClientInfo.STATUS_INIT);
 			userClientInfo.setCer(UserClientInfo.CER_NOT);
-			userClientInfo.setRoleGrade(RoleCode.ROLE_USER.getIndex());//添加区别用户管理员
+			userClientInfo.setRoleGrade(RoleCodes.ROLE_KEY_STRING.get("U"));//添加区别用户管理员
+			userClientInfo.setCreatedTime(new Date());
+			userClientInfo.setUpdatedTime(new Date());
 			userClientInfo = userInfoRepository.save(userClientInfo);
 			
 			//新增登录信息
@@ -116,9 +119,18 @@ public class RegisterService {
 			//对登录密码做SHA256处理
 			userClientLoginInfo.setPwd(CommonUtil.toSha256(pwd));
 			userClientLoginInfo.setClientInfoId(userClientInfo.getUuid());//登录信息和用户信息关联
+			userClientLoginInfo.setCreatedTime(new Date());
+			userClientLoginInfo.setUpdatedTime(new Date());
 			userClientLoginInfoRepository.save(userClientLoginInfo);
-			
-			//创建待办注册审核任务
+
+			UserAccount userAccount = new UserAccount();
+			userAccount.setUserId(userClientInfo.getUuid());
+			userAccount.setCreatedTime(new Date());
+			userAccount.setUpdatedTime(new Date());
+			userAccountRepository.save(userAccount);
+
+
+			/*//创建待办注册审核任务
 			CreateTodoTaskModel model = new CreateTodoTaskModel();
 			model.setTaskType(CreateTodoTaskModel.TASK_TYPE_REG);
 			model.setRegisterUserId(userClientInfo.getUuid());
@@ -126,7 +138,7 @@ public class RegisterService {
 			ResponseModel<Object> reponse = todoTaskService.createRegTodoTask(model);
 			if(!ResultCode.SUCESS.equals(reponse.getCode())) {
 				throw new RegisterheckExistException("注册审核暂时停止");
-			}
+			}*/
 		}
 
 	}
@@ -148,5 +160,7 @@ public class RegisterService {
 		}
 		return codeNum;
 	}
+
+
 
 }

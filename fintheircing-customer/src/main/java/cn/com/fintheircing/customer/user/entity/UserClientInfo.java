@@ -35,6 +35,7 @@ public class UserClientInfo extends AbstractEntity {
 	private String displayname;
 	private Integer roleGrade;  //固定字段，用户
 
+
 	public Integer getRoleGrade() {
 		return roleGrade;
 	}
