@@ -4,6 +4,7 @@ import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
+import cn.com.fintheircing.admin.proxy.service.ProxyService;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
@@ -31,6 +32,8 @@ public class FeignController {
     private SystemService systemService;
     @Resource
     private IDistributService distributService;
+    @Resource
+    private ProxyService proxyService;
 
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
@@ -69,9 +72,9 @@ public class FeignController {
 
     @ApiOperation(value = "获取邀请人id", notes = "")
     @ApiImplicitParams({})
-    @RequestMapping("/getInvitId")
-    public String getInvitId(@RequestParam("invitId") String invitId){
-        return null;
+    @RequestMapping("/getInviteId")
+    public String getInvitId(@RequestParam("inviteCode") String inviteCode){
+        return proxyService.getInviteId(inviteCode);
     }
 
 }

@@ -1,6 +1,10 @@
 package cn.com.fintheircing.admin.systemdetect.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 
@@ -13,6 +17,9 @@ import javax.validation.constraints.Pattern;
 @Entity
 @Table(name="systemdetect_Product")
 public class Product {
+    @Id
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     protected String id;
     /**
      * 买入时收取的交易金额

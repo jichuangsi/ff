@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -353,5 +354,15 @@ public class ProxyService {
 
     private String changePwd(String pwd){
         return CommonUtil.toSha256(pwd);
+    }
+
+
+
+    //通过邀请码获取邀请人id
+    public String getInviteId(String inviteCode){
+        if (!StringUtils.isEmpty(inviteCode)){
+            return spreadMapper.getSpreadId(inviteCode).getId();
+        }
+        return "";
     }
 }

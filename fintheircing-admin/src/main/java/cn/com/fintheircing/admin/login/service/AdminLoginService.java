@@ -1,8 +1,8 @@
 package cn.com.fintheircing.admin.login.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.entity.SystemBlackList;
+import cn.com.fintheircing.admin.common.entity.userInfo.AdminClientInfo;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;

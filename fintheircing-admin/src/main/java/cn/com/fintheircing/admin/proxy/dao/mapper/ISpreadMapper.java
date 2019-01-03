@@ -1,6 +1,7 @@
 package cn.com.fintheircing.admin.proxy.dao.mapper;
 
 import cn.com.fintheircing.admin.proxy.model.SpreadModel;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -35,4 +36,8 @@ public interface ISpreadMapper {
             "</where>" +
             "  order by t1.created_time</script>")
     List<SpreadModel> getSpreadEmp(SpreadModel spreadModel);
+
+    //获取邀请人id
+    @Select("<script>select saleman_id as id from proxy_spread WHERE invite_code=#{inviteCode}</script>")
+    SpreadModel getSpreadId(@Param("inviteCode") String inviteCode);
 }

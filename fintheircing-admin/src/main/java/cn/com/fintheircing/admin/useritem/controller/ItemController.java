@@ -87,13 +87,13 @@ public class ItemController {
     @PostMapping("/updateRemark")
     public ResponseModel updateRemark(@Validated @RequestBody TransactionModel model ) throws AdminLoginException {
         int i = itemService.updateRemark(model);
-        return ResponseModel.sucess("",i);
+        return ResponseModel.sucess("",null);
     }
     @ApiOperation(value = "白名单列表-删除信息", notes = "")
     @ApiImplicitParams({
     })
-    @PostMapping("/updateRemark")
-    public ResponseModel updateRemark(String[] ids ) throws AdminLoginException {
+    @PostMapping("/deleteRemark")
+    public ResponseModel deleteRemark(String[] ids ) throws AdminLoginException {
         int i = itemService.deleteTransactionSummary(ids);
         return ResponseModel.sucess("",i);
     }

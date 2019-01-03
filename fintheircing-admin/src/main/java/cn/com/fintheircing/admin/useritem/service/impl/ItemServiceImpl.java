@@ -8,6 +8,7 @@ import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
 import cn.com.fintheircing.admin.useritem.utils.MappingModel2EntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 /**
@@ -16,6 +17,7 @@ import java.util.List;
  * @author yaoxiong
  * @date 2018/12/27
  */
+@Service
 public class ItemServiceImpl implements ItemService {
     @Autowired
     private TransactionSummaryMapper transactionSummaryMapper;

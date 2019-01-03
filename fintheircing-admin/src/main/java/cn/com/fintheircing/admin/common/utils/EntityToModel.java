@@ -1,18 +1,9 @@
 package cn.com.fintheircing.admin.common.utils;
 
 import cn.com.fintheircing.admin.Repository.UserClientInfoRepository;
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
-import cn.com.fintheircing.admin.common.entity.AskMoneyInfo;
-import cn.com.fintheircing.admin.common.entity.Contact.contactInfo;
-import cn.com.fintheircing.admin.common.entity.UserClientInfo;
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
-import cn.com.fintheircing.admin.usermanag.model.AdminClientInfModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.UUID;
 
 public class EntityToModel {
     @Autowired
@@ -26,7 +17,7 @@ public class EntityToModel {
         return taskInfo;
     }
 
-
+/*
     public static AdminClientInfModel coverAdminClientInfo(AdminClientInfo adminClientInfo, UserClientInfo userClientInfo){
         AdminClientInfModel model=new AdminClientInfModel();
         model.setId(userClientInfo.getId());
@@ -60,8 +51,8 @@ public class EntityToModel {
         return models;
     }
 
-    public static cn.com.fintheircing.admin.UserManag.model.AskMoneyInfoModel coverAskMoneyInfo(AskMoneyInfo user, UserClientInfo userClientInfo){
-        cn.com.fintheircing.admin.UserManag.model.AskMoneyInfoModel model =new cn.com.fintheircing.admin.UserManag.model.AskMoneyInfoModel();
+    public static cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel coverAskMoneyInfo(AskMoneyInfo user, UserClientInfo userClientInfo){
+        cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel model =new cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel();
         model.setApplyMoney(user.getApplyMoney());
         model.setArrivalTime(user.getArrivalTime());
         model.setBankCard(user.getBankCard());
@@ -83,9 +74,9 @@ public class EntityToModel {
         return model;
     }
 
-    public static List<cn.com.fintheircing.admin.UserManag.model.ContactInfoModel> coverContactInfo(List<contactInfo> info){
-        List<cn.com.fintheircing.admin.UserManag.model.ContactInfoModel> models=null;
-        cn.com.fintheircing.admin.UserManag.model.ContactInfoModel model=new cn.com.fintheircing.admin.UserManag.model.ContactInfoModel();
+    public static List<cn.com.fintheircing.admin.usermanag.model.ContactInfoModel> coverContactInfo(List<contactInfo> info){
+        List<cn.com.fintheircing.admin.usermanag.model.ContactInfoModel> models=null;
+        cn.com.fintheircing.admin.usermanag.model.ContactInfoModel model=new cn.com.fintheircing.admin.usermanag.model.ContactInfoModel();
         info.forEach(user->{
             model.setId(user.getId());
             model.setAssureMoney(user.getAssureMoney());
@@ -123,8 +114,8 @@ public class EntityToModel {
         return models;
     }
 
-    public static cn.com.fintheircing.admin.UserManag.model.UserClientInfoModel coverUserClientInfo(UserClientInfo oneByUuid) {
-        cn.com.fintheircing.admin.UserManag.model.UserClientInfoModel model =new cn.com.fintheircing.admin.UserManag.model.UserClientInfoModel();
+    public static cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel coverUserClientInfo(UserClientInfo oneByUuid) {
+        cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel model =new cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel();
         model.setCer(oneByUuid.getCer());
         model.setSource(oneByUuid.getSource());
         model.setStatus(oneByUuid.getStatus());
@@ -141,5 +132,5 @@ public class EntityToModel {
         model.setUpdateUserId(oneByUuid.getUpdateUserId());
         model.setUpdateUserName(oneByUuid.getUpdateUserName());
         return model;
-    }
+    }*/
 }
