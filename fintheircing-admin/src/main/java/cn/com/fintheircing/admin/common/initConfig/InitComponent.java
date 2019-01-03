@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.common.initCoonfig;
+package cn.com.fintheircing.admin.common.initConfig;
 
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import cn.com.fintheircing.admin.system.service.SystemService;
@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 @Component
-public class InitCompoent  {
+public class InitComponent {
 
     @Resource
     private UrlService urlService;

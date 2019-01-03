@@ -5,8 +5,6 @@ import java.util.Date;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
-	protected String userName;
-	protected String phone;
 	protected Date createdTime = new Date();
 	protected String creatorId;
 	protected String creatorName;
@@ -15,21 +13,7 @@ public abstract class AbstractEntity {
 	protected String updateUserName;
 	protected String deleteFlag = "0";
 
-	public final String getUserName() {
-		return userName;
-	}
 
-	public final void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public final String getPhone() {
-		return phone;
-	}
-
-	public final void setPhone(String phone) {
-		this.phone = phone;
-	}
 
 	public final Date getCreatedTime() {
 		return createdTime;

@@ -14,7 +14,7 @@ public class BusinessControlContract extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String contractId;
-    private String controlType;   //ControlCode
+    private String controlId;   //ControlCode
 
     public String getUuid() {
         return uuid;
@@ -32,11 +32,11 @@ public class BusinessControlContract extends AbstractEntity{
         this.contractId = contractId;
     }
 
-    public String getControlType() {
-        return controlType;
+    public String getControlId() {
+        return controlId;
     }
 
-    public void setControlType(String controlType) {
-        this.controlType = controlType;
+    public void setControlId(String controlId) {
+        this.controlId = controlId;
     }
 }

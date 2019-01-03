@@ -5,6 +5,8 @@ import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import cn.com.fintheircing.admin.system.service.SystemService;
+import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
+import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +29,8 @@ public class FeignController {
     private AdminLoginService adminLoginService;
     @Resource
     private SystemService systemService;
+    @Resource
+    private IDistributService distributService;
 
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
@@ -54,4 +58,20 @@ public class FeignController {
     public List<RoleModel> getRoles(){
         return systemService.getRoles();
     }
+
+    @ApiOperation(value = "传递product信息", notes = "")
+    @ApiImplicitParams({})
+    @PostMapping("/getProduct")
+    public ProductModel getProduct(@RequestBody ProductModel model){
+        return distributService.getProduct(model);
+    }
+
+
+    @ApiOperation(value = "获取邀请人id", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getInvitId")
+    public String getInvitId(@RequestParam("invitId") String invitId){
+        return null;
+    }
+
 }

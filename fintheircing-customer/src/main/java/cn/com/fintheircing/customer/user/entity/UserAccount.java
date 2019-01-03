@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 @Entity
 public class UserAccount extends AbstractEntity {
@@ -15,6 +16,16 @@ public class UserAccount extends AbstractEntity {
     private String uuid;
     private String userId;
     private Double userAccount;
+    @Version
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public String getUuid() {
         return uuid;

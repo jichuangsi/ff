@@ -25,4 +25,5 @@ public class ResultCode {
 	public static final String LOGIN_TOKEN_ERR = "token转换失败";
 
 	public static final String SYS_BUSY_BLACK = "黑名单访问，融断";
+	public static final String PRODUCT_GET_ERR = "获取产品失败";
 }

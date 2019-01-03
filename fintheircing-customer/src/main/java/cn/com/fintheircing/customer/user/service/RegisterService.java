@@ -2,6 +2,7 @@ package cn.com.fintheircing.customer.user.service;
 
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.RoleCodes;
+import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserClientInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
@@ -12,6 +13,7 @@ import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +23,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -44,6 +43,8 @@ public class RegisterService {
 	private RedisTemplate<String, String> redisTemplate;
 	@Resource
 	private AmqpTemplate rabbitTemplate;
+	@Resource
+	private ITodoTaskService todoTaskService;
 
 	private int valCodeLength = 4;
 	private String valsmsPre = "sms_val_";
@@ -54,7 +55,7 @@ public class RegisterService {
 
 	// 根据手机号获取验证码
 	public String getValCode(String phoneNo) throws RegisterheckExistException {
-
+		this.getRole();
 		synchronized (phoneNo.intern()) {
 			// 使用手机号作为用户名
 			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
@@ -80,9 +81,14 @@ public class RegisterService {
 	// 新增注册
 	@Transactional(rollbackOn = Exception.class)
 	public void register(RegisterModel registerModel) throws RegisterheckExistException {
+		this.getRole(); //一次性加载role
+		String invitId = "";
 		String phoneNo = registerModel.getPhoneNo();
 		String pwd = registerModel.getPwd();
 		String valCode = registerModel.getValCode();
+		if (!StringUtils.isEmpty(registerModel)){
+
+		}
 		synchronized (phoneNo.intern()) {
 			// 使用手机号作为用户名
 			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
@@ -111,6 +117,7 @@ public class RegisterService {
 			userClientInfo.setRoleGrade(RoleCodes.ROLE_KEY_STRING.get("U"));//添加区别用户管理员
 			userClientInfo.setCreatedTime(new Date());
 			userClientInfo.setUpdatedTime(new Date());
+			userClientInfo.setInviterId(invitId);   //添加邀请人
 			userClientInfo = userInfoRepository.save(userClientInfo);
 			
 			//新增登录信息
@@ -159,6 +166,17 @@ public class RegisterService {
 			codeNum += numbers[next % 10];
 		}
 		return codeNum;
+	}
+
+	public Boolean getRole(){
+		if (!(RoleCodes.ROLE_KEY_INTEGER.size()>0)){
+			List<RoleModel> roles = todoTaskService.getRoles();
+			for (RoleModel role : roles) {
+				RoleCodes.ROLE_KEY_INTEGER.put(role.getPosition(), role.getSign());
+				RoleCodes.ROLE_KEY_STRING.put(role.getSign(), role.getPosition());
+			}
+		}
+		return true;
 	}
 
 

@@ -13,6 +13,17 @@ public class RegisterModel {
     @NotBlank(message = "验证码不能为空")
 	private String valCode;
 
+
+    private String invitCode;    //邀请码，可空
+
+	public String getInvitCode() {
+		return invitCode;
+	}
+
+	public void setInvitCode(String invitCode) {
+		this.invitCode = invitCode;
+	}
+
 	public String getPhoneNo() {
 		return phoneNo;
 	}

@@ -35,6 +35,15 @@ public class UserClientInfo extends AbstractEntity {
 	private String displayname;
 	private Integer roleGrade;  //固定字段，用户
 
+	private String inviterId;
+
+	public String getInviterId() {
+		return inviterId;
+	}
+
+	public void setInviterId(String inviterId) {
+		this.inviterId = inviterId;
+	}
 
 	public Integer getRoleGrade() {
 		return roleGrade;

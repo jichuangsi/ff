@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.systemdetect.model;
+package cn.com.fintheircing.customer.business.model;
 
 /**
  * ProductModel

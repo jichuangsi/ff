@@ -52,8 +52,7 @@ public class UrlAcessControlGatewayFilterFactory extends AbstractGatewayFilterFa
 				String user = jwt.getClaim(userClaim).asString();
 				UserTokenInfo userInfo = JSONObject.parseObject(user,UserTokenInfo.class);
 				TranferUrlModel model = new TranferUrlModel();
-				model.setPosition(userInfo.getPosition());
-				model.setRole(userInfo.getRole());
+				model.setRoleGrade(userInfo.getRoleGrade());
 				model.setUrl(url);
 				if (!adminFeignService.checkPromisedUrl(model)){
 					return CommonUtils.buildResponse(exchange, ResultCode.SYS_ERROR, ResultCode.POWER_VISIT_MSG);

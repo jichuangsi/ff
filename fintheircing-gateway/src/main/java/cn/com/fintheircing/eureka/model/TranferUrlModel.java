@@ -2,24 +2,15 @@ package cn.com.fintheircing.eureka.model;
 
 public class TranferUrlModel {
 
-    private Integer position;
-    private String role;
+    private Integer roleGrade;
     private String url;
 
-    public Integer getPosition() {
-        return position;
+    public Integer getRoleGrade() {
+        return roleGrade;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleGrade(Integer roleGrade) {
+        this.roleGrade = roleGrade;
     }
 
     public String getUrl() {

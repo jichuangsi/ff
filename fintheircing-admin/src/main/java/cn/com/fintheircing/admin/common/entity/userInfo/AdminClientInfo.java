@@ -12,29 +12,25 @@ public class AdminClientInfo extends AbstractEntity {
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
 
-    public final static String ROLE_ADMIN = "0";
-
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
-    private Integer position;
     private String status;
     private String name;
     private String proxyNum;
-    /**
-     * 备注
-     */
-    private String remarks;
+    private String userName;
+    private String phone;
+    private String remarks;  //备注
     private String bossId;  //上级id
-    private String role;  //固定字段，管理员
+    private Integer roleGrade;  //固定字段，管理员
 
-    public String getRole() {
-        return role;
+    public Integer getRoleGrade() {
+        return roleGrade;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleGrade(Integer roleGrade) {
+        this.roleGrade = roleGrade;
     }
 
     public String getProxyNum() {
@@ -45,6 +41,14 @@ public class AdminClientInfo extends AbstractEntity {
         this.proxyNum = proxyNum;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -53,13 +57,6 @@ public class AdminClientInfo extends AbstractEntity {
         this.uuid = uuid;
     }
 
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
 
     public String getStatus() {
         return status;
@@ -75,6 +72,14 @@ public class AdminClientInfo extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getRemarks() {

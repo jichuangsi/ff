@@ -13,16 +13,8 @@ public class BusinessControl extends AbstractEntity {
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
-    private Integer controlKey;   //用于后台转换
     private String controlName;
 
-    public Integer getControlKey() {
-        return controlKey;
-    }
-
-    public void setControlKey(Integer controlKey) {
-        this.controlKey = controlKey;
-    }
 
     public String getUuid() {
         return uuid;

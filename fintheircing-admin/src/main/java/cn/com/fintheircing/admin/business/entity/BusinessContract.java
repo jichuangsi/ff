@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.util.Date;
 
 @Entity
@@ -28,6 +29,16 @@ public class BusinessContract extends AbstractEntity{
     private Double warningLine;    //警告线
     private Double abortLine;    //平仓线
     private String riskId;    //关联风控
+    @Version
+    private int version;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public Double getColdMoney() {
         return coldMoney;

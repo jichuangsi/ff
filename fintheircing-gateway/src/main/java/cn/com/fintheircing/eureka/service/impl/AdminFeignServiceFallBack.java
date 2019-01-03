@@ -1,6 +1,5 @@
 package cn.com.fintheircing.eureka.service.impl;
 
-import cn.com.fintheircing.eureka.model.TranferUrlModel;
 import cn.com.fintheircing.eureka.service.IAdminFeignService;
 import org.springframework.stereotype.Component;
 

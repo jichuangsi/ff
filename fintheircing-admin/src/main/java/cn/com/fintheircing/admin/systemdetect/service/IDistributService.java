@@ -19,4 +19,6 @@ public interface IDistributService {
     List<ProductModel> findForSpecialAllot();
 
     ProductModel updateProduce(ProductModel model);
+
+    ProductModel getProduct(ProductModel model);
 }

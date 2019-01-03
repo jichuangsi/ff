@@ -18,15 +18,6 @@ public class UserTokenInfo {
     private Integer roleGrade; //区别管理和用户
     private String roleName;;
 
-    private String role;
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public String getLoginName() {
         return loginName;
