@@ -1,6 +1,5 @@
 package cn.com.fintheircing.admin.systemdetect.model;
 
-import cn.com.fintheircing.admin.systemdetect.common.Status;
 /**
  * ProductModel
  *
@@ -32,7 +31,7 @@ public class ProductModel {
     /**
      * 杠杆比率
      */
-    private double leverRate;
+    private int leverRate;
     /**
      * 警戒线
      */
@@ -44,7 +43,7 @@ public class ProductModel {
     /**
      * 日配或者月配或者特殊
      */
-    private Status allot;
+    private String allot;
 
     public String getId() {
         return id;
@@ -94,11 +93,11 @@ public class ProductModel {
         this.financingTime = financingTime;
     }
 
-    public double getLeverRate() {
+    public int getLeverRate() {
         return leverRate;
     }
 
-    public void setLeverRate(double leverRate) {
+    public void setLeverRate(int leverRate) {
         this.leverRate = leverRate;
     }
 
@@ -118,11 +117,11 @@ public class ProductModel {
         this.liquidation = liquidation;
     }
 
-    public Status getAllot() {
+    public String getAllot() {
         return allot;
     }
 
-    public void setAllot(Status allot) {
+    public void setAllot(String allot) {
         this.allot = allot;
     }
 }

@@ -1,9 +1,8 @@
 package cn.com.fintheircing.admin.systemdetect.entity;
 
-import cn.com.fintheircing.admin.systemdetect.common.Status;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 /**
  * Product entity
@@ -38,7 +37,8 @@ public class Product {
     /**
      * 杠杆比率
      */
-    private double leverRate;
+    @Pattern(regexp ="^([1-9]|10)$", message="输入错误,请输入1到10中的一位整数")
+    private int leverRate;
     /**
      * 警戒线
      */
@@ -50,13 +50,13 @@ public class Product {
     /**
      * 日配或者月配或者特殊
      */
-    private Status allot;
+    private String allot;
 
-    public Status getAllot() {
+    public String getAllot() {
         return allot;
     }
 
-    public void setAllot(Status allot) {
+    public void setAllot(String allot) {
         this.allot = allot;
     }
 
@@ -108,11 +108,11 @@ public class Product {
         this.financingTime = financingTime;
     }
 
-    public double getLeverRate() {
+    public int getLeverRate() {
         return leverRate;
     }
 
-    public void setLeverRate(double leverRate) {
+    public void setLeverRate(int leverRate) {
         this.leverRate = leverRate;
     }
 
