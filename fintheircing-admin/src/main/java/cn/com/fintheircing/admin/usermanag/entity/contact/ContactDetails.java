@@ -1,14 +1,18 @@
-package cn.com.fintheircing.admin.common.entity.Contact;
+package cn.com.fintheircing.admin.usermanag.entity.contact;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "contactDetails")
-public class contactDetails {
+@Table(name = "ContactDetails")
+public class ContactDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String id;
     private String borrowRate;//借款利率
     private String borrowDays;//借款天数
@@ -19,9 +23,9 @@ public class contactDetails {
     private String delegationOrigin;//委托来源
     private String ContactAssets;//合约净资产
     private String taskStatus;//审核状态
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "contactDetails")
-    private contactInfo contactInfo;
+   /* @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "ContactDetails")
+    private ContactInfo contactInfo;*/
     public String getId() {
         return id;
     }

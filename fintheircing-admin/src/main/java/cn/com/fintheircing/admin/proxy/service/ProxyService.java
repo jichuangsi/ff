@@ -2,7 +2,7 @@ package cn.com.fintheircing.admin.proxy.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.constant.RoleCodes;
-import cn.com.fintheircing.admin.common.entity.userInfo.AdminClientInfo;
+import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;

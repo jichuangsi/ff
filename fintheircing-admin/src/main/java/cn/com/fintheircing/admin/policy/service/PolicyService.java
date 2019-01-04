@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.policy.service;
 
-import cn.com.fintheircing.admin.policy.dao.mapper.IBusinessContractMapper;
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
 import cn.com.fintheircing.admin.policy.model.TranferContractModel;
 import cn.com.fintheircing.admin.policy.model.TranferControlContractModel;
 import com.github.pagehelper.PageHelper;

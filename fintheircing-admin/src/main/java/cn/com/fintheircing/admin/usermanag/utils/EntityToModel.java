@@ -1,9 +1,21 @@
-package cn.com.fintheircing.admin.common.utils;
+package cn.com.fintheircing.admin.usermanag.utils;
 
+import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.common.entity.UserClientInfo;
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IUserClientInfoRepository;
+import cn.com.fintheircing.admin.usermanag.entity.AskMoneyInfo;
+import cn.com.fintheircing.admin.usermanag.entity.contact.ContactInfo;
+import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
+import cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel;
+import cn.com.fintheircing.admin.usermanag.model.ContactInfoModel;
+import cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.UUID;
 
 public class EntityToModel {
     @Autowired
@@ -17,26 +29,26 @@ public class EntityToModel {
         return taskInfo;
     }
 
-/*
-    public static AdminClientInfModel coverAdminClientInfo(AdminClientInfo adminClientInfo, UserClientInfo userClientInfo){
-        AdminClientInfModel model=new AdminClientInfModel();
+
+    public static AdminClientInfoModel coverAdminClientInfo(AdminClientInfo adminClientInfo, UserClientInfo userClientInfo){
+        AdminClientInfoModel model=new AdminClientInfoModel();
         model.setId(userClientInfo.getId());
         model.setCer(userClientInfo.getCer());
         model.setSource(userClientInfo.getSource());
         model.setCreateTime(userClientInfo.getCreatedTime());
         //model.setEmployeeId(adminClientInfo.getEmpolyeeId());
-        model.setPhone(userClientInfo.getPhone());
+        model.setPhone(adminClientInfo.getPhone());
         model.setProxyId(adminClientInfo.getProxyNum());
-        model.setProxyName(userClientInfo.getUserName());
+        model.setProxyName(adminClientInfo.getName());
         model.setUserId(StringUtils.isEmpty(userClientInfo.getUserId())?
                 UUID.randomUUID().toString().replace("-",""):userClientInfo.getUserId());
-        model.setUserName(userClientInfo.getUserName());
+        model.setUserName(adminClientInfo.getUserName());
 
         return model;
     }
-    public static List<cn.com.fintheircing.admin.usermanag.model.AdminClientInfModel> coverAdminClientInfos(List<AdminClientInfo> userInfos, UserClientInfo userClientInfo){
-        List<AdminClientInfModel> models=null;
-        AdminClientInfModel model= new AdminClientInfModel();
+    public static List<AdminClientInfoModel> coverAdminClientInfos(List<AdminClientInfo> userInfos, UserClientInfo userClientInfo){
+        List<AdminClientInfoModel> models=null;
+        AdminClientInfoModel model= new AdminClientInfoModel();
         List<String> list=null;
         userInfos.forEach(userInfo -> {
             //匹配上下级信息
@@ -45,21 +57,20 @@ public class EntityToModel {
                     list.add(user.getProxyNum());
                 }
                 }
-            AdminClientInfModel adminClientInfModel = coverAdminClientInfo( userInfo, userClientInfo);
-            models.add(adminClientInfModel);
+            AdminClientInfoModel adminClientInfoModel = coverAdminClientInfo( userInfo, userClientInfo);
+            models.add(adminClientInfoModel);
         });
         return models;
     }
 
-    public static cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel coverAskMoneyInfo(AskMoneyInfo user, UserClientInfo userClientInfo){
-        cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel model =new cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel();
+    public static AskMoneyInfoModel coverAskMoneyInfo(AskMoneyInfo user, UserClientInfo userClientInfo){
+        AskMoneyInfoModel model =new AskMoneyInfoModel();
         model.setApplyMoney(user.getApplyMoney());
         model.setArrivalTime(user.getArrivalTime());
         model.setBankCard(user.getBankCard());
         model.setBankName(user.getBankName());
         model.setId(userClientInfo.getId());
         model.setPayAcount(user.getPayAcount());
-        model.setPhone(userClientInfo.getPhone());
         model.setRecharge(user.getRecharge());
         model.setRechargeTime(user.getRechargeTime());
         model.setTaskStatus(userClientInfo.getStatus());
@@ -74,55 +85,52 @@ public class EntityToModel {
         return model;
     }
 
-    public static List<cn.com.fintheircing.admin.usermanag.model.ContactInfoModel> coverContactInfo(List<ContactInfo> info){
-        List<cn.com.fintheircing.admin.usermanag.model.ContactInfoModel> models=null;
-        cn.com.fintheircing.admin.usermanag.model.ContactInfoModel model=new cn.com.fintheircing.admin.usermanag.model.ContactInfoModel();
+    public static List<ContactInfoModel> coverContactInfo(List<ContactInfo> info){
+        List<ContactInfoModel> models=null;
+        ContactInfoModel model=new ContactInfoModel();
         info.forEach(user->{
             model.setId(user.getId());
             model.setAssureMoney(user.getAssureMoney());
             model.setAvailableCash(user.getAvailableCash());
             model.setBorrowDays(user.getBorrowMoney());
-            model.setBorrowRate(user.getContactDetails().getBorrowRate());
-            model.setBorrowMoney(user.getBorrowMoney());
+           /* model.setBorrowRate(user.getContactDetails().getBorrowRate());*/
             model.setBorrowTime(user.getBorrowTime());
             model.setContactAllMoney(user.getContactAllMoney());
-            model.setContactAssets(user.getContactDetails().getContactAssets());
+            /*model.setContactAssets(user.getContactDetails().getContactAssets());*/
             model.setContactId(user.getContactId());
             model.setCreateTime(user.getCreateTime());
-            model.setDangerLevel(user.getContactDetails().getDangerLevel());
+            /*model.setDangerLevel(user.getContactDetails().getDangerLevel());*/
             model.setDeficitAmount(user.getDeficitAmount());
             model.setDeficitLine(user.getDeficitLine());
-            model.setDelegationOrigin(user.getContactDetails().getDelegationOrigin());
-            model.setFirstRate(user.getContactDetails().getFirstRate());
+           /* model.setDelegationOrigin(user.getContactDetails().getDelegationOrigin());
+            model.setFirstRate(user.getContactDetails().getFirstRate());*/
             model.setFloatFilled(user.getFloatFilled());
             model.setGoodsType(user.getGoodsType());
-            model.setRemainderDays(user.getContactDetails().getRemainderDays());
+            /*model.setRemainderDays(user.getContactDetails().getRemainderDays());*/
             model.setRemainderTime(user.getRemainderTime());
             model.setStatus(user.getStatus());
             model.setStockValue(user.getStockValue());
-            model.setTaskStatus(user.getContactDetails().getTaskStatus());
-            model.setTransactionCommission(user.getContactDetails().getTransactionCommission());
-            model.setStockName(user.getContractStock().getStockName());
-            model.setStockId(user.getContractStock().getStockId());
-            model.setStockAccount(user.getContractStock().getStockAccount());
-            model.setBuyPrice(user.getContractStock().getBuyPrice());
-            model.setBuyTime(user.getContractStock().getBuyTime());
-            model.setMarketPrice(user.getContractStock().getMarketPrice());
-            model.setMarketValue(user.getContractStock().getMarketValue());
+//            model.setTaskStatus(user.getContactDetails().getTaskStatus());
+//            model.setTransactionCommission(user.getContactDetails().getTransactionCommission());
+//            model.setStockName(user.getContractStock().getStockName());
+//            model.setStockId(user.getContractStock().getStockId());
+//            model.setStockAccount(user.getContractStock().getStockAccount());
+//            model.setBuyPrice(user.getContractStock().getBuyPrice());
+//            model.setBuyTime(user.getContractStock().getBuyTime());
+//            model.setMarketPrice(user.getContractStock().getMarketPrice());
+//            model.setMarketValue(user.getContractStock().getMarketValue());
             models.add(model);
         });
         return models;
     }
 
-    public static cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel coverUserClientInfo(UserClientInfo oneByUuid) {
-        cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel model =new cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel();
+    public static UserClientInfoModel coverUserClientInfo(UserClientInfo oneByUuid) {
+        UserClientInfoModel model =new UserClientInfoModel();
         model.setCer(oneByUuid.getCer());
         model.setSource(oneByUuid.getSource());
         model.setStatus(oneByUuid.getStatus());
-        model.setPhone(oneByUuid.getPhone());
         model.setId(oneByUuid.getId());
         model.setUserId(oneByUuid.getUserId());
-        model.setUserName(oneByUuid.getUserName());
         model.setDisplayname(oneByUuid.getDisplayname());
         model.setCreatedTime(oneByUuid.getCreatedTime());
         model.setCreatorId(oneByUuid.getCreatorId());
@@ -132,5 +140,5 @@ public class EntityToModel {
         model.setUpdateUserId(oneByUuid.getUpdateUserId());
         model.setUpdateUserName(oneByUuid.getUpdateUserName());
         return model;
-    }*/
+    }
 }

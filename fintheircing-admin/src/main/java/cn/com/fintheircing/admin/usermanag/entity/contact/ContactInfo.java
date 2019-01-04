@@ -1,12 +1,15 @@
-package cn.com.fintheircing.admin.common.entity.Contact;
+package cn.com.fintheircing.admin.usermanag.entity.contact;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
 @Entity
-@Table(name ="contactInfo")
-public class contactInfo {
+@Table(name ="ContactInfo")
+public class ContactInfo {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String id;
     private String contactId;//合约编号
     private Date createTime;//发生时间
@@ -23,28 +26,28 @@ public class contactInfo {
     private String floatFilled;//浮盈
     private String status;//状态
 
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name="contactDetails_id")//关联的表为contactDetails表，其主键是id
-    private contactDetails contactDetails;
+    private ContactDetails contactDetails;
     @OneToOne
     @JoinColumn(name="contractStock_id")//关联的表为contractStock表，其主键是id
-    private contractStock contractStock;
+    private ContractStock contractStock;*/
 
-    public contractStock  getContractStock() {
+/*    public ContractStock getContractStock() {
         return contractStock;
     }
 
-    public void setContractStock(contractStock contractStock) {
+    public void setContractStock(ContractStock contractStock) {
         this.contractStock = contractStock;
     }
 
-    public contactDetails getContactDetails() {
+    public ContactDetails getContactDetails() {
         return contactDetails;
     }
 
-    public void setContactDetails(contactDetails contactDetails) {
+    public void setContactDetails(ContactDetails contactDetails) {
         this.contactDetails = contactDetails;
-    }
+    }*/
 
     public String getId() {
         return id;

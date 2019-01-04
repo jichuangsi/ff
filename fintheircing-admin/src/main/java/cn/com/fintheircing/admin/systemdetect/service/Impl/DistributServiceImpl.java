@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DistributServiceImpl implements IDistributService {
@@ -20,6 +22,7 @@ public class DistributServiceImpl implements IDistributService {
     private ProductRepository productRepository;
     @Resource
     private IProductMapper productMapper;
+
 
     @Override
     public List<ProductModel> findForDayAllot() {
@@ -65,7 +68,11 @@ public class DistributServiceImpl implements IDistributService {
 
     //获取当前开启，选择的套餐
     @Override
-    public ProductModel getProduct(ProductModel model) {
-        return productMapper.selectCurrentProduct(model);
+    public ProductModel getProduct(Integer productNo) {
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("productNo",productNo);
+        return productMapper.selectCurrentProduct(params);
     }
+
+
 }

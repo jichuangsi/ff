@@ -1,13 +1,13 @@
 package cn.com.fintheircing.admin.todotask.controller;
 
-import cn.com.fintheircing.admin.Repository.TodoTaskInfoRepository;
-import cn.com.fintheircing.admin.Repository.UserClientInfoRepository;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.utils.EntityToModel;
 import cn.com.fintheircing.admin.common.utils.ModelToEntity;
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
 import cn.com.fintheircing.admin.todotask.model.FeedbackModel;
+import cn.com.fintheircing.admin.usermanag.dao.repsitory.ITodoTaskInfoRepository;
+import cn.com.fintheircing.admin.usermanag.dao.repsitory.IUserClientInfoRepository;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/todoTask")
 public class TodoTaskController {
     @Autowired
-    private UserClientInfoRepository userClientInfoRepository;
+    private IUserClientInfoRepository userClientInfoRepository;
 	@Autowired
-	private TodoTaskInfoRepository todoTaskInfoRepository;
+	private ITodoTaskInfoRepository todoTaskInfoRepository;
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@ApiOperation(value = "创建待办任务并且返回结果", notes = "")

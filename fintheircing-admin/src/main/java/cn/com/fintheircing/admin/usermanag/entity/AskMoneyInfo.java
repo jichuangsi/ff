@@ -1,15 +1,19 @@
-package cn.com.fintheircing.admin.common.entity;
+package cn.com.fintheircing.admin.usermanag.entity;
+
+import cn.com.fintheircing.admin.common.entity.AbstractEntity;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class AskMoneyInfo extends AbstractEntity  {
+public class AskMoneyInfo extends AbstractEntity {
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String id;
     private String userId;
     private String applyTime;
@@ -26,24 +30,6 @@ public class AskMoneyInfo extends AbstractEntity  {
     private String ArrivalTime; //到账时间
     private String payWay;//打款方式
     private String remark;//备注
-    private String phone;
-    private String userName;
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getUserId() {
         return userId;

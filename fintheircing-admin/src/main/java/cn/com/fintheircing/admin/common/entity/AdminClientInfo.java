@@ -1,6 +1,5 @@
-package cn.com.fintheircing.admin.common.entity.userInfo;
+package cn.com.fintheircing.admin.common.entity;
 
-import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;

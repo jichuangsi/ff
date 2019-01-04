@@ -1,12 +1,16 @@
-package cn.com.fintheircing.admin.common.entity.Contact;
+package cn.com.fintheircing.admin.usermanag.entity.contact;
 
+
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "contractStock")
-public class contractStock {
+@Table(name = "ContractStock")
+public class ContractStock {
     @Id
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String id;
     private String stockId;//股票代码ID
     private String stockName;//股票名称
@@ -16,8 +20,8 @@ public class contractStock {
     private String MarketValue;//市值
     private String buyTime;//购入时间
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "contractStock")
-    private contactInfo contactInfo;
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "ContractStock")
+//    private ContactInfo contactInfo;
 
     public String getId() {
         return id;
@@ -35,13 +39,13 @@ public class contractStock {
         this.stockId = stockId;
     }
 
-    public cn.com.fintheircing.admin.common.entity.Contact.contactInfo getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(cn.com.fintheircing.admin.common.entity.Contact.contactInfo contactInfo) {
-        this.contactInfo = contactInfo;
-    }
+//    public ContactInfo getContactInfo() {
+//        return contactInfo;
+//    }
+//
+//    public void setContactInfo(ContactInfo contactInfo) {
+//        this.contactInfo = contactInfo;
+//    }
 
     public String getStockName() {
         return stockName;

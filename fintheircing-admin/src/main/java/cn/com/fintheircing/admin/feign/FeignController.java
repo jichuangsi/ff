@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.feign;
 
+import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
@@ -31,9 +32,11 @@ public class FeignController {
     @Resource
     private SystemService systemService;
     @Resource
-    private IDistributService distributService;
+    private BusinessService businessService;
     @Resource
     private ProxyService proxyService;
+    @Resource
+    private IDistributService distributService;
 
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
@@ -64,9 +67,9 @@ public class FeignController {
 
     @ApiOperation(value = "传递product信息", notes = "")
     @ApiImplicitParams({})
-    @PostMapping("/getProduct")
-    public ProductModel getProduct(@RequestBody ProductModel model){
-        return distributService.getProduct(model);
+    @RequestMapping("/getProduct")
+    public ProductModel getProduct(@RequestParam("productNo") Integer productNo){
+        return distributService.getProduct(productNo);
     }
 
 
@@ -75,6 +78,13 @@ public class FeignController {
     @RequestMapping("/getInviteId")
     public String getInvitId(@RequestParam("inviteCode") String inviteCode){
         return proxyService.getInviteId(inviteCode);
+    }
+
+    @ApiOperation(value = "判断是否可购买", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/canBuy")
+    public Boolean canBuy(@RequestParam("productNo") Integer productNo,@RequestParam("userId") String userId){
+        return businessService.canBuy(productNo,userId);
     }
 
 }

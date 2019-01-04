@@ -20,5 +20,7 @@ public interface IDistributService {
 
     ProductModel updateProduce(ProductModel model);
 
-    ProductModel getProduct(ProductModel model);
+    ProductModel getProduct(Integer producctNo);
+
+
 }

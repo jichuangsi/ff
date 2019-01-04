@@ -2,7 +2,10 @@ package cn.com.fintheircing.admin.useritem.entity;
 
 import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import cn.com.fintheircing.admin.useritem.common.Status;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -17,6 +20,8 @@ import java.util.Date;
 @Table(name ="admin_Transaction_Summary")
 public class TransactionSummary extends AbstractEntity {
     @Id
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String stockId;
     private String stockName;
     private String alphabetCapitalization;

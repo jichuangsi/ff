@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.business.model;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class ContractModel {
@@ -11,6 +12,7 @@ public class ContractModel {
     private Date  createdTime;     //合约开始时间
     private String productName;     //产品名称
     private Double borrowMoney;     //借款
+    @Pattern(regexp = "^+?[1-9][0-9]*$")
     private Double promisedMoney;      //保证金
     private Double warningLine;     //预警线
     private Double abortLine;     //合约中止线

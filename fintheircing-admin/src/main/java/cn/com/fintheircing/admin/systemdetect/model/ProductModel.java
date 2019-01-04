@@ -43,7 +43,17 @@ public class ProductModel {
     /**
      * 日配或者月配或者特殊
      */
-    private String allot;
+    private Integer allot;
+
+    private String allotStr;
+
+    public String getAllotStr() {
+        return allotStr;
+    }
+
+    public void setAllotStr(String allotStr) {
+        this.allotStr = allotStr;
+    }
 
     public String getId() {
         return id;
@@ -117,11 +127,11 @@ public class ProductModel {
         this.liquidation = liquidation;
     }
 
-    public String getAllot() {
+    public Integer getAllot() {
         return allot;
     }
 
-    public void setAllot(String allot) {
+    public void setAllot(Integer allot) {
         this.allot = allot;
     }
 }

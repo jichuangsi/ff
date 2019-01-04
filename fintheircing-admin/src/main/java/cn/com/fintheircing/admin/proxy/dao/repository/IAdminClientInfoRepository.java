@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.proxy.dao.repository;
 
-import cn.com.fintheircing.admin.common.entity.userInfo.AdminClientInfo;
+import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

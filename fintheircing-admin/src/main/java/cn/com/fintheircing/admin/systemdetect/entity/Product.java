@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
 
 /**
  * Product entity
@@ -20,7 +19,7 @@ public class Product {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
-    protected String id;
+    private String id;
     /**
      * 买入时收取的交易金额
      */
@@ -44,7 +43,6 @@ public class Product {
     /**
      * 杠杆比率
      */
-    @Pattern(regexp ="^([1-9]|10)$", message="输入错误,请输入1到10中的一位整数")
     private int leverRate;
     /**
      * 警戒线
@@ -58,6 +56,16 @@ public class Product {
      * 日配或者月配或者特殊
      */
     private String allot;
+
+    private String open;
+
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
+    }
 
     public String getAllot() {
         return allot;
