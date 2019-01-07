@@ -7,7 +7,6 @@ import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
 import cn.com.fintheircing.admin.todotask.model.FeedbackModel;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.ITodoTaskInfoRepository;
-import cn.com.fintheircing.admin.usermanag.dao.repsitory.IUserClientInfoRepository;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -22,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/todoTask")
 public class TodoTaskController {
-    @Autowired
-    private IUserClientInfoRepository userClientInfoRepository;
+
 	@Autowired
 	private ITodoTaskInfoRepository todoTaskInfoRepository;
 	private Logger logger = LoggerFactory.getLogger(getClass());

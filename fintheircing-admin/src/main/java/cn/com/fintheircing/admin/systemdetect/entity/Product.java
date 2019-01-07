@@ -55,23 +55,13 @@ public class Product {
     /**
      * 日配或者月配或者特殊
      */
-    private String allot;
+    private Integer allot;
 
-    private String open;
-
-    public String getOpen() {
-        return open;
-    }
-
-    public void setOpen(String open) {
-        this.open = open;
-    }
-
-    public String getAllot() {
+    public Integer getAllot() {
         return allot;
     }
 
-    public void setAllot(String allot) {
+    public void setAllot(Integer allot) {
         this.allot = allot;
     }
 

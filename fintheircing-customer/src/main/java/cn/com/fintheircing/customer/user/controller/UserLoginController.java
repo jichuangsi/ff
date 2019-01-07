@@ -1,12 +1,12 @@
 package cn.com.fintheircing.customer.user.controller;
 
 import cn.com.fintheircing.customer.common.constant.ResultCode;
+import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.utils.WebCommonUtils;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.LoginService;
-import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +26,7 @@ public class UserLoginController {
     @Resource
     private LoginService loginService;
     @Resource
-    private ITodoTaskService todoTaskService;
+    private IAdminFeignService adminFeignService;
 
     @ApiOperation(value = "用户登录", notes = "")
     @ApiImplicitParams({})
@@ -36,7 +36,7 @@ public class UserLoginController {
         if(request==null){
             return ResponseModel.fail("",ResultCode.IP_VALIDATE_ERR);
         }
-        if(todoTaskService.isExistBlackList(WebCommonUtils.getClientIp(request))){
+        if(adminFeignService.isExistBlackList(WebCommonUtils.getClientIp(request))){
             return ResponseModel.fail("",ResultCode.IP_BLACK_VISIT);
         }
         String token =  "";

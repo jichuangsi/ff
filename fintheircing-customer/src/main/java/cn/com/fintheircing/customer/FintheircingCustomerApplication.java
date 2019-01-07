@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 @EnableHystrix//使用Hystrix
 @EnableCircuitBreaker//断路器
 @EnableDiscoveryClient//服务发现
-@EnableFeignClients//使用feing
+@EnableFeignClients//使用feign
 @MapperScan("cn.com.fintheircing.customer.user.dao.mapper")//扫描mybatismapper
 public class FintheircingCustomerApplication {
 

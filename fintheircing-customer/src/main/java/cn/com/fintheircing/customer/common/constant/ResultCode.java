@@ -26,4 +26,15 @@ public class ResultCode {
 
 	public static final String SYS_BUSY_BLACK = "黑名单访问，融断";
 	public static final String PRODUCT_GET_ERR = "获取产品失败";
+	public static final String ACCOUNT_NUM_ERR = "保证金金额数目不正确";
+	public static final String ACCOUNT_LESS_ERR = "账户余额不足";
+	public static final String ACCOUNT_PAY_ERR = "扣款失败";
+	public static final String CONTRACT_SAVE_ERR = "保存合约失败";
+
+
+	public static final String SPREAD_CREATED_ERR = "生成邀请码失败";
+
+
+	public static final String SUCESS_INFO = "success";
+	public static final String ERR_INFO = "error";
 }

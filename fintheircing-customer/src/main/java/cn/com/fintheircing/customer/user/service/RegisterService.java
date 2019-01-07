@@ -1,7 +1,9 @@
 package cn.com.fintheircing.customer.user.service;
 
 import cn.com.fintheircing.customer.common.CommonUtil;
+import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.constant.RoleCodes;
+import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserClientInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
@@ -13,7 +15,6 @@ import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
-import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +45,7 @@ public class RegisterService {
 	@Resource
 	private AmqpTemplate rabbitTemplate;
 	@Resource
-	private ITodoTaskService todoTaskService;
+	private IAdminFeignService adminFeignService;
 
 	private int valCodeLength = 4;
 	private String valsmsPre = "sms_val_";
@@ -55,7 +56,6 @@ public class RegisterService {
 
 	// 根据手机号获取验证码
 	public String getValCode(String phoneNo) throws RegisterheckExistException {
-		this.getRole();
 		synchronized (phoneNo.intern()) {
 			// 使用手机号作为用户名
 			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
@@ -86,8 +86,8 @@ public class RegisterService {
 		String phoneNo = registerModel.getPhoneNo();
 		String pwd = registerModel.getPwd();
 		String valCode = registerModel.getValCode();
-		if (!StringUtils.isEmpty(registerModel)){
-
+		if (!StringUtils.isEmpty(registerModel.getInvitCode())){
+			invitId = adminFeignService.getInviteId(registerModel.getInvitCode());
 		}
 		synchronized (phoneNo.intern()) {
 			// 使用手机号作为用户名
@@ -136,6 +136,13 @@ public class RegisterService {
 			userAccount.setUpdatedTime(new Date());
 			userAccountRepository.save(userAccount);
 
+			UserTokenInfo userInfo = new UserTokenInfo();
+			userInfo.setUuid(userClientInfo.getUuid());
+			userInfo.setRoleGrade(userClientInfo.getRoleGrade());
+			if (!adminFeignService.saveUserSpread(userInfo)){
+				throw new RegisterheckExistException(ResultCode.SPREAD_CREATED_ERR);
+			}
+
 
 			/*//创建待办注册审核任务
 			CreateTodoTaskModel model = new CreateTodoTaskModel();
@@ -170,7 +177,7 @@ public class RegisterService {
 
 	public Boolean getRole(){
 		if (!(RoleCodes.ROLE_KEY_INTEGER.size()>0)){
-			List<RoleModel> roles = todoTaskService.getRoles();
+			List<RoleModel> roles = adminFeignService.getRoles();
 			for (RoleModel role : roles) {
 				RoleCodes.ROLE_KEY_INTEGER.put(role.getPosition(), role.getSign());
 				RoleCodes.ROLE_KEY_STRING.put(role.getSign(), role.getPosition());

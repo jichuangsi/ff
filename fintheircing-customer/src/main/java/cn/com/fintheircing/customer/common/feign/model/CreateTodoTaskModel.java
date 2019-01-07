@@ -1,4 +1,4 @@
-package cn.com.fintheircing.customer.user.service.feign.model;
+package cn.com.fintheircing.customer.common.feign.model;
 
 public class CreateTodoTaskModel {
 

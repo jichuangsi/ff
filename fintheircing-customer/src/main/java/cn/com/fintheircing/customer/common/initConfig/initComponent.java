@@ -1,6 +1,6 @@
 package cn.com.fintheircing.customer.common.initConfig;
 
-import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
+import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 public class initComponent {
 
     @Resource
-    private ITodoTaskService todoTaskService;
+    private IAdminFeignService adminFeignService;
 
    /* @PostConstruct
     public void getRole(){

@@ -1,11 +1,13 @@
 package cn.com.fintheircing.customer.user.dao.mapper;
 
+import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.model.OnlineUserInfo;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IUserClientInfoMapper {
 
@@ -25,7 +27,12 @@ public interface IUserClientInfoMapper {
 			"LEFT OUTER JOIN User_Info_Recoding t2 on t1.client_info_id=t2.login_id " +
 			"<where> <if test= \"operating!=null and operating!=''\">t2.operating LIKE CONCAT('%',#{operating},'%') </if> <if test= \"loginName'!=null and loginName!=''\">and t1.login_name LIKE CONCAT('%',#{loginName},'%') </if>  </where>" +
 			"and where t2.delete_flag=\"0\"  </script>")
-	List<OnlineUserInfo> findAllRecoding(String operating, String loginName);
+	List<OnlineUserInfo> findAllRecoding(Map<String,Object> params);
+
 	@Update("<script> update User_Info_Recoding t1 set t1.delete_flag=\"0\" where t1.login_id=#{userId}</script>")
-	int deleteRecoding(String userId);
+	int deleteRecoding(Map<String,Object> params);
+
+
+	@Select("<script>select inviter_id as inviterId from user_client_info where uuid=#{id}</script>")
+	UserClientInfo selectSaleMan(Map<String,Object> params);
 }

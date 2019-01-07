@@ -1,24 +1,20 @@
-package cn.com.fintheircing.admin.systemdetect.common;
-/**
- * Demo Status
- *
- * @author YAOXIONG
- * @date 2018/12/27
- */
-public enum Status {
-    DAYS("日配", 0), MONTHS("月配", 1),
-    SPECIAL("特殊", 2);
+package cn.com.fintheircing.admin.common.constant;
+
+public enum  VerifyCode {
+
+    VERIFY_S("成功",0),VERIFY_E("驳回",1),VERIFY_W("待审核",2);
+
     private String name;
     private int index;
 
     // 构造方法
-    private Status(String name, int index) {
+    private VerifyCode(String name, int index) {
         this.name = name;
         this.index = index;
     }
 
     public static String getName(int index) {
-        for (Status c : Status.values()) {
+        for (VerifyCode c : VerifyCode.values()) {
             if (c.getIndex() == index) {
                 return c.name;
             }
@@ -26,8 +22,8 @@ public enum Status {
         return null;
     }
 
-    public static Status getStatus(String name) {
-        for (Status c : Status.values()) {
+    public static VerifyCode getStatus(String name) {
+        for (VerifyCode c : VerifyCode.values()) {
             if (c.getName().equalsIgnoreCase(name)) {
                 return c;
             }
@@ -50,5 +46,4 @@ public enum Status {
     public void setIndex(int index) {
         this.index = index;
     }
-
 }

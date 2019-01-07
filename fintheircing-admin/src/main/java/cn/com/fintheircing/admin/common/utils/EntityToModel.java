@@ -2,12 +2,10 @@ package cn.com.fintheircing.admin.common.utils;
 
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
-import cn.com.fintheircing.admin.usermanag.dao.repsitory.IUserClientInfoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class EntityToModel {
-    @Autowired
-    IUserClientInfoRepository userClientInfoRepository;
+   /* @Autowired
+    IUserClientInfoRepository userClientInfoRepository;*/
 
     public static TodoTaskInfo CoverTodoTaskInfoModel(CreateRegTodoTaskModel model){
         TodoTaskInfo taskInfo =new TodoTaskInfo();

@@ -40,4 +40,8 @@ public interface ISpreadMapper {
     //获取邀请人id
     @Select("<script>select saleman_id as id from proxy_spread WHERE invite_code=#{inviteCode}</script>")
     SpreadModel getSpreadId(@Param("inviteCode") String inviteCode);
+
+
+    @Select("<script>select spread_link as spreadLink,spread_code_pic as qRcode,invite_code as spreadNum from proxy_spread where saleman_id=#{userId}</script>")
+    SpreadModel getOwnSpread(@Param("userId")String userId);
 }

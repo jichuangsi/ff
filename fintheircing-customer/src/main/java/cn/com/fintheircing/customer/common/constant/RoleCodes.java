@@ -1,6 +1,5 @@
 package cn.com.fintheircing.customer.common.constant;
 
-import cn.com.fintheircing.customer.user.service.feign.ITodoTaskService;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public  class RoleCodes {
 
     public static  Map<String,Integer> ROLE_KEY_STRING = new HashMap<>();
 
-    private static ITodoTaskService todoTaskService;
+    /*private static IAdminFeignService adminFeignService;*/
    /* @Autowired
     public void setSystemService(ITodoTaskService todoTaskService) {
         RoleCodes.todoTaskService = todoTaskService;

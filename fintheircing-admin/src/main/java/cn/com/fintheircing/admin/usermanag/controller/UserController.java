@@ -39,12 +39,12 @@ public class UserController {
     @ApiOperation(value = "用户列表-根据Id冻结账户", notes = "")
     @PostMapping("/changeStatus")
     public ResponseModel<AdminClientInfoModel> changeStatus(String id)throws UserServiceException {
-        return ResponseModel.sucess("",userService.changeStatus(id));
+        return ResponseModel.sucess("",/*userService.changeStatus(id)*/null);
     }
     @ApiOperation(value = "冻结账户-根据Id恢复账户", notes = "")
     @GetMapping("/returnStatus")
     public ResponseModel<AdminClientInfoModel> returnStatus(String id)throws UserServiceException{
-        return ResponseModel.sucess("",userService.returnStatus(id));
+        return ResponseModel.sucess("",/*userService.returnStatus(id)*/null);
     }
     @ApiOperation(value = "冻结账户-查询冻结账户", notes = "")
     @PostMapping("/findByOption")
@@ -57,7 +57,7 @@ public class UserController {
     @ApiOperation(value = "用户列表-基本信息-修改所属代理", notes = "")
     @PostMapping("/changeProxyNum")
     public ResponseModel<AdminClientInfoModel> changeProxyNum(AdminClientInfoModel Model )throws UserServiceException{
-        AdminClientInfoModel adminClientInfoModel = userService.changeProxyNum(Model);
+        AdminClientInfoModel adminClientInfoModel = /*userService.changeProxyNum(Model);*/null;
         return ResponseModel.sucess("", adminClientInfoModel);
     }
     @ApiOperation(value = "用户列表-合约信息-合约记录", notes = "")
@@ -85,7 +85,7 @@ public class UserController {
     @ApiOperation(value = "资金申请-入金申请-入金处理", notes = "")
     @PostMapping("/insideMoneyHandel")
     public ResponseModel<AskMoneyInfoModel> insideMoneyHandel(AskMoneyInfoModel Model )throws UserServiceException{
-        AskMoneyInfoModel askMoneyInfoModels = userService.insideMoneyHandel(Model);
+        AskMoneyInfoModel askMoneyInfoModels = /*userService.insideMoneyHandel(Model);*/null;
         return ResponseModel.sucess("",askMoneyInfoModels);
     }
 //    @ApiOperation(value = "银行卡管理-银行卡全部信息", notes = "")
@@ -99,7 +99,7 @@ public class UserController {
     @ApiOperation(value = "银行卡管理-银行卡信息-银行卡解绑", notes = "")
     @PostMapping("/updatebankCard")
     public ResponseModel<AskMoneyInfoModel> updatebankCard(AskMoneyInfoModel Model )throws UserServiceException{
-        AskMoneyInfoModel askMoneyInfoModels = userService.updatebankCard(Model);
+        AskMoneyInfoModel askMoneyInfoModels = /*userService.updatebankCard(Model);*/null;
         return ResponseModel.sucess("",askMoneyInfoModels);
     }
 
@@ -107,7 +107,7 @@ public class UserController {
     @PostMapping("/findAllMessage")
     public ResponseModel<PageInfo<MesModel>> findAllMessage(int pageNum, int pageSize)throws UserServiceException{
         PageHelper.startPage(pageNum,pageSize);
-        List<MesModel> allMessage = imesgService.findAllMessage();
+        List<MesModel> allMessage = /*imesgService.findAllMessage();*/null;
         PageInfo<MesModel> personPageInfo = new PageInfo<>(allMessage);
         return ResponseModel.sucess("",personPageInfo);
     }

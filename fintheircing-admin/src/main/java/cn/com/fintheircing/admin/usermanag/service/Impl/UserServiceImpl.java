@@ -2,13 +2,11 @@ package cn.com.fintheircing.admin.usermanag.service.Impl;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
-import cn.com.fintheircing.admin.common.entity.UserClientInfo;
 import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientInfoRepository;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IUserMapper;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IAskMoneyInfoRepository;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IContactInfoRepository;
-import cn.com.fintheircing.admin.usermanag.dao.repsitory.IUserClientInfoRepository;
 import cn.com.fintheircing.admin.usermanag.entity.AskMoneyInfo;
 import cn.com.fintheircing.admin.usermanag.entity.contact.ContactInfo;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
@@ -26,8 +24,8 @@ import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl implements IUserService {
-    @Autowired
-    IUserClientInfoRepository userClientInfoRepository;
+    /*@Autowired
+    IUserClientInfoRepository userClientInfoRepository;*/
     @Autowired
     IUserMapper usermapper;
 //    @Autowired
@@ -83,7 +81,7 @@ public class UserServiceImpl implements IUserService {
 
 
 
-    @Override
+   /* @Override
     public AdminClientInfoModel changeStatus(String id) throws UserServiceException {
         try {
             AdminClientInfo oneByUuid = adminClientInfoRepository.findOneByUuid(id);
@@ -100,7 +98,7 @@ public class UserServiceImpl implements IUserService {
             throw new UserServiceException(e.getMessage());
         }
 
-    }
+    }*/
 
     @Override
     public List<AdminClientInfoModel> findByOption(AdminClientInfoModel model)throws UserServiceException {
@@ -124,7 +122,7 @@ public class UserServiceImpl implements IUserService {
 
     }
 
-    @Override
+    /*@Override
     public AdminClientInfoModel changeProxyNum(AdminClientInfoModel model)throws UserServiceException {
         try{
             if (model==null){
@@ -136,9 +134,9 @@ public class UserServiceImpl implements IUserService {
             throw new UserServiceException(e.getMessage());
         }
 
-    }
+    }*/
 
-    @Override
+   /* @Override
     public AdminClientInfoModel returnStatus(String id) throws UserServiceException{
         try {
             AdminClientInfo oneByUuid = adminClientInfoRepository.findOneByUuid(id);
@@ -155,7 +153,7 @@ public class UserServiceImpl implements IUserService {
             throw new UserServiceException(e.getMessage());
         }
 
-    }
+    }*/
 
 //    @Override
 //    public List<AskMoneyInfoModel> insideMoney(AskMoneyInfoModel model)throws UserServiceException {
@@ -202,7 +200,7 @@ public class UserServiceImpl implements IUserService {
 //        }
 //    }
 
-    @Override
+  /*  @Override
     public AskMoneyInfoModel updatebankCard(AskMoneyInfoModel model) {
         AskMoneyInfo askMoneyInfo = ModelToEntity.coverAskMoneyInfo2entity(model);
         askMoneyInfo.setDeleteFlag("1");
@@ -210,21 +208,21 @@ public class UserServiceImpl implements IUserService {
         UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(save.getUserId());
 //        EntityToModel.coverAskMoneyInfo(save,oneByPhone);
         return   EntityToModel.coverAskMoneyInfo(save,oneByPhone);
-    }
+    }*/
     /*未实现*/
     @Override
     public AskMoneyInfoModel changeMoneyBySelf(AskMoneyInfoModel model) {
         return null;
     }
 
-    @Override
+/*    @Override
     public AskMoneyInfoModel insideMoneyHandel(AskMoneyInfoModel model) {
         AskMoneyInfo askMoneyInfo = ModelToEntity.coverAskMoneyInfo2entity(model);
         AskMoneyInfo save = askMoneyInfoRepository.save(askMoneyInfo);
         UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(save.getUserId());
         AskMoneyInfoModel askMoneyInfoModel = EntityToModel.coverAskMoneyInfo(save, oneByPhone);
         return askMoneyInfoModel;
-    }
+    }*/
 
     @Override
     public List<ContactInfoModel> contactRecode(String goodsType) {
@@ -249,14 +247,14 @@ public class UserServiceImpl implements IUserService {
 //        return models;
 //    }
 
-    private AdminClientInfoModel convertQuestionList(AdminClientInfo userInfo){
+    /*private AdminClientInfoModel convertQuestionList(AdminClientInfo userInfo){
         AdminClientInfoModel model =new AdminClientInfoModel();
             //根据手机号查询UserClientInfo
         UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(userInfo.getUuid());
          return EntityToModel.coverAdminClientInfo(userInfo,oneByPhone);
 
-    }
-    private AdminClientInfoModel convertentity(AdminClientInfoModel userInfo){
+    }*/
+   /* private AdminClientInfoModel convertentity(AdminClientInfoModel userInfo){
         AdminClientInfoModel model =new AdminClientInfoModel();
             //根据手机号查询UserClientInfo
         UserClientInfo oneByPhone = userClientInfoRepository.findOneByUserId(userInfo.getPhone());
@@ -264,5 +262,5 @@ public class UserServiceImpl implements IUserService {
         AdminClientInfo save = adminClientInfoRepository.save(adminClientInfo);
        return EntityToModel.coverAdminClientInfo(save,oneByPhone);
 
-    }
+    }*/
 }

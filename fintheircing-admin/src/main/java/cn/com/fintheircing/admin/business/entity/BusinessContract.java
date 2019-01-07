@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Version;
-import java.util.Date;
 
 @Entity
 public class BusinessContract extends AbstractEntity{
@@ -19,18 +18,24 @@ public class BusinessContract extends AbstractEntity{
     private String userId;    //关联用户
     private String productId;    //关联产品
     private String transactorId;   //关联销售
-    private Date startTime;     //合约开始时间
-    private Date finishTime;    //合约结束时间
-    private String choseWay;    //选择付利息方式
+    private Integer choseWay;    //选择付利息方式
     private Double promisedMoney;   //保证金
     private Double dangerourPrpmised;   //超危保证金
     private Double borrowMoney;   //借款
     private Double coldMoney;   //冻结资金
     private Double warningLine;    //警告线
     private Double abortLine;    //平仓线
-    private String riskId;    //关联风控
+    private Double firstInterest;   //初次利息
     @Version
     private int version;
+
+    public Double getFirstInterest() {
+        return firstInterest;
+    }
+
+    public void setFirstInterest(Double firstInterest) {
+        this.firstInterest = firstInterest;
+    }
 
     public int getVersion() {
         return version;
@@ -48,9 +53,6 @@ public class BusinessContract extends AbstractEntity{
         this.coldMoney = coldMoney;
     }
 
-    public String getRiskId() {
-        return riskId;
-    }
 
     public Double getDangerourPrpmised() {
         return dangerourPrpmised;
@@ -60,9 +62,6 @@ public class BusinessContract extends AbstractEntity{
         this.dangerourPrpmised = dangerourPrpmised;
     }
 
-    public void setRiskId(String riskId) {
-        this.riskId = riskId;
-    }
 
     public String getUuid() {
         return uuid;
@@ -104,27 +103,11 @@ public class BusinessContract extends AbstractEntity{
         this.transactorId = transactorId;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(Date finishTime) {
-        this.finishTime = finishTime;
-    }
-
-    public String getChoseWay() {
+    public Integer getChoseWay() {
         return choseWay;
     }
 
-    public void setChoseWay(String choseWay) {
+    public void setChoseWay(Integer choseWay) {
         this.choseWay = choseWay;
     }
 

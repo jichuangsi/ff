@@ -1,25 +1,15 @@
 package cn.com.fintheircing.admin.usermanag.utils;
 
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
-import cn.com.fintheircing.admin.common.entity.UserClientInfo;
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
-import cn.com.fintheircing.admin.usermanag.dao.repsitory.IUserClientInfoRepository;
-import cn.com.fintheircing.admin.usermanag.entity.AskMoneyInfo;
 import cn.com.fintheircing.admin.usermanag.entity.contact.ContactInfo;
-import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
-import cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.ContactInfoModel;
-import cn.com.fintheircing.admin.usermanag.model.UserClientInfoModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.UUID;
 
 public class EntityToModel {
-    @Autowired
-    IUserClientInfoRepository userClientInfoRepository;
+   /* @Autowired
+    IUserClientInfoRepository userClientInfoRepository;*/
 
     public static TodoTaskInfo CoverTodoTaskInfoModel(CreateRegTodoTaskModel model){
         TodoTaskInfo taskInfo =new TodoTaskInfo();
@@ -30,7 +20,7 @@ public class EntityToModel {
     }
 
 
-    public static AdminClientInfoModel coverAdminClientInfo(AdminClientInfo adminClientInfo, UserClientInfo userClientInfo){
+    /*public static AdminClientInfoModel coverAdminClientInfo(AdminClientInfo adminClientInfo, UserClientInfo userClientInfo){
         AdminClientInfoModel model=new AdminClientInfoModel();
         model.setId(userClientInfo.getId());
         model.setCer(userClientInfo.getCer());
@@ -45,8 +35,8 @@ public class EntityToModel {
         model.setUserName(adminClientInfo.getUserName());
 
         return model;
-    }
-    public static List<AdminClientInfoModel> coverAdminClientInfos(List<AdminClientInfo> userInfos, UserClientInfo userClientInfo){
+    }*/
+    /*public static List<AdminClientInfoModel> coverAdminClientInfos(List<AdminClientInfo> userInfos, UserClientInfo userClientInfo){
         List<AdminClientInfoModel> models=null;
         AdminClientInfoModel model= new AdminClientInfoModel();
         List<String> list=null;
@@ -61,9 +51,9 @@ public class EntityToModel {
             models.add(adminClientInfoModel);
         });
         return models;
-    }
+    }*/
 
-    public static AskMoneyInfoModel coverAskMoneyInfo(AskMoneyInfo user, UserClientInfo userClientInfo){
+    /*public static AskMoneyInfoModel coverAskMoneyInfo(AskMoneyInfo user, UserClientInfo userClientInfo){
         AskMoneyInfoModel model =new AskMoneyInfoModel();
         model.setApplyMoney(user.getApplyMoney());
         model.setArrivalTime(user.getArrivalTime());
@@ -83,7 +73,7 @@ public class EntityToModel {
         model.setStatus(user.getStatus());
         model.setPayWay(user.getPayWay());
         return model;
-    }
+    }*/
 
     public static List<ContactInfoModel> coverContactInfo(List<ContactInfo> info){
         List<ContactInfoModel> models=null;
@@ -124,7 +114,7 @@ public class EntityToModel {
         return models;
     }
 
-    public static UserClientInfoModel coverUserClientInfo(UserClientInfo oneByUuid) {
+   /* public static UserClientInfoModel coverUserClientInfo(UserClientInfo oneByUuid) {
         UserClientInfoModel model =new UserClientInfoModel();
         model.setCer(oneByUuid.getCer());
         model.setSource(oneByUuid.getSource());
@@ -140,5 +130,5 @@ public class EntityToModel {
         model.setUpdateUserId(oneByUuid.getUpdateUserId());
         model.setUpdateUserName(oneByUuid.getUpdateUserName());
         return model;
-    }
+    }*/
 }

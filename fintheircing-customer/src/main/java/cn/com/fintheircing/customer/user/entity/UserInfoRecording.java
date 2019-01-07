@@ -1,19 +1,20 @@
 package cn.com.fintheircing.customer.user.entity;
 
 import cn.com.fintheircing.customer.common.entity.AbstractEntity;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
-@Entity
-@Table(name = "UserInfoRecording")
+/*@Entity*/
 public class UserInfoRecording extends AbstractEntity {
     @Id
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     String id;
     Date loginTime;
     Date lastTime;
-    Long ExpiredTime;//过期时间
+    long ExpiredTime;//过期时间
     String status;
     String method;//方法
     String usage;//用法
@@ -76,11 +77,11 @@ public class UserInfoRecording extends AbstractEntity {
         this.lastTime = lastTime;
     }
 
-    public Long getExpiredTime() {
+    public long getExpiredTime() {
         return ExpiredTime;
     }
 
-    public void setExpiredTime(Long expiredTime) {
+    public void setExpiredTime(long expiredTime) {
         ExpiredTime = expiredTime;
     }
 

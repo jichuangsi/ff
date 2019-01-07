@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.systemdetect.service.Impl;
 
-import cn.com.fintheircing.admin.systemdetect.common.Status;
+import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
 import cn.com.fintheircing.admin.systemdetect.dao.mapper.IProductMapper;
 import cn.com.fintheircing.admin.systemdetect.dao.repository.ProductRepository;
 import cn.com.fintheircing.admin.systemdetect.entity.Product;
@@ -28,7 +28,7 @@ public class DistributServiceImpl implements IDistributService {
     public List<ProductModel> findForDayAllot() {
         List<Product> all = productRepository.findAll();
         all.forEach(a -> {
-            if (!Status.DAYS.getName().equals(a.getAllot())) {
+            if (!ProductStatus.DAYS.getName().equals(a.getAllot())) {
                 all.remove(a);
             }
         });
@@ -39,7 +39,7 @@ public class DistributServiceImpl implements IDistributService {
     public List<ProductModel> findForMonthAllot() {
         List<Product> all = productRepository.findAll();
         all.forEach(a -> {
-            if (!Status.MONTHS.getName().equals(a.getAllot())) {
+            if (!ProductStatus.MONTHS.getName().equals(a.getAllot())) {
                 all.remove(a);
             }
         });
@@ -50,7 +50,7 @@ public class DistributServiceImpl implements IDistributService {
     public List<ProductModel> findForSpecialAllot() {
         List<Product> all = productRepository.findAll();
         all.forEach(a -> {
-            if (!Status.SPECIAL.getName().equals(a.getAllot())) {
+            if (!ProductStatus.SPECIAL.getName().equals(a.getAllot())) {
                 all.remove(a);
             }
         });
@@ -68,10 +68,15 @@ public class DistributServiceImpl implements IDistributService {
 
     //获取当前开启，选择的套餐
     @Override
-    public ProductModel getProduct(Integer productNo) {
+    public List<ProductModel> getProduct(Integer productNo) {
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put("productNo",productNo);
+        String productName = "";
+        if (productNo!=null){
+            productName = ProductStatus.getName(productNo);
+        }
+        params.put("productName",productName);
         return productMapper.selectCurrentProduct(params);
+        /*return MappingEntity2ModelConverter.coverProductList(productRepository.findProductsByAllotContains(productNo));*/
     }
 
 

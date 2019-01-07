@@ -205,10 +205,11 @@ public class ProxyService {
         PageHelper.startPage(spreadModel.getPageIndex(),spreadModel.getPageSize());
         spreadModel.setId(userInfo.getUuid());
         List<SpreadModel> spreadModels = new ArrayList<SpreadModel>();
-        if(RoleCodes.ROLE_KEY_STRING.get("E").equals(spreadModel.getPosition())){
+        if(RoleCodes.ROLE_KEY_STRING.get("E").equals(spreadModel.getPosition())
+                ||RoleCodes.ROLE_KEY_STRING.get("U").equals(spreadModel.getPosition())){
             spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadEmp(spreadModel);
-        }else{
+        } else{
             spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadProxy(spreadModel);
         }
@@ -364,5 +365,51 @@ public class ProxyService {
             return spreadMapper.getSpreadId(inviteCode).getId();
         }
         return "";
+    }
+
+
+    public Boolean saveUserSpread(UserTokenInfo userInfo) throws ProxyException{
+        ProxySpread proxySpread = new ProxySpread();
+        InputStream is = null;
+        File file = null;
+        ByteArrayOutputStream outputStream = null;
+        try {
+            proxySpread.setInviteCode(createdInvitCode(0, RoleCodes.ROLE_KEY_INTEGER.get(userInfo.getRoleGrade())));
+            proxySpread.setSalemanId(userInfo.getUuid());
+            proxySpread.setSpreadLink(getNewInviteLink(proxySpread.getInviteCode(),proxySpread.getInviteCode()));
+            String path = getNewCodePic(proxySpread.getSpreadLink(),proxySpread.getInviteCode());
+            file = new File(path);
+            is = new FileInputStream(file);
+            outputStream = new ByteArrayOutputStream();
+            byte[] bytes = new byte[100];
+            int rc = 0;
+            while ((rc=is.read(bytes,0,100))>0){
+                outputStream.write(bytes,0,rc);
+            }
+            byte[] piccodes = outputStream.toByteArray();
+            proxySpread.setSpreadCodePic(piccodes);
+            spreadRepository.save(proxySpread);
+            return true;
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            return false;
+        }finally {
+            try {
+                outputStream.close();
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(file.exists()&&file.isFile()){
+                file.delete();
+            }
+        }
+
+    }
+
+
+    //获取个人推广页面
+    public SpreadModel getOwnSpread(String userId){
+        return spreadMapper.getOwnSpread(userId);
     }
 }

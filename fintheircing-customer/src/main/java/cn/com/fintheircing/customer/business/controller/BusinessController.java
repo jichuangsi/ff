@@ -1,14 +1,19 @@
 package cn.com.fintheircing.customer.business.controller;
 
+import cn.com.fintheircing.customer.business.exception.BusinessException;
+import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
-import cn.com.fintheircing.customer.business.service.feign.IBusinessFeignService;
+import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
+import cn.com.fintheircing.customer.business.service.BusinessService;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
+import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,7 +23,9 @@ import javax.annotation.Resource;
 @Api("用户关于商业上操作")
 public class BusinessController {
     @Resource
-    private IBusinessFeignService businessFeignService;
+    private IAdminFeignService adminFeignService;
+    @Resource
+    private BusinessService businessService;
 
 
     @ApiOperation(value = "获取产品列表", notes = "")
@@ -26,12 +33,12 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getProducts")
-    public ResponseModel getProducts(@ModelAttribute UserTokenInfo userInfo, @RequestBody ProductModel model){
-        model = businessFeignService.getProductModel(model);
-        if (model==null){
-            return ResponseModel.fail("", ResultCode.PRODUCT_GET_ERR);
+    public ResponseModel<TranferProductModel> getProducts(@ModelAttribute UserTokenInfo userInfo, @RequestBody ProductModel model){
+        try {
+            return ResponseModel.sucess("", businessService.getTranferProductModel(userInfo,model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
         }
-        return ResponseModel.sucess("",model);
     }
 
     @ApiOperation(value = "验证并保存合约", notes = "")
@@ -39,7 +46,30 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveContract")
-    public ResponseModel saveContract(){
+    public ResponseModel saveContract(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody ContractModel model){
+        if (model.getPromisedMoney()<2000||model.getPromisedMoney()>3000000){
+            return ResponseModel.fail("",ResultCode.ACCOUNT_NUM_ERR);
+        }
+        try {
+            businessService.saveContract(userInfo,model);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "判断是否金额充足", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/isRich")
+    public ResponseModel isRich(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractModel model){
+        if (model.getPromisedMoney()<2000||model.getPromisedMoney()>3000000){
+            return ResponseModel.fail("",ResultCode.ACCOUNT_NUM_ERR);
+        }
+        if (!businessService.isRich(userInfo,model)){
+            return ResponseModel.fail("",ResultCode.ACCOUNT_LESS_ERR);
+        }
         return ResponseModel.sucessWithEmptyData("");
     }
 

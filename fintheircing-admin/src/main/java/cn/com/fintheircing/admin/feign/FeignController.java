@@ -1,10 +1,14 @@
 package cn.com.fintheircing.admin.feign;
 
+import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.common.model.RoleModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
+import cn.com.fintheircing.admin.proxy.exception.ProxyException;
+import cn.com.fintheircing.admin.proxy.model.SpreadModel;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
@@ -65,10 +69,12 @@ public class FeignController {
         return systemService.getRoles();
     }
 
+
+
     @ApiOperation(value = "传递product信息", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/getProduct")
-    public ProductModel getProduct(@RequestParam("productNo") Integer productNo){
+    public List<ProductModel> getProduct(@RequestParam("productNo") Integer productNo){
         return distributService.getProduct(productNo);
     }
 
@@ -85,6 +91,28 @@ public class FeignController {
     @RequestMapping("/canBuy")
     public Boolean canBuy(@RequestParam("productNo") Integer productNo,@RequestParam("userId") String userId){
         return businessService.canBuy(productNo,userId);
+    }
+
+    @ApiOperation(value = "保存合约，和创立合约操作", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/saveContract")
+    public Boolean saveContract(@RequestBody ContractModel model){
+        return businessService.saveContract(model);
+    }
+
+    @ApiOperation(value = "新建用户的推广", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/saveUserSpread")
+    public Boolean saveUserSpread(@RequestBody UserTokenInfo userInfo) throws ProxyException{
+        return proxyService.saveUserSpread(userInfo);
+    }
+
+
+    @ApiOperation(value = "获取当前用户的推广", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getOwnSpread")
+    public SpreadModel getOwnSpread(@RequestParam("userId") String userId){
+        return proxyService.getOwnSpread(userId);
     }
 
 }

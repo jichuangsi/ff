@@ -43,17 +43,11 @@ public class ProductModel {
     /**
      * 日配或者月配或者特殊
      */
-    private Integer allot;
-
     private String allotStr;
 
-    public String getAllotStr() {
-        return allotStr;
-    }
+    private Integer allot;
 
-    public void setAllotStr(String allotStr) {
-        this.allotStr = allotStr;
-    }
+
 
     public String getId() {
         return id;
@@ -125,6 +119,14 @@ public class ProductModel {
 
     public void setLiquidation(double liquidation) {
         this.liquidation = liquidation;
+    }
+
+    public String getAllotStr() {
+        return allotStr;
+    }
+
+    public void setAllotStr(String allotStr) {
+        this.allotStr = allotStr;
     }
 
     public Integer getAllot() {

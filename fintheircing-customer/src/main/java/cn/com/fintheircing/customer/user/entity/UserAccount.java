@@ -15,7 +15,7 @@ public class UserAccount extends AbstractEntity {
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String userId;
-    private Double userAccount;
+    private Double account;
     @Version
     private Integer version;
 
@@ -43,11 +43,11 @@ public class UserAccount extends AbstractEntity {
         this.userId = userId;
     }
 
-    public Double getUserAccount() {
-        return userAccount;
+    public Double getAccount() {
+        return account;
     }
 
-    public void setUserAccount(Double userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(Double account) {
+        this.account = account;
     }
 }
