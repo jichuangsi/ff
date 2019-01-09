@@ -1,5 +1,7 @@
 package cn.com.fintheircing.customer.business.model;
 
+
+
 import java.util.Date;
 
 public class ContractModel {
@@ -16,11 +18,15 @@ public class ContractModel {
     private Double abortLine;     //合约中止线
     private String userId;     //用户人
     private String saleManId;     //上级操控人
-
+    private Double canUseMoney;      //可用余额
+    private Double worth;       //市值
+    private Double floatMoney;      //盈亏
 
     private Integer choseWay;    //选择方式
     private Double coldCash;    //冻结资金
     private Double dangerCash;    //危险保证金
+
+    private String choseStr;
 
     private Double first;   //初次利息
 
@@ -29,6 +35,14 @@ public class ContractModel {
 
     private Integer pageIndex;
     private Integer pageSize;
+
+    public String getChoseStr() {
+        return choseStr;
+    }
+
+    public void setChoseStr(String choseStr) {
+        this.choseStr = choseStr;
+    }
 
     public Double getFirst() {
         return first;
@@ -180,5 +194,29 @@ public class ContractModel {
 
     public void setAbortLine(Double abortLine) {
         this.abortLine = abortLine;
+    }
+
+    public Double getCanUseMoney() {
+        return canUseMoney;
+    }
+
+    public void setCanUseMoney(Double canUseMoney) {
+        this.canUseMoney = canUseMoney;
+    }
+
+    public Double getWorth() {
+        return worth;
+    }
+
+    public void setWorth(Double worth) {
+        this.worth = worth;
+    }
+
+    public Double getFloatMoney() {
+        return floatMoney;
+    }
+
+    public void setFloatMoney(Double floatMoney) {
+        this.floatMoney = floatMoney;
     }
 }

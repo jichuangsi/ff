@@ -68,7 +68,7 @@ public class DistributServiceImpl implements IDistributService {
 
     //获取当前开启，选择的套餐
     @Override
-    public List<ProductModel> getProduct(Integer productNo) {
+    public List<ProductModel> getProducts(Integer productNo) {
         Map<String,Object> params = new HashMap<String,Object>();
         String productName = "";
         if (productNo!=null){
@@ -79,5 +79,8 @@ public class DistributServiceImpl implements IDistributService {
         /*return MappingEntity2ModelConverter.coverProductList(productRepository.findProductsByAllotContains(productNo));*/
     }
 
-
+    @Override
+    public ProductModel getProduct(String productId) {
+        return productMapper.selectProduct(productId);
+    }
 }

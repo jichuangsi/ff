@@ -1,8 +1,8 @@
-package cn.com.fintheircing.admin.feign;
+package cn.com.fintheircing.admin.common.feign;
 
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
-import cn.com.fintheircing.admin.feign.impl.CustomerFeignServiceFallBack;
+import cn.com.fintheircing.admin.common.feign.impl.CustomerFeignServiceFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 

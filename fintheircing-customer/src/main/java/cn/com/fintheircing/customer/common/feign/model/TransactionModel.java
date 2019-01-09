@@ -1,43 +1,24 @@
-package cn.com.fintheircing.admin.useritem.entity;
+package cn.com.fintheircing.customer.common.feign.model;
 
-import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import cn.com.fintheircing.admin.useritem.common.Status;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * Demo TransactionSummary
+ * Demo class
  *
  * @author 姚雄
  * @date 2018/12/27
  */
-@Entity
-@Table(name ="admin_Transaction_Summary")
-public class TransactionSummary extends AbstractEntity {
-    @Id
-    @GeneratedValue(generator = "paymentableGenerator")
-    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+public class TransactionModel {
     private String id;
     private String stockNum;
     private String stockName;
-    private String alphabetCapitalization;  //名称首字母大写
-    private String martTemplate;    //市场模块
-    private Date   joinTime;
+    private String alphabetCapitalization;
+    private String martTemplate;
+    private Date joinTime;
     private String remake;
     private Status status;
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 
     public String getId() {
         return id;
@@ -93,5 +74,13 @@ public class TransactionSummary extends AbstractEntity {
 
     public void setRemake(String remake) {
         this.remake = remake;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

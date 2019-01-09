@@ -30,6 +30,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getProxyList")
+    @CrossOrigin
     public ResponseModel<PageInfo<ProxyModel>> getProxyList(@ModelAttribute UserTokenInfo admin, @RequestBody ProxyModel proxyModel){
         if(proxyModel.getPageIndex()==null||proxyModel.getPageIndex()==0
                 ||proxyModel.getPageSize()==null||proxyModel.getPageSize()==0)
@@ -48,6 +49,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveChildProxy")
+    @CrossOrigin
     public ResponseModel saveChildProxy(@ModelAttribute UserTokenInfo admin , @RequestBody ProxyModel proxyModel) throws ProxyException{
 
         if (StringUtils.isEmpty(proxyModel.getProxyName())
@@ -70,6 +72,7 @@ public class ProxyController {
     @ApiImplicitParams({
     })
     @PostMapping("/getCommission")
+    @CrossOrigin
     public ResponseModel<ProxyModel> getCommission(@RequestBody IdModel model){
         if(model==null||model.getIds()==null||!(model.getIds().size()>0)){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
@@ -86,6 +89,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateCommission")
+    @CrossOrigin
     public ResponseModel updateCommission(@ModelAttribute UserTokenInfo userInfo,@RequestBody ProxyModel model){
         if(StringUtils.isEmpty(model.getBackCommission())||StringUtils.isEmpty(model.getDayCommission())
                 ||StringUtils.isEmpty(model.getMonthCommission())||StringUtils.isEmpty(model.getProxyId())){
@@ -104,6 +108,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getEmployee")
+    @CrossOrigin
     public ResponseModel getEmployee(@ModelAttribute UserTokenInfo userInfo,@RequestBody EmployeeModel model){
         if(model==null||StringUtils.isEmpty(model.getId())
                 ||model.getPageIndex()==null||model.getPageSize()==null){
@@ -117,6 +122,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getSpread")
+    @CrossOrigin
     public ResponseModel<PageInfo<SpreadModel>> getSpread(@ModelAttribute UserTokenInfo userInfo,@RequestBody SpreadModel spreadModel){
         if (spreadModel.getPageIndex()==0||spreadModel.getPageIndex()==null
                 ||spreadModel.getPageSize()==0||spreadModel.getPageSize()==null){
@@ -132,6 +138,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getCommissionDetail")
+    @CrossOrigin
     public ResponseModel getCommissionDetail(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractDetailModel contract){
 
         return ResponseModel.sucess("",null);
@@ -143,6 +150,7 @@ public class ProxyController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getManageDetail")
+    @CrossOrigin
     public ResponseModel getManageDetail(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractDetailModel contract){
 
         return ResponseModel.sucess("",null);

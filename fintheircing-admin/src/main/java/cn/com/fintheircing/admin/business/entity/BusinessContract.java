@@ -23,11 +23,27 @@ public class BusinessContract extends AbstractEntity{
     private Double dangerourPrpmised;   //超危保证金
     private Double borrowMoney;   //借款
     private Double coldMoney;   //冻结资金
-    private Double warningLine;    //警告线
-    private Double abortLine;    //平仓线
+    private String  riskId;
     private Double firstInterest;   //初次利息
+    private Double availableMoney;  //可用资金
     @Version
     private int version;
+
+    public String getRiskId() {
+        return riskId;
+    }
+
+    public void setRiskId(String riskId) {
+        this.riskId = riskId;
+    }
+
+    public Double getAvailableMoney() {
+        return availableMoney;
+    }
+
+    public void setAvailableMoney(Double availableMoney) {
+        this.availableMoney = availableMoney;
+    }
 
     public Double getFirstInterest() {
         return firstInterest;
@@ -127,19 +143,4 @@ public class BusinessContract extends AbstractEntity{
         this.borrowMoney = borrowMoney;
     }
 
-    public Double getWarningLine() {
-        return warningLine;
-    }
-
-    public void setWarningLine(Double warningLine) {
-        this.warningLine = warningLine;
-    }
-
-    public Double getAbortLine() {
-        return abortLine;
-    }
-
-    public void setAbortLine(Double abortLine) {
-        this.abortLine = abortLine;
-    }
 }

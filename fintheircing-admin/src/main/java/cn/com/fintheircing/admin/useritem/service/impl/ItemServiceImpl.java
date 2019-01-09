@@ -10,6 +10,7 @@ import cn.com.fintheircing.admin.useritem.utils.MappingModel2EntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Demo class
@@ -104,5 +105,22 @@ public class ItemServiceImpl implements ItemService {
     public final List<TransactionModel> findAllList(TransactionModel model){
         List<TransactionModel> list = transactionSummaryMapper.findAllByTemplateAndStockName(model);
         return list;
+    }
+
+    @Override
+    public Boolean isExistWhiteList(String  stockNum) {
+        Boolean flag = false;
+        List<TransactionModel> list = findAllList(new TransactionModel());
+        list.forEach(i->{
+            if(!i.getStatus().getName().equals(Status.WHITELIST)){
+                list.remove(i);
+            }
+        });
+        for (TransactionModel transactionModel:list){
+            if (transactionModel.getStockNum().equals(stockNum)){
+                flag = true;
+            }
+        }
+        return flag;
     }
 }

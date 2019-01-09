@@ -15,7 +15,8 @@ public class MappingEntity2ModelConverter {
             model.setJoinTime(s.getJoinTime());
             model.setMartTemplate(s.getMartTemplate());
             model.setRemake(s.getRemake());
-            model.setStockId(s.getStockId());
+            model.setId(s.getId());
+            model.setStockNum(s.getStockNum());
             model.setStockName(s.getStockName());
             models.add(model);
         });
@@ -27,7 +28,8 @@ public class MappingEntity2ModelConverter {
         model.setJoinTime(Summary.getJoinTime());
         model.setMartTemplate(Summary.getMartTemplate());
         model.setRemake(Summary.getRemake());
-        model.setStockId(Summary.getStockId());
+        model.setStockNum(Summary.getStockNum());
+        model.setId(Summary.getId());
         model.setStockName(Summary.getStockName());
         model.setStatus(Summary.getStatus());
         return model;
@@ -38,7 +40,8 @@ public class MappingEntity2ModelConverter {
         model.setJoinTime(summary.getJoinTime());
         model.setMartTemplate(summary.getMartTemplate());
         model.setRemake(summary.getRemake());
-        model.setStockId(summary.getStockId());
+        model.setId(summary.getId());
+        model.setStockNum(summary.getStockNum());
         model.setStockName(summary.getStockName());
         model.setStatus(summary.getStatus());
         return model;

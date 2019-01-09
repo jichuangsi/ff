@@ -1,7 +1,7 @@
-package cn.com.fintheircing.admin.feign;
+package cn.com.fintheircing.admin.common.feign;
 
 
-import cn.com.fintheircing.admin.feign.impl.MsgFeignServiceFallBack;
+import cn.com.fintheircing.admin.common.feign.impl.MsgFeignServiceFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(name = "ffmsg",fallback = MsgFeignServiceFallBack.class)

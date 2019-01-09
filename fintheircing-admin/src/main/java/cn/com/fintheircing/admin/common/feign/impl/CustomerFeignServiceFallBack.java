@@ -1,9 +1,9 @@
-package cn.com.fintheircing.admin.feign.impl;
+package cn.com.fintheircing.admin.common.feign.impl;
 
 
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
-import cn.com.fintheircing.admin.feign.ICustomerFeignService;
+import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

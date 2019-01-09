@@ -33,7 +33,7 @@ public class BusinessService {
     private String sdformat;
 
     public TranferProductModel getTranferProductModel(UserTokenInfo userInfo,ProductModel model) throws BusinessException{
-        List<ProductModel> productModels = adminFeignService.getProductModel(model.getAllot());
+        List<ProductModel> productModels = adminFeignService.getProductModels(model.getAllot());
         if (!(productModels.size()>0)){
             throw new BusinessException( ResultCode.PRODUCT_GET_ERR);
         }
@@ -61,13 +61,23 @@ public class BusinessService {
     //保存合约，扣除用户账户，创建合约操作
     @Transactional(rollbackFor = Exception.class)
     public void saveContract(UserTokenInfo userInfo,ContractModel model) throws BusinessException{
+        if (!adminFeignService.canBuy(model.getProductModel().getAllot(),userInfo.getUuid())){
+            throw new BusinessException(ResultCode.PRODUCT_ISEXIST_ERR);
+        }
         if (!isRich(userInfo,model)){
             throw new BusinessException(ResultCode.ACCOUNT_LESS_ERR);
         }//再次查看余额是否足够购买，并锁住表（悲观锁）
+        ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
+        if (productModel==null){
+            throw new BusinessException(ResultCode.PRODUCT_NOTEXIST_ERR);
+        }
+        model.setProductModel(productModel);
+        //保证数据安全，重新获取产品信息
         model.setFirst(getNeedMoney(model.getProductModel(),model.getPromisedMoney()));
         if (!(userAccountRepository.updatePayAccount(model.getPromisedMoney()+model.getFirst(),userInfo.getUuid())>0)){
             throw new BusinessException(ResultCode.ACCOUNT_PAY_ERR);
         }//扣款先
+        model.setBorrowMoney(model.getPromisedMoney()*model.getProductModel().getLeverRate());
         model.setContractNum(newContractNum());
         model.setChoseWay(model.getProductModel().getAllot());
         model.setWarningLine(model.getProductModel().getWornLine());
@@ -111,5 +121,11 @@ public class BusinessService {
    private String newContractNum(){
        SimpleDateFormat sdf = new SimpleDateFormat(sdformat);
        return sdf.format(new Date())+(int)Math.random()*10000;
+   }
+
+
+   //获取当前用户当前的合约
+   public List<ContractModel> getCurrentContract(UserTokenInfo userInfo){
+       return adminFeignService.getCurrentContract(userInfo.getUuid());
    }
 }

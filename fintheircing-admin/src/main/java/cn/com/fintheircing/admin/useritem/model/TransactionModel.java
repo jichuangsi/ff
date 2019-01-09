@@ -10,7 +10,8 @@ import java.util.Date;
  * @date 2018/12/27
  */
 public class TransactionModel {
-    private String stockId;
+    private String id;
+    private String stockNum;
     private String stockName;
     private String alphabetCapitalization;
     private String martTemplate;
@@ -18,12 +19,20 @@ public class TransactionModel {
     private String remake;
     private Status status;
 
-    public String getStockId() {
-        return stockId;
+    public String getId() {
+        return id;
     }
 
-    public void setStockId(String stockId) {
-        this.stockId = stockId;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStockNum() {
+        return stockNum;
+    }
+
+    public void setStockNum(String stockNum) {
+        this.stockNum = stockNum;
     }
 
     public String getStockName() {

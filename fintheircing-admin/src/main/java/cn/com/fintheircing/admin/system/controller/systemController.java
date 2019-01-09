@@ -37,6 +37,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveHoliday")
+    @CrossOrigin
     public ResponseModel saveHoliday(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody HolidayModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -54,6 +55,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateHoliday")
+    @CrossOrigin
     public ResponseModel updateHoliday(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody HolidayModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -71,6 +73,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @DeleteMapping("/deleteHolidays")
+    @CrossOrigin
     public ResponseModel deleteHolidays(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -86,6 +89,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getPageHolidays")
+    @CrossOrigin
     public ResponseModel<PageInfo<HolidayModel>> getPageHolidays(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody HolidaySearchModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -106,6 +110,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveBrand")
+    @CrossOrigin
     public ResponseModel saveBrand(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, BrandModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -124,6 +129,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @DeleteMapping("/deleteBrands")
+    @CrossOrigin
     public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo,@RequestBody IdModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -140,6 +146,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateBrand")
+    @CrossOrigin
     public ResponseModel updateBrand(@RequestParam MultipartFile file,@ModelAttribute UserTokenInfo userInfo, BrandModel model){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -157,6 +164,7 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getBrands")
+    @CrossOrigin
     public ResponseModel<List<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo){
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);

@@ -39,7 +39,6 @@ public class ItemController {
         List<TransactionModel> allInfo = itemService.findAllByWhite(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );
-
     }
     @ApiOperation(value = "白名单列表-交易总表", notes = "")
     @ApiImplicitParams({
@@ -113,9 +112,10 @@ public class ItemController {
     })
     @PostMapping("/findWhiteList")
     public ResponseModel<PageInfo<TransactionModel>> findAllWhiteList(@Validated @RequestBody TransactionModel model ,int pageNum,int pageSize) throws AdminLoginException {
-        PageHelper.startPage(pageNum,pageSize);
+       // PageHelper.startPage(pageNum,pageSize);
         List<TransactionModel> allInfo = itemService.findAllWhiteList(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
+        /*System.out.println();*/
         return ResponseModel.sucess("",personPageInfo );
 
     }

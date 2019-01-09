@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.feign;
+package cn.com.fintheircing.admin.common.feign;
 
 import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
@@ -10,12 +10,16 @@ import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
 import cn.com.fintheircing.admin.proxy.model.SpreadModel;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
+import cn.com.fintheircing.admin.system.exception.SystemException;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
+import cn.com.fintheircing.admin.useritem.service.ItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,8 @@ import java.util.List;
 @RequestMapping("/adminF")
 public class FeignController {
 
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private UrlService urlService;
@@ -41,6 +47,8 @@ public class FeignController {
     private ProxyService proxyService;
     @Resource
     private IDistributService distributService;
+    @Resource
+    private ItemService temService;
 
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
@@ -73,9 +81,9 @@ public class FeignController {
 
     @ApiOperation(value = "传递product信息", notes = "")
     @ApiImplicitParams({})
-    @RequestMapping("/getProduct")
-    public List<ProductModel> getProduct(@RequestParam("productNo") Integer productNo){
-        return distributService.getProduct(productNo);
+    @RequestMapping("/getProducts")
+    public List<ProductModel> getProducts(@RequestParam("productNo") Integer productNo){
+        return distributService.getProducts(productNo);
     }
 
 
@@ -97,7 +105,12 @@ public class FeignController {
     @ApiImplicitParams({})
     @RequestMapping("/saveContract")
     public Boolean saveContract(@RequestBody ContractModel model){
-        return businessService.saveContract(model);
+        try {
+            return businessService.saveContract(model);
+        } catch (SystemException e) {
+            logger.error(e.getMessage());
+        }
+        return false;
     }
 
     @ApiOperation(value = "新建用户的推广", notes = "")
@@ -115,4 +128,27 @@ public class FeignController {
         return proxyService.getOwnSpread(userId);
     }
 
+
+
+    @ApiOperation(value = "获取当前用户的当前合约", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getCurrentContract")
+    public List<ContractModel> getCurrentContract(@RequestParam("userId") String userId){
+        return businessService.getCurrentContract(userId);
+    }
+
+
+    @ApiOperation(value = "获取挑选的产品", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getProduct")
+    public ProductModel getProduct(@RequestParam("productId")String productId){
+        return distributService.getProduct(productId);
+    }
+
+    @ApiOperation(value = "判断是否存在白名单内", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/isExistWhiteList")
+    public Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum){
+        return temService.isExistWhiteList(stockNum);
+    }
 }

@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.useritem.dao.mapper;
 
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 /**
@@ -16,7 +17,7 @@ public interface TransactionSummaryMapper {
      * @param model
      * @return
      */
-   /* @Select("<script>select t1.stock_Id as stockId" +
+    @Select("<script>select t1.stock_Id as stockId" +
             ",t1.stockName as stockName" +
             ",t1.alphabetCapitalization as alphabetCapitalization" +
             ",t1.martTemplate as martTemplate" +
@@ -24,8 +25,8 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake" +
             ",t1.status as status," +
             " from  Transaction_Summary t1" +
-            "<where> t1.delete_flag=\"0\"  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_Template=#{martTemplate} </if> <if test= \"stockId'!=null and stockId!=''\"> and t1.stock_Id LIKE CONCAT('%',#{stockId},'%') </if>  </where>" +
-            " </script>")*/
+            "<where> t1.delete_flag=\"0\"  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_Template=#{martTemplate} </if> <if test= \"stockId'!=null and stockId!=''\"> and t1.stock_Id LIKE CONCAT('%',#{stockId},'%') </if>  and t1.status=\"3\"</where>" +
+            " </script>")
     List<TransactionModel> findAllByTemplateAndStockName(TransactionModel model);
 
     /**

@@ -10,7 +10,6 @@ public final class MappingModel2EntityConverter {
 
     public static final BusinessContract CONVERTERFORCONTRACT(ContractModel model){
         BusinessContract contract = new BusinessContract();
-        contract.setAbortLine(model.getAbortLine());
         contract.setBorrowMoney(model.getBorrowMoney());
         contract.setChoseWay(model.getChoseWay());
         contract.setColdMoney(model.getColdCash());
@@ -20,9 +19,9 @@ public final class MappingModel2EntityConverter {
         contract.setPromisedMoney(model.getPromisedMoney());
         contract.setTransactorId(model.getSaleManId());
         contract.setUserId(model.getUserId());
-        contract.setWarningLine(model.getWarningLine());
         contract.setUuid(model.getId());
         contract.setFirstInterest(model.getFirst());
+        contract.setAvailableMoney(model.getBorrowMoney()+model.getPromisedMoney());
 
         return contract;
     }

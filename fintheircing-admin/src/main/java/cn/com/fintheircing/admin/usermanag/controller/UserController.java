@@ -6,7 +6,7 @@ import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.AskMoneyInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.ContactInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.MesModel;
-import cn.com.fintheircing.admin.feign.IMsgFeignService;
+import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
 import cn.com.fintheircing.admin.usermanag.service.IUserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

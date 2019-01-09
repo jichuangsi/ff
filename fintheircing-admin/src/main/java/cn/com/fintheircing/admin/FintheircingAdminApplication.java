@@ -23,4 +23,5 @@ public class FintheircingAdminApplication {
 	public Algorithm getTokenAlgorithm() throws IllegalArgumentException, Exception {
 		return Algorithm.HMAC512(secret);
 	}
+
 }

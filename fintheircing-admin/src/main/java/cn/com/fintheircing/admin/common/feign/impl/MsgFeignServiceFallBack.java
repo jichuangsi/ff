@@ -1,6 +1,6 @@
-package cn.com.fintheircing.admin.feign.impl;
+package cn.com.fintheircing.admin.common.feign.impl;
 
-import cn.com.fintheircing.admin.feign.IMsgFeignService;
+import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
 
 public class MsgFeignServiceFallBack  implements IMsgFeignService {
   /*  @Override

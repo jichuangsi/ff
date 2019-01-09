@@ -6,22 +6,22 @@ import java.util.List;
 
 public class ProxyModel {
     private String proxyId;
-    private String proxyNum;
-    private String proxyName;
-    private Integer roleGrade;
-    private String linkMan;
-    private String linkPhone;
-    private String status;
-    private String remarks;
-    private List<ProxyModel> proxyModels = new ArrayList<ProxyModel>();
-    private Double dayCommission;
-    private Double monthCommission;
-    private Double backCommission;
-    private Date createdTime;
-    private Date updateTime;
-    private String bossId;
+    private String proxyNum;    //代理编号
+    private String proxyName;   //代理名称
+    private Integer roleGrade;  //角色定位，1为代理1,2为代理2
+    private String linkMan;     //联系人
+    private String linkPhone;   //联系人电话
+    private String status;      //账户状态
+    private String remarks;     //备注
+    private List<ProxyModel> proxyModels = new ArrayList<ProxyModel>();     //子代理商
+    private Double dayCommission;       //日收佣
+    private Double monthCommission;     //月收佣
+    private Double backCommission;      //返佣
+    private Date createdTime;       //创建时间
+    private Date updateTime;        //修改时间
+    private String bossId;      //上级id
 
-    private String beginTime;
+    private String beginTime;       //查询时间的接口
 
     public String getBeginTime() {
         return beginTime;

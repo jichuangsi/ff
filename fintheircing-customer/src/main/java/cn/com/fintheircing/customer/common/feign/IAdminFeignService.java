@@ -20,8 +20,8 @@ public interface IAdminFeignService {
 
 
     //获取所有该种类产品
-    @RequestMapping("/adminF/getProduct")
-    List<ProductModel> getProductModel(@RequestParam("productNo") Integer productNo);
+    @RequestMapping("/adminF/getProducts")
+    List<ProductModel> getProductModels(@RequestParam("productNo") Integer productNo);
 
 
     //创建事务
@@ -64,4 +64,13 @@ public interface IAdminFeignService {
 
     @RequestMapping(value = "/adminF/getOwnSpread")
     SpreadModel getOwnSpread(@RequestParam("userId") String userId);
+
+    @RequestMapping(value = "/adminF/getCurrentContract")
+    List<ContractModel> getCurrentContract(@RequestParam("userId") String userId);
+
+    @RequestMapping(value = "/adminF/getProduct")
+    ProductModel getProduct(@RequestParam("productId") String productId);
+
+    @RequestMapping(value = "adminF/isExistWhiteList")
+    Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum);
 }

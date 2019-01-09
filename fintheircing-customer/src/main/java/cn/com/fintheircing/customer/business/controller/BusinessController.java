@@ -6,7 +6,7 @@ import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.business.service.BusinessService;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
-import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
+import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import io.swagger.annotations.Api;
@@ -17,13 +17,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/business")
 @Api("用户关于商业上操作")
 public class BusinessController {
-    @Resource
-    private IAdminFeignService adminFeignService;
+
     @Resource
     private BusinessService businessService;
 
@@ -72,5 +72,26 @@ public class BusinessController {
         }
         return ResponseModel.sucessWithEmptyData("");
     }
+
+
+    @ApiOperation(value = "获取该用户的合约详情", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getCurrentContract")
+    public ResponseModel<List<ContractModel>> getCurrentContract(@ModelAttribute UserTokenInfo userInfo){
+        return ResponseModel.sucess("",businessService.getCurrentContract(userInfo));
+    }
+
+
+    @ApiOperation(value = "提交购买股票申请单", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/saveStockEntrust")
+    public ResponseModel saveStockEntrust(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockEntrustModel model){
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
 
 }
