@@ -23,6 +23,15 @@ public class AdminClientInfo extends AbstractEntity {
     private String remarks;  //备注
     private String bossId;  //上级id
     private Integer roleGrade;  //固定字段，管理员
+    private String userClientInfoId;
+
+    public String getUserClientInfoId() {
+        return userClientInfoId;
+    }
+
+    public void setUserClientInfoId(String userClientInfoId) {
+        this.userClientInfoId = userClientInfoId;
+    }
 
     public Integer getRoleGrade() {
         return roleGrade;

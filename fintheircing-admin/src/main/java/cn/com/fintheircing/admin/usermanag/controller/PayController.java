@@ -30,10 +30,10 @@ public class PayController {
         if (ipayService.queryReconTrans(model, orderId)) {
             return ResponseModel.sucess("", ResultCode.SUCESS_MSG);
         } else {
-            return ResponseModel.sucess("", ResultCode.PARAM_MISS_MSG);
+            return ResponseModel.sucess("", ResultCode.CHECK_ANOTHER);
         }
     }
-    @PostMapping("/getpayforNet")
+    @PostMapping("/getpayfornet")
     @ApiOperation(value = "网关支付", notes = "")
     public ResponseModel<ResultModel> getWayToPay(@RequestBody NetQueryModel model) throws UserServiceException {
         return ResponseModel.sucess("",ipayService.getWayToPay(model));

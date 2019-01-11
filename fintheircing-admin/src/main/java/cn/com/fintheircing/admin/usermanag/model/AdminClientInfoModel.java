@@ -8,21 +8,47 @@ import java.util.Date;
 public class AdminClientInfoModel extends AbstractEntityModel {
     Date createTime;//注册时间
     Date endtime;
+    String userId;
+    String phoneNo;
+    String userName;
     String cer;
     String source;
     String proxyId;
     String proxyName;
     String balanceMoney;
-//    List<String> empolyeeId;
     String belongs;
-    String status;
+    String emplooyeeId;
 
-    public String getStatus() {
-        return status;
+    public String getEmplooyeeId() {
+        return emplooyeeId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setEmplooyeeId(String emplooyeeId) {
+        this.emplooyeeId = emplooyeeId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Date getEndtime() {

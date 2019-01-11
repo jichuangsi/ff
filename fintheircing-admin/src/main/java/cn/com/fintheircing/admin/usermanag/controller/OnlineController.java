@@ -1,9 +1,9 @@
 package cn.com.fintheircing.admin.usermanag.controller;
 
+import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
-import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
-import cn.com.fintheircing.admin.usermanag.service.Impl.OnlineService;
+import cn.com.fintheircing.admin.usermanag.service.impl.OnlineService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;

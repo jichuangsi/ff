@@ -1,8 +1,8 @@
 package cn.com.fintheircing.admin.usermanag.dao.mapper;
 
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.mapstruct.Mapper;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

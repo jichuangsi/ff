@@ -29,7 +29,7 @@ public interface IPayService {
      * @return
      * @throws UserServiceException
      */
-//    ResultModel gatewayPayByQRcode(NetQueryModel model)throws UserServiceException;
+    ResultModel gatewayPayByQRcode(NetQueryModel model)throws UserServiceException;
 
     /**
      * 支付结果查询

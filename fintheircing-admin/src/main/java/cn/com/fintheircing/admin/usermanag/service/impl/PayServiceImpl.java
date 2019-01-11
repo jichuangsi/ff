@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.usermanag.service.Impl;
+package cn.com.fintheircing.admin.usermanag.service.impl;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.usermanag.uilts.GsonUtil;
@@ -21,7 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
-
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -115,7 +115,43 @@ public class PayServiceImpl implements IPayService {
 
     }
 
+    /**
+     * 网关二维码支付
+     *
+     * @param model
+     * @return
+     * @throws UserServiceException
+     */
+    @Override
+    public ResultModel gatewayPayByQRcode(NetQueryModel model) throws UserServiceException {
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("orderId",model.getOrderId());
+        formData.add("payerNo",model.getPayerNo());
+        formData.add("payerName",model.getPayerName());
+        formData.add("amount",model.getAmount());
+        formData.add("tradeId",model.getTradeId());
+        formData.add("encryptionParams",model.getEncryptionParams());
+//        formData.add("payType",model.getPayType());
+        formData.add("orderName ",model.getOrderName());
+        formData.add("noticeUrl ",model.getNoticeUrl());
+        try {
+            Mono<String> resp = webClientFormRequest(weChatOrAilpay,formData);
+            Optional<String> result = resp.blockOptional();
+            if (result.isPresent()) {
+                ResultModel resultModel = JSONObject.parseObject(resp.block(), new TypeReference<ResultModel>() {
+                }.getType());
+                if (!ResultCode.PAY_INFO_EXIT.equalsIgnoreCase(resultModel.getResult())){
+                    throw new UserServiceException(resultModel.getFailReason());
+                }
+//                payResponseModel.setResult(ResultCode.PAY_INFO_EXIT);
+                return resultModel;
+            }
 
+        } catch (Exception exp) {
+            throw new UserServiceException(exp.getMessage());
+        }
+        return null;
+    }
 
     /**
      * 支付结果查询
@@ -179,6 +215,12 @@ public class PayServiceImpl implements IPayService {
         }
 
     }
-
+    private Mono<String> webClientFormRequest(String api,MultiValueMap<String, String> formData) throws Exception {
+        String baseUrl =
+                "HttpUtils://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/gatewayCheckstandPay";
+        WebClient webClient = WebClient.create(baseUrl);
+        Mono<String> mono = webClient.post().syncBody(formData).retrieve().bodyToMono(String.class);
+        return  mono;
+    }
 
 }
