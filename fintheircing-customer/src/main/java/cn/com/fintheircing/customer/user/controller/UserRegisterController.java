@@ -3,7 +3,7 @@
  */
 package cn.com.fintheircing.customer.user.controller;
 
-import cn.com.fintheircing.customer.common.CommonUtil;
+import cn.com.fintheircing.customer.common.utils.CommonUtil;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;

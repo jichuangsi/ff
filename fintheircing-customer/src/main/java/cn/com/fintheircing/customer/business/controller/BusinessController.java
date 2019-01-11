@@ -90,6 +90,11 @@ public class BusinessController {
     })
     @PostMapping("/saveStockEntrust")
     public ResponseModel saveStockEntrust(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockEntrustModel model){
+        try {
+            businessService.saveEntrust(userInfo,model);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
         return ResponseModel.sucessWithEmptyData("");
     }
 

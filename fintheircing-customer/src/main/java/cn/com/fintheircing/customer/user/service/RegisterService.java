@@ -1,6 +1,6 @@
 package cn.com.fintheircing.customer.user.service;
 
-import cn.com.fintheircing.customer.common.CommonUtil;
+import cn.com.fintheircing.customer.common.utils.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.constant.RoleCodes;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;

@@ -17,7 +17,15 @@ public class UserTokenInfo {
     private String displayname;
     private Integer roleGrade; //区别管理和用户
     private String roleName;
+    private String applyOn;     //区别pc和app
 
+    public String getApplyOn() {
+        return applyOn;
+    }
+
+    public void setApplyOn(String applyOn) {
+        this.applyOn = applyOn;
+    }
 
     public String getLoginName() {
         return loginName;

@@ -1,9 +1,12 @@
 package cn.com.fintheircing.customer.common.feign.model;
 
+import javax.validation.constraints.Pattern;
+
 public class StockEntrustModel {
 
     private String id;
     private String userName;
+    @Pattern(regexp = "^(?i)s[hz]\\d{6}$",message = "股票代码不符合规范")
     private String stockNum;
     private String stockName;
     private Integer business;
@@ -11,9 +14,19 @@ public class StockEntrustModel {
     private String businessStr;
     private String statusStr;
     private Double price;
+    @Pattern(regexp = "^[1-9][0-9]*0{2}$",message = "购买数量必须是100的倍数")
     private Integer amount;
     private String dealNum;
     private String dealTime;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getId() {
         return id;

@@ -98,4 +98,10 @@ public class FeignServiceFallBack implements IAdminFeignService {
         logger.error("调用feign失败，不能判断是否存在白名单");
         return false;
     }
+
+    @Override
+    public Boolean costColdContract(String contractId, Double coldMoney) {
+        logger.error("修改合约冻结资金失败");
+        return false;
+    }
 }

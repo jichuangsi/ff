@@ -14,6 +14,24 @@ public class StockEntrustModel {
     private Integer amount;
     private String dealNum;
     private String dealTime;
+    private String contractId;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
+    }
 
     public String getId() {
         return id;

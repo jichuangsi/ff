@@ -15,10 +15,28 @@ public class BusinessControlContract extends AbstractEntity{
     private String uuid;
     private String contractId;
     private Integer controlType;   //ControlCode
-    private Double lessMoney;
+    private Double costMoney;       //合约操作内扣款
+    private Double addMoney;        //合约操作内补资金
+    private Double lessMoney;       //操作后合约剩余
     private Double pickUpMoney;   //提取金额
     private Double windUpMoney;    //结算金额
     private Integer verifyStatus;    //审核状态
+
+    public Double getCostMoney() {
+        return costMoney;
+    }
+
+    public void setCostMoney(Double costMoney) {
+        this.costMoney = costMoney;
+    }
+
+    public Double getAddMoney() {
+        return addMoney;
+    }
+
+    public void setAddMoney(Double addMoney) {
+        this.addMoney = addMoney;
+    }
 
     public Integer getVerifyStatus() {
         return verifyStatus;

@@ -21,20 +21,24 @@ public class ContractModel {
     private Double canUseMoney;      //可用余额
     private Double worth;       //市值
     private Double floatMoney;      //盈亏
-
     private Integer choseWay;    //选择方式
     private Double coldCash;    //冻结资金
     private Double dangerCash;    //危险保证金
-
     private String choseStr;
-
     private Double first;   //初次利息
-
     private ProductModel productModel;
-
+    private Integer version;
 
     private Integer pageIndex;
     private Integer pageSize;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public String getChoseStr() {
         return choseStr;

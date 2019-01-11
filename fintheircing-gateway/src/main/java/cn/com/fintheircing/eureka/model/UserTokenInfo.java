@@ -7,7 +7,7 @@ public class UserTokenInfo {
     @NotBlank(message = "登录名不能为空")
     private String loginName;
     @NotBlank(message = "登录密码不能为空")
-    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$", message = "密码必须为8-16位数字与字母混合")
+    @Pattern(regexp = "^((?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16})|111111$", message = "密码必须为8-16位数字与字母混合")
     private String pwd;
 
     private String uuid;
@@ -16,8 +16,16 @@ public class UserTokenInfo {
     private String userName;
     private String displayname;
     private Integer roleGrade; //区别管理和用户
-    private String roleName;;
+    private String roleName;
+    private String applyOn;     //区别pc和app
 
+    public String getApplyOn() {
+        return applyOn;
+    }
+
+    public void setApplyOn(String applyOn) {
+        this.applyOn = applyOn;
+    }
 
     public String getLoginName() {
         return loginName;
@@ -67,6 +75,15 @@ public class UserTokenInfo {
         this.userName = userName;
     }
 
+
+    public String getDisplayname() {
+        return displayname;
+    }
+
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
+    }
+
     public Integer getRoleGrade() {
         return roleGrade;
     }
@@ -81,13 +98,5 @@ public class UserTokenInfo {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
-    }
-
-    public String getDisplayname() {
-        return displayname;
-    }
-
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
     }
 }

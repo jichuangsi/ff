@@ -7,6 +7,7 @@ import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.common.constant.ProductStatus;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
+import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.UserService;
@@ -127,5 +128,14 @@ public class BusinessService {
    //获取当前用户当前的合约
    public List<ContractModel> getCurrentContract(UserTokenInfo userInfo){
        return adminFeignService.getCurrentContract(userInfo.getUuid());
+   }
+
+
+   public void saveEntrust(UserTokenInfo userInfo,StockEntrustModel model) throws BusinessException{
+        if (!adminFeignService.isExistWhiteList(model.getStockNum())){
+            throw new BusinessException(ResultCode.STOCK_DANGER_ERR);
+        }//验证是否存在白名单
+        //获取合约账户
+
    }
 }

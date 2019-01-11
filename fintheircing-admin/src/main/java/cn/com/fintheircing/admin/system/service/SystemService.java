@@ -121,7 +121,7 @@ public class SystemService {
 
     //假期分页
     public PageInfo<HolidayModel> getPageHolidays(HolidaySearchModel model) throws SystemException{
-        PageHelper.startPage(model.getPageIndex(),model.getPageSize());
+        PageHelper.startPage(model.getPage(),model.getLimit());
         if (!StringUtils.isEmpty(model.getSearchTime())){
             model.setLongtime(CommonUtil.getlongTime(model.getSearchTime()+hms,sdformat));
         } else {

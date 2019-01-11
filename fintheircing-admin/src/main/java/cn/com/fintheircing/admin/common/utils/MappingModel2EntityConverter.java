@@ -21,8 +21,6 @@ public final class MappingModel2EntityConverter {
         contract.setUserId(model.getUserId());
         contract.setUuid(model.getId());
         contract.setFirstInterest(model.getFirst());
-        contract.setAvailableMoney(model.getBorrowMoney()+model.getPromisedMoney());
-
         return contract;
     }
 }

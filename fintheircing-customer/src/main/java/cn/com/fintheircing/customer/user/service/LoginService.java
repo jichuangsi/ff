@@ -33,6 +33,8 @@ public class LoginService {
     private String tokrnPre;
     @Value("${custom.token.longTime}")
     private long longTime;
+    @Value("${custom.token.appLongTime}")
+    private long appLongTime;
 
 
     public String userLogin(UserTokenInfo model) throws LoginException{
@@ -51,7 +53,11 @@ public class LoginService {
             logger.error(ResultCode.LOGIN_TOKEN_ERR);
         }
         if(StringUtils.isEmpty(token)) throw new LoginException(ResultCode.LOGIN_USER_ERR);
-        redisTemplate.opsForValue().set(tokrnPre+user.getUuid(),token,longTime, TimeUnit.MINUTES);
+        if ("app".equalsIgnoreCase(model.getApplyOn())){
+            redisTemplate.opsForValue().set(tokrnPre+user.getUuid(),token,appLongTime, TimeUnit.DAYS);
+        }else{
+            redisTemplate.opsForValue().set(tokrnPre+user.getUuid(),token,longTime, TimeUnit.MINUTES);
+        }
         return token;
     }
 }

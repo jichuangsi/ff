@@ -94,8 +94,8 @@ public class systemController {
         if(!IsManage(userInfo)){
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
-        if(model.getPageIndex()==0||model.getPageIndex()==null
-                ||model.getPageSize()==null||model.getPageSize()==0){
+        if(model.getPage()==0||model.getPage()==null
+                ||model.getLimit()==null||model.getLimit()==0){
             return ResponseModel.fail("",ResultCode.PARAM_MISS_MSG);
         }
         try {

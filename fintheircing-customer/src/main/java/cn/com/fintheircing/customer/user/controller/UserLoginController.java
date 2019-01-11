@@ -1,5 +1,6 @@
 package cn.com.fintheircing.customer.user.controller;
 
+import cn.com.fintheircing.customer.common.utils.IsMoblieUtils;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
@@ -39,6 +40,11 @@ public class UserLoginController {
         if(adminFeignService.isExistBlackList(WebCommonUtils.getClientIp(request))){
             return ResponseModel.fail("",ResultCode.IP_BLACK_VISIT);
         }
+        if (IsMoblieUtils.JudgeIsMoblie(request)){
+            model.setApplyOn("app");
+        }else {
+            model.setApplyOn("pc");
+        }//判断来源
         String token =  "";
         try {
             token = loginService.userLogin(model);

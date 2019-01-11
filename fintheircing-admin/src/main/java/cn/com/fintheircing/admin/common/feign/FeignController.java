@@ -1,7 +1,10 @@
 package cn.com.fintheircing.admin.common.feign;
 
+import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.ContractModel;
+import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
+import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
@@ -10,7 +13,6 @@ import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import cn.com.fintheircing.admin.proxy.exception.ProxyException;
 import cn.com.fintheircing.admin.proxy.model.SpreadModel;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
-import cn.com.fintheircing.admin.system.exception.SystemException;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
@@ -36,7 +38,6 @@ public class FeignController {
 
     @Resource
     private UrlService urlService;
-
     @Resource
     private AdminLoginService adminLoginService;
     @Resource
@@ -50,6 +51,7 @@ public class FeignController {
     @Resource
     private ItemService temService;
 
+
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
     })
@@ -60,7 +62,6 @@ public class FeignController {
         }
         return urlService.checkUrl(model);
     }
-
 
 
     @ApiOperation(value = "判断是否IP存在黑名单", notes = "")
@@ -78,7 +79,6 @@ public class FeignController {
     }
 
 
-
     @ApiOperation(value = "传递product信息", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/getProducts")
@@ -94,6 +94,7 @@ public class FeignController {
         return proxyService.getInviteId(inviteCode);
     }
 
+
     @ApiOperation(value = "判断是否可购买", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/canBuy")
@@ -101,17 +102,19 @@ public class FeignController {
         return businessService.canBuy(productNo,userId);
     }
 
+
     @ApiOperation(value = "保存合约，和创立合约操作", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/saveContract")
     public Boolean saveContract(@RequestBody ContractModel model){
         try {
             return businessService.saveContract(model);
-        } catch (SystemException e) {
+        } catch (BusinessException e) {
             logger.error(e.getMessage());
         }
         return false;
     }
+
 
     @ApiOperation(value = "新建用户的推广", notes = "")
     @ApiImplicitParams({})
@@ -129,7 +132,6 @@ public class FeignController {
     }
 
 
-
     @ApiOperation(value = "获取当前用户的当前合约", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/getCurrentContract")
@@ -145,10 +147,24 @@ public class FeignController {
         return distributService.getProduct(productId);
     }
 
+
     @ApiOperation(value = "判断是否存在白名单内", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/isExistWhiteList")
     public Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum){
         return temService.isExistWhiteList(stockNum);
+    }
+
+
+    @ApiOperation(value = "判断是否将合约扣款（冻结资金）成功", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/costColdContract")
+    public ResponseModel costColdContract(@RequestBody StockEntrustModel model){
+        try {
+            businessService.costColdContract(model);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
     }
 }

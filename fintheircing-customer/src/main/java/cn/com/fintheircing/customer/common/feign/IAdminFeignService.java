@@ -58,19 +58,29 @@ public interface IAdminFeignService {
     @RequestMapping(value = "/adminF/saveUserSpread")
     Boolean saveUserSpread(@RequestBody UserTokenInfo userInfo);
 
+
     /*//判断是否存在相同合约编号
     @RequestMapping(value = "/adminF/existContractNum")
     Boolean existContractNum(@RequestParam("contractNum") String contractNum);*/
 
+
     @RequestMapping(value = "/adminF/getOwnSpread")
     SpreadModel getOwnSpread(@RequestParam("userId") String userId);
+
 
     @RequestMapping(value = "/adminF/getCurrentContract")
     List<ContractModel> getCurrentContract(@RequestParam("userId") String userId);
 
+
     @RequestMapping(value = "/adminF/getProduct")
     ProductModel getProduct(@RequestParam("productId") String productId);
 
+
     @RequestMapping(value = "adminF/isExistWhiteList")
     Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum);
+
+
+    @RequestMapping(value = "adminF/costColdContract")
+    Boolean costColdContract(@RequestParam("contractId") String contractId,
+                             @RequestParam("coldMoney") Double coldMoney);
 }

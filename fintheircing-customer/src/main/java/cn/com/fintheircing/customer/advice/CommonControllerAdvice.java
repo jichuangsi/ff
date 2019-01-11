@@ -34,7 +34,8 @@ public class CommonControllerAdvice {
 			String user = jwt.getClaim(userClaim).asString();
 			// model.addAttribute(userClaim,
 			// JSONObject.parseObject(roles,UserInfoForToken.class));
-			return JSONObject.parseObject(user, UserTokenInfo.class);
+			UserTokenInfo userTokenInfo = JSONObject.parseObject(user, UserTokenInfo.class);
+			return userTokenInfo;
 		}
 		return null;
 	}

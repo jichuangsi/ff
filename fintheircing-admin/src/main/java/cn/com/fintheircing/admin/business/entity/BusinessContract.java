@@ -23,11 +23,29 @@ public class BusinessContract extends AbstractEntity{
     private Double dangerourPrpmised;   //超危保证金
     private Double borrowMoney;   //借款
     private Double coldMoney;   //冻结资金
-    private String  riskId;
+    private String  riskId;     //关联风控
     private Double firstInterest;   //初次利息
     private Double availableMoney;  //可用资金
+    private Integer contractStatus;     //合约状态，新建，交易中，结束交易
+    private Integer rudeStatus;     //是否强制平仓
     @Version
     private int version;
+
+    public Integer getContractStatus() {
+        return contractStatus;
+    }
+
+    public void setContractStatus(Integer contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
+    public Integer getRudeStatus() {
+        return rudeStatus;
+    }
+
+    public void setRudeStatus(Integer rudeStatus) {
+        this.rudeStatus = rudeStatus;
+    }
 
     public String getRiskId() {
         return riskId;

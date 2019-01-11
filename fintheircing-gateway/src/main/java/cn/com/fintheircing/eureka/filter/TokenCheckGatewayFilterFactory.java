@@ -43,6 +43,8 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 	private String userClaim;
 	@Value("${custom.token.dieTime}")
 	private long dieTime;
+	@Value("${custom.token.appDieTime}")
+	private long appDieTime;
 
 	@Autowired
 	private Algorithm tokenAlgorithm;
@@ -73,11 +75,16 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 					 * 这个验证将过期token也打回去了
 					 *//*
 					verifier.verify(accessToken);// 校验有效性*/
+					UserTokenInfo userInfo = changeUserInfo(accessToken);
 					// todo 校验有效期
 					// 如果在redis里面找不到，则看token中的过期时间是否超过，若超过，则返回过期，若没超过，则将token写入redis（设置超时时间）
 					if(!redisTemplate.hasKey(getTokenKey(accessToken))){
 						if(checkToken(accessToken)){
-							redisTemplate.opsForValue().set(getTokenKey(accessToken),accessToken,dieTime,TimeUnit.MINUTES);
+							if ("app".equalsIgnoreCase(userInfo.getApplyOn())){
+								redisTemplate.opsForValue().set(getTokenKey(accessToken),accessToken,appDieTime,TimeUnit.DAYS);
+							}else{
+								redisTemplate.opsForValue().set(getTokenKey(accessToken),accessToken,dieTime,TimeUnit.MINUTES);
+							}
 						}else{
 							return  CommonUtils.buildResponse(exchange, ResultCode.TOKEN_CHECK_ERR, ResultCode.TOKEN_OVER_MSG);
 						}
@@ -85,7 +92,11 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 					//在redis里面找到对应的token，则刷新在redis里缓存token的时间
 					else{
 						if(accessToken.equals(redisTemplate.opsForValue().get(getTokenKey(accessToken)))){
-							redisTemplate.expire(getTokenKey(accessToken),dieTime, TimeUnit.MINUTES);
+							if ("app".equalsIgnoreCase(userInfo.getApplyOn())){
+								redisTemplate.expire(getTokenKey(accessToken),appDieTime, TimeUnit.DAYS);
+							}else {
+								redisTemplate.expire(getTokenKey(accessToken),dieTime, TimeUnit.MINUTES);
+							}
 						}else{
 							return CommonUtils.buildResponse(exchange,ResultCode.TOKEN_CHECK_ERR,ResultCode.TOKEN_CHECK_ERR_MSG);
 						}
@@ -123,12 +134,22 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 		JWTVerifier verifier = JWT.require(tokenAlgorithm).build();
 		try {
 			verifier.verify(token);
-			return true;
 		} catch (JWTVerificationException e) {
 			e.printStackTrace();
 			return false;
 		}
+		return true;
+	}
 
+	private UserTokenInfo changeUserInfo(String token){
+		if (!StringUtils.isEmpty(token)) {
+			DecodedJWT jwt = JWT.decode(token);
+			String user = jwt.getClaim(userClaim).asString();
+			// model.addAttribute(userClaim,
+			// JSONObject.parseObject(roles,UserInfoForToken.class));
+			return JSONObject.parseObject(user, UserTokenInfo.class);
+		}
+		return null;
 	}
 
 }

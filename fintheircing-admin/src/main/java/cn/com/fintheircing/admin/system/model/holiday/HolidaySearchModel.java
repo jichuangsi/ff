@@ -6,8 +6,8 @@ public class HolidaySearchModel {
 
     private long longtime;
 
-    private Integer pageIndex;
-    private Integer pageSize;
+    private Integer page;
+    private Integer limit;
 
     public long getLongtime() {
         return longtime;
@@ -25,19 +25,19 @@ public class HolidaySearchModel {
         this.searchTime = searchTime;
     }
 
-    public Integer getPageIndex() {
-        return pageIndex;
+    public Integer getPage() {
+        return page;
     }
 
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setPage(Integer page) {
+        this.page = page;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
+    public Integer getLimit() {
+        return limit;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

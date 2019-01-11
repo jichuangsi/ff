@@ -13,6 +13,10 @@ import java.util.Date;
  */
 @Entity
 public class BusinessStockEntrust extends AbstractEntity {
+
+    public final static Integer STOCK_BUY = 0;
+    public final static Integer STOCK_SELL = 1;
+
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")

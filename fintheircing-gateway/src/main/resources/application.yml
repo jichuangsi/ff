@@ -71,6 +71,7 @@ custom:
     prefix: token_val_
     userClaim: userModel
     dieTime: 30
+    appDieTime: 7
     
       
     

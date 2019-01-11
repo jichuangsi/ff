@@ -36,7 +36,16 @@ public class ResultCode {
 	public static final String DATE_INVIDATE_MSG = "日期不合法";
 	public static final String VISIT_VALIDITY_MSG = "非法访问，请从页面进行访问";
 	public static final String PIC_UPLODE_MSG = "图片上传错误";
+
 	public static final String PAY_INFO_EXIT= "1";
 	public static final String PAY_INFO_NOTEXIT= "0";
 	public static final String CHECK_ANOTHER= "检查第三方支付的返回值";
+
+
+
+	public static final String ACCOUNT_LESS_ERR  = "可用资金不足";
+	public static final String ACCOUNT_WARN_ERR  = "您已到警戒线，请补交保证金";
+	public static final String ACCOUNT_COST_ERR  = "扣款失败";
+	public static final String STOCK_ENTRUST_SAVE_ERR  = "保存委托单失败";
+
 }
