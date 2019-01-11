@@ -3,28 +3,22 @@
  */
 package cn.com.fintheircing.customer.user.controller;
 
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import cn.com.fintheircing.customer.common.CommonUtil;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
-import cn.com.fintheircing.customer.user.exception.RegisterheckExistExcption;
+import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
-import cn.com.fintheircing.customer.user.model.UserForLoginModel;
+import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.RegisterService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/user")
@@ -39,6 +33,7 @@ public class UserRegisterController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "phoneNo", value = "手机号", required = true, dataType = "String") })
 	@GetMapping("/{phoneNo}")
+	@CrossOrigin
 	public ResponseModel<String> getRegisterValCode(@PathVariable String phoneNo) {
 
 		if (StringUtils.isEmpty(phoneNo) || !CommonUtil.isPhone(phoneNo)) {
@@ -47,7 +42,7 @@ public class UserRegisterController {
 		
 		try {
 			registerService.getValCode(phoneNo);
-		} catch (RegisterheckExistExcption e) {
+		} catch (RegisterheckExistException e) {
 			return ResponseModel.fail("", e.getMessage());
 		}
 
@@ -58,11 +53,12 @@ public class UserRegisterController {
 	@ApiImplicitParams({
 			})
 	@PostMapping("/register")
+	@CrossOrigin
 	public ResponseModel<String> register(@Validated @RequestBody RegisterModel registerModel) {
 		
 		try {
 			registerService.register(registerModel);
-		} catch (RegisterheckExistExcption e) {
+		} catch (RegisterheckExistException e) {
 			return ResponseModel.fail("", e.getMessage());
 		}
 		return ResponseModel.sucessWithEmptyData("");
@@ -72,7 +68,7 @@ public class UserRegisterController {
 	@ApiImplicitParams({
 			})
 	@PostMapping("/login")
-	public ResponseModel<String> login(@Validated @RequestBody UserForLoginModel model) {
+	public ResponseModel<String> login(@Validated @RequestBody UserTokenInfo model) {
 		registerService.getUserForLogin(model);
 		logger.debug("user Info:"+model);
 		return ResponseModel.sucessWithEmptyData("");

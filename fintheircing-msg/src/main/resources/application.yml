@@ -4,13 +4,13 @@ spring:
       dev
   application:
     name: ffmsg
+
 server:
-  port: 8091
+  port: 8888
 eureka:
   client:
     serviceUrl:
       defaultZone: http://127.0.0.1:8762/eureka/
-      
 custom: 
   swagger:
     enable: true #是否启用swagger文档
@@ -20,3 +20,9 @@ custom:
         sendSms: ffcostomer.sms.ffmsg #发送短信的消息名称
   log: 
     path: E:/logback/${spring.application.name}/${spring.profiles.active}
+
+sms:
+  accessKeyId: LTAIyA39hSF5wbp0
+  accessKeySecret: IguokmddfOjip4UExmH4ddsViFvuk5
+  signName : 集创思短信通知
+  templateCode : SMS_152405275

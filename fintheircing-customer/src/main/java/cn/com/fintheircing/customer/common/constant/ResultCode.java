@@ -16,4 +16,26 @@ public class ResultCode {
 	public static final String TOKEN_CHECK_ERR_MSG = "token校验异常";
 	public static final String SYS_ERROR_MSG = "系统繁忙";
 	public static final String SYS_BUSY_MSG = "系统繁忙";
+
+	public static final String IP_VALIDATE_ERR = "非法访问";
+	public static final String IP_BLACK_VISIT = "黑名单用户，非法访问";
+	public static final String LOGIN_USER_NOTEXIST = "用户账号密码不匹配";
+	public static final String LOGIN_USER_STOP = "此号已被冻结";
+	public static final String LOGIN_USER_ERR = "用户登录失败";
+	public static final String LOGIN_TOKEN_ERR = "token转换失败";
+
+	public static final String SYS_BUSY_BLACK = "黑名单访问，融断";
+	public static final String PRODUCT_GET_ERR = "获取产品失败";
+	public static final String ACCOUNT_NUM_ERR = "保证金金额数目不正确";
+	public static final String ACCOUNT_LESS_ERR = "账户余额不足";
+	public static final String ACCOUNT_PAY_ERR = "扣款失败";
+	public static final String CONTRACT_SAVE_ERR = "保存合约失败";
+
+
+	public static final String SPREAD_CREATED_ERR = "生成邀请码失败";
+	public static final String PRODUCT_NOTEXIST_ERR = "不存在该产品";
+	public static final String PRODUCT_ISEXIST_ERR = "不可购买该类产品";
+
+	public static final String SUCESS_INFO = "success";
+	public static final String ERR_INFO = "error";
 }
