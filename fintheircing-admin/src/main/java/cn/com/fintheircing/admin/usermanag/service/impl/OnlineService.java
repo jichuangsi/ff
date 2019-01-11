@@ -14,6 +14,7 @@ public class OnlineService {
 
         if (StringUtils.isEmpty(userName)) {
             return allInfo;
+
         } else {
             allInfo.forEach(user -> {
                 if (!user.getUserName().contains(userName)) {
