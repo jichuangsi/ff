@@ -1,12 +1,10 @@
 package cn.com.fintheircing.admin.common.entity;
 
-import java.util.Date;
-
 import javax.persistence.MappedSuperclass;
+import java.util.Date;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
-
 	protected Date createdTime = new Date();
 	protected String creatorId;
 	protected String creatorName;
@@ -14,6 +12,8 @@ public abstract class AbstractEntity {
 	protected String updateUserId;
 	protected String updateUserName;
 	protected String deleteFlag = "0";
+
+
 
 	public final Date getCreatedTime() {
 		return createdTime;

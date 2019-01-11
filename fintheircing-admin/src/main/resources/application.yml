@@ -7,12 +7,17 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/ff?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8
     username: root
-    password: 123456
+    password: root
   jpa: 
     show-sql: true
     generate-ddl: true
     hibernate:
       ddl-auto: update
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 8MB
+      max-request-size: 8MB
 server:
   port: 8081
 eureka:
@@ -26,3 +31,37 @@ custom:
     enable: true #是否启用swagger文档
   log: 
     path: E:/logback/${spring.application.name}/${spring.profiles.active}
+  token:
+      prefix: token_val_
+      claim: userModel
+      secret: FF79@34$123de
+      longTime: 30
+      alg: HS512
+      survival: 360000
+  admin:
+    prefix: token_val_
+    longTime: 30
+    pwd: 111111
+    inviteLink: http://m.newplay.me/login
+    codeWidth: 300
+    codeHeight: 300
+    picFormat: jpg
+    picSavePath: F://codeImg
+  urlKey:
+    searchKey: url_val_search
+    roleKey: role_
+
+  system:
+    sdformat: yyyyMMdd-HH:mm:ss
+    hms: -00:00:00
+  pay:
+    url: http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
+    reciveWay: gatewayCheckstandPay
+    weChatOrAilpay: appPayPublic
+    queryPayResult: queryPayResult
+    queryReconTrans: queryReconTrans
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

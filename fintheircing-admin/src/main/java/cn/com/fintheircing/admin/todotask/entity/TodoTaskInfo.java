@@ -1,10 +1,10 @@
 package cn.com.fintheircing.admin.todotask.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class TodoTaskInfo {
@@ -20,6 +20,16 @@ public class TodoTaskInfo {
 	private String status;
 	private String examerId;
 	private String processorName;
+	private String taskId;
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
 	/**
 	 * 各种类型任务对应不同信息表
 	 */
