@@ -29,7 +29,7 @@ public class DemoTest {
             a.setUserName("aaa");
             System.out.println(a.toString());
            AdminClientInfo save = iAdminClientInfoRepository.save(a);
-            System.out.println(123);
+//            System.out.println(123);
 
         }
     }
