@@ -1,5 +1,6 @@
 package cn.com.fintheircing.customer.advice;
 
+import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -42,6 +44,14 @@ public class CommonControllerAdvice {
 
 	@ExceptionHandler
 	public ResponseModel<Object> handler(Exception e) {
+		
+		if (e instanceof MethodArgumentNotValidException) {
+			MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
+			ResponseModel<Object> responseModel = new ResponseModel<>("", ResultCode.PARAM_ERR,
+					ex.getBindingResult().getFieldError().getDefaultMessage(), null);
+			return responseModel;
+		}
+		
 		logger.error(e.getCause() + ":" + e.getMessage());
 		return ResponseModel.fail("", e.getMessage());
 
