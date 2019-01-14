@@ -46,7 +46,7 @@ public class Swagger2 {
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
 				// 页面标题
-				.title("交意接口服务RESTful API")
+				.title("交易接口服务RESTful API")
 				// 版本号
 				.version("1.0")
 				// 描述
