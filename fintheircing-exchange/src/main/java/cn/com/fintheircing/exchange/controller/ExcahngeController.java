@@ -79,8 +79,8 @@ public class ExcahngeController {
 	@ApiOperation(value = "查询历史成交（数据不含当天，注意接口数量最大约2K条，因此最好不要查询超过三天）", notes = "")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "motnerAccount", value = "母账户帐号（资金帐号）", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType = "path", name = "startDate", value = "开始日期，格式为20190101", required = true, dataType = "int"),
-			@ApiImplicitParam(paramType = "path", name = "endDate", value = "开始日期，格式为20190101", required = true, dataType = "int") })
+			@ApiImplicitParam(paramType = "path", name = "startDate", value = "开始日期，格式为20190101", required = true, dataType = "num"),
+			@ApiImplicitParam(paramType = "path", name = "endDate", value = "开始日期，格式为20190101", required = true, dataType = "num") })
 	@GetMapping("/getHistoryAcceptOrderList/{motnerAccount}/{startDate}/{endDate}")
 	public ResponseModel<List<HistoryAcceptOrder>> getHistoryAcceptOrderList(@PathVariable String motnerAccount,
 			@PathVariable int startDate, @PathVariable int endDate) {
