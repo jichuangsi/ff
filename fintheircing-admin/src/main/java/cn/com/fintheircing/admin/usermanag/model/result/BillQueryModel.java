@@ -2,7 +2,7 @@ package cn.com.fintheircing.admin.usermanag.model.result;
 /**
  * queryModel  返回待确认充值数据
  *
- * @author keriezhang
+ * @author yaoxiong
  * @date 2016/10/31
  */
 public class BillQueryModel {

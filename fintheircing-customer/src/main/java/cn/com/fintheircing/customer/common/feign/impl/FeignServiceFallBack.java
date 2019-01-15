@@ -93,7 +93,7 @@ public class FeignServiceFallBack implements IAdminFeignService {
     @Override
     public ProductModel getProduct(String productId) {
         logger.error("调用feign失败，获取product失败");
-        return null;
+        return new ProductModel();
     }
 
     @Override
@@ -122,7 +122,7 @@ public class FeignServiceFallBack implements IAdminFeignService {
     @Override
     public AppResultModel payForQRCode() {
         logger.error("读取二维码支付地址信息失败");
-        return null;
+        return new AppResultModel();
     }
 
     /**
@@ -134,6 +134,6 @@ public class FeignServiceFallBack implements IAdminFeignService {
     @Override
     public RecodInfoPayModel updatePayInfo(RecodInfoPayModel model) {
         logger.error("从操作员获取更新数据失败");
-        return null;
+        return new RecodInfoPayModel();
     }
 }

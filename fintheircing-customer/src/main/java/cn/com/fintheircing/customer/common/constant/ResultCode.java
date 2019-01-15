@@ -39,4 +39,5 @@ public class ResultCode {
 
 	public static final String SUCESS_INFO = "success";
 	public static final String ERR_INFO = "error";
+
 }

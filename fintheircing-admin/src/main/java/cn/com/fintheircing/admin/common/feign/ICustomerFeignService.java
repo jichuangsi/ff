@@ -1,10 +1,13 @@
 package cn.com.fintheircing.admin.common.feign;
 
+import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
 import cn.com.fintheircing.admin.common.feign.impl.CustomerFeignServiceFallBack;
-import cn.com.fintheircing.admin.usermanag.model.pay.RecodInfoPayModel;
+import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
+import cn.com.fintheircing.admin.usermanag.model.promise.AddPromiseMoneyModel;
+import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,15 +31,22 @@ public interface ICustomerFeignService {
      * 获取第三方配置信息
      * @return
      */
-    @RequestMapping("/getPayConfig")
+    @RequestMapping("/pay/getPayConfig")
     PayConfigModel getPayConfig();
 
     /**
      * 获得待确认所有的 信息
      * @return
      */
-    @RequestMapping("/findAllPayInfo")
-     List<RecodInfoPayModel> findAllPayInfo();
+    @RequestMapping("/pay/recodPayInfo")
+    RecodeInfoPayModel recodPayInfo();
 
+    /**
+     * 追加保证金
+     *
+     * @return
+     */
+    @RequestMapping("/pay/updatePayInfo")
+     ResponseModel<PromiseModel> addPromiseMoney();
 
 }

@@ -7,8 +7,10 @@ import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
 
 import cn.com.fintheircing.admin.usermanag.entity.AskMoneyInfo;
 import cn.com.fintheircing.admin.usermanag.entity.Bill;
+import cn.com.fintheircing.admin.usermanag.entity.PayInfo;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 
+import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -65,6 +67,19 @@ public class EntityToModel {
         b.setTransTime(model.getTransTime());
         return b;
     }
-
+    public static final RecodeInfoPayModel CoverPayInfo(PayInfo model){
+        RecodeInfoPayModel p =new RecodeInfoPayModel();
+        p.setCostCount(model.getCostCount());
+        p.setAddCount(model.getAddCount());
+        p.setCreatTime(model.getCreateTime());
+        p.setPhone(model.getPhone());
+        p.setRemark(model.getRemark());
+        p.setStatus(model.getStatus());
+        p.setUserId(model.getUserId());
+        p.setUserName(model.getUserName());
+        p.setWay(model.getWay());
+        p.setPhone(model.getPhone());
+        return p;
+    }
 
 }
