@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.usermanag.service;
 
+import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
+import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
 import cn.com.fintheircing.admin.usermanag.model.pay.NetQueryModel;
@@ -13,7 +15,7 @@ public interface IPayService {
      * @return
      * @throws UserServiceException
      */
-   ResultModel getWayToPay(NetQueryModel model) throws UserServiceException;
+   ResultModel getWayToPay(NetQueryModel model, PayConfigModel payConfig) throws UserServiceException;
 
     /**
      * 第支付宝微信支付信息并且返回支付
@@ -23,13 +25,6 @@ public interface IPayService {
      */
     ResultModel getWechatOrAilpayInfo(AppQueryModel model)throws UserServiceException;
 
-    /**
-     * 网关二维码支付
-     * @param model
-     * @return
-     * @throws UserServiceException
-     */
-    ResultModel gatewayPayByQRcode(NetQueryModel model)throws UserServiceException;
 
     /**
      * 支付结果查询
@@ -47,5 +42,12 @@ public interface IPayService {
      */
     boolean queryReconTrans(BillQueryModel modelList, String orderId)throws UserServiceException;
 
-
+    /**
+     * 展示支付二维码
+     * @param model
+     * @param payConfig
+     * @return
+     * @throws UserServiceException
+     */
+    AppResultModel payForQRCode(AppQueryModel model, PayConfigModel payConfig) throws UserServiceException;
 }

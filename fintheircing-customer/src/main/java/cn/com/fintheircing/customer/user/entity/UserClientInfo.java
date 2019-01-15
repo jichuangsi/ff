@@ -8,7 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class UserClientInfo extends AbstractEntity {
+public class
+UserClientInfo extends AbstractEntity {
 
 	public static final String STATUS_INIT = "0";
 	public static final String STATUS_ACTIVE = "1";

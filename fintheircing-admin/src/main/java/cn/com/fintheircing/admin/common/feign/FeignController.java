@@ -4,9 +4,12 @@ import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
+import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
+import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
+import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
@@ -17,6 +20,10 @@ import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
+import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
+import cn.com.fintheircing.admin.usermanag.model.pay.NetQueryModel;
+import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
+import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -50,8 +57,10 @@ public class FeignController {
     private IDistributService distributService;
     @Resource
     private ItemService temService;
-
-
+    @Resource
+    private ICustomerFeignService iCustomerFeignService;
+    @Resource
+    private IPayService iPayService;
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
     })
@@ -166,5 +175,17 @@ public class FeignController {
             return ResponseModel.fail("",e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
+    }
+    @RequestMapping("/showPayInfo")
+    @ApiOperation(value = "展示第三方支付网关信息", notes = "")
+    public ResultModel getWayToPay(@RequestBody NetQueryModel model) throws UserServiceException {
+        PayConfigModel payConfig = iCustomerFeignService.getPayConfig();
+        return iPayService.getWayToPay(model,payConfig);
+    }
+    @RequestMapping("/payForQRCode")
+    @ApiOperation(value = "展示第三方支付二维码信息", notes = "")
+    public AppResultModel payForQRCode(@RequestBody AppQueryModel model) throws UserServiceException {
+        PayConfigModel payConfig = iCustomerFeignService.getPayConfig();
+        return iPayService.payForQRCode(model,payConfig);
     }
 }

@@ -1,13 +1,12 @@
 package cn.com.fintheircing.admin.usermanag.uilts;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.usermanag.model.result.RecodeInfoPayModel;
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.FeedbackModel;
-import cn.com.fintheircing.admin.usermanag.entity.AskMoneyInfo;
 
 import cn.com.fintheircing.admin.usermanag.entity.Bill;
-import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
+import cn.com.fintheircing.admin.usermanag.entity.PayInfo;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
 
 public class ModelToEntity {
@@ -61,5 +60,17 @@ public class ModelToEntity {
         b.setTransAmount(model.getTransAmount());
         b.setTransTime(model.getTransTime());
         return b;
+    }
+    public static PayInfo CoverPayInfo(RecodeInfoPayModel model){
+        PayInfo p =new PayInfo();
+        p.setAddCount(model.getAmount());
+        p.setCreateTime(model.getDate());
+        p.setPhone(model.getPhone());
+        p.setRemark(model.getRemark());
+        p.setStatus(model.getStatus());
+        p.setUserId(model.getUserId());
+        p.setUserName(model.getUserName());
+        p.setWay(model.getWay());
+        return p;
     }
 }

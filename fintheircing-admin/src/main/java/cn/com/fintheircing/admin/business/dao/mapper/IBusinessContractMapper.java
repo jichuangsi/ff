@@ -16,7 +16,7 @@ public interface IBusinessContractMapper {
             " t1.user_id=#{userId}" +
             "<if test='productNo!=null'> and t2.allot=#{productNo}  and not(t1.contract_status=2)</if>" +
             "</where></script>")
-    int countSameContract(Map<String,Object> params);
+    int countSameContract(Map<String, Object> params);
 
 
     //策略

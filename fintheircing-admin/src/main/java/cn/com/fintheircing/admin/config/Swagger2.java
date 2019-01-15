@@ -42,7 +42,10 @@ public class Swagger2 {
 						+ "cn.com.fintheircing.admin.login.controller"+ splitor
 						+"cn.com.fintheircing.admin.proxy.controller"+ splitor
 						+"cn.com.fintheircing.admin.promisedUrls.controller"+ splitor
-						+"cn.com.fintheircing.admin.system.controller"))
+						+"cn.com.fintheircing.admin.system.controller"+splitor
+					+"cn.com.fintheircing.admin.usermanag.controller"+splitor+
+						"cn.com.fintheircing.admin.useritem.controller"+splitor+
+						"cn.com.fintheircing.admin.systemdetect.controller"))
 				.paths(PathSelectors.any()).build();
 	}
 

@@ -46,66 +46,6 @@ public class NetQueryModel {
      * 浏览器标识
      */
     private String browserUA;
-//    /**
-//     * 微信号
-//     */
-//    private String openId;
-//    /**
-//     * 商品名字
-//     */
-//    private String goodsName;
-//    /**
-//     * 客户端类型
-//     */
-//    private String appType;
-//    /**
-//     * 微信公众号
-//     */
-//    private String appId;
-//    /**
-//     * 二维码支付类型
-//     */
-//    private String payType;
-
-//    public String getPayType() {
-//        return payType;
-//    }
-//
-//    public void setPayType(String payType) {
-//        this.payType = payType;
-//    }
-//
-//    public String getOpenId() {
-//        return openId;
-//    }
-//
-//    public void setOpenId(String openId) {
-//        this.openId = openId;
-//    }
-//
-//    public String getGoodsName() {
-//        return goodsName;
-//    }
-//
-//    public void setGoodsName(String goodsName) {
-//        this.goodsName = goodsName;
-//    }
-//
-//    public String getAppType() {
-//        return appType;
-//    }
-//
-//    public void setAppType(String appType) {
-//        this.appType = appType;
-//    }
-//
-//    public String getAppId() {
-//        return appId;
-//    }
-//
-//    public void setAppId(String appId) {
-//        this.appId = appId;
-//    }
 
     public String getOrderId() {
         return orderId;

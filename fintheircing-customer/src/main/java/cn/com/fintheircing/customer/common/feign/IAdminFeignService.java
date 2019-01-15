@@ -8,6 +8,9 @@ import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +49,7 @@ public interface IAdminFeignService {
 
     //查看是否能购买相同套餐
     @RequestMapping(value = "/adminF/canBuy")
-    Boolean canBuy(@RequestParam("productNo") Integer productNo,@RequestParam("userId") String userId);
+    Boolean canBuy(@RequestParam("productNo") Integer productNo, @RequestParam("userId") String userId);
 
 
     //创建合约
@@ -83,4 +86,27 @@ public interface IAdminFeignService {
     @RequestMapping(value = "adminF/costColdContract")
     Boolean costColdContract(@RequestParam("contractId") String contractId,
                              @RequestParam("coldMoney") Double coldMoney);
+
+    /**
+     * 返回一个第三方网关接口
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "adminF/getWayToPay")
+    ResultModel getWayToPay();
+
+    /**
+     * 返回二维码支付地址
+     * @return
+     */
+    @RequestMapping("adminF/payForQRCode")
+    AppResultModel payForQRCode();
+
+    /**
+     * 返回更新用户信息
+     * @param model
+     * @return
+     */
+    @RequestMapping("adminF/updatePayInfo")
+    RecodInfoPayModel updatePayInfo(@RequestBody RecodInfoPayModel model);
 }

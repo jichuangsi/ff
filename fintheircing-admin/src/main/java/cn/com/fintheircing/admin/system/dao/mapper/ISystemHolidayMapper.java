@@ -15,7 +15,7 @@ public interface ISystemHolidayMapper {
             "`update_user_id` = #{id}, `update_user_name` = #{name}," +
             " `updated_time` = #{time}  WHERE `uuid` in <foreach collection=\"list\" index=\"index\" item=\"item\" open=\"(\" separator=\",\" close=\")\"> " +
             "   #{item}   </foreach></script>")
-    int deleteHolidays(Map<String,Object> params);
+    int deleteHolidays(Map<String, Object> params);
 
 
     @Select("<script>select uuid as id ,begin_time as `start`" +

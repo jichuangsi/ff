@@ -1,6 +1,7 @@
 package cn.com.fintheircing.customer.common.feign.model;
 
-import cn.com.fintheircing.admin.useritem.common.Status;
+
+import cn.com.fintheircing.customer.common.constant.Status;
 
 import java.util.Date;
 

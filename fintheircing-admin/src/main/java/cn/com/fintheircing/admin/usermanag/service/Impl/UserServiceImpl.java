@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.usermanag.service.impl;
+package cn.com.fintheircing.admin.usermanag.service.Impl;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.entity.AdminClientInfo;

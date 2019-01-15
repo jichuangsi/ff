@@ -9,6 +9,9 @@ import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -103,5 +106,34 @@ public class FeignServiceFallBack implements IAdminFeignService {
     public Boolean costColdContract(String contractId, Double coldMoney) {
         logger.error("修改合约冻结资金失败");
         return false;
+    }
+
+    @Override
+    public ResultModel getWayToPay() {
+        logger.error("读取第三方支付信息失败");
+        return null;
+    }
+
+    /**
+     * 返回二维码支付地址
+     *
+     * @return
+     */
+    @Override
+    public AppResultModel payForQRCode() {
+        logger.error("读取二维码支付地址信息失败");
+        return null;
+    }
+
+    /**
+     * 返回更新用户信息
+     *
+     * @param model
+     * @return
+     */
+    @Override
+    public RecodInfoPayModel updatePayInfo(RecodInfoPayModel model) {
+        logger.error("从操作员获取更新数据失败");
+        return null;
     }
 }

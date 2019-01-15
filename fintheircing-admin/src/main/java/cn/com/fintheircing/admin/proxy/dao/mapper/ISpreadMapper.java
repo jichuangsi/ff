@@ -43,5 +43,5 @@ public interface ISpreadMapper {
 
 
     @Select("<script>select spread_link as spreadLink,spread_code_pic as qRcode,invite_code as spreadNum from proxy_spread where saleman_id=#{userId}</script>")
-    SpreadModel getOwnSpread(@Param("userId")String userId);
+    SpreadModel getOwnSpread(@Param("userId") String userId);
 }

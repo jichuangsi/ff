@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.usermanag.model.result;
 /**
- * BillQueryModel  返回待确认充值数据
+ * queryModel  返回待确认充值数据
  *
  * @author keriezhang
  * @date 2016/10/31

@@ -6,6 +6,7 @@ import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,14 +27,14 @@ public class Distributcontroller {
     @ApiOperation(value = "产品列表-日配", notes = "")
     @ApiImplicitParams({
     })
-    @RequestMapping("/findDay")
+    @GetMapping("/findDay")
     public ResponseModel<List<ProductModel>> findForDayAllot(){
         return ResponseModel.sucess("",iDistributService.findForDayAllot());
     }
     @ApiOperation(value = "产品列表-月配", notes = "")
     @ApiImplicitParams({
     })
-    @RequestMapping("/findmonth")
+    @GetMapping("/findmonth")
 
     public ResponseModel<List<ProductModel>> findForMonthAllot(){
         return ResponseModel.sucess("",iDistributService.findForMonthAllot());
@@ -41,14 +42,14 @@ public class Distributcontroller {
     @ApiOperation(value = "产品列表-特殊", notes = "")
     @ApiImplicitParams({
     })
-    @RequestMapping("/findspec")
+    @GetMapping("/findspec")
     public ResponseModel<List<ProductModel>> findForSpecialAllot(){
         return ResponseModel.sucess("",iDistributService.findForSpecialAllot());
     }
     @ApiOperation(value = "产品列表-修改", notes = "")
     @ApiImplicitParams({
     })
-    @RequestMapping("/update")
+    @GetMapping("/update")
     public ResponseModel<ProductModel> findForSpecialAllot(ProductModel model){
         return ResponseModel.sucess("",iDistributService.updateProduce(model));
     }

@@ -37,7 +37,7 @@ custom:
     prefix: token_val_
     longTime: 30
     pwd: 111111
-    inviteLink: HttpUtils://m.newplay.me/login
+    inviteLink: http://m.newplay.me/login
     codeWidth: 300
     codeHeight: 300
     picFormat: jpg
@@ -55,7 +55,7 @@ custom:
     weChatOrAilpay: appPayPublic
     queryPayResult: queryPayResult
     queryReconTrans: queryReconTrans
-
+    QRcode: gatewayPayByQRcode
 pagehelper:
   helperDialect: mysql
   reasonable: true
