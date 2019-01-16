@@ -4,4 +4,6 @@ import cn.com.fintheircing.admin.business.entity.BusinessContractRisk;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IBusinessContractRiskRepository extends JpaRepository<BusinessContractRisk,String> {
+
+    BusinessContractRisk findBusinessContractRiskByContractId(String contractId);
 }

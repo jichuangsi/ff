@@ -3,6 +3,7 @@ package cn.com.fintheircing.customer.business.controller;
 import cn.com.fintheircing.customer.business.exception.BusinessException;
 import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
+import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.business.service.BusinessService;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
@@ -33,6 +34,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getProducts")
+    @CrossOrigin
     public ResponseModel<TranferProductModel> getProducts(@ModelAttribute UserTokenInfo userInfo, @RequestBody ProductModel model){
         try {
             return ResponseModel.sucess("", businessService.getTranferProductModel(userInfo,model));
@@ -46,6 +48,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveContract")
+    @CrossOrigin
     public ResponseModel saveContract(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody ContractModel model){
         if (model.getPromisedMoney()<2000||model.getPromisedMoney()>3000000){
             return ResponseModel.fail("",ResultCode.ACCOUNT_NUM_ERR);
@@ -63,6 +66,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/isRich")
+    @CrossOrigin
     public ResponseModel isRich(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractModel model){
         if (model.getPromisedMoney()<2000||model.getPromisedMoney()>3000000){
             return ResponseModel.fail("",ResultCode.ACCOUNT_NUM_ERR);
@@ -79,6 +83,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getCurrentContract")
+    @CrossOrigin
     public ResponseModel<List<ContractModel>> getCurrentContract(@ModelAttribute UserTokenInfo userInfo){
         return ResponseModel.sucess("",businessService.getCurrentContract(userInfo));
     }
@@ -89,6 +94,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveStockEntrust")
+    @CrossOrigin
     public ResponseModel saveStockEntrust(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockEntrustModel model){
         try {
             businessService.saveEntrust(userInfo,model);
@@ -98,5 +104,15 @@ public class BusinessController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
+    @ApiOperation(value = "根据股票代码查询当前持仓", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getCurrentHolding")
+    @CrossOrigin
+    public ResponseModel getCurrentHolding(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockHoldingModel model){
+
+        return ResponseModel.sucessWithEmptyData("");
+    }
 
 }

@@ -86,4 +86,8 @@ public class AdminLoginService {
         model.setPwd(CommonUtil.toSha256(model.getPwd()));
         return model;
     }
+
+    public int countAdmin(UserTokenInfo userTokenInfo){
+        return adminClientLoginInfoMapper.selectCountAdmin(userTokenInfo);
+    }
 }

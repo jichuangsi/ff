@@ -32,8 +32,8 @@ public class ProxyController {
     @PostMapping("/getProxyList")
     @CrossOrigin
     public ResponseModel<PageInfo<ProxyModel>> getProxyList(@ModelAttribute UserTokenInfo admin, @RequestBody ProxyModel proxyModel){
-        if(proxyModel.getPageIndex()==null||proxyModel.getPageIndex()==0
-                ||proxyModel.getPageSize()==null||proxyModel.getPageSize()==0)
+        if(proxyModel.getPage()==null||proxyModel.getPage()==0
+                ||proxyModel.getLimit()==null||proxyModel.getLimit()==0)
             return ResponseModel.fail("", ResultCode.PARAM_ERR_MSG);
         /*admin.setUuid("123");
         admin.setPosition(RoleCode.POSITION_MANAGE.getIndex());*/
@@ -59,7 +59,7 @@ public class ProxyController {
         try {
             String result = proxyService.saveProxy(admin,proxyModel);
             if(!"success".equals(result)){
-                return ResponseModel.fail("",result);
+                return ResponseModel.sucess("",result);
             }
         } catch (ProxyException e) {
             return ResponseModel.fail("",e.getMessage());
@@ -111,7 +111,7 @@ public class ProxyController {
     @CrossOrigin
     public ResponseModel getEmployee(@ModelAttribute UserTokenInfo userInfo,@RequestBody EmployeeModel model){
         if(model==null||StringUtils.isEmpty(model.getId())
-                ||model.getPageIndex()==null||model.getPageSize()==null){
+                ||model.getPage()==null||model.getLimit()==null){
             return ResponseModel.fail("",ResultCode.PARAM_ERR_MSG);
         }
         return ResponseModel.sucess("",proxyService.getEmployee(userInfo,model));

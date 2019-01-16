@@ -25,6 +25,7 @@ public class ResultCode {
 	public static final String LOGIN_ADMIN_ERR = "管理员登录失败";
 
 	public static final String UPDATE_ERR = "修改失败";
+	public static final String PROXY_ISEXIST_ERR = "已存在该代理";
 	public static final String COMMISSION_NULL_ERR = "请填写分成";
 	public static final String INVITCODE_GET_MSG = "请重新申请邀请码";
 	public static final String INVITCODE_PIC_MSG = "二维码生成失败";
@@ -48,4 +49,13 @@ public class ResultCode {
 	public static final String ACCOUNT_COST_ERR  = "扣款失败";
 	public static final String STOCK_ENTRUST_SAVE_ERR  = "保存委托单失败";
 
+	public static final String STOCK_ENTRUST_MAX = "该股超过最大购买";
+	public static final String STOCK_ENTRUST_DANGER = "该股为危险股票";
+	public static final String STOCK_ENTRUST_NULL = "申请表为空";
+	public static final String STOCK_NULL_FIND = "未找到该股的交易记录";
+	public static final String CONTRACT_NULL_FIND = "您尚未创建交易合约";
+	public static final String STOCK_BAD_ERR = "此单是废单";
+	public static final String STOCK_BUSINESS_ERR = "交易失败";
+	public static final String UPDATE_ERR_MSG = "更新失败";
+	public static final String UPDATE_ALREAD_MSG = "已有人在处理";
 }

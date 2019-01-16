@@ -6,24 +6,24 @@ public class EmployeeModel {
     private String name;
     private String userName;
     private String position;
-    private String status;
-    private Integer pageIndex;
-    private Integer pageSize;
+    private String remarks;
+    private Integer page;
+    private Integer limit;
 
-    public Integer getPageIndex() {
-        return pageIndex;
+    public Integer getPage() {
+        return page;
     }
 
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setPage(Integer page) {
+        this.page = page;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
+    public Integer getLimit() {
+        return limit;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     public String getId() {
@@ -58,11 +58,11 @@ public class EmployeeModel {
         this.position = position;
     }
 
-    public String getStatus() {
-        return status;
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

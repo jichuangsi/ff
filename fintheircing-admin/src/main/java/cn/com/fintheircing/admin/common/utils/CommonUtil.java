@@ -82,4 +82,10 @@ public class CommonUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime().getTime();
 	}
+
+	public static Boolean regexString(String regex,String str){
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(str);
+		return matcher.find();
+	}
 }

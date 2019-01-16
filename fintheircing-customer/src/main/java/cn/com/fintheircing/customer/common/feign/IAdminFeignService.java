@@ -2,8 +2,10 @@ package cn.com.fintheircing.customer.common.feign;
 
 import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
+import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.common.feign.impl.FeignServiceFallBack;
 import cn.com.fintheircing.customer.common.feign.model.CreateTodoTaskModel;
+import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
@@ -67,22 +69,27 @@ public interface IAdminFeignService {
     Boolean existContractNum(@RequestParam("contractNum") String contractNum);*/
 
 
+    //获取用户推广
     @RequestMapping(value = "/adminF/getOwnSpread")
     SpreadModel getOwnSpread(@RequestParam("userId") String userId);
 
 
+    //获取当前持有的所有合约
     @RequestMapping(value = "/adminF/getCurrentContract")
     List<ContractModel> getCurrentContract(@RequestParam("userId") String userId);
 
 
+    //获取当前的产品
     @RequestMapping(value = "/adminF/getProduct")
     ProductModel getProduct(@RequestParam("productId") String productId);
 
 
+    //判断是否存在白名单内
     @RequestMapping(value = "adminF/isExistWhiteList")
     Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum);
 
 
+<<<<<<< Updated upstream
     @RequestMapping(value = "adminF/costColdContract")
     Boolean costColdContract(@RequestParam("contractId") String contractId,
                              @RequestParam("coldMoney") Double coldMoney);
@@ -109,4 +116,14 @@ public interface IAdminFeignService {
      */
     @RequestMapping("adminF/updatePayInfo")
     RecodInfoPayModel updatePayInfo(@RequestBody RecodInfoPayModel model);
+=======
+    //保存股票申请
+    @RequestMapping(value = "adminF/saveStockEntrust")
+    ResponseModel saveStockEntrust(@RequestBody StockEntrustModel model);
+
+
+    //查看当前合约的该股持仓
+    @RequestMapping(value = "")
+    StockHoldingModel getCurrentHolding();
+>>>>>>> Stashed changes
 }

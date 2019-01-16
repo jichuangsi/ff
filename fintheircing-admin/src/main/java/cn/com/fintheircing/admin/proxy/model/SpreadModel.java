@@ -7,12 +7,30 @@ public class SpreadModel {
     private String proxyName;
     private String empNum;
     private String empName;
+    private String userName;
+    private String userNum;
     private String spreadNum;
     private String spreadLink;
     private byte[] qRcode;
     private Integer position;
     private Integer pageIndex;
     private Integer pageSize;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(String userNum) {
+        this.userNum = userNum;
+    }
 
     public Integer getPageIndex() {
         return pageIndex;

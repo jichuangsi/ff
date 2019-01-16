@@ -45,17 +45,28 @@ custom:
   urlKey:
     searchKey: url_val_search
     roleKey: role_
-
   system:
     sdformat: yyyyMMdd-HH:mm:ss
     hms: -00:00:00
+    autoBuy: autoBuy
+    shangRegex:  ^(60)|(900)[0-9]*$
+    shenRegex:  ^(000)|(002)|(300)|(200)[0-9]*$
   pay:
     url: http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
     reciveWay: gatewayCheckstandPay
     weChatOrAilpay: appPayPublic
     queryPayResult: queryPayResult
     queryReconTrans: queryReconTrans
+<<<<<<< Updated upstream
     QRcode: gatewayPayByQRcode
+=======
+  risk:
+    maxBuyOne: 0.8
+    venturEditionMax: 0.5
+    holdOverFiveAvg: 0.3
+    holdOverCurrency: 0.005
+    shockShutDown: 1
+>>>>>>> Stashed changes
 pagehelper:
   helperDialect: mysql
   reasonable: true

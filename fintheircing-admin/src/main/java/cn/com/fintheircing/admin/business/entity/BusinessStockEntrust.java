@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.util.Date;
 
 /**
@@ -25,10 +26,40 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String stockId;     //关联股票
     private Integer businessTo;     //买卖方向
     private Integer entrustStatus;      //委托状态
-    private Double buyAccount;      //总金额
+    private Double buyPrice;      //购买单价
     private Integer buyAmount;      ///总数量
-    private String dealNum;     //成交编号
+    private String contractId;
+    private Double dealPrice;   //成交价钱
+    private String dealNo;     //委托编号
+    private String dealNum;     //成交数量
     private Date dealTime;      //成交时间
+    private String montherAccount;  //母账户
+    @Version
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
+    }
+
+    public String getMontherAccount() {
+        return montherAccount;
+    }
+
+    public void setMontherAccount(String montherAccount) {
+        this.montherAccount = montherAccount;
+    }
 
     public String getUuid() {
         return uuid;
@@ -70,12 +101,20 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.entrustStatus = entrustStatus;
     }
 
-    public Double getBuyAccount() {
-        return buyAccount;
+    public Double getBuyPrice() {
+        return buyPrice;
     }
 
-    public void setBuyAccount(Double buyAccount) {
-        this.buyAccount = buyAccount;
+    public void setBuyPrice(Double buyPrice) {
+        this.buyPrice = buyPrice;
+    }
+
+    public Double getDealPrice() {
+        return dealPrice;
+    }
+
+    public void setDealPrice(Double dealPrice) {
+        this.dealPrice = dealPrice;
     }
 
     public Integer getBuyAmount() {
@@ -100,5 +139,13 @@ public class BusinessStockEntrust extends AbstractEntity {
 
     public void setDealTime(Date dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public String getDealNo() {
+        return dealNo;
+    }
+
+    public void setDealNo(String dealNo) {
+        this.dealNo = dealNo;
     }
 }

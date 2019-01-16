@@ -4,4 +4,7 @@ import cn.com.fintheircing.admin.business.entity.BusinessStockEntrust;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IBusinessStockEntrustRepository extends JpaRepository<BusinessStockEntrust,String> {
+
+    BusinessStockEntrust findByDeleteFlagAndUuid(String delete,String uuid);
+
 }

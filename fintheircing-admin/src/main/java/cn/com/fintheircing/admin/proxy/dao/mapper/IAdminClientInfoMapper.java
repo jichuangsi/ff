@@ -8,9 +8,10 @@ import java.util.List;
 
 public interface IAdminClientInfoMapper {
 
-    @Select("<script>select uuid as id,`name` as  name,user_name as userName,position as position" +
-            ",`status` as status from admin_client_info where boss_id=#{id}" +
+    @Select("<script>select uuid as id,`name` as  name,user_name as userName,role_grade as position" +
+            ",remarks as remarks from admin_client_info" +
             "<where>" +
+            " boss_id=#{id} and role_grade=3" +
             "<if test='userName!=null and userName!=\"\"'> and user_name like concat('%',#{userName},'%')</if>" +
             "</where></script>")
     List<EmployeeModel> selectEmp(EmployeeModel model);

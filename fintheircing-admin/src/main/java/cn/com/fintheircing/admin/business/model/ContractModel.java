@@ -26,11 +26,65 @@ public class ContractModel {
     private Double dangerCash;    //危险保证金
     private String choseStr;
     private Double first;   //初次利息
-    private ProductModel productModel;
-    private Integer version;
+    private ProductModel productModel;  //产品
+    private Integer version;        //version
+    private Double customerMaxAccount;  //最大买入单股
+    private Double venturEditionMaxAccount;     //创业版最大买入单股
+    private Double holdOverFiveAvg;     //五日交易平均
+    private Double holdOverCurrency;       //流通市值
+    private Integer shockShutDown;      //跌停
+    private Double businessRate;
+
+    public Double getBusinessRate() {
+        return businessRate;
+    }
+
+    public void setBusinessRate(Double businessRate) {
+        this.businessRate = businessRate;
+    }
 
     private Integer pageIndex;
     private Integer pageSize;
+
+    public Double getCustomerMaxAccount() {
+        return customerMaxAccount;
+    }
+
+    public void setCustomerMaxAccount(Double customerMaxAccount) {
+        this.customerMaxAccount = customerMaxAccount;
+    }
+
+    public Double getVenturEditionMaxAccount() {
+        return venturEditionMaxAccount;
+    }
+
+    public void setVenturEditionMaxAccount(Double venturEditionMaxAccount) {
+        this.venturEditionMaxAccount = venturEditionMaxAccount;
+    }
+
+    public Double getHoldOverFiveAvg() {
+        return holdOverFiveAvg;
+    }
+
+    public void setHoldOverFiveAvg(Double holdOverFiveAvg) {
+        this.holdOverFiveAvg = holdOverFiveAvg;
+    }
+
+    public Double getHoldOverCurrency() {
+        return holdOverCurrency;
+    }
+
+    public void setHoldOverCurrency(Double holdOverCurrency) {
+        this.holdOverCurrency = holdOverCurrency;
+    }
+
+    public Integer getShockShutDown() {
+        return shockShutDown;
+    }
+
+    public void setShockShutDown(Integer shockShutDown) {
+        this.shockShutDown = shockShutDown;
+    }
 
     public Integer getVersion() {
         return version;

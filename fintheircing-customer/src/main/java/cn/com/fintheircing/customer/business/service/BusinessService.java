@@ -3,11 +3,13 @@ package cn.com.fintheircing.customer.business.service;
 import cn.com.fintheircing.customer.business.exception.BusinessException;
 import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
+import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.common.constant.ProductStatus;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
+import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.UserService;
@@ -51,6 +53,8 @@ public class BusinessService {
 
     public Boolean isRich(UserTokenInfo userInfo, ContractModel model){
         Double account = userAccountRepository.findAccountByUserId(userInfo.getUuid());
+        ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
+        model.setProductModel(productModel);
         if (account!=null){
             if (account>getNeedMoney(model.getProductModel(),model.getPromisedMoney())+model.getPromisedMoney()){
                 return true;
@@ -131,11 +135,18 @@ public class BusinessService {
    }
 
 
-   public void saveEntrust(UserTokenInfo userInfo,StockEntrustModel model) throws BusinessException{
+   public ResponseModel saveEntrust(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException{
         if (!adminFeignService.isExistWhiteList(model.getStockNum())){
-            throw new BusinessException(ResultCode.STOCK_DANGER_ERR);
+           /* throw new BusinessException(ResultCode.STOCK_DANGER_ERR);*/
+            return ResponseModel.fail(ResultCode.STOCK_DANGER_ERR);
         }//验证是否存在白名单
-        //获取合约账户
+        //保存购买股票申请单，并冻结资金
+       return adminFeignService.saveStockEntrust(model);
+   }
 
+   public StockHoldingModel getCurrentStockHolding(UserTokenInfo userInfo, StockHoldingModel model){
+       model.setUserId(userInfo.getUuid());
+
+       return null;
    }
 }

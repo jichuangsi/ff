@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/userLogin")
 @Api("配资客户登录controller")
 public class UserLoginController {
 

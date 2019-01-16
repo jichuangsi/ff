@@ -12,8 +12,15 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
     @Modifying
     @Query(value = "update BusinessContract set availableMoney=availableMoney-:coldMoney" +
             ",coldMoney=coldMoney+:coldMoney,version=:version+1 where uuid=:contractId and deleteFlag='0'  and version=:version")
+    int updateAvailableMoney(@Param("contractId") String contractId,
+                        @Param("coldMoney") Double coldMoney,@Param("version") Integer version);
+
+
+    @Modifying
+    @Query(value = "update BusinessContract set coldMoney=coldMoney-:coldMoney,version=:version+1 where uuid=:contractId and deleteFlag='0'  and version=:version")
     int updateColdMoney(@Param("contractId") String contractId,
                         @Param("coldMoney") Double coldMoney, @Param("version") Integer version);
+
 
     BusinessContract findByUuid(String id);
 }

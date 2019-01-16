@@ -1,24 +1,14 @@
-package cn.com.fintheircing.admin.business.entity;
+package cn.com.fintheircing.admin.business.model;
 
-import cn.com.fintheircing.admin.common.entity.AbstractEntity;
-import org.hibernate.annotations.GenericGenerator;
+import javax.validation.constraints.Pattern;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+public class StockHoldingModel {
 
-/**
- * 持仓
- */
-@Entity
-public class BusinessStockHolding extends AbstractEntity {
-
-    @Id
-    @GeneratedValue(generator = "paymentableGenerator")
-    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
-    private String uuid;
-    private String contractId;  //相关合约编号
-    private String stockId;     //关联股票
+    private String id;
+    private String stockId;
+    @Pattern(regexp = "^\\d{6}$",message = "股票代码不正确")
+    private String stockNo;
+    private String stockName;
     private Integer amount;     //持仓
     private Integer canSell;    //可用
     private Double costPrice;    //成本单价
@@ -26,23 +16,16 @@ public class BusinessStockHolding extends AbstractEntity {
     private Double currentWorth;    //当前市值
     private String motherAccount;   //母账号
     private Double floatMoney;      //盈亏金额
-    private Double floatRate;       //盈亏比例
-    private String entrustId;
+    private Double floatRate;
+    private String contractId;
+    private String userId;
 
-    public String getEntrustId() {
-        return entrustId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setEntrustId(String entrustId) {
-        this.entrustId = entrustId;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getContractId() {
@@ -53,12 +36,28 @@ public class BusinessStockHolding extends AbstractEntity {
         this.contractId = contractId;
     }
 
-    public String getStockId() {
-        return stockId;
+    public String getId() {
+        return id;
     }
 
-    public void setStockId(String stockId) {
-        this.stockId = stockId;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStockNo() {
+        return stockNo;
+    }
+
+    public void setStockNo(String stockNo) {
+        this.stockNo = stockNo;
+    }
+
+    public String getStockName() {
+        return stockName;
+    }
+
+    public void setStockName(String stockName) {
+        this.stockName = stockName;
     }
 
     public Integer getAmount() {
@@ -123,5 +122,13 @@ public class BusinessStockHolding extends AbstractEntity {
 
     public void setFloatRate(Double floatRate) {
         this.floatRate = floatRate;
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
     }
 }

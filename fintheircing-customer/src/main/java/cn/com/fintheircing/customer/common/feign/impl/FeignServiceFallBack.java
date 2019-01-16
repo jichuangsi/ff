@@ -5,6 +5,7 @@ import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.feign.model.CreateTodoTaskModel;
+import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
@@ -103,9 +104,9 @@ public class FeignServiceFallBack implements IAdminFeignService {
     }
 
     @Override
-    public Boolean costColdContract(String contractId, Double coldMoney) {
-        logger.error("修改合约冻结资金失败");
-        return false;
+    public ResponseModel saveStockEntrust(StockEntrustModel model) {
+        logger.error("调用feign失败，保存买入申请单失败");
+        return ResponseModel.fail("",ResultCode.SYS_ERROR_MSG);
     }
 
     @Override

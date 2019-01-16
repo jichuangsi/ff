@@ -8,6 +8,7 @@ import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.MatrixToImageWriter;
 import cn.com.fintheircing.admin.login.entity.AdminClientLoginInfo;
+import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.proxy.dao.mapper.IAdminClientInfoMapper;
 import cn.com.fintheircing.admin.proxy.dao.mapper.ICommissionMapper;
 import cn.com.fintheircing.admin.proxy.dao.mapper.ISpreadMapper;
@@ -72,6 +73,8 @@ public class ProxyService {
     private ISpreadMapper spreadMapper;
     @Resource
     private ISpreadRepository spreadRepository;
+    @Resource
+    private AdminLoginService adminLoginService;
 
     //获取代理信息列表
     public PageInfo<ProxyModel> getProxyList(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
@@ -90,15 +93,22 @@ public class ProxyService {
     //保存代理或员工
     @Transactional(rollbackFor=Exception.class)
     public String saveProxy(UserTokenInfo userInfo , ProxyModel proxyModel) throws ProxyException{
+        UserTokenInfo userTokenInfo = new UserTokenInfo();
+        userTokenInfo.setPwd(changePwd(pwd));
+        userTokenInfo.setLoginName(proxyModel.getProxyName());
+        if (adminLoginService.countAdmin(userTokenInfo)>0){
+            throw new ProxyException(ResultCode.PROXY_ISEXIST_ERR);
+        }
         AdminClientInfo info = MappingModel2EntityConverter.CONVERTERFORPROXYMODEL(proxyModel);
         info.setBossId(userInfo.getUuid());
         /*userInfo.setRoleGrade(1);*/
         if(RoleCodes.ROLE_KEY_STRING.get("E")==proxyModel.getRoleGrade()) {//添加员工
            info.setRoleGrade(proxyModel.getRoleGrade());
-        } else if(proxyModel.getRoleGrade()==userInfo.getRoleGrade()+1){//非添加员工，只能创建低于自己一级
+        } else if(RoleCodes.ROLE_KEY_STRING.get("A")==proxyModel.getRoleGrade()
+                &&userInfo.getRoleGrade()<RoleCodes.ROLE_KEY_STRING.get("S")){//非添加员工，只能创建低于自己一级
             info.setRoleGrade(userInfo.getRoleGrade() + 1);
         }/*else if (proxyModel.getRoleGrade()==100){   //后要注释，模拟注册系统管理员
-            info.setRoleGrade(RoleCode.ROLE_MANAGE.getIndex());
+            info.setRoleGrade(RoleCodes.ROLE_KEY_STRING.get("M"));
         }*/ else {
             throw new ProxyException(ResultCode.POWER_VISIT_ERR);
         }
@@ -174,7 +184,15 @@ public class ProxyService {
 
     //修改个人收佣信息
     public void updateCommission(UserTokenInfo userInfo,ProxyModel model) throws ProxyException{
-        Map<String,Object> params = new HashMap<String,Object>();
+        ProxyCommission proxyCommission = commissionRepository.findCommissionBySalemanId(model.getProxyId());
+        proxyCommission.setBackCommission(model.getBackCommission());
+        proxyCommission.setDayCommission(model.getDayCommission());
+        proxyCommission.setMonthCommission(model.getMonthCommission());
+        proxyCommission.setUpdatedTime(new Date());
+        proxyCommission.setUpdateUserId(userInfo.getUuid());
+        proxyCommission.setUpdateUserName(userInfo.getUserName());
+        commissionRepository.save(proxyCommission);
+       /* Map<String,Object> params = new HashMap<String,Object>();
         try {
             params.put("backCommission",model.getBackCommission());
             params.put("dayCommission",model.getDayCommission());
@@ -189,12 +207,12 @@ public class ProxyService {
         }
         if( !(commissionMapper.updateCommission(params)>0)){
            throw new ProxyException(ResultCode.UPDATE_ERR);
-       }
+       }*/
     }
 
     //获取员工信息列表
     public PageInfo<EmployeeModel> getEmployee(UserTokenInfo userInfo,EmployeeModel model){
-        PageHelper.startPage(model.getPageIndex(),model.getPageSize());
+        PageHelper.startPage(model.getPage(),model.getLimit());
         model.setId(userInfo.getUuid());
         List<EmployeeModel> employeeModels = adminClientInfoMapper.selectEmp(model);
         PageInfo<EmployeeModel> page = new PageInfo<EmployeeModel>(employeeModels);
@@ -205,13 +223,15 @@ public class ProxyService {
         PageHelper.startPage(spreadModel.getPageIndex(),spreadModel.getPageSize());
         spreadModel.setId(userInfo.getUuid());
         List<SpreadModel> spreadModels = new ArrayList<SpreadModel>();
-        if(RoleCodes.ROLE_KEY_STRING.get("E").equals(spreadModel.getPosition())
-                ||RoleCodes.ROLE_KEY_STRING.get("U").equals(spreadModel.getPosition())){
+        if(RoleCodes.ROLE_KEY_STRING.get("E")==spreadModel.getPosition()){
             spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadEmp(spreadModel);
-        } else{
+        } else if (RoleCodes.ROLE_KEY_STRING.get("A")==spreadModel.getPosition()){
             spreadModel.setPosition(userInfo.getRoleGrade());
             spreadModels = spreadMapper.getSpreadProxy(spreadModel);
+        } else if (RoleCodes.ROLE_KEY_STRING.get("U")==spreadModel.getPosition()
+                &&RoleCodes.ROLE_KEY_STRING.get("M")==userInfo.getRoleGrade()){
+            spreadModels = spreadMapper.getSpreadUser(spreadModel);
         }
         PageInfo<SpreadModel> page = new PageInfo<>(spreadModels);
         return page;
@@ -241,26 +261,26 @@ public class ProxyService {
     private PageInfo<ProxyModel> manageProxy(UserTokenInfo userInfo,ProxyModel proxyModel) throws ProxyException{
         List<ProxyModel> proxyModels = getTreeProxyModels(userInfo,adminClientInfoMapper.selectProxy(proxyModel));
         List<ProxyModel> list = new ArrayList<ProxyModel>();
-        if((proxyModel.getPageIndex()-1)*proxyModel.getPageSize()>proxyModels.size()){
+        if((proxyModel.getPage()-1)*proxyModel.getLimit()>proxyModels.size()){
             throw new ProxyException(ResultCode.SELECT_OVER_MSG);
         }
-        int j = proxyModels.size()>(proxyModel.getPageIndex()-1)*proxyModel.getPageSize()+proxyModel.getPageSize()
-                ?(proxyModel.getPageIndex()-1)*proxyModel.getPageSize()+proxyModel.getPageSize():proxyModels.size();
-        for (int i = (proxyModel.getPageIndex()-1)*proxyModel.getPageSize()
+        int j = proxyModels.size()>(proxyModel.getPage()-1)*proxyModel.getLimit()+proxyModel.getLimit()
+                ?(proxyModel.getPage()-1)*proxyModel.getLimit()+proxyModel.getLimit():proxyModels.size();
+        for (int i = (proxyModel.getPage()-1)*proxyModel.getLimit()
              ;i<j;i++){
             list.add(proxyModels.get(i));
         }
-        PageHelper.startPage(proxyModel.getPageIndex(),proxyModel.getPageSize());
+        PageHelper.startPage(proxyModel.getPage(),proxyModel.getLimit());
         PageInfo<ProxyModel> page = new PageInfo<ProxyModel>(list);
         page.setTotal(proxyModels.size());
-        page.setPageSize(proxyModel.getPageSize());
-        page.setPageNum(proxyModel.getPageIndex());
+        page.setPageSize(proxyModel.getLimit());
+        page.setPageNum(proxyModel.getPage());
         return page;
     }
 
     //普通代理分页
     private PageInfo<ProxyModel> commonProxy(ProxyModel proxyModel){
-        PageHelper.startPage(proxyModel.getPageIndex(),proxyModel.getPageSize());
+        PageHelper.startPage(proxyModel.getPage(),proxyModel.getLimit());
         List<ProxyModel> list = adminClientInfoMapper.selectProxy(proxyModel);
         PageInfo<ProxyModel> page = new PageInfo<ProxyModel>(list);
         return page;

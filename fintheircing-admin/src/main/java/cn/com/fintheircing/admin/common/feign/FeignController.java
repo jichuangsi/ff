@@ -76,7 +76,7 @@ public class FeignController {
     @ApiOperation(value = "判断是否IP存在黑名单", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/isExistBlackList")
-    public Boolean isExistBlackList(@RequestParam String ip){
+    public Boolean isExistBlackList(@RequestParam("ip") String ip){
         return adminLoginService.isExistBlackList(ip);
     }
 
@@ -165,10 +165,10 @@ public class FeignController {
     }
 
 
-    @ApiOperation(value = "判断是否将合约扣款（冻结资金）成功", notes = "")
+    @ApiOperation(value = "保存申请单，合约扣款（冻结资金）", notes = "")
     @ApiImplicitParams({})
-    @RequestMapping("/costColdContract")
-    public ResponseModel costColdContract(@RequestBody StockEntrustModel model){
+    @RequestMapping("/saveStockEntrust")
+    public ResponseModel saveStockEntrust(@RequestBody StockEntrustModel model){
         try {
             businessService.costColdContract(model);
         } catch (BusinessException e) {

@@ -18,7 +18,7 @@ public interface ISpreadMapper {
             "<where> " +
             " t1.delete_flag=0" +
             "<if test='position!=0'> and t2.boss_id=#{id} </if>" +
-            "<if test='proxyNum!=null and proxyNum!=\"\"'>and  t2.proxy_num like CONCAT(\"%\",#{proxyNum},\"%\")</if>" +
+            "<if test='proxyNum!=null and proxyNum!=\"\"'> and  t2.proxy_num like CONCAT(\"%\",#{proxyNum},\"%\")</if>" +
             "<if test='proxyName!=null and proxyName!=\"\"'> and t2.user_name like CONCAT(\"%\",#{proxyName},\"%\")</if>" +
             "</where>" +
             " order by t1.created_time </script>")
@@ -36,6 +36,11 @@ public interface ISpreadMapper {
             "</where>" +
             "  order by t1.created_time</script>")
     List<SpreadModel> getSpreadEmp(SpreadModel spreadModel);
+
+
+    @Select("<script>select t2.user_name as userName,t1.invite_code as userNum,t1.invite_code as spreadNum,t1.spread_link as spreadLink,t1.spread_code_pic as qRcode from proxy_spread t1 LEFT JOIN user_client_info t2 on t1.saleman_id=t2.uuid where t1.delete_flag=\"0\" and " +
+            " t1.invite_code like CONCAT(\"%\",#{proxyNum},\"%\") and t2.user_name like CONCAT(\"%\",#{proxyName},\"%\")</script>")
+    List<SpreadModel> getSpreadUser(SpreadModel spreadModel);
 
     //获取邀请人id
     @Select("<script>select saleman_id as id from proxy_spread WHERE invite_code=#{inviteCode}</script>")

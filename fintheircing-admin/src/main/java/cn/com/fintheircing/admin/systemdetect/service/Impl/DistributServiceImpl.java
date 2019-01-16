@@ -70,11 +70,7 @@ public class DistributServiceImpl implements IDistributService {
     @Override
     public List<ProductModel> getProducts(Integer productNo) {
         Map<String,Object> params = new HashMap<String,Object>();
-        String productName = "";
-        if (productNo!=null){
-            productName = ProductStatus.getName(productNo);
-        }
-        params.put("productName",productName);
+        params.put("productNo",productNo);
         return productMapper.selectCurrentProduct(params);
         /*return MappingEntity2ModelConverter.coverProductList(productRepository.findProductsByAllotContains(productNo));*/
     }

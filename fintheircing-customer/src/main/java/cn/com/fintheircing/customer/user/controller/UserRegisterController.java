@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/userRegist")
 public class UserRegisterController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
