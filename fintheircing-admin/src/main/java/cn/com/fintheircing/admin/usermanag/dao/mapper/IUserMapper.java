@@ -25,7 +25,7 @@ public interface IUserMapper {
             "from User_Client_Info t1 left join Admin_Client_Info t2 on t1.inviter_id =t2.uuid" +
             "<where>" +
             "t1.status=\"0\" " +
-            "<if test=\"createTime!=null and createTime!=''\">and t1.created_time &gt;=#{startTime}</if>" +
+            "<if test=\"startTime!=null and startTime!=''\">and t1.created_time &gt;=#{startTime}</if>" +
             "<if test=\"endTime!=null and endTime!=''\"> and t1.created_time &lt;=${endTime}</if>" +
             "<if test=\"proxyId!=null and proxyId!=''\">and t2.proxy_num LIKE CONCAT('%',#{proxyId},'%')</if>" +
             "<if test=\"userId !=null and userId !=''\"> and t1.uuid like concat('%',#{userId},'%')</if>" +
