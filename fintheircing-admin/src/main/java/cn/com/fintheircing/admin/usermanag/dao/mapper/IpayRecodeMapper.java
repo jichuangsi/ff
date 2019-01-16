@@ -14,13 +14,16 @@ public interface IpayRecodeMapper {
      * @param model
      * @return
      */
-    @Update("<script><script>")
+    @Update("")
     int updatePayInfo(RecodeInfoPayModel model);
 
     /***
      * 查询checkStatus =0的
      * @return
      */
-    @Select("<script></script>")
+    @Select("")
     List<RecodeInfoPayModel> findAllPayInfo();
+
+
+
 }

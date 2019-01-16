@@ -27,7 +27,7 @@ public class UserController {
     @Resource
    private IMsgFeignService imesgService;
     @ApiOperation(value = "用户列表-查询所有用户信息", notes = "")
-    @PostMapping("/findAll")
+    @GetMapping("/findAll")
     public ResponseModel<PageInfo<AdminClientInfoModel>> findAllUserInfo(@RequestBody AdminClientInfoModel queryModel, int pageNum, int pageSize) throws UserServiceException {
         PageHelper.startPage(pageNum,pageSize);
         List<AdminClientInfoModel> allUserInfo = userService.findAllUserInfo(queryModel);
