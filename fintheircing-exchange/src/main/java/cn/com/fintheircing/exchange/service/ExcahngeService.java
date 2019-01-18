@@ -29,7 +29,7 @@ import cn.com.fintheircing.exchange.model.TodayOrder;
 import cn.com.fintheircing.exchange.util.EncodeUtils;
 
 public class ExcahngeService {
-	private ITdxLibrary tdxLibrary = (ITdxLibrary) Native.loadLibrary("TradeX2-M", ITdxLibrary.class);
+	private final ITdxLibrary tdxLibrary = (ITdxLibrary) Native.loadLibrary("TradeX2-M", ITdxLibrary.class);
 	private int clientId;// 客户端ID
 	private final ScheduledExecutorService threadPool;
 	private final MotherAccount motherAccount;
