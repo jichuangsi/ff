@@ -10,7 +10,7 @@ import java.util.Date;
 public class Model2Entity {
     public static RecodeInfoPay CoverRecodInfoPayModel(RecodInfoPayModel model){
         RecodeInfoPay r =new RecodeInfoPay();
-        r.setCostCount("");
+        r.setCostCount(model.getCostCount());
         r.setRemark(model.getRemark());
         r.setUserId(model.getUserId());
         r.setWay(model.getWay());

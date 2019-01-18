@@ -1,17 +1,15 @@
 package cn.com.fintheircing.sms.utils;
 
 import cn.com.fintheircing.sms.entity.Recoding;
-import cn.com.fintheircing.sms.model.mesModel;
+import cn.com.fintheircing.sms.model.MesModel;
 
 public class Entity2Model {
-    public  static mesModel coverRecoding(Recoding recoding){
-        mesModel model =new mesModel();
-       model.setIsSucess(recoding.getIsSucess());
-       model.setPhone(recoding.getPhone());
+    public  static MesModel coverRecoding(Recoding recoding){
+        MesModel model =new MesModel();
+       model.setIsSucess(recoding.getIsSucess().getName());
        model.setTaskType(recoding.getTaskType());
        model.setContent(recoding.getContent());
-       model.setUuid(recoding.getUuid());
-       model.setCreatedTime(recoding.getCreatedTime());
+       model.setCreateTime(recoding.getCreateTime());
        return  model;
     }
 }

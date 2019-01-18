@@ -158,7 +158,7 @@ public class RegisterService {
 	}
 	
 	//登录时获取用户信息
-	public UserTokenInfo getUserForLogin(UserTokenInfo model) {
+	public UserTokenInfo getUserForLogin (UserTokenInfo model) {
 		model.setPwd(CommonUtil.toSha256(model.getPwd()));
 		return userClientInfoMapper.find(model);
 	}

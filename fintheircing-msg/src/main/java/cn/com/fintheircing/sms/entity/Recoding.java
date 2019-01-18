@@ -1,29 +1,47 @@
 package cn.com.fintheircing.sms.entity;
 
 
-import cn.com.fintheircing.customer.common.entity.AbstractEntity;
-import cn.com.fintheircing.sms.Commons.Status;
+import cn.com.fintheircing.sms.Commons.MesStatus;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.Date;
+
 @Entity
-public class Recoding extends AbstractEntity {
+public class Recoding  {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
-    private String phone;
-    private Status isSucess;//是否成功
+    private String userId;
+    private MesStatus isSucess;//是否成功
     private String taskType;//任务类型
     private String content;//短信内容
+    private Date createTime =new Date();
 
-    public Status getIsSucess() {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public MesStatus getIsSucess() {
         return isSucess;
     }
 
-    public void setIsSucess(Status isSucess) {
+    public void setIsSucess(MesStatus isSucess) {
         this.isSucess = isSucess;
     }
 
@@ -55,12 +73,4 @@ public class Recoding extends AbstractEntity {
         this.uuid = uuid;
     }
 
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

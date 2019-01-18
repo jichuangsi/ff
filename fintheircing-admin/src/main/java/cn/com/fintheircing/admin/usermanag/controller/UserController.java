@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.usermanag.controller;
 import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
+import cn.com.fintheircing.admin.usermanag.dao.mapper.IAdminRecodingMapper;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
 import cn.com.fintheircing.admin.usermanag.model.MesModel;
@@ -11,30 +12,29 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 @RestController
 @Api("userController相关控制层")
+@CrossOrigin
 public class UserController {
 
     @Resource
     private IUserService userService;
     @Resource
-   private IMsgFeignService imesgService;
+     private IMsgFeignService imesgService;
+    @Resource
+    private IAdminRecodingMapper iAdminRecodingMapper;
     @ApiOperation(value = "用户列表-查询所有用户信息", notes = "")
-    @GetMapping("/findAll")
-    public ResponseModel<PageInfo<AdminClientInfoModel>> findAllUserInfo(@RequestBody AdminClientInfoModel queryModel, int pageNum, int pageSize) throws UserServiceException {
-        PageHelper.startPage(pageNum,pageSize);
+    @PostMapping("/findAll")
+    public ResponseModel<PageInfo<AdminClientInfoModel>> findAllUserInfo(@RequestBody AdminClientInfoModel queryModel) throws UserServiceException {
+        PageHelper.startPage(queryModel.getPageNum(),queryModel.getPageSize());
         List<AdminClientInfoModel> allUserInfo = userService.findAllUserInfo(queryModel);
         PageInfo<AdminClientInfoModel> personPageInfo = new PageInfo<>(allUserInfo);
         return ResponseModel.sucess("",personPageInfo);
     }
-
     @ApiOperation(value = "用户列表-根据Id冻结账户", notes = "")
     @PostMapping("/changeStatus")
     public ResponseModel changeStatus(String id)throws UserServiceException {
@@ -47,8 +47,8 @@ public class UserController {
     }
     @ApiOperation(value = "冻结账户-查询冻结账户", notes = "")
     @PostMapping("/findByOption")
-    public ResponseModel<PageInfo<AdminClientInfoModel>> findByOption(AdminClientInfoModel queryModel, int pageNum, int pageSize)throws UserServiceException{
-        PageHelper.startPage(pageNum,pageSize);
+    public ResponseModel<PageInfo<AdminClientInfoModel>> findByOption(@RequestBody AdminClientInfoModel queryModel)throws UserServiceException{
+        PageHelper.startPage(queryModel.getPageNum(),queryModel.getPageSize());
         List<AdminClientInfoModel> allUserInfo = userService.findByOption(queryModel);
         PageInfo<AdminClientInfoModel> personPageInfo = new PageInfo<>(allUserInfo);
         return ResponseModel.sucess("",personPageInfo);
@@ -101,11 +101,19 @@ public class UserController {
         return ResponseModel.sucess("",userService.updatebankCard(id));
     }
 
-    @ApiOperation(value = "用户列表-短信记录", notes = "")
+    @ApiOperation(value = "管理员-短信记录", notes = "")
     @PostMapping("/findAllMessage")
     public ResponseModel<PageInfo<MesModel>> findAllMessage(int pageNum, int pageSize)throws UserServiceException{
         PageHelper.startPage(pageNum,pageSize);
         List<MesModel> allMessage = imesgService.findAllMessage();
+        PageInfo<MesModel> personPageInfo = new PageInfo<>(allMessage);
+        return ResponseModel.sucess("",personPageInfo);
+    }
+    @ApiOperation(value = "个人用户-短信记录", notes = "")
+    @PostMapping ("/findAllMesByUserId")
+    public ResponseModel<PageInfo<MesModel>> findAllMesByUserId(int pageNum, int pageSize, String id)throws UserServiceException{
+        PageHelper.startPage(pageNum,pageSize);
+        List<MesModel> allMessage = iAdminRecodingMapper.findAllMesByUserId(id);
         PageInfo<MesModel> personPageInfo = new PageInfo<>(allMessage);
         return ResponseModel.sucess("",personPageInfo);
     }

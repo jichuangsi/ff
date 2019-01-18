@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.usermanag.service;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.util.List;

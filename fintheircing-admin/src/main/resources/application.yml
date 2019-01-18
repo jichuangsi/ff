@@ -57,16 +57,13 @@ custom:
     weChatOrAilpay: appPayPublic
     queryPayResult: queryPayResult
     queryReconTrans: queryReconTrans
-<<<<<<< Updated upstream
     QRcode: gatewayPayByQRcode
-=======
   risk:
     maxBuyOne: 0.8
     venturEditionMax: 0.5
     holdOverFiveAvg: 0.3
     holdOverCurrency: 0.005
     shockShutDown: 1
->>>>>>> Stashed changes
 pagehelper:
   helperDialect: mysql
   reasonable: true

@@ -20,20 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 
+import javax.annotation.Resource;
 import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
+    @Resource
     IUserMapper usermapper;
 //    @Autowired
 //    fundsAskMapper askMapper;
-    @Autowired
+    @Resource
     IAdminClientInfoRepository adminClientInfoRepository;
-    @Autowired
+    @Resource
     IBankIdRepository iBankIdRepository;
-    @Autowired
+    @Resource
     IBankMapper iBankMapper;
 
 //    @Autowired
@@ -45,25 +46,9 @@ public class UserServiceImpl implements IUserService {
         try {
 
             List<AdminClientInfoModel> all = usermapper.findAll(Model);
-            if (StringUtils.isEmpty(all)){
-                throw new UserServiceException(ResultCode.PARAM_MISS_MSG);}
-            else{
-                all.forEach(a->{
-                    if (Model.getBelongs().equals("无")){
-                        if (StringUtil.isNotEmpty(a.getEmplooyeeId())){
-                            all.remove(a);
-                        }
 
-                    }else {
-                        if (Model.getBelongs().equals("有")){
-                            if (StringUtil.isEmpty(a.getEmplooyeeId())){
-                                all.remove(a);
-                            }
-                        }
-                    }
-                });
                 return all;
-            }
+
         }catch (Exception e){
             throw  new UserServiceException(e.getMessage());
         }
@@ -93,18 +78,12 @@ public class UserServiceImpl implements IUserService {
             if (StringUtils.isEmpty(id)){
                 throw new UserServiceException(ResultCode.PARAM_MISS_MSG);}
             else {
-                AdminClientInfo oneByUuid = adminClientInfoRepository.findOneByUuid(id);
-                if(oneByUuid==null||AdminClientInfo.STATUS_NOTEXIST.equals(oneByUuid.getStatus())){
-                    throw new UserServiceException(ResultCode.USER_EXITS);
-                } else {
-                oneByUuid.setStatus(AdminClientInfo.STATUS_NOTEXIST);
-                AdminClientInfo save = adminClientInfoRepository.save(oneByUuid);
-                if (StringUtils.isEmpty(save)) {
+                int i = usermapper.updateStatus(id);
+                if (i>0){
+                    return true;
+                }else {
                     return false;
                 }
-                return true;
-            }
-
             }
         }catch (Exception e){
             throw new UserServiceException(e.getMessage());
@@ -150,16 +129,11 @@ public class UserServiceImpl implements IUserService {
             if (StringUtils.isEmpty(id)){
                 throw new UserServiceException(ResultCode.PARAM_MISS_MSG);}
             else {
-                AdminClientInfo oneByUuid = adminClientInfoRepository.findOneByUuid(id);
-                if(oneByUuid==null||AdminClientInfo.STATUS_EXIST.equals(oneByUuid.getStatus())){
-                    throw new UserServiceException(ResultCode.USER_EXITS);
-                } else {
-                    oneByUuid.setStatus(AdminClientInfo.STATUS_EXIST);
-                    AdminClientInfo save = adminClientInfoRepository.save(oneByUuid);
-                    if (StringUtils.isEmpty(save)) {
-                        return false;
-                    }
+                int i = usermapper.restoreStatus(id);
+                if (i>0){
                     return true;
+                }else {
+                    return false;
                 }
 
             }

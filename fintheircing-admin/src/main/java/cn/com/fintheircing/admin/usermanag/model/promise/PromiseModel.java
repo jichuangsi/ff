@@ -1,4 +1,7 @@
 package cn.com.fintheircing.admin.usermanag.model.promise;
+
+import java.util.Date;
+
 /**
  * 保证金
  *
@@ -6,12 +9,63 @@ package cn.com.fintheircing.admin.usermanag.model.promise;
  * @date 2019/1/15
  */
 public class PromiseModel {
+    private String recodeInfoPayId;
     private String userId;
-    private String BusinessContractId;
+    private String businessContractId;
     private double cash;
-    private double beforeCash;
-    private double afterCash;
-    private int payStatus=0;
+    private Date createTime;
+    private String remark;
+    private String way;
+    private String contractNum;
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
+    }
+
+    public String getWay() {
+        return way;
+    }
+
+    public void setWay(String way) {
+        this.way = way;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getRecodeInfoPayId() {
+        return recodeInfoPayId;
+    }
+
+    public void setRecodeInfoPayId(String recodeInfoPayId) {
+        this.recodeInfoPayId = recodeInfoPayId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public String getUserId() {
         return userId;
@@ -22,11 +76,11 @@ public class PromiseModel {
     }
 
     public String getBusinessContractId() {
-        return BusinessContractId;
+        return businessContractId;
     }
 
     public void setBusinessContractId(String businessContractId) {
-        BusinessContractId = businessContractId;
+        this.businessContractId = businessContractId;
     }
 
     public double getCash() {
@@ -35,29 +89,5 @@ public class PromiseModel {
 
     public void setCash(double cash) {
         this.cash = cash;
-    }
-
-    public double getBeforeCash() {
-        return beforeCash;
-    }
-
-    public void setBeforeCash(double beforeCash) {
-        this.beforeCash = beforeCash;
-    }
-
-    public double getAfterCash() {
-        return afterCash;
-    }
-
-    public void setAfterCash(double afterCash) {
-        this.afterCash = afterCash;
-    }
-
-    public int getPayStatus() {
-        return payStatus;
-    }
-
-    public void setPayStatus(int payStatus) {
-        this.payStatus = payStatus;
     }
 }

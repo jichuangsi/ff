@@ -4,11 +4,10 @@ import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
-import cn.com.fintheircing.admin.usermanag.dao.mapper.IpayRecodeMapper;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IPayInfoRepository;
-import cn.com.fintheircing.admin.usermanag.entity.PayInfo;
+import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
-import cn.com.fintheircing.admin.usermanag.model.promise.AddPromiseMoneyModel;
+
 import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillQueryModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
@@ -32,8 +31,7 @@ public class AdminPayController {
 
     @Resource
     private ICustomerFeignService iCustomerFeignService;
-    @Resource
-    private IpayRecodeMapper ipayRecodeMapper;
+
     @Resource
     private IPayInfoRepository iPayInfoRepository;
     @PostMapping("/getBill")
@@ -43,9 +41,9 @@ public class AdminPayController {
 
     }
 
-    @GetMapping("/recodPayInfo")
+    @GetMapping("/recodePayInfo")
     @ApiOperation(value = "保存待确认信息", notes = "")
-    public ResponseModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
+    public ResponseModel recodePayInfo(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
         RecodeInfoPayModel recodeInfoPayModel = iCustomerFeignService.recodPayInfo();
         PayInfo save = iPayInfoRepository.save(ModelToEntity.CoverPayInfo(recodeInfoPayModel));
         RecodeInfoPayModel model = EntityToModel.CoverPayInfo(save);
@@ -57,24 +55,35 @@ public class AdminPayController {
     public RecodeInfoPayModel updatePayInfo(@ModelAttribute UserTokenInfo userInfo,@RequestBody RecodeInfoPayModel model) throws UserServiceException {
         model.setOperator(userInfo.getUserName());//操作人的名字
         model.setOperatorId(userInfo.getUuid());//操作人的Id
-        ipayRecodeMapper.updatePayInfo(model);
+        ipayService.updatePayInfo(model);
         return model;
     }
 
     @GetMapping("/findAllPayInfo")
     @ApiOperation(value = "查询所有未审核的", notes = "")
     public ResponseModel<List<RecodeInfoPayModel>> findAllPayInfo(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
-        List<RecodeInfoPayModel> allPayInfo = ipayRecodeMapper.findAllPayInfo();
+        List<RecodeInfoPayModel> allPayInfo = ipayService.findAllPayInfo();
         return ResponseModel.sucess("", allPayInfo);
     }
 
     @GetMapping("/addPromiseMoney")
-    @ApiOperation(value = "追加保证金", notes = "")
-    public RecodeInfoPayModel addPromiseMoney() throws UserServiceException {
-        ResponseModel<PromiseModel> promiseModelResponseModel = iCustomerFeignService.addPromiseMoney();
-        PromiseModel data = promiseModelResponseModel.getData();
+    @ApiOperation(value = "管理查询所有申请追加保证金", notes = "")
+    public ResponseModel<List<PromiseModel>> addPromiseMoney(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
+        return ResponseModel.sucess("",  ipayService.findAllApply());
 
-        return  null;
+    }
+
+    @GetMapping("/AgreePromiseMoney")
+    @ApiOperation(value = "同意申请追加保证金", notes = "")
+    public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo,PromiseModel model) throws UserServiceException {
+        return ResponseModel.sucess("",  ipayService.agreePromiseMoney(userInfo,model));
+
+    }
+    @GetMapping("/passPromiseMoney")
+    @ApiOperation(value = "同意申请追加保证金", notes = "")
+    public ResponseModel passPromiseMoney(@ModelAttribute UserTokenInfo userInfo,PromiseModel model) throws UserServiceException {
+        return ResponseModel.sucess("",  ipayService.passPromiseMoney(userInfo,model));
+
     }
 
 }

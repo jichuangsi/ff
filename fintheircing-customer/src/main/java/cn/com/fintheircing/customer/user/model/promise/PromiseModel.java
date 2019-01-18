@@ -1,4 +1,7 @@
 package cn.com.fintheircing.customer.user.model.promise;
+
+import java.util.Date;
+
 /**
  * 保证金
  *
@@ -7,13 +10,18 @@ package cn.com.fintheircing.customer.user.model.promise;
  */
 public class PromiseModel {
     private String userId;
-    private String userName;
-    private String phone;
     private String BusinessContractId;
+    private Date createTime;
     private double cash;
-    private double beforeCash;
-    private double afterCash;
     private int payStatus=0;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public String getUserId() {
         return userId;
@@ -21,22 +29,6 @@ public class PromiseModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getBusinessContractId() {
@@ -53,22 +45,6 @@ public class PromiseModel {
 
     public void setCash(double cash) {
         this.cash = cash;
-    }
-
-    public double getBeforeCash() {
-        return beforeCash;
-    }
-
-    public void setBeforeCash(double beforeCash) {
-        this.beforeCash = beforeCash;
-    }
-
-    public double getAfterCash() {
-        return afterCash;
-    }
-
-    public void setAfterCash(double afterCash) {
-        this.afterCash = afterCash;
     }
 
     public int getPayStatus() {

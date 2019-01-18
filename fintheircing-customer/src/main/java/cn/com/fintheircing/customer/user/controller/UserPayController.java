@@ -17,9 +17,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 @RestController
 @Api("PayController相关的控制层 ")
@@ -83,16 +85,23 @@ public class UserPayController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
-    @GetMapping("/addPromiseMoney")
-    public ResponseModel<PromiseModel>  addPromiseMoney(@ModelAttribute UserTokenInfo userInfo, AddPromiseMoneyModel model) {
+    @PostMapping("/addPromiseMoney")
+    public ResponseModel  savePromiseMoney(@ModelAttribute UserTokenInfo userInfo,@RequestBody AddPromiseMoneyModel model) {
         if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid())<model.getCash()){
             return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
         }
-        PromiseModel p =new PromiseModel();
+        RecodeInfoPay p =new RecodeInfoPay();
         p.setUserId(userInfo.getUuid());
-        p.setCash(model.getCash());
+        p.setWay(model.getWay());
+        p.setRemark(model.getRemark());
+        p.setCostCount(model.getCash());
         p.setBusinessContractId(model.getBusinessContractId());
-        return ResponseModel.sucess("",p);
+        if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))){
+            return ResponseModel.fail("", ResultCode.APPLY_FAIL);
+        }else {
+            return ResponseModel.sucessWithEmptyData("" );
+        }
 
     }
+
 }

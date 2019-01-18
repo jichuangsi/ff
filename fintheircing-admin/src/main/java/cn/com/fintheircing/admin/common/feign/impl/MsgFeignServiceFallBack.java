@@ -11,4 +11,9 @@ public class MsgFeignServiceFallBack  implements IMsgFeignService {
     public List<MesModel> findAllMessage() {
         return new ArrayList<MesModel>();
     }
+
+    @Override
+    public List<MesModel> findAllMesByUserId(String id) {
+        return new ArrayList<MesModel>();
+    }
 }

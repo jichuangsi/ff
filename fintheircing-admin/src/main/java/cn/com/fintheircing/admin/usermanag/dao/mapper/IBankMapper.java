@@ -12,8 +12,6 @@ import java.util.List;
  * @author keriezhang
  * @date 2016/10/31
  */
-@Mapper
-@Component
 public interface IBankMapper {
     @Select("<script></script>")
     List<BankCardModel> findAllBankCard(BankCardModel model);

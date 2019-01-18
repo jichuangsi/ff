@@ -9,17 +9,17 @@ import java.util.Date;
  * @date 2019/1/14
  */
 public class PayInfoModel {
-    private String amount;
+    private double amount;
     /**
      * 充值方式
      */
     private String Way;
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

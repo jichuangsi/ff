@@ -89,7 +89,6 @@ public interface IAdminFeignService {
     Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum);
 
 
-<<<<<<< Updated upstream
     @RequestMapping(value = "adminF/costColdContract")
     Boolean costColdContract(@RequestParam("contractId") String contractId,
                              @RequestParam("coldMoney") Double coldMoney);
@@ -116,7 +115,7 @@ public interface IAdminFeignService {
      */
     @RequestMapping("adminF/updatePayInfo")
     RecodInfoPayModel updatePayInfo(@RequestBody RecodInfoPayModel model);
-=======
+
     //保存股票申请
     @RequestMapping(value = "adminF/saveStockEntrust")
     ResponseModel saveStockEntrust(@RequestBody StockEntrustModel model);
@@ -125,5 +124,4 @@ public interface IAdminFeignService {
     //查看当前合约的该股持仓
     @RequestMapping(value = "")
     StockHoldingModel getCurrentHolding();
->>>>>>> Stashed changes
 }

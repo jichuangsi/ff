@@ -15,8 +15,8 @@ public class RecodeInfoPay {
     @Id
     private String uuid;
     private String userId;
-    private String addCount;
-    private String costCount;
+    private double addCount;
+    private double costCount;
     private String remark;
     private Integer status=0;
     private String way;
@@ -25,15 +25,17 @@ public class RecodeInfoPay {
      * 用户自己看是充值完成时间,管理员看是操作时间
      */
     private Date updateTime;
-    private String operator;
-    private String operatorId;
+    /**
+     * 合约id
+     */
+    private String businessContractId;
 
-    public String getOperatorId() {
-        return operatorId;
+    public String getBusinessContractId() {
+        return businessContractId;
     }
 
-    public void setOperatorId(String operatorId) {
-        this.operatorId = operatorId;
+    public void setBusinessContractId(String businessContractId) {
+        this.businessContractId = businessContractId;
     }
 
     public Date getUpdateTime() {
@@ -60,14 +62,6 @@ public class RecodeInfoPay {
         this.createTime = createTime;
     }
 
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -92,19 +86,19 @@ public class RecodeInfoPay {
         this.userId = userId;
     }
 
-    public String getAddCount() {
+    public double getAddCount() {
         return addCount;
     }
 
-    public void setAddCount(String addCount) {
+    public void setAddCount(double addCount) {
         this.addCount = addCount;
     }
 
-    public String getCostCount() {
+    public double getCostCount() {
         return costCount;
     }
 
-    public void setCostCount(String costCount) {
+    public void setCostCount(double costCount) {
         this.costCount = costCount;
     }
 

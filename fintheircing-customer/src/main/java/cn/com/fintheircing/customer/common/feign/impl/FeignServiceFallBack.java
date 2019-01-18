@@ -2,6 +2,7 @@ package cn.com.fintheircing.customer.common.feign.impl;
 
 import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
+import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.feign.model.CreateTodoTaskModel;
@@ -104,9 +105,19 @@ public class FeignServiceFallBack implements IAdminFeignService {
     }
 
     @Override
+    public Boolean costColdContract(String contractId, Double coldMoney) {
+        return null;
+    }
+
+    @Override
     public ResponseModel saveStockEntrust(StockEntrustModel model) {
         logger.error("调用feign失败，保存买入申请单失败");
         return ResponseModel.fail("",ResultCode.SYS_ERROR_MSG);
+    }
+
+    @Override
+    public StockHoldingModel getCurrentHolding() {
+        return null;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class Swagger2 {
 	public Docket createRestApi() {
 		return new Docket(DocumentationType.SWAGGER_2).enable(enableSwagger).apiInfo(apiInfo()).select()
 				// 为当前包路径
-				.apis(basePackage("cn.com.fintheircing.customer.sms.controller"))
+				.apis(basePackage("cn.com.fintheircing.customer.sms.controller"+splitor))
 				.paths(PathSelectors.any()).build();
 	}
 

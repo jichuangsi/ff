@@ -1,22 +1,13 @@
 package cn.com.fintheircing.admin.usermanag.uilts;
 
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
-
 import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.CreateRegTodoTaskModel;
 
-import cn.com.fintheircing.admin.usermanag.entity.AskMoneyInfo;
 import cn.com.fintheircing.admin.usermanag.entity.Bill;
-import cn.com.fintheircing.admin.usermanag.entity.PayInfo;
-import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
+import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
 
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.UUID;
 
 public class EntityToModel {
 
@@ -59,10 +50,8 @@ public class EntityToModel {
 
     public static final BillResponseModel COVERBILLTOENTITY(Bill model){
         BillResponseModel b= new BillResponseModel();
-
         b.setOrderId(model.getOrderId());
         b.setPayStatus(model.getPayStatus());
-
         b.setTransAmount(model.getTransAmount());
         b.setTransTime(model.getTransTime());
         return b;
@@ -72,13 +61,9 @@ public class EntityToModel {
         p.setCostCount(model.getCostCount());
         p.setAddCount(model.getAddCount());
         p.setCreatTime(model.getCreateTime());
-        p.setPhone(model.getPhone());
         p.setRemark(model.getRemark());
-        p.setStatus(model.getStatus());
         p.setUserId(model.getUserId());
-        p.setUserName(model.getUserName());
         p.setWay(model.getWay());
-        p.setPhone(model.getPhone());
         return p;
     }
 

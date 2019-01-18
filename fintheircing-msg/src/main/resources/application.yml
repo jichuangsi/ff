@@ -1,28 +1,89 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8762/eureka/
+    register-with-eureka: true
+  instance:
+    preferIpAddress: true
+server:
+  port: 8088
+
 spring:
   profiles:
     active:
       dev
   application:
     name: ffmsg
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/ff?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    # 连接超时时间（毫秒）
+    timeout: 5000
+    jedis:
+      pool:
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 2
 
-server:
-  port: 8888
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://127.0.0.1:8762/eureka/
-custom: 
+# feign配置
+feign:
+  hystrix:
+    # 在feign中开启hystrix功能，默认情况下feign不开启hystrix功能
+    enabled: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  # 对所有操作都进行重试（ConnectTimeout和ReadTimeout都重试）
+  OkToRetryOnAllOperations: false
+  # 对当前实例重试次数
+  MaxAutoRetries: 1
+  # 对下一个实例重试的次数
+  MaxAutoRetriesNextServer: 1
+
+custom:
   swagger:
     enable: true #是否启用swagger文档
   mq:
-    consumer: 
+    consumer:
       queue-name:
         sendSms: ffcostomer.sms.ffmsg #发送短信的消息名称
-  log: 
+  log:
     path: E:/logback/${spring.application.name}/${spring.profiles.active}
-
-sms:
-  accessKeyId: LTAIyA39hSF5wbp0
-  accessKeySecret: IguokmddfOjip4UExmH4ddsViFvuk5
-  signName : 集创思短信通知
-  templateCode : SMS_152405275
+  token:
+    prefix: token_val_
+    claim: userModel
+    secret: FF79@34$123de
+    longTime: 30
+    appLongTime: 7
+    alg: HS512
+    survival: 360000
+  contract:
+        dateFormat: yyyyMMddHHmmss
+  sms:
+    accessKeyId: LTAIyA39hSF5wbp0
+    accessKeySecret: IguokmddfOjip4UExmH4ddsViFvuk5
+    signName: 集创思短信通知
+    templateCode: SMS_152405275

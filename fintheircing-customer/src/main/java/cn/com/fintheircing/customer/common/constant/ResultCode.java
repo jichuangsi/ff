@@ -36,6 +36,7 @@ public class ResultCode {
 	public static final String PRODUCT_NOTEXIST_ERR = "不存在该产品";
 	public static final String PRODUCT_ISEXIST_ERR = "不可购买该类产品";
 	public static final String STOCK_DANGER_ERR  = "此类股票为危险股票";
+	public static final String APPLY_FAIL  = "申请中,数据保存失败,请稍后再填";
 
 	public static final String SUCESS_INFO = "success";
 	public static final String ERR_INFO = "error";

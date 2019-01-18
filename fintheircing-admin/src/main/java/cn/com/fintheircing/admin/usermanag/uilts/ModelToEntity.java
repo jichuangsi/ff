@@ -5,7 +5,7 @@ import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.FeedbackModel;
 
 import cn.com.fintheircing.admin.usermanag.entity.Bill;
-import cn.com.fintheircing.admin.usermanag.entity.PayInfo;
+import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
 
@@ -66,13 +66,9 @@ public class ModelToEntity {
         p.setCostCount(model.getCostCount());
         p.setAddCount(model.getAddCount());
         p.setCreateTime(model.getCreatTime());
-        p.setPhone(model.getPhone());
         p.setRemark(model.getRemark());
-        p.setStatus(model.getStatus());
         p.setUserId(model.getUserId());
-        p.setUserName(model.getUserName());
         p.setWay(model.getWay());
-        p.setPhone(model.getPhone());
         return p;
     }
 }

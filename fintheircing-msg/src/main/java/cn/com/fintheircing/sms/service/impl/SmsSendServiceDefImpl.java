@@ -1,12 +1,12 @@
 package cn.com.fintheircing.sms.service.impl;
 
 import cn.com.fintheircing.sms.Commons.SmsSendUtil;
-import cn.com.fintheircing.sms.Commons.Status;
-import cn.com.fintheircing.sms.Repository.RecodingRepository;
-import cn.com.fintheircing.sms.entity.Recoding;
-import cn.com.fintheircing.sms.model.mesModel;
+import cn.com.fintheircing.sms.Commons.MesStatus;
+
+import cn.com.fintheircing.sms.dao.RecodingRepository;
+import cn.com.fintheircing.sms.dao.mapper.IRecodingMapper;
+import cn.com.fintheircing.sms.model.MesModel;
 import cn.com.fintheircing.sms.service.ISmsSendService;
-import cn.com.fintheircing.sms.utils.Entity2Model;
 import cn.com.fintheircing.sms.utils.Model2Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,42 +14,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-@Transactional
+
 @Service
 public class SmsSendServiceDefImpl implements ISmsSendService{
 
-	@Value("${sms.signName}")
+	@Value("${custom.sms.signName}")
 	private String signName;
-	@Value("${sms.templateCode}")
+	@Value("${custom.sms.templateCode}")
 	private String templateCode;
 	// 签名KEY
-	@Value("${sms.accessKeyId}")
+	@Value("${custom.sms.accessKeyId}")
 	private String accessKeyId;
 	// 签名密钥
-	@Value("${sms.accessKeySecret}")
+	@Value("${custom.sms.accessKeySecret}")
 	private String accessKeySecret;
 
 	@Autowired
-	private SmsSendUtil smsSendUtil;
-	@Autowired
 	private RecodingRepository recodingRepository;
-
+	@Autowired
+	private IRecodingMapper iRecodingMapper;
 	@Override
 	@Transactional
 	public void sendValCodeSms(String phone,String code ,String taskType) {
-		String message=smsSendUtil.send(phone, code,signName,templateCode,accessKeyId,accessKeySecret);
-		mesModel model =new mesModel();
+		String message=SmsSendUtil.send(phone, code,signName,templateCode,accessKeyId,accessKeySecret);
+		MesModel model =new MesModel();
 		if (StringUtils.isEmpty(message)){
-			model.setIsSucess(Status.FAIL);
+			model.setIsSucess(MesStatus.getName(1));
 		}else {
-			model.setIsSucess(Status.SUCCESS);
+			model.setIsSucess(MesStatus.getName(0));
 		}
-		model.setUuid(UUID.randomUUID().toString().replaceAll("",""));
-		model.setCreatedTime(new Date());
 		model.setContent(message);
 		model.setTaskType(taskType);
 		model.setPhone(phone);
@@ -57,14 +52,18 @@ public class SmsSendServiceDefImpl implements ISmsSendService{
 	}
 
 	@Override
-	public List<mesModel> findAllMessage() {
-		List<mesModel> models=null;
-		List<Recoding> all = recodingRepository.findAll();
-		all.forEach(one->{
+	public List<MesModel> findAllMessage() {
+		return iRecodingMapper.findAllMes();
+	}
 
-			models.add(Entity2Model.coverRecoding(one));
-		});
-		return models;
+	/**
+	 * 返回userid的所有信息
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public List<MesModel> findAllMesByUserId(String id) {
+			return iRecodingMapper.findAllMesByUserId(id);
 	}
 
 }

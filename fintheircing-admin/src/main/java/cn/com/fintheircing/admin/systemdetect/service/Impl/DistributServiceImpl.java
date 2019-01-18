@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Service
 public class DistributServiceImpl implements IDistributService {
-    @Autowired
+    @Resource
     private ProductRepository productRepository;
     @Resource
     private IProductMapper productMapper;

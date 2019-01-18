@@ -1,16 +1,18 @@
 package cn.com.fintheircing.admin.usermanag.service.Impl;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
-import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
+import cn.com.fintheircing.admin.usermanag.dao.repsitory.IPayInfoRepository;
+import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
+import cn.com.fintheircing.admin.usermanag.model.pay.*;
+import cn.com.fintheircing.admin.usermanag.model.promise.CheckPromiseModel;
+import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
 import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.usermanag.uilts.GsonUtil;
 import cn.com.fintheircing.admin.usermanag.uilts.HttpUtils;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IBillMapper;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IBillRepository;
-import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.NetQueryModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
 import cn.com.fintheircing.admin.usermanag.model.result.*;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import cn.com.fintheircing.admin.usermanag.uilts.ModelToEntity;
@@ -19,7 +21,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,6 +51,8 @@ public class PayServiceImpl implements IPayService {
     private IBillRepository iBillRepository;
     @Autowired
     private IBillMapper iBillMapper;
+    @Resource
+    private IPayInfoRepository iPayInfoRepository;
     /**
      * 获取第三方支付信息并且返回支付地址
      *
@@ -209,6 +216,85 @@ public class PayServiceImpl implements IPayService {
         }
     }
 
+    @Override
+    public CheckPromiseModel addPromiseMoney(PromiseModel data, UserTokenInfo userInfo) {
+        Map<String,Object> parms =new HashMap<>();
+        parms.put("userId", data.getUserId());
+        parms.put("businessContractId", data.getBusinessContractId());
 
+        CheckPromiseModel model = iBillMapper.findAllPromise(parms);
+        model.setTaskType("追加保证金");
+        return model;
+    }
 
+    @Override
+    public List<RecodeInfoPayModel> findAllPayInfo() {
+       return iBillMapper.findAllPayInfo();
+
+    }
+
+    @Override
+    public int updatePayInfo(RecodeInfoPayModel model) {
+        return iBillMapper.updatePayInfo(model);
+    }
+
+    /**
+     * 查询所有申请追加保证金的个人的信息
+     * @return
+     */
+    @Override
+    public List<PromiseModel> findAllApply() {
+        List<PromiseModel> allApply = iBillMapper.findAllApply();
+        return allApply;
+    }
+    /**
+     * 同意追加保证金申请
+     * @param userInfo
+     * @param model
+     * @return
+     */
+    @Override
+    public boolean agreePromiseMoney(UserTokenInfo userInfo,PromiseModel model) {
+        PayInfo p =new PayInfo();
+        if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId())>0){
+            p.setWay(model.getWay());
+            p.setRemark(model.getRemark());
+            p.setCreateTime(model.getCreateTime());
+            p.setBusinessContractId(model.getBusinessContractId());
+            p.setCostCount(model.getCash());
+            p.setCheckStatus("0");
+            p.setUpdateTime(new Date());
+            p.setUserId(model.getUserId());
+            p.setOperaId(userInfo.getUuid());
+            p.setOperaName(userInfo.getUserName());
+            iPayInfoRepository.save(p);
+            return true;
+        }
+                 return false;
+    }
+    /**
+     * 驳回追加保证金申请
+     * @param userInfo
+     * @param model
+     * @return
+     */
+    @Override
+    public boolean passPromiseMoney(UserTokenInfo userInfo,PromiseModel model) {
+        PayInfo p =new PayInfo();
+        if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId())>0){
+            p.setWay(model.getWay());
+            p.setRemark(model.getRemark());
+            p.setCreateTime(model.getCreateTime());
+            p.setBusinessContractId(model.getBusinessContractId());
+            p.setCostCount(model.getCash());
+            p.setCheckStatus("1");
+            p.setUpdateTime(new Date());
+            p.setUserId(model.getUserId());
+            p.setOperaId(userInfo.getUuid());
+            p.setOperaName(userInfo.getUserName());
+            iPayInfoRepository.save(p);
+            return true;
+        }
+                 return false;
+    }
 }

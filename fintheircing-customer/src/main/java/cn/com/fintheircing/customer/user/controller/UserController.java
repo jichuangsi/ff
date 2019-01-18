@@ -54,7 +54,6 @@ public class UserController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getOwnSpread")
-<<<<<<< Updated upstream
     public ResponseModel<SpreadModel> getOwnSpread(@ModelAttribute UserTokenInfo userInfo) {
         return ResponseModel.sucess("", adminFeignService.getOwnSpread(userInfo.getUuid()));
     }
@@ -75,11 +74,6 @@ public class UserController {
     @RequestMapping("/payForQRCode")
     public ResponseModel<AppResultModel> payForQRCode(@ModelAttribute UserTokenInfo userInfo) {
         return ResponseModel.sucess("", adminFeignService.payForQRCode());
-=======
-    @CrossOrigin
-    public ResponseModel<SpreadModel> getOwnSpread(@ModelAttribute UserTokenInfo userInfo){
-        return ResponseModel.sucess("",adminFeignService.getOwnSpread(userInfo.getUuid()));
->>>>>>> Stashed changes
     }
 
     @ApiOperation(value = "第三方网关支付地址", notes = "")
@@ -91,9 +85,9 @@ public class UserController {
         return ResponseModel.sucess("", adminFeignService.getWayToPay());
     }
 
+}
 
 
-    }
 
 
 

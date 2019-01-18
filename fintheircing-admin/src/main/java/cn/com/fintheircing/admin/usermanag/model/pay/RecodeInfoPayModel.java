@@ -13,8 +13,8 @@ public class RecodeInfoPayModel {
     /**
      * 金额
      */
-    private String addCount;
-    private String costCount;
+    private double addCount;
+    private double costCount;
     private String remark;
     private String way;
     private Date creatTime;
@@ -97,19 +97,19 @@ public class RecodeInfoPayModel {
         this.userId = userId;
     }
 
-    public String getAddCount() {
+    public double getAddCount() {
         return addCount;
     }
 
-    public void setAddCount(String addCount) {
+    public void setAddCount(double addCount) {
         this.addCount = addCount;
     }
 
-    public String getCostCount() {
+    public double getCostCount() {
         return costCount;
     }
 
-    public void setCostCount(String costCount) {
+    public void setCostCount(double costCount) {
         this.costCount = costCount;
     }
 

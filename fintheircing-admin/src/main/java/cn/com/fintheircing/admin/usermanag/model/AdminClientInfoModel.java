@@ -5,19 +5,20 @@ import cn.com.fintheircing.admin.common.model.AbstractEntityModel;
 import java.util.Date;
 
 
-public class AdminClientInfoModel extends AbstractEntityModel {
+public class AdminClientInfoModel  {
     Date createTime;//注册时间
-    Date endtime;
-    String userId;
-    String phoneNo;
-    String userName;
-    String cer;
-    String source;
-    String proxyId;
-    String proxyName;
-    String balanceMoney;
-    String belongs;
-    String emplooyeeId;
+    Date endtime;//结束时间
+    String userId;//用户编号
+    String phoneNo;//手机号码
+    String userName;//用户名字
+    String cer;//是否实名
+    String source;//来源
+    String proxyId;//代理Id
+    String proxyName;//代理名称
+    String balanceMoney;//资金
+    String belongs;//所属 有或者无
+    String emplooyeeId;//所属员工编号
+
 
     public String getEmplooyeeId() {
         return emplooyeeId;
@@ -114,5 +115,23 @@ public class AdminClientInfoModel extends AbstractEntityModel {
 
     public void setBalanceMoney(String balanceMoney) {
         this.balanceMoney = balanceMoney;
+    }
+    int pageNum;
+    int pageSize;
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

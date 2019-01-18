@@ -19,7 +19,8 @@ public class PayInfoModel {
     private String way;
     private Date createTime;
     private Date updateTime=new Date();
-    private String checkStatus="0";
+    private String checkStatus;
+
 
     public String getCheckStatus() {
         return checkStatus;

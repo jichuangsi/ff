@@ -9,7 +9,7 @@ import com.aliyuncs.profile.IClientProfile;
 import org.springframework.stereotype.Component;
 
 /** 短信发送工具类 */
-@Component
+
 public class SmsSendUtil {
 
     /** 产品名称:云通信短信API产品,开发者无需替换 */
@@ -22,7 +22,7 @@ public class SmsSendUtil {
      * @param code 短信内容
      * @return true: 发送成功， false：发送失败
      */
-    public  String send(String phoneNum, String code,String signName,String templateCode,String accessKeyId,String accessKeySecret){
+    public static  String send(String phoneNum, String code,String signName,String templateCode,String accessKeyId,String accessKeySecret){
         try {
             /** 可自助调整超时时间 */
             System.setProperty("sun.net.client.defaultConnectTimeout", "10000");

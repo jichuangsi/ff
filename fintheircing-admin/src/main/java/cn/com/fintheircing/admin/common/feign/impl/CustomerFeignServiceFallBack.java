@@ -60,14 +60,4 @@ public class CustomerFeignServiceFallBack implements ICustomerFeignService {
         return new RecodeInfoPayModel();
     }
 
-    /**
-     * 追加保证金
-     *
-     * @return
-     */
-    @Override
-    public ResponseModel<PromiseModel> addPromiseMoney() {
-        logger.debug("追加保证金 信息失败");
-        return ResponseModel.sucess("", new PromiseModel()) ;
-    }
 }
