@@ -41,4 +41,9 @@ public interface IBusinessContractMapper {
             "select uuid from business_contract where user_id=#{userId} and delete_flag=\"0\"" +
             ")  and delete_flag=\"0\" GROUP BY contract_id) t2 on t1.uuid=t2.contract_id where t1.user_id=#{userId} and delete_flag=\"0\"</script>")
     List<ContractModel> selectCurrentContract(@Param("userId") String userId);
+
+    /**
+     * 追加保证金
+     */
+    int addPromiseMoney(@Param("cash") double cash);
 }

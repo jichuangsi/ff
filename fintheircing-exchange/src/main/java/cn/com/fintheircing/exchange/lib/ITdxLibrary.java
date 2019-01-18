@@ -54,7 +54,7 @@ public interface ITdxLibrary extends Library {
 	 *            券商交易服务器端口
 	 * @param version
 	 *            设置通达信客户端的版本号，默认6.68
-	 * @param ytbId
+	 * @param yybID
 	 *            营业部代码，可设置为0
 	 * @param accountType
 	 *            登录账号类型，一般情况下,8-资金账号,9-客户号

@@ -58,7 +58,7 @@ public class UserController {
     public ResponseModel changeProxyNum(AdminClientInfoModel Model )throws UserServiceException{
         return ResponseModel.sucess("", userService.changeProxyNum(Model));
     }
-//    @ApiOperation(value = "用户列表-合约信息-合约记录", notes = "")
+//    @ApiOperation(value = "用户列表-合约信息-2", notes = "")
 //    @PostMapping("/contactRecode")
 //    public ResponseModel<PageInfo<ContactInfoModel>> contactRecode(String goodsType , int pageNum, int pageSize)throws UserServiceException{
 //        PageHelper.startPage(pageNum,pageSize);

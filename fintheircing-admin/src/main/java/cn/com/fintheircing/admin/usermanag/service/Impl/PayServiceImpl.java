@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.usermanag.service.Impl;
 
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IPayInfoRepository;
@@ -53,6 +54,7 @@ public class PayServiceImpl implements IPayService {
     private IBillMapper iBillMapper;
     @Resource
     private IPayInfoRepository iPayInfoRepository;
+
     /**
      * 获取第三方支付信息并且返回支付地址
      *
@@ -255,6 +257,7 @@ public class PayServiceImpl implements IPayService {
      */
     @Override
     public boolean agreePromiseMoney(UserTokenInfo userInfo,PromiseModel model) {
+
         PayInfo p =new PayInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId())>0){
             p.setWay(model.getWay());
@@ -270,6 +273,7 @@ public class PayServiceImpl implements IPayService {
             iPayInfoRepository.save(p);
             return true;
         }
+
                  return false;
     }
     /**

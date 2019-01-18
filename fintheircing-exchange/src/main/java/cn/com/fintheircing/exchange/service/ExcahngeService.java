@@ -37,7 +37,7 @@ public class ExcahngeService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
-	 * @param mmotherAccount
+	 * @param motherAccount
 	 *            交易母账户信息（调用前注意检查数据完整性）
 	 * @param replySeconds
 	 *            保持连接的心跳时间（秒），小于等于0时表示不使用心跳

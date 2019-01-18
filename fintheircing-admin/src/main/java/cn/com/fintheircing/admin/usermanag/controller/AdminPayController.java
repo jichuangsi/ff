@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.usermanag.controller;
 
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
+import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
@@ -34,6 +36,8 @@ public class AdminPayController {
 
     @Resource
     private IPayInfoRepository iPayInfoRepository;
+    @Resource
+    private IBusinessContractMapper iBusinessContractMapper;
     @PostMapping("/getBill")
     @ApiOperation(value = "支付结果查询", notes = "")
     public ResponseModel<BillResponseModel> getBill(@RequestBody BillQueryModel model) throws UserServiceException {
@@ -76,6 +80,9 @@ public class AdminPayController {
     @GetMapping("/AgreePromiseMoney")
     @ApiOperation(value = "同意申请追加保证金", notes = "")
     public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo,PromiseModel model) throws UserServiceException {
+        if (iBusinessContractMapper.addPromiseMoney(model.getCash())<0){
+            return ResponseModel.fail("", ResultCode.ADD_PROMISE_MONEY_ERR);
+        }
         return ResponseModel.sucess("",  ipayService.agreePromiseMoney(userInfo,model));
 
     }

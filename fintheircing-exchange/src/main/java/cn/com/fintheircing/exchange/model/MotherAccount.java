@@ -18,7 +18,6 @@ public class MotherAccount {
 	private String tradeAccount;// 交易账号，一般与登录帐号相同. 请登录券商通达信软件，查询股东列表，股东列表内的资金帐号就是交易帐号
 	private String jyPassword;// 交易密码
 	private String txPassword;// 通讯密码，部分券商没有通讯密码，可以为空串
-
 	private String szAccout;// 深圳股东账户
 	private String shAccout;// 上海股东账户
 

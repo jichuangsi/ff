@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.systemdetect.utils;
 
+import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
 import cn.com.fintheircing.admin.systemdetect.entity.Product;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 
@@ -11,10 +12,10 @@ public class MappingEntity2ModelConverter {
         List<ProductModel> models = new ArrayList<>();
         productList.forEach(p -> {
             ProductModel model = new ProductModel();
-            model.setAllot(p.getAllot());
+            model.setAllot(ProductStatus.getName(p.getAllot()));
             model.setEntryAmount(p.getEntryAmount());
             model.setFinancingTime(p.getFinancingTime());
-            model.setId(p.getId());
+            model.setId(p.getUuid());
             model.setLeverRate(p.getLeverRate());
             model.setLiquidation(p.getLiquidation());
             model.setMoneyInContact(p.getMoneyInContact());
@@ -28,10 +29,10 @@ public class MappingEntity2ModelConverter {
     public static final ProductModel coverProduct(Product p) {
         ProductModel model =new ProductModel() ;
 
-            model.setAllot(p.getAllot());
+            model.setAllot(ProductStatus.getName(p.getAllot()));
             model.setEntryAmount(p.getEntryAmount());
             model.setFinancingTime(p.getFinancingTime());
-            model.setId(p.getId());
+            model.setId(p.getUuid());
             model.setLeverRate(p.getLeverRate());
             model.setLiquidation(p.getLiquidation());
             model.setMoneyInContact(p.getMoneyInContact());

@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.systemdetect.model;
 
+import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
+
 /**
  * ProductModel
  *
@@ -45,7 +47,7 @@ public class ProductModel {
      */
     private String allotStr;
 
-    private Integer allot;
+    private String allot;
 
 
 
@@ -129,11 +131,11 @@ public class ProductModel {
         this.allotStr = allotStr;
     }
 
-    public Integer getAllot() {
+    public String getAllot() {
         return allot;
     }
 
-    public void setAllot(Integer allot) {
+    public void setAllot(String allot) {
         this.allot = allot;
     }
 }

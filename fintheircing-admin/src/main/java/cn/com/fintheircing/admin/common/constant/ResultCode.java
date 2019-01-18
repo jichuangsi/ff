@@ -48,6 +48,7 @@ public class ResultCode {
 	public static final String ACCOUNT_WARN_ERR  = "您已到警戒线，请补交保证金";
 	public static final String ACCOUNT_COST_ERR  = "扣款失败";
 	public static final String STOCK_ENTRUST_SAVE_ERR  = "保存委托单失败";
+	public static final String ADD_PROMISE_MONEY_ERR  = "增加保证金失败";
 
 	public static final String STOCK_ENTRUST_MAX = "该股超过最大购买";
 	public static final String STOCK_ENTRUST_DANGER = "该股为危险股票";

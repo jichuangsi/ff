@@ -26,35 +26,18 @@ public class DistributServiceImpl implements IDistributService {
 
     @Override
     public List<ProductModel> findForDayAllot() {
-        List<Product> all = productRepository.findAll();
-        all.forEach(a -> {
-            if (!ProductStatus.DAYS.getName().equals(a.getAllot())) {
-                all.remove(a);
-            }
-        });
-        return MappingEntity2ModelConverter.coverProductList(all);
+        return productMapper.findAllByDay();
     }
 
     @Override
     public List<ProductModel> findForMonthAllot() {
-        List<Product> all = productRepository.findAll();
-        all.forEach(a -> {
-            if (!ProductStatus.MONTHS.getName().equals(a.getAllot())) {
-                all.remove(a);
-            }
-        });
-        return MappingEntity2ModelConverter.coverProductList(all);
+
+        return productMapper.findAllByMonth();
     }
 
     @Override
     public List<ProductModel> findForSpecialAllot() {
-        List<Product> all = productRepository.findAll();
-        all.forEach(a -> {
-            if (!ProductStatus.SPECIAL.getName().equals(a.getAllot())) {
-                all.remove(a);
-            }
-        });
-        return MappingEntity2ModelConverter.coverProductList(all);
+        return productMapper.findAllBySpec();
     }
 
     @Override

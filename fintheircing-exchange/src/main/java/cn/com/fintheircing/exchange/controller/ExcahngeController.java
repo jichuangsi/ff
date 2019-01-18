@@ -7,26 +7,19 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import cn.com.fintheircing.exchange.constant.AccountStatus;
+import cn.com.fintheircing.exchange.dao.repository.IParentAccountRepository;
+import cn.com.fintheircing.exchange.entity.SecuritiesInfo;
+import cn.com.fintheircing.exchange.model.*;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cn.com.fintheircing.exchange.constant.ResultCode;
 import cn.com.fintheircing.exchange.controller.model.BuyOrderRequestModel;
 import cn.com.fintheircing.exchange.controller.model.CancleOrderRequestModel;
 import cn.com.fintheircing.exchange.controller.model.SellOrderRequestModel;
 import cn.com.fintheircing.exchange.exception.ExchangeException;
-import cn.com.fintheircing.exchange.model.BuyOrderResult;
-import cn.com.fintheircing.exchange.model.CanCancleOrder;
-import cn.com.fintheircing.exchange.model.CancleOrderResult;
-import cn.com.fintheircing.exchange.model.HistoryAcceptOrder;
-import cn.com.fintheircing.exchange.model.ResponseModel;
-import cn.com.fintheircing.exchange.model.SellOrderResult;
-import cn.com.fintheircing.exchange.model.TodayAcceptOrder;
-import cn.com.fintheircing.exchange.model.TodayOrder;
 import cn.com.fintheircing.exchange.service.ExchangeServiceRouter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -39,6 +32,8 @@ import io.swagger.annotations.ApiResponse;
 public class ExcahngeController {
 	@Resource
 	private ExchangeServiceRouter exchangeService;
+	@Resource
+	private IParentAccountRepository iParentAccountRepository;
 
 	@ApiOperation(value = "查询当天成交", notes = "")
 	@ApiImplicitParams({
