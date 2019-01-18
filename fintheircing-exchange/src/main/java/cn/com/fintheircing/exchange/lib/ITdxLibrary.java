@@ -29,12 +29,19 @@ public interface ITdxLibrary extends Library {
 	/**
 	 * 打开通达信实例
 	 */
-	public void OpenTdx();
+	public int OpenTdx(char nClientType, String pszClientVersion, char nCliType, char nVipTermFlag, byte[] errorInfo);
+
+	public int OpenTdx();
 
 	/**
 	 * 关闭通达信实例
 	 */
 	public void CloseTdx();
+
+	/**
+	 * 检查链接是否可用
+	 */
+	boolean IsConnectOK(int clientId);
 
 	/**
 	 * 交易账户登录
@@ -64,8 +71,8 @@ public interface ITdxLibrary extends Library {
 	 * 
 	 * @return 客户端ID，调用各个函数时需要使用到的clientId参数，失败时返回-1
 	 */
-	public int LogonEx(String qsId, String ip, short port, String version, short yybID, int accountType,
-			String accountNo, String tradeAccount, String jyPassword, String txPassword, byte[] errInfo);
+	public int Logon(int qsId, String ip, short port, String version, short yybID, int accountType, String accountNo,
+			String tradeAccount, String jyPassword, String txPassword, byte[] errInfo);
 
 	/**
 	 * 交易账户注销
@@ -96,7 +103,7 @@ public interface ITdxLibrary extends Library {
 	 * @param clientId
 	 *            客户端ID
 	 * @param category
-	 *            表示查询信息的种类，0 资金,1   交割单，2 历史委托，3 历史成交
+	 *            表示查询信息的种类，0 历史委托，1 历史成交，2 资金流水，3 交割单
 	 * @param startDate
 	 *            开始日期，整型，格式为20190101
 	 * @param endDate
@@ -107,7 +114,8 @@ public interface ITdxLibrary extends Library {
 	 * @param errInfo
 	 *            此API执行返回后，如果出错，保存了错误信息说明。一般要分配256字节的空间。没出错时为空字符串。
 	 */
-	public void QueryHisData(int clientId, int category, int startDate, int endDate, byte[] result, byte[] errInfo);
+	public void QueryHistoryData(int clientId, int category, String startDate, String endDate, byte[] result,
+			byte[] errInfo);
 
 	/**
 	 * 下委托交易证券
@@ -144,11 +152,7 @@ public interface ITdxLibrary extends Library {
 	 *            客户端ID
 	 * @param exchangeId
 	 *            交易所ID， 上海1，深圳0(招商证券普通账户深圳是2)
-	 * @param pszStockAccount
-	 *            股东代码, 交易上海股票填上海的股东代码；交易深圳的股票填入深圳的股东代码,
-	 * @param pszStockCode
-	 *            股票代码
-	 * @param pszhth
+	 * @param orderId
 	 *            表示要撤的目标委托的编号,SendOrder时可从result里面获取
 	 * @param result
 	 *            此API执行返回后，Result内保存了返回的查询数据,其中含有委托编号数据
@@ -156,6 +160,5 @@ public interface ITdxLibrary extends Library {
 	 * @param errInfo
 	 *            此API执行返回后，如果出错，保存了错误信息说明。一般要分配256字节的空间。没出错时为空字符串。
 	 */
-	public void CancelOrder(int clientId, String exchangeId, String pszStockAccount, String pszStockCode, String pszhth,
-			byte[] result, byte[] errInfo);
+	public void CancelOrder(int clientId, char exchangeId, String orderId, byte[] result, byte[] errInfo);
 }

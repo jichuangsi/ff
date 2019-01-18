@@ -29,7 +29,7 @@ import cn.com.fintheircing.exchange.model.TodayOrder;
 import cn.com.fintheircing.exchange.util.EncodeUtils;
 
 public class ExcahngeService {
-	private ITdxLibrary tdxLibrary = (ITdxLibrary) Native.loadLibrary("TdApiX", ITdxLibrary.class);
+	private ITdxLibrary tdxLibrary = (ITdxLibrary) Native.loadLibrary("TradeX2-M", ITdxLibrary.class);
 	private int clientId;// 客户端ID
 	private final ScheduledExecutorService threadPool;
 	private final MotherAccount motherAccount;
@@ -48,10 +48,10 @@ public class ExcahngeService {
 		tdxLibrary.OpenTdx();
 		byte[] errorInfo = new byte[256];
 		logger.info("登录帐号：" + motherAccount.getAccountNo());
-		this.clientId = tdxLibrary.LogonEx(motherAccount.getQsId(), motherAccount.getIp(), motherAccount.getPort(),
-				motherAccount.getVersion(), motherAccount.getYybId(), motherAccount.getAccountType(),
-				motherAccount.getAccountNo(), motherAccount.getTradeAccount(), motherAccount.getJyPassword(),
-				motherAccount.getTxPassword(), errorInfo);
+		this.clientId = tdxLibrary.Logon(Integer.parseInt(motherAccount.getQsId()), motherAccount.getIp(),
+				motherAccount.getPort(), motherAccount.getVersion(), motherAccount.getYybId(),
+				motherAccount.getAccountType(), motherAccount.getAccountNo(), motherAccount.getTradeAccount(),
+				motherAccount.getJyPassword(), motherAccount.getTxPassword(), errorInfo);
 		if (-1 == clientId) {
 			String msg = EncodeUtils.getUTF8StringFromGBKString(Native.toString(errorInfo, "GBK"));
 			logger.error(msg);
@@ -62,21 +62,17 @@ public class ExcahngeService {
 		if (0 < replySeconds) {
 			this.threadPool = Executors.newScheduledThreadPool(1);
 			threadPool.scheduleAtFixedRate(() -> {
-				byte[] result = new byte[1024];
 				byte[] errorInfo1 = new byte[256];
 				logger.info(motherAccount.getAccountNo() + " 心跳维持连接" + replySeconds + "s一次...");
-				tdxLibrary.QueryData(clientId, 0, result, errorInfo);
-				String msg = EncodeUtils.getUTF8StringFromGBKString(Native.toString(errorInfo1, "GBK"));
-				if (!StringUtils.isEmpty(msg)) {
-					logger.error("心跳异常：" + msg);
-					logger.info("心跳失败，再次登录");
+				if (!tdxLibrary.IsConnectOK(clientId)) {
+					logger.info("链接已断开，再次登录");
 					synchronized (this) {
 						try {
-							this.clientId = tdxLibrary.LogonEx(motherAccount.getQsId(), motherAccount.getIp(),
-									motherAccount.getPort(), motherAccount.getVersion(), motherAccount.getYybId(),
-									motherAccount.getAccountType(), motherAccount.getAccountNo(),
-									motherAccount.getTradeAccount(), motherAccount.getJyPassword(),
-									motherAccount.getTxPassword(), errorInfo1);
+							this.clientId = tdxLibrary.Logon(Integer.parseInt(motherAccount.getQsId()),
+									motherAccount.getIp(), motherAccount.getPort(), motherAccount.getVersion(),
+									motherAccount.getYybId(), motherAccount.getAccountType(),
+									motherAccount.getAccountNo(), motherAccount.getTradeAccount(),
+									motherAccount.getJyPassword(), motherAccount.getTxPassword(), errorInfo1);
 							if (-1 == this.clientId) {
 								logger.error("心跳重连异常："
 										+ EncodeUtils.getUTF8StringFromGBKString(Native.toString(errorInfo1, "GBK")));
@@ -90,7 +86,6 @@ public class ExcahngeService {
 							logger.error("交易服务异常：" + e.getMessage());
 							e.printStackTrace();
 						}
-
 					}
 				}
 
@@ -106,7 +101,7 @@ public class ExcahngeService {
 	public List<TodayOrder> getTodayOrderList() throws ExchangeException {
 		byte[] result = new byte[1024 * 1024];
 		byte[] errorInfo = new byte[256];
-		tdxLibrary.QueryData(clientId, 2, result, errorInfo);
+		tdxLibrary.QueryData(getClientId(), 2, result, errorInfo);
 		String errMsg = Native.toString(errorInfo, "GBK");
 		String resultMsg = Native.toString(result, "GBK");
 		if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -132,7 +127,7 @@ public class ExcahngeService {
 	public List<TodayAcceptOrder> getTodayAcceptOrderList() throws ExchangeException {
 		byte[] result = new byte[1024 * 1024];
 		byte[] errorInfo = new byte[256];
-		tdxLibrary.QueryData(clientId, 3, result, errorInfo);
+		tdxLibrary.QueryData(getClientId(), 3, result, errorInfo);
 		String errMsg = Native.toString(errorInfo, "GBK");
 		String resultMsg = Native.toString(result, "GBK");
 		if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -163,7 +158,8 @@ public class ExcahngeService {
 	public List<HistoryOrder> getHistoryOrderList(int startDate, int endDate) throws ExchangeException {
 		byte[] result = new byte[1024 * 1024];
 		byte[] errorInfo = new byte[256];
-		tdxLibrary.QueryHisData(clientId, 2, startDate, endDate, result, errorInfo);
+		tdxLibrary.QueryHistoryData(getClientId(), 0, Integer.toString(startDate), Integer.toString(endDate), result,
+				errorInfo);
 		String errMsg = Native.toString(errorInfo, "GBK");
 		String resultMsg = Native.toString(result, "GBK");
 		if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -194,7 +190,8 @@ public class ExcahngeService {
 	public List<HistoryAcceptOrder> getHistoryAcceptOrderList(int startDate, int endDate) throws ExchangeException {
 		byte[] result = new byte[1024 * 1024];
 		byte[] errorInfo = new byte[256];
-		tdxLibrary.QueryHisData(clientId, 3, startDate, endDate, result, errorInfo);
+		tdxLibrary.QueryHistoryData(getClientId(), 1, Integer.toString(startDate), Integer.toString(endDate), result,
+				errorInfo);
 		String errMsg = Native.toString(errorInfo, "GBK");
 		String resultMsg = Native.toString(result, "GBK");
 		if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -248,7 +245,7 @@ public class ExcahngeService {
 				return buyOrderResult;
 			}
 			// 执行dll调用
-			tdxLibrary.SendOrder(clientId, 0, 0, gddm, pszStockCode, price, quantity, result, errorInfo);
+			tdxLibrary.SendOrder(getClientId(), 0, 0, gddm, pszStockCode, price, quantity, result, errorInfo);
 			String errMsg = Native.toString(errorInfo, "GBK");
 			String resultMsg = Native.toString(result, "GBK");
 			if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -311,7 +308,7 @@ public class ExcahngeService {
 				return sellOrderResult;
 			}
 			// 执行dll调用
-			tdxLibrary.SendOrder(clientId, 1, 0, gddm, pszStockCode, price, quantity, result, errorInfo);
+			tdxLibrary.SendOrder(getClientId(), 1, 0, gddm, pszStockCode, price, quantity, result, errorInfo);
 			String errMsg = Native.toString(errorInfo, "GBK");
 			String resultMsg = Native.toString(result, "GBK");
 			if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -345,7 +342,7 @@ public class ExcahngeService {
 	public List<CanCancleOrder> getCanCancleOrderList() throws ExchangeException {
 		byte[] result = new byte[1024 * 1024];
 		byte[] errorInfo = new byte[256];
-		tdxLibrary.QueryData(clientId, 4, result, errorInfo);
+		tdxLibrary.QueryData(getClientId(), 4, result, errorInfo);
 		String errMsg = Native.toString(errorInfo, "GBK");
 		String resultMsg = Native.toString(result, "GBK");
 		if (!StringUtils.isEmpty(errMsg) || StringUtils.isEmpty(resultMsg)) {
@@ -387,7 +384,7 @@ public class ExcahngeService {
 				return cancleOrderResult;
 			}
 			// 调用dll执行
-			tdxLibrary.CancelOrder(clientId, exchangeId, pszStockAccount, pszStockCode, orderNum, result, errorInfo);
+			tdxLibrary.CancelOrder(getClientId(), exchangeId.charAt(0), orderNum, result, errorInfo);
 			String errMsg = Native.toString(errorInfo, "GBK");
 			if (!StringUtils.isEmpty(errMsg)) {
 				cancleOrderResult.setSucess(false);
