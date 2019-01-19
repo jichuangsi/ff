@@ -9,10 +9,11 @@ public class StockHoldingModel {
     @Pattern(regexp = "^\\d{6}$",message = "股票代码不正确")
     private String stockNo;
     private String stockName;
+    @Pattern(regexp = "^[1-9][0-9]*0{2}&")
     private Integer amount;     //持仓
     private Integer canSell;    //可用
     private Double costPrice;    //成本单价
-    private Double currentPrice;    //   当前单价
+    private Double currentPrice;    //当前单价
     private Double currentWorth;    //当前市值
     private String motherAccount;   //母账号
     private Double floatMoney;      //盈亏金额

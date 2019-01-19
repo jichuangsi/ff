@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TransactionSummaryRepository extends JpaRepository<TransactionSummary,String> {
 
+    TransactionSummary findByDeleteFlagAndStockNum(String delete,String StockNum);
 }

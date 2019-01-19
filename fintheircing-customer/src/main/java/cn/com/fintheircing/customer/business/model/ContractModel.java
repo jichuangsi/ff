@@ -25,16 +25,25 @@ public class ContractModel {
     private Integer choseWay;    //选择方式
     private Double coldCash;    //冻结资金
     private Double dangerCash;    //危险保证金
+    private String productId;
 
     private String choseStr;
 
     private Double first;   //初次利息
 
-    private ProductModel productModel;
+    private ProductModel productModel ;
 
 
     private Integer pageIndex;
     private Integer pageSize;
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public String getChoseStr() {
         return choseStr;

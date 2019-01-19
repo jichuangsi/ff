@@ -4,31 +4,20 @@ import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
-import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.model.PayConfigModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.service.UserService;
-import cn.com.fintheircing.customer.user.utlis.Entity2Model;
-import cn.com.fintheircing.customer.user.utlis.Model2Entity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -86,8 +75,6 @@ public class UserController {
     }
 
 }
-
-
 
 
 

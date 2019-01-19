@@ -41,4 +41,8 @@ public class ResultCode {
 	public static final String SUCESS_INFO = "success";
 	public static final String ERR_INFO = "error";
 
+	public static final String STOCK_HOLD_ERR = "您尚未持有该股票";
+	public static final String STOCK_SELL_LESS_ERR = "您的可售股份不足";
+	public static final String STOCK_SELL_ERR = "出售股份失败";
+
 }

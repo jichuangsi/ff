@@ -15,6 +15,7 @@ spring:
   application:
     name: ffmsg
   datasource:
+    databaseplatform: org.hibernate.dialect.MySQL5InnoDBDialect
     url: jdbc:mysql://127.0.0.1:3306/ff?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8
     username: root
     password: root

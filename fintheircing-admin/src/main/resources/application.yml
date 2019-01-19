@@ -9,6 +9,7 @@ spring:
     username: root
     password: root
   jpa:
+    databaseplatform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
     generate-ddl: true
     hibernate:
@@ -58,6 +59,8 @@ custom:
     queryPayResult: queryPayResult
     queryReconTrans: queryReconTrans
     QRcode: gatewayPayByQRcode
+  report:
+    isReport: 已报
   risk:
     maxBuyOne: 0.8
     venturEditionMax: 0.5

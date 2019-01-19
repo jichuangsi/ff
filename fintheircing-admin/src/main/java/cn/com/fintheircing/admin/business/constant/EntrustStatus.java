@@ -2,9 +2,9 @@ package cn.com.fintheircing.admin.business.constant;
 
 public enum  EntrustStatus {
 
-    ENTRUST_SUCCESS("已成",0),ENTRUST_ERR("废单",1),ENTRUST_BACK("撤单",2),
-    ENTRUST_TOBACK("已报待扯",3),ENTRUST_REPORT("已报",4),ENTRUST_NOT_REPORT("未报",5)
-    ,ENTRUST_WAIT("待处理",6);
+    ENTRUST_NOT_DEAL("未处理",0),ENTRUST_WAIT_DEAL("待处理",1),
+    ENTRUST_REPORT("已报",2),ENTRUST_FINSISH("已成",3),ENTRUST_BACK("撤单",4)
+    ,ENTRUST_WAIT_BACK("撤单中",5);
 
     private String name;
     private Integer index;

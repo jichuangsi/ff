@@ -76,6 +76,9 @@ public class TokenCheckGatewayFilterFactory extends AbstractGatewayFilterFactory
 					 *//*
 					verifier.verify(accessToken);// 校验有效性*/
 					UserTokenInfo userInfo = changeUserInfo(accessToken);
+					if (userInfo==null){
+						return CommonUtils.buildResponse(exchange,ResultCode.TOKEN_CHECK_ERR,ResultCode.TOKEN_CHECK_ERR_MSG);
+					}
 					// todo 校验有效期
 					// 如果在redis里面找不到，则看token中的过期时间是否超过，若超过，则返回过期，若没超过，则将token写入redis（设置超时时间）
 					if(!redisTemplate.hasKey(getTokenKey(accessToken))){

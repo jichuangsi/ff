@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.business.model;
 
+import java.util.Date;
+
 public class StockEntrustModel {
 
     private String id;
@@ -18,6 +20,44 @@ public class StockEntrustModel {
     private String userId;
     private String motherAccount;
     private String dealNo;
+    private String cancelOrder;
+    private Date createdTime;
+
+
+    private Integer pageIndex;
+    private Integer pageSize;
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getCancelOrder() {
+        return cancelOrder;
+    }
+
+    public void setCancelOrder(String cancelOrder) {
+        this.cancelOrder = cancelOrder;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getDealNo() {
         return dealNo;

@@ -89,10 +89,6 @@ public interface IAdminFeignService {
     Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum);
 
 
-    @RequestMapping(value = "adminF/costColdContract")
-    Boolean costColdContract(@RequestParam("contractId") String contractId,
-                             @RequestParam("coldMoney") Double coldMoney);
-
     /**
      * 返回一个第三方网关接口
      * @param
@@ -118,10 +114,22 @@ public interface IAdminFeignService {
 
     //保存股票申请
     @RequestMapping(value = "adminF/saveStockEntrust")
-    ResponseModel saveStockEntrust(@RequestBody StockEntrustModel model);
+    ResponseModel<String> saveStockEntrust(@RequestBody StockEntrustModel model);
 
 
     //查看当前合约的该股持仓
-    @RequestMapping(value = "")
-    StockHoldingModel getCurrentHolding();
+    @RequestMapping(value = "adminF/getCurrentHolding")
+    StockHoldingModel getCurrentHolding(@RequestBody StockHoldingModel model);
+
+
+    //卖出持仓
+    @RequestMapping(value = "adminF/sellHoldStockEntrust")
+    Boolean sellHoldStockEntrust(@RequestBody StockHoldingModel model);
+
+    @RequestMapping(value = "adminF/getUnFinishedEntrust")
+    List<StockEntrustModel> getUnFinishedEntrust(@RequestBody ContractModel model);
+
+    @RequestMapping(value = "adminF/entrustCancelOrder")
+    ResponseModel entrustCancelOrder(@RequestBody StockEntrustModel model);
+
 }

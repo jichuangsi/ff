@@ -59,4 +59,12 @@ public class ResultCode {
 	public static final String STOCK_BUSINESS_ERR = "交易失败";
 	public static final String UPDATE_ERR_MSG = "更新失败";
 	public static final String UPDATE_ALREAD_MSG = "已有人在处理";
+
+	public static final String STOCK_SELL_LESS_ERR = "您的股票数目不足";
+	public static final String ENTRUST_IS_DEAL = "该单已完结";
+	public static final String ENTRUST_WAIT_DEAL = "该单正在处理中，不可撤单";
+	public static final String ENTRUST_BACK_ERR = "撤单失败";
+
+	public static final String MOTHER_NULL_ERR = "母账号未空";
+	public static final String STOCK_MSG_ERR = "证券无响应";
 }

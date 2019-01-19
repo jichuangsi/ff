@@ -3,24 +3,38 @@ package cn.com.fintheircing.admin.business.service;
 import cn.com.fintheircing.admin.business.constant.BusinessStatus;
 import cn.com.fintheircing.admin.business.constant.EntrustStatus;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockEntrustMapper;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockHoldingMapper;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessTaxationMapper;
 import cn.com.fintheircing.admin.business.dao.repository.*;
 import cn.com.fintheircing.admin.business.entity.*;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
-import cn.com.fintheircing.admin.business.model.*;
+import cn.com.fintheircing.admin.business.model.ContractModel;
+import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import cn.com.fintheircing.admin.business.model.StockHoldingModel;
+import cn.com.fintheircing.admin.business.model.StockModel;
+import cn.com.fintheircing.admin.business.model.tranfer.TranferStockEntrustModel;
 import cn.com.fintheircing.admin.business.utils.BusinessUtils;
 import cn.com.fintheircing.admin.common.constant.ControlCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.constant.VerifyCode;
 import cn.com.fintheircing.admin.common.feign.IExchangeFeignService;
 import cn.com.fintheircing.admin.common.feign.model.BuyOrderRequestModel;
+import cn.com.fintheircing.admin.common.feign.model.CanCancleOrder;
+import cn.com.fintheircing.admin.common.feign.model.CancleOrderRequestModel;
+import cn.com.fintheircing.admin.common.feign.model.SellOrderRequestModel;
 import cn.com.fintheircing.admin.common.model.MotherAccount;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.MappingModel2EntityConverter;
 import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
+import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
+import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -32,6 +46,9 @@ import java.util.*;
 
 @Service
 public class BusinessService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Resource
     private IBusinessContractMapper businessContractMapper;
     @Resource
@@ -54,6 +71,14 @@ public class BusinessService {
     private IBusinessTaxationRelationRepository businessTaxationRelationRepository;
     @Resource
     private IBusinessTaxationMapper businessTaxationMapper;
+    @Resource
+    private IBusinessStockHoldingRepository businessStockHoldingRepository;
+    @Resource
+    private IBusinessStockEntrustMapper businessStockEntrustMapper;
+    @Resource
+    private TransactionSummaryRepository transactionSummaryRepository;
+    @Resource
+    private MotherAccountQueryService motherAccountQueryService;
 
     @Value("${custom.risk.maxBuyOne}")
     private Double maxBuyOne;
@@ -71,6 +96,8 @@ public class BusinessService {
     private String shangRegex;
     @Value("${custom.system.shenRegex}")
     private String shenRegex;
+    @Value("${custom.report.isReport}")
+    private String report;
 
     public Boolean canBuy(Integer productNo,String userId) {
         Map<String,Object> params = new HashMap<String,Object>();
@@ -81,6 +108,17 @@ public class BusinessService {
         params.put("productNo", productName);
         params.put("userId",userId);
         return !(businessContractMapper.countSameContract(params)>0);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void testRollBack() throws BusinessException{
+        int i = businessContractRepository.
+                updateAvailableMoney("40289f1a686084460168608694110000",100.0,1);
+        try {
+            i=1/0;
+        } catch (Exception e) {
+            throw new BusinessException("");
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -134,29 +172,41 @@ public class BusinessService {
     }
 
 
+
     //交易过程中冻结资金
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class,timeout = 1000000)
     public void costColdContract(StockEntrustModel model) throws BusinessException{
-        Double coldMoney = model.getAmount()*model.getPrice();
+        Double coldMoney = BusinessUtils.multiplicationMethod(model.getAmount().doubleValue(),model.getPrice());
         String contractId = model.getContractId();
         StockModel stockModel = new StockModel();//根据stockNum获取当前股票实时数据
+       /* BusinessContractRisk risk = businessContractRiskRepository.findBusinessContractRiskByContractId(model.getContractId());*/
         StockHoldingModel stockHoldingModel = businessStockHoldingMapper.selectStockNum(model.getContractId(),model.getStockNum());
-        BusinessContractRisk risk = businessContractRiskRepository.findBusinessContractRiskByContractId(model.getContractId());
         ContractModel contract = businessContractMapper.selectContract(contractId);//获取相关合约
-        BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);//验证是否能交易，不能直接抛出异常
+        TransactionSummary transactionSummary = transactionSummaryRepository.findByDeleteFlagAndStockNum("0",model.getStockNum());
+        if (transactionSummary==null){
+            throw new BusinessException(ResultCode.STOCK_BUSINESS_ERR);
+        }
+        //BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);//验证是否能交易，不能直接抛出异常
         /**
          * 需要计算税费
          */
-        Double taxation = 1.0;
+        Double taxation = 0.0;
         List<BusinessTaxation> businessTaxations = businessTaxationRepository.findByDeleteFlagAndBsuinessTo("0",BusinessTaxation.BUSINESS_BUY);
         for (BusinessTaxation businessTaxation:businessTaxations){
             taxation = taxation + businessTaxation.getTaxRate();
         }
-        coldMoney = taxation*coldMoney+contract.getBusinessRate()*coldMoney;
-
-        Double totalMoney = contract.getCanUseMoney()+contract.getColdCash()+contract.getWorth();//总资产
-        Double warningMoney =(contract.getBorrowMoney()+
-                contract.getPromisedMoney())*contract.getWarningLine();//警戒线
+        taxation = taxation * coldMoney;
+        Double businessCash = contract.getBusinessRate()*coldMoney;
+        Double worth = contract.getWorth();
+        Double coldCash = contract.getColdCash();
+        Double canUseMoney = contract.getCanUseMoney();
+        Double totalMoney = BusinessUtils.addMethod(canUseMoney,coldCash,worth);//总资产
+        Double warningMoney =BusinessUtils.addMethod(contract.getBorrowMoney(),contract.getPromisedMoney())*contract.getWarningLine();//警戒线
+        Double available = contract.getCanUseMoney();
+        available = savePayControl(contractId,ControlCode.CONTROL_TAXATION.getIndex(),taxation,available);//保存收取税费操作
+        available = savePayControl(contractId,ControlCode.CONTROL_BUSINESSSELLSTOCK.getIndex(),businessCash,available); //保存交易收取操作
+        available = savePayControl(contractId,ControlCode.CONTROL_BUYSTOCK.getIndex(),coldMoney,available); //保存买入操作
+        coldMoney = taxation + coldMoney + businessCash;
         if (totalMoney<=warningMoney){
             throw new BusinessException(ResultCode.ACCOUNT_WARN_ERR);
         }
@@ -169,11 +219,14 @@ public class BusinessService {
         }
         BusinessStockEntrust stockEntrust = new BusinessStockEntrust();
         stockEntrust.setBusinessTo(BusinessStockEntrust.STOCK_BUY);
-        stockEntrust.setBuyPrice(model.getPrice());
-        stockEntrust.setBuyAmount(model.getAmount());
+        stockEntrust.setBusinessPrice(model.getPrice());
+        stockEntrust.setBusinessAmount(model.getAmount());
         stockEntrust.setUserId(model.getUserId());
-        stockEntrust.setStockId(stockHoldingModel.getStockId());
-        stockEntrust.setEntrustStatus(EntrustStatus.ENTRUST_NOT_REPORT.getIndex());
+        stockEntrust.setStockId(transactionSummary.getId());
+        stockEntrust.setCreatedTime(new Date());
+        stockEntrust.setCreatorId(model.getUserId());
+        stockEntrust.setCancelOrder(BusinessStockEntrust.STOCK_ORDER);
+        stockEntrust.setEntrustStatus(EntrustStatus.ENTRUST_NOT_DEAL.getIndex());
         stockEntrust = businessStockEntrustRepository.save(stockEntrust);
         if (StringUtils.isEmpty(stockEntrust.getUuid())){
             throw new BusinessException(ResultCode.STOCK_ENTRUST_SAVE_ERR);
@@ -184,25 +237,29 @@ public class BusinessService {
             relation.setTaxationId(businessTaxation.getUuid());
             businessTaxationRelationRepository.save(relation);
         }
-
         ContractModel contractModel = new ContractModel();
         contractModel.setId(model.getContractId());
         contractModel.setColdCash(coldMoney);
-        if (dealStockAuto(stockEntrust,model.getStockNum(),contractModel)){
+        if (!dealStockAuto(stockEntrust,model.getStockNum(),contractModel)){
             throw new BusinessException(ResultCode.STOCK_BUSINESS_ERR);
         }
     }
 
     /*@Async*/
     //失败回滚
-    public Boolean dealStockAuto(BusinessStockEntrust model,String stockNo,ContractModel contractModel){
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean dealStockAuto(BusinessStockEntrust entrust,String stockNo,ContractModel contractModel) throws BusinessException{
         Boolean auto = Boolean.parseBoolean(redisTemplate.opsForValue().get(autoBuy));
         if (auto){
             String account = getMotherAccount(contractModel.getId(),stockNo);
             if (StringUtils.isEmpty(account)){
-                List<MotherAccount> motherAccounts = new ArrayList<>();
-                Random random = new Random(UUID.fromString(model.getUserId()).getMostSignificantBits());
-                account = motherAccounts.get(random.nextInt(motherAccounts.size())).getAccountNo();
+                List<MotherAccount> motherAccounts = motherAccountQueryService.getAllAviable();
+                if (motherAccounts.size()>0) {
+                    Random random = new Random(BusinessUtils.fromStringWhitoutHyphens(entrust.getUserId()).getLeastSignificantBits());
+                    account = motherAccounts.get(random.nextInt(motherAccounts.size())).getAccountNo();
+                }else {
+                    throw new BusinessException(ResultCode.MOTHER_NULL_ERR);
+                }
             }
             String exchangeId = "";
             if (CommonUtil.regexString(shenRegex,stockNo)){
@@ -213,23 +270,33 @@ public class BusinessService {
             BuyOrderRequestModel buyOrderRequestModel = new BuyOrderRequestModel();
             buyOrderRequestModel.setExchangeId(exchangeId);
             buyOrderRequestModel.setMotnerAccount(account);
-            buyOrderRequestModel.setPrice(Float.valueOf(model.getBuyPrice().toString()));
+            buyOrderRequestModel.setPrice(Float.valueOf(entrust.getBusinessPrice().toString()));
             buyOrderRequestModel.setPszStockCode(stockNo);
-            buyOrderRequestModel.setQuantity(model.getBuyAmount());
+            buyOrderRequestModel.setQuantity(entrust.getBusinessAmount());
             ResponseModel<String> responseModel = exchangeFeignService.sendBuyOrder(buyOrderRequestModel);
+            if (responseModel==null){
+                throw new BusinessException(ResultCode.STOCK_MSG_ERR);
+            }
+            responseModel.setCode(ResultCode.SUCESS);//test
             if (ResultCode.SUCESS.equals(responseModel.getCode())){
-                model.setEntrustStatus(EntrustStatus.ENTRUST_REPORT.getIndex());
-                model.setDealNo(responseModel.getData());
-                model.setMontherAccount(account);
-                businessStockEntrustRepository.save(model);
-                ContractModel contract = businessContractMapper.selectContract(contractModel.getId());//获取相关合约
-                if(businessContractRepository.updateColdMoney(contractModel.getId(),
-                        contractModel.getColdCash(),contract.getVersion())>0){
-                    return true;
-                }
+                /*if (searchIsReport(account,responseModel.getData())){*/
+                    entrust.setEntrustStatus(EntrustStatus.ENTRUST_REPORT.getIndex());
+                    entrust.setDealNo(responseModel.getData());
+                    entrust.setMontherAccount(account);
+                    businessStockEntrustRepository.save(entrust);
+                /*}else {
+                    return false;
+                }*/
+                /*ContractModel contract = businessContractMapper.selectContract(contractModel.getId());//获取相关合约
+                if(!(businessContractRepository.updateColdMoney(contractModel.getId(),
+                        contractModel.getColdCash(),contract.getVersion())>0)){
+                    return false;
+                }*///真实买入时才扣除冻结
+            }else {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -239,10 +306,10 @@ public class BusinessService {
         if (entrust==null){
             throw new BusinessException(ResultCode.STOCK_NULL_FIND);
         }
-        ContractModel contract = businessContractMapper.selectContract(model.getContractId());//获取相关合约
+        /*ContractModel contract = businessContractMapper.selectContract(model.getContractId());//获取相关合约
         if (contract==null){
             throw new BusinessException(ResultCode.CONTRACT_NULL_FIND);
-        }
+        }*/
         entrust.setMontherAccount(model.getMotherAccount());
         entrust.setDealNo(model.getDealNo());
         entrust.setEntrustStatus(EntrustStatus.ENTRUST_REPORT.getIndex());
@@ -250,7 +317,7 @@ public class BusinessService {
         entrust.setUpdateUserId(userInfo.getUuid());
         entrust.setUpdateUserName(userInfo.getUserName());
         businessStockEntrustRepository.save(entrust);
-        Double coldMoney = 0.0;
+        /*Double coldMoney = 0.0;
         Double taxation = 1.0;
         List<TaxationModel> taxationModels = businessTaxationMapper.selectEntrustTax(model.getId());
         for (TaxationModel taxationModel:taxationModels){
@@ -260,30 +327,31 @@ public class BusinessService {
         if(!(businessContractRepository.updateColdMoney(model.getContractId(),
                 coldMoney,contract.getVersion())>0)){
            throw new BusinessException(ResultCode.UPDATE_ERR_MSG);
-        }
-
+        }*///暂不涉及冻结资金的扣除
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     public Map<String,String> checkEntrust(UserTokenInfo userInfo,StockEntrustModel model) throws BusinessException{
         BusinessStockEntrust entrust = businessStockEntrustRepository.findByDeleteFlagAndUuid("0",model.getId());
         if (entrust==null){
             throw new BusinessException(ResultCode.STOCK_NULL_FIND);
         }
-        if (!EntrustStatus.ENTRUST_NOT_REPORT.getIndex().
+        if (!EntrustStatus.ENTRUST_NOT_DEAL.getIndex().
                 equals(entrust.getEntrustStatus())){
             throw new BusinessException(ResultCode.UPDATE_ALREAD_MSG);
         }
         entrust.setUpdateUserName(userInfo.getUserName());
         entrust.setUpdateUserId(userInfo.getUuid());
         entrust.setUpdatedTime(new Date());
-        entrust.setEntrustStatus(EntrustStatus.ENTRUST_WAIT.getIndex());
+        entrust.setEntrustStatus(EntrustStatus.ENTRUST_WAIT_DEAL.getIndex());
         businessStockEntrustRepository.save(entrust);
         String account = getMotherAccount(model.getContractId(),model.getStockNum());
         if (StringUtils.isEmpty(account)){
-            List<MotherAccount> motherAccounts = new ArrayList<>();
-            Random random = new Random(UUID.fromString(model.getUserId()).getMostSignificantBits());
-            account = motherAccounts.get(random.nextInt(motherAccounts.size())).getAccountNo();
+            List<MotherAccount> motherAccounts = motherAccountQueryService.getAllAviable();
+            if (motherAccounts.size()>0) {
+                Random random = new Random(BusinessUtils.fromStringWhitoutHyphens(model.getUserId()).getLeastSignificantBits());
+                account = motherAccounts.get(random.nextInt(motherAccounts.size())).getAccountNo();
+            }
         }
         Map<String,String> map = new HashMap<String,String>();
         map.put("motherAccount",account);
@@ -300,5 +368,223 @@ public class BusinessService {
         return account;
     }
 
+
+    public StockHoldingModel getCurrentHolding(StockHoldingModel model){
+        if (businessContractRepository.countByDeleteFlagAndUuidAndUserId
+                ("0",model.getContractId(),model.getUserId())>0){
+            return businessStockHoldingMapper.selectStockNum(model.getContractId(),model.getStockNo());
+        }
+        return null;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public  Double savePayControl(String contractId,Integer cotrolType,
+                                  Double pay,Double available) throws BusinessException{
+        BusinessControlContract controlContract = new BusinessControlContract();
+        available = BusinessUtils.minusMethod(available,pay);
+        controlContract.setCostMoney(pay);
+        controlContract.setLessMoney(available);
+        controlContract.setVerifyStatus(VerifyCode.VERIFY_S.getIndex());
+        controlContract.setContractId(contractId);
+        controlContract.setControlType(cotrolType);
+        controlContract = businessControlContractRepository.save(controlContract);
+        if (StringUtils.isEmpty(controlContract.getUuid())){
+            throw new BusinessException(ResultCode.STOCK_BUSINESS_ERR);
+        }
+        return available;
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean sellHoldStock(StockHoldingModel model) throws BusinessException{
+        BusinessStockHolding holding = businessStockHoldingRepository.findByDeleteFlagAndUuid("0",model.getId());
+        if (model.getAmount()>holding.getCanSell()){
+            logger.error("userID:"+model.getUserId()+";msg:"+ResultCode.STOCK_SELL_LESS_ERR);
+            throw new BusinessException(ResultCode.STOCK_SELL_LESS_ERR);
+        }
+        holding.setAmount(holding.getAmount()-model.getAmount());
+        holding.setCanSell(holding.getCanSell()-model.getAmount());
+        holding.setColdAmount(holding.getColdAmount()+model.getAmount());
+        try {
+            businessStockHoldingRepository.save(holding);
+        } catch (Exception e) {
+            logger.error("userId:"+model.getUserId()+",msg:持仓修改失败");
+            throw new BusinessException(e.getMessage());
+        }
+        BusinessStockEntrust entrust = new BusinessStockEntrust();
+        entrust.setEntrustStatus(EntrustStatus.ENTRUST_NOT_DEAL.getIndex());
+        entrust.setMontherAccount(holding.getMotherAccount());
+        entrust.setStockId(holding.getStockId());
+        entrust.setBusinessAmount(model.getAmount());
+        entrust.setBusinessPrice(model.getCostPrice());
+        entrust.setUserId(model.getUserId());
+        entrust.setBusinessTo(BusinessStockEntrust.STOCK_SELL);
+        entrust.setHoldingId(holding.getUuid());
+        entrust.setCancelOrder(BusinessStockEntrust.STOCK_ORDER);
+        entrust.setCreatedTime(new Date());
+        entrust.setCreatorId(model.getUserId());
+        try {
+            businessStockEntrustRepository.save(entrust);
+        } catch (Exception e) {
+            logger.error("userId:"+model.getUserId()+",msg:保存出售股票委托失败");
+            throw new BusinessException(e.getMessage());
+        }
+        if (!dealAutoSell(entrust,model.getStockNo())){
+            logger.error("userId:"+model.getUserId()+",msg:卖出股票委托失败");
+        }
+        return true;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean dealAutoSell(BusinessStockEntrust entrust,String stockNo) {
+        Boolean auto = Boolean.parseBoolean(redisTemplate.opsForValue().get(autoBuy));
+        if (auto){
+            String account = entrust.getMontherAccount();
+            String exchangeId = "";
+            if (CommonUtil.regexString(shenRegex,stockNo)){
+                exchangeId = "0";
+            }else if (CommonUtil.regexString(shangRegex,stockNo)){
+                exchangeId = "1";
+            }
+            SellOrderRequestModel sell = new SellOrderRequestModel();
+            sell.setExchangeId(exchangeId);
+            sell.setMotnerAccount(account);
+            sell.setPrice(Float.valueOf(entrust.getBusinessPrice().toString()));
+            sell.setPszStockCode(stockNo);
+            sell.setQuantity(entrust.getBusinessAmount());
+            ResponseModel<String> response = exchangeFeignService.sendSellOrder(sell);
+            if (response==null){
+                return false;
+            }
+            if (ResultCode.SUCESS.equals(response.getCode())){
+                //查询证券委托单,不查
+                /*if (searchIsReport(account,response.getData())){*/
+                    entrust.setEntrustStatus(EntrustStatus.ENTRUST_REPORT.getIndex());
+                    entrust.setDealNo(response.getData());
+                    businessStockEntrustRepository.save(entrust);
+               /* }  else {
+                    return false;
+                }*/
+            }else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void dealSellHand(UserTokenInfo userInfo,StockEntrustModel model) throws BusinessException{
+        BusinessStockEntrust entrust = businessStockEntrustRepository.findByDeleteFlagAndUuid("0",model.getId());
+        if (entrust==null){
+            throw new BusinessException(ResultCode.STOCK_NULL_FIND);
+        }
+        entrust.setDealNo(model.getDealNo());
+        entrust.setEntrustStatus(EntrustStatus.ENTRUST_REPORT.getIndex());
+        entrust.setUpdatedTime(new Date());
+        entrust.setUpdateUserId(userInfo.getUuid());
+        entrust.setUpdateUserName(userInfo.getUserName());
+        businessStockEntrustRepository.save(entrust);
+    }
+
+
+    /*private Boolean searchIsReport(String motherAccount,String dealNo){
+        ResponseModel<List<TodayOrder>> response = exchangeFeignService.getTodayOrderList(motherAccount);
+        List<TodayOrder> orders = response.getData();
+        for (TodayOrder order:orders){
+            if (order.getOrderNumber().equals(dealNo)){
+                if (report.equals(order.getStatus())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }*/
+
+    public TranferStockEntrustModel getPageEntrust(StockEntrustModel model){
+        PageHelper.startPage(model.getPageIndex(),model.getPageSize());
+        List<StockEntrustModel> models = businessStockEntrustMapper.selectPageEntrusts(model);
+        PageInfo<StockEntrustModel> page = new PageInfo<StockEntrustModel>(models);
+        TranferStockEntrustModel tranferStockEntrustModel = new TranferStockEntrustModel();
+        tranferStockEntrustModel.setPageInfo(page);
+        tranferStockEntrustModel.setAutoBuy(redisTemplate.opsForValue().get(autoBuy));
+        return tranferStockEntrustModel;
+    }
+
+
+    public List<StockEntrustModel> getUnFinishedEntrust(ContractModel model){
+        return businessStockEntrustMapper.selectCancelEntrust(model);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void cancelOrder(StockEntrustModel model) throws BusinessException{
+        BusinessStockEntrust entrust = businessStockEntrustRepository.
+                findByDeleteFlagAndUuidAndUserId("0",model.getId(),model.getUserId());
+        if (entrust==null){
+            throw new BusinessException(ResultCode.STOCK_NULL_FIND);
+        }
+        if (EntrustStatus.ENTRUST_FINSISH.getIndex()==entrust.getEntrustStatus()||
+                EntrustStatus.ENTRUST_BACK.getIndex()==entrust.getEntrustStatus()){
+            throw new BusinessException(ResultCode.ENTRUST_IS_DEAL);
+        }
+        if (EntrustStatus.ENTRUST_WAIT_DEAL.getIndex()==entrust.getEntrustStatus()){
+            throw new BusinessException(ResultCode.ENTRUST_WAIT_DEAL);
+        }
+        entrust.setEntrustStatus(EntrustStatus.ENTRUST_WAIT_DEAL.getIndex());
+        entrust.setUpdateUserId(model.getUserId());
+        businessStockEntrustRepository.save(entrust);
+        if (!autoDealBack(entrust,model.getStockNum())){
+            throw new BusinessException(ResultCode.ENTRUST_BACK_ERR);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean autoDealBack(BusinessStockEntrust entrust,String stockNo){
+        Boolean auto = Boolean.parseBoolean( redisTemplate.opsForValue().get(autoBuy));
+        if (auto){
+            String account = entrust.getMontherAccount();
+            String dealNo = entrust.getDealNo();
+            if (!searchIsCancel(account,dealNo)){
+                return false;
+            }
+            String exchangeId = "";
+            if (CommonUtil.regexString(shenRegex,stockNo)){
+                exchangeId = "0";
+            }else if (CommonUtil.regexString(shangRegex,stockNo)){
+                exchangeId = "1";
+            }
+            CancleOrderRequestModel cancle = new CancleOrderRequestModel();
+            cancle.setExchangeId(exchangeId);
+            cancle.setMotnerAccount(account);
+            cancle.setOrderNum(dealNo);
+            cancle.setPszStockCode(stockNo);
+            ResponseModel<String> response = exchangeFeignService.cancelOrder(cancle);
+            if (ResultCode.SUCESS.equals(response.getCode())){
+                entrust.setEntrustStatus(EntrustStatus.ENTRUST_WAIT_BACK.getIndex());
+                entrust.setUpdatedTime(new Date());
+                businessStockEntrustRepository.save(entrust);
+            }else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private Boolean searchIsCancel(String account,String dealNo){
+        ResponseModel<List<CanCancleOrder>> responseModel = exchangeFeignService.getCanCancleOrderList(account);
+        List<CanCancleOrder> canCancleOrders = responseModel.getData();
+        for (CanCancleOrder canCancleOrder:canCancleOrders){
+            if (canCancleOrder.getOrderNumber().equals(dealNo)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void setAutoSystem(UserTokenInfo userInfo){
+        Boolean auto = !Boolean.valueOf(redisTemplate.opsForValue().get(autoBuy));
+        redisTemplate.opsForValue().set(autoBuy,auto.toString());
+    }
 
 }

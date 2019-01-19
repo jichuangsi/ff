@@ -119,7 +119,8 @@ public class RegisterService {
 			userClientInfo.setUpdatedTime(new Date());
 			userClientInfo.setInviterId(invitId);   //添加邀请人
 			userClientInfo = userInfoRepository.save(userClientInfo);
-			
+
+
 			//新增登录信息
 			UserClientLoginInfo userClientLoginInfo = new UserClientLoginInfo();
 			userClientLoginInfo.setLoginName(phoneNo);//手机号做登录名

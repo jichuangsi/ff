@@ -22,7 +22,7 @@ public class BusinessTaxation extends AbstractEntity{
     private String uuid;
     private String taxName;     //税费名
     private Double taxRate;     //税费比例
-    private Integer bsuinessTo;     //买卖方向
+    private String bsuinessTo;     //买卖方向
     private String remarks;     //备注
 
     public String getUuid() {
@@ -49,11 +49,11 @@ public class BusinessTaxation extends AbstractEntity{
         this.taxRate = taxRate;
     }
 
-    public Integer getBsuinessTo() {
+    public String getBsuinessTo() {
         return bsuinessTo;
     }
 
-    public void setBsuinessTo(Integer bsuinessTo) {
+    public void setBsuinessTo(String bsuinessTo) {
         this.bsuinessTo = bsuinessTo;
     }
 

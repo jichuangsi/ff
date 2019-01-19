@@ -7,4 +7,6 @@ public interface IBusinessStockEntrustRepository extends JpaRepository<BusinessS
 
     BusinessStockEntrust findByDeleteFlagAndUuid(String delete,String uuid);
 
+    BusinessStockEntrust findByDeleteFlagAndUuidAndUserId(String delete,String uuid,String userId);
+
 }

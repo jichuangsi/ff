@@ -25,8 +25,15 @@ import java.util.List;
 public class FeignServiceFallBack implements IAdminFeignService {
     Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Override
+    public List<StockEntrustModel> getUnFinishedEntrust(ContractModel model) {
+        return new ArrayList<>();
+    }
 
-
+    @Override
+    public ResponseModel entrustCancelOrder(StockEntrustModel model) {
+        return new ResponseModel();
+    }
 
     @Override
     public ResponseModel<Object> createRegTodoTask(CreateTodoTaskModel model) {
@@ -104,21 +111,14 @@ public class FeignServiceFallBack implements IAdminFeignService {
         return false;
     }
 
-    @Override
-    public Boolean costColdContract(String contractId, Double coldMoney) {
-        return null;
-    }
 
     @Override
-    public ResponseModel saveStockEntrust(StockEntrustModel model) {
+    public ResponseModel<String> saveStockEntrust(StockEntrustModel model) {
         logger.error("调用feign失败，保存买入申请单失败");
         return ResponseModel.fail("",ResultCode.SYS_ERROR_MSG);
     }
 
-    @Override
-    public StockHoldingModel getCurrentHolding() {
-        return null;
-    }
+
 
     @Override
     public ResultModel getWayToPay() {
@@ -147,5 +147,17 @@ public class FeignServiceFallBack implements IAdminFeignService {
     public RecodInfoPayModel updatePayInfo(RecodInfoPayModel model) {
         logger.error("从操作员获取更新数据失败");
         return new RecodInfoPayModel();
+    }
+
+    @Override
+    public StockHoldingModel getCurrentHolding(StockHoldingModel model) {
+        logger.error("调用feign失败,未获取持仓");
+        return null;
+    }
+
+    @Override
+    public Boolean sellHoldStockEntrust(StockHoldingModel model) {
+        logger.error("调用feign失败，未委托卖出成功");
+        return false;
     }
 }

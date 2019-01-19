@@ -11,6 +11,8 @@ public class ResponseModel {
 		this.msg = msg;
 	}
 
+	public ResponseModel(){}
+
 	public final String getCode() {
 		return code;
 	}

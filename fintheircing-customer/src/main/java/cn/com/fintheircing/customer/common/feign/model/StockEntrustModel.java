@@ -1,12 +1,11 @@
 package cn.com.fintheircing.customer.common.feign.model;
 
-import javax.validation.constraints.Pattern;
+import java.util.Date;
 
 public class StockEntrustModel {
 
     private String id;
     private String userName;
-    @Pattern(regexp = "^(?i)s[hz]\\d{6}$",message = "股票代码不符合规范")
     private String stockNum;
     private String stockName;
     private Integer business;
@@ -14,11 +13,67 @@ public class StockEntrustModel {
     private String businessStr;
     private String statusStr;
     private Double price;
-    @Pattern(regexp = "^[1-9][0-9]*0{2}$",message = "购买数量必须是100的倍数")
     private Integer amount;
     private String dealNum;
     private String dealTime;
+    private String contractId;
     private String userId;
+    private String motherAccount;
+    private String dealNo;
+    private String cancelOrder;
+    private Date createdTime;
+
+
+    private Integer pageIndex;
+    private Integer pageSize;
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getCancelOrder() {
+        return cancelOrder;
+    }
+
+    public void setCancelOrder(String cancelOrder) {
+        this.cancelOrder = cancelOrder;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getDealNo() {
+        return dealNo;
+    }
+
+    public void setDealNo(String dealNo) {
+        this.dealNo = dealNo;
+    }
+
+    public String getMotherAccount() {
+        return motherAccount;
+    }
+
+    public void setMotherAccount(String motherAccount) {
+        this.motherAccount = motherAccount;
+    }
 
     public String getUserId() {
         return userId;
@@ -26,6 +81,14 @@ public class StockEntrustModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
     }
 
     public String getId() {

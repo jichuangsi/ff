@@ -18,6 +18,9 @@ public class BusinessStockEntrust extends AbstractEntity {
     public final static Integer STOCK_BUY = 0;
     public final static Integer STOCK_SELL = 1;
 
+    public final static String STOCK_ORDER = "0";
+    public final static String STOCK_CANCEL_ORDER = "1";
+
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -26,16 +29,34 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String stockId;     //关联股票
     private Integer businessTo;     //买卖方向
     private Integer entrustStatus;      //委托状态
-    private Double buyPrice;      //购买单价
-    private Integer buyAmount;      ///总数量
+    private Double businessPrice;      //交易单价
+    private Integer businessAmount;      ///总数量
     private String contractId;
+    private String cancelOrder;
     private Double dealPrice;   //成交价钱
     private String dealNo;     //委托编号
     private String dealNum;     //成交数量
     private Date dealTime;      //成交时间
     private String montherAccount;  //母账户
+    private String holdingId;
     @Version
     private Integer version;
+
+    public String getCancelOrder() {
+        return cancelOrder;
+    }
+
+    public void setCancelOrder(String cancelOrder) {
+        this.cancelOrder = cancelOrder;
+    }
+
+    public String getHoldingId() {
+        return holdingId;
+    }
+
+    public void setHoldingId(String holdingId) {
+        this.holdingId = holdingId;
+    }
 
     public Integer getVersion() {
         return version;
@@ -101,13 +122,6 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.entrustStatus = entrustStatus;
     }
 
-    public Double getBuyPrice() {
-        return buyPrice;
-    }
-
-    public void setBuyPrice(Double buyPrice) {
-        this.buyPrice = buyPrice;
-    }
 
     public Double getDealPrice() {
         return dealPrice;
@@ -117,12 +131,20 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.dealPrice = dealPrice;
     }
 
-    public Integer getBuyAmount() {
-        return buyAmount;
+    public Double getBusinessPrice() {
+        return businessPrice;
     }
 
-    public void setBuyAmount(Integer buyAmount) {
-        this.buyAmount = buyAmount;
+    public void setBusinessPrice(Double businessPrice) {
+        this.businessPrice = businessPrice;
+    }
+
+    public Integer getBusinessAmount() {
+        return businessAmount;
+    }
+
+    public void setBusinessAmount(Integer businessAmount) {
+        this.businessAmount = businessAmount;
     }
 
     public String getDealNum() {

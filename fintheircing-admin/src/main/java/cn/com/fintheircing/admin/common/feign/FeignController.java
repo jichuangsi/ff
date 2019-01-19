@@ -3,13 +3,11 @@ package cn.com.fintheircing.admin.common.feign;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
-import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
-import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
-import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.promisedUrls.model.TranferUrlModel;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
@@ -21,8 +19,11 @@ import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
+import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
 import cn.com.fintheircing.admin.usermanag.model.pay.NetQueryModel;
+import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
+import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
@@ -61,6 +62,8 @@ public class FeignController {
     private ICustomerFeignService iCustomerFeignService;
     @Resource
     private IPayService iPayService;
+
+
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
     })
@@ -79,6 +82,7 @@ public class FeignController {
     public Boolean isExistBlackList(@RequestParam("ip") String ip){
         return adminLoginService.isExistBlackList(ip);
     }
+
 
     @ApiOperation(value = "传递role角色", notes = "")
     @ApiImplicitParams({})
@@ -168,7 +172,7 @@ public class FeignController {
     @ApiOperation(value = "保存申请单，合约扣款（冻结资金）", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/saveStockEntrust")
-    public ResponseModel saveStockEntrust(@RequestBody StockEntrustModel model){
+    public ResponseModel<String> saveStockEntrust(@RequestBody StockEntrustModel model){
         try {
             businessService.costColdContract(model);
         } catch (BusinessException e) {
@@ -176,16 +180,60 @@ public class FeignController {
         }
         return ResponseModel.sucessWithEmptyData("");
     }
+
+
     @RequestMapping("/showPayInfo")
     @ApiOperation(value = "展示第三方支付网关信息", notes = "")
     public ResultModel getWayToPay(@RequestBody NetQueryModel model) throws UserServiceException {
         PayConfigModel payConfig = iCustomerFeignService.getPayConfig();
         return iPayService.getWayToPay(model,payConfig);
     }
+
+
     @RequestMapping("/payForQRCode")
     @ApiOperation(value = "展示第三方支付二维码信息", notes = "")
     public AppResultModel payForQRCode(@RequestBody AppQueryModel model) throws UserServiceException {
         PayConfigModel payConfig = iCustomerFeignService.getPayConfig();
         return iPayService.payForQRCode(model,payConfig);
     }
+
+    @ApiOperation(value = "获取当前持仓", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getCurrentHolding")
+    public StockHoldingModel getCurrentHolding(@RequestBody StockHoldingModel model){
+        return businessService.getCurrentHolding(model);
+    }
+
+
+    @ApiOperation(value = "卖出持仓股份", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/sellHoldStockEntrust")
+    public Boolean sellHoldStockEntrust(@RequestBody StockHoldingModel model){
+        try {
+            return businessService.sellHoldStock(model);
+        } catch (BusinessException e) {
+            return false;
+        }
+    }
+
+    @ApiOperation(value = "获取未完成订单", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getUnFinishedEntrust")
+    public List<StockEntrustModel> getUnFinishedEntrust(@RequestBody ContractModel model){
+        return businessService.getUnFinishedEntrust(model);
+    }
+
+    @ApiOperation(value = "申请表撤单", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/entrustCancelOrder")
+    public ResponseModel<String> entrustCancelOrder(StockEntrustModel model){
+        try {
+            businessService.cancelOrder(model);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * 持仓
@@ -27,14 +28,24 @@ public class BusinessStockHolding extends AbstractEntity {
     private String motherAccount;   //母账号
     private Double floatMoney;      //盈亏金额
     private Double floatRate;       //盈亏比例
-    private String entrustId;
+    private Integer coldAmount;
+    @Version
+    private Integer version;
 
-    public String getEntrustId() {
-        return entrustId;
+    public Integer getColdAmount() {
+        return coldAmount;
     }
 
-    public void setEntrustId(String entrustId) {
-        this.entrustId = entrustId;
+    public void setColdAmount(Integer coldAmount) {
+        this.coldAmount = coldAmount;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getUuid() {

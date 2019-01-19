@@ -111,7 +111,50 @@ public class BusinessController {
     @PostMapping("/getCurrentHolding")
     @CrossOrigin
     public ResponseModel getCurrentHolding(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockHoldingModel model){
+        try {
+            return ResponseModel.sucess("",businessService.getCurrentStockHolding(userInfo,model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+    }
 
+
+    @ApiOperation(value = "卖出持有股", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/sellHoldStockEntrust")
+    @CrossOrigin
+    public ResponseModel sellHoldStockEntrust(@ModelAttribute UserTokenInfo userInfo,@RequestBody StockHoldingModel model){
+        try {
+            businessService.sellHoldStockEntrust(userInfo,model);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+
+    @ApiOperation(value = "查询未完成的申请单", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getUnfinishedEtrust")
+    public ResponseModel<List<StockEntrustModel>> getUnfinishedEtrust(@ModelAttribute UserTokenInfo userInfo,@RequestBody ContractModel model){
+        return ResponseModel.sucess("",businessService.getUnfinishedEntrust(userInfo,model));
+    }
+
+    @ApiOperation(value = "撤单(仅可撤未处理和已报，待处理不让撤)", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateEntrustCancelOrder")
+    public ResponseModel updateEntrustCancelOrder(@ModelAttribute UserTokenInfo userInfo,@RequestBody StockEntrustModel model){
+        try {
+            businessService.cancelOrder(userInfo,model);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
         return ResponseModel.sucessWithEmptyData("");
     }
 

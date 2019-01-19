@@ -53,7 +53,7 @@ public class BusinessService {
 
     public Boolean isRich(UserTokenInfo userInfo, ContractModel model){
         Double account = userAccountRepository.findAccountByUserId(userInfo.getUuid());
-        ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
+        ProductModel productModel = adminFeignService.getProduct(model.getProductId());
         model.setProductModel(productModel);
         if (account!=null){
             if (account>getNeedMoney(model.getProductModel(),model.getPromisedMoney())+model.getPromisedMoney()){
@@ -63,19 +63,33 @@ public class BusinessService {
         return false;
     }
 
+
+    //判断资金是否充足并返回产品
+    private ProductModel getProductIsRich(UserTokenInfo userInfo, ContractModel model) throws BusinessException{
+        Double account = userAccountRepository.findAccountByUserId(userInfo.getUuid());
+        ProductModel productModel = adminFeignService.getProduct(model.getProductId());
+        if (productModel==null){
+            throw new BusinessException(ResultCode.PRODUCT_NOTEXIST_ERR);
+        }
+        model.setProductModel(productModel);
+        if (account!=null){
+            if (account>getNeedMoney(model.getProductModel(),model.getPromisedMoney())+model.getPromisedMoney()){
+                return productModel;
+            }
+        }
+        return null;
+    }
+
     //保存合约，扣除用户账户，创建合约操作
     @Transactional(rollbackFor = Exception.class)
     public void saveContract(UserTokenInfo userInfo,ContractModel model) throws BusinessException{
         if (!adminFeignService.canBuy(model.getProductModel().getAllot(),userInfo.getUuid())){
             throw new BusinessException(ResultCode.PRODUCT_ISEXIST_ERR);
         }
-        if (!isRich(userInfo,model)){
+        ProductModel productModel = getProductIsRich(userInfo,model);
+        if (productModel == null){
             throw new BusinessException(ResultCode.ACCOUNT_LESS_ERR);
         }//再次查看余额是否足够购买，并锁住表（悲观锁）
-        ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
-        if (productModel==null){
-            throw new BusinessException(ResultCode.PRODUCT_NOTEXIST_ERR);
-        }
         model.setProductModel(productModel);
         //保证数据安全，重新获取产品信息
         model.setFirst(getNeedMoney(model.getProductModel(),model.getPromisedMoney()));
@@ -135,18 +149,56 @@ public class BusinessService {
    }
 
 
-   public ResponseModel saveEntrust(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException{
-        if (!adminFeignService.isExistWhiteList(model.getStockNum())){
-           /* throw new BusinessException(ResultCode.STOCK_DANGER_ERR);*/
-            return ResponseModel.fail(ResultCode.STOCK_DANGER_ERR);
-        }//验证是否存在白名单
+   public void saveEntrust(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException{
+        /*if (!adminFeignService.isExistWhiteList(model.getStockNum())){
+           *//* throw new BusinessException(ResultCode.STOCK_DANGER_ERR);*//*
+            throw new BusinessException(ResultCode.STOCK_DANGER_ERR);
+        }//验证是否存在白名单*/
         //保存购买股票申请单，并冻结资金
-       return adminFeignService.saveStockEntrust(model);
+        model.setUserId(userInfo.getUuid());
+        ResponseModel<String> response = adminFeignService.saveStockEntrust(model);
+        if (response==null){
+            throw new BusinessException("响应失败");
+        }
+        if (!ResultCode.SUCESS.equals(response.getCode())){
+            throw new BusinessException(response.getMsg());
+        }
    }
 
-   public StockHoldingModel getCurrentStockHolding(UserTokenInfo userInfo, StockHoldingModel model){
+   public StockHoldingModel getCurrentStockHolding(UserTokenInfo userInfo,
+                                                   StockHoldingModel model) throws BusinessException{
        model.setUserId(userInfo.getUuid());
-
-       return null;
+       model = adminFeignService.getCurrentHolding(model);
+       if (model==null){
+           throw new BusinessException(ResultCode.STOCK_HOLD_ERR);
+       }
+       return model;
    }
+
+   public void sellHoldStockEntrust(UserTokenInfo userInfo,StockHoldingModel model) throws BusinessException{
+       /*StockHoldingModel stockHoldingModel = getCurrentStockHolding(userInfo,model);
+        if (model.getAmount()>stockHoldingModel.getCanSell()){
+            throw new BusinessException(ResultCode.STOCK_SELL_LESS_ERR);
+        }
+        model.setMotherAccount(stockHoldingModel.getMotherAccount());
+        model.setId(stockHoldingModel.getId());*/
+       model.setUserId(userInfo.getUuid());
+       if (!adminFeignService.sellHoldStockEntrust(model)){
+           throw new BusinessException(ResultCode.STOCK_SELL_ERR);
+       }
+   }
+
+    public List<StockEntrustModel> getUnfinishedEntrust(UserTokenInfo userInfo,ContractModel model){
+        model.setUserId(userInfo.getUuid());
+        return adminFeignService.getUnFinishedEntrust(model);
+    }
+
+
+    public void cancelOrder(UserTokenInfo userInfo,StockEntrustModel model) throws BusinessException{
+       model.setUserId(userInfo.getUuid());
+       ResponseModel responseModel = adminFeignService.entrustCancelOrder(model);
+       if (!ResultCode.SUCESS.equals(responseModel.getCode())){
+           throw new BusinessException(responseModel.getMsg());
+       }
+    }
 }

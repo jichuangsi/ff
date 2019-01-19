@@ -5,16 +5,19 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
 @SpringBootApplication
 @EnableFeignClients
+@EnableDiscoveryClient//服务发现
 @EnableAsync
 @MapperScan("cn.com.fintheircing.admin.*.dao.mapper")//扫描mybatism
 public class FintheircingAdminApplication {
@@ -49,6 +52,13 @@ public class FintheircingAdminApplication {
 		// 等待所有任务结束后再关闭线程池
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
+	}
+
+
+	@Bean
+	public Object testBean(PlatformTransactionManager platformTransactionManager){
+		System.out.println(">>>>>>>>>>>"+platformTransactionManager.getClass().getName());
+		return new Object();
 	}
 
 }
