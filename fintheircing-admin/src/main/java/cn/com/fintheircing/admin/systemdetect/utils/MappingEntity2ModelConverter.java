@@ -15,7 +15,7 @@ public class MappingEntity2ModelConverter {
             model.setAllot(ProductStatus.getName(p.getAllot()));
             model.setEntryAmount(p.getEntryAmount());
             model.setFinancingTime(p.getFinancingTime());
-            model.setId(p.getUuid());
+            model.setId(p.getId());
             model.setLeverRate(p.getLeverRate());
             model.setLiquidation(p.getLiquidation());
             model.setMoneyInContact(p.getMoneyInContact());
@@ -32,7 +32,7 @@ public class MappingEntity2ModelConverter {
             model.setAllot(ProductStatus.getName(p.getAllot()));
             model.setEntryAmount(p.getEntryAmount());
             model.setFinancingTime(p.getFinancingTime());
-            model.setId(p.getUuid());
+            model.setId(p.getId());
             model.setLeverRate(p.getLeverRate());
             model.setLiquidation(p.getLiquidation());
             model.setMoneyInContact(p.getMoneyInContact());

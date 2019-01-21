@@ -103,8 +103,10 @@ public class BusinessService {
         model.setAbortLine(model.getProductModel().getLiquidation());
         model.setUserId(userInfo.getUuid());
         model.setSaleManId(userService.getSaleManId(userInfo.getUuid()));
-        if (!adminFeignService.saveContract(model)){
-            throw new BusinessException(ResultCode.CONTRACT_SAVE_ERR);
+
+        ResponseModel<String> response = adminFeignService.saveContract(model);
+        if (!ResultCode.SUCESS.equals(response.getCode())){
+            throw new BusinessException(response.getMsg());
         }
     }
 
@@ -150,10 +152,9 @@ public class BusinessService {
 
 
    public void saveEntrust(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException{
-        /*if (!adminFeignService.isExistWhiteList(model.getStockNum())){
-           *//* throw new BusinessException(ResultCode.STOCK_DANGER_ERR);*//*
+        if (!adminFeignService.isExistWhiteList(model.getStockNum())){
             throw new BusinessException(ResultCode.STOCK_DANGER_ERR);
-        }//验证是否存在白名单*/
+        }//验证是否存在白名单,暂时接口不可用
         //保存购买股票申请单，并冻结资金
         model.setUserId(userInfo.getUuid());
         ResponseModel<String> response = adminFeignService.saveStockEntrust(model);
@@ -183,8 +184,9 @@ public class BusinessService {
         model.setMotherAccount(stockHoldingModel.getMotherAccount());
         model.setId(stockHoldingModel.getId());*/
        model.setUserId(userInfo.getUuid());
-       if (!adminFeignService.sellHoldStockEntrust(model)){
-           throw new BusinessException(ResultCode.STOCK_SELL_ERR);
+       ResponseModel<String> response = adminFeignService.sellHoldStockEntrust(model);
+       if (!ResultCode.SUCESS.equals(response.getCode())){
+           throw new BusinessException(response.getMsg());
        }
    }
 

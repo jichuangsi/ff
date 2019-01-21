@@ -34,11 +34,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
 
 @Service
 public class ProxyService {
@@ -388,7 +392,7 @@ public class ProxyService {
     }
 
 
-    public Boolean saveUserSpread(UserTokenInfo userInfo) throws ProxyException{
+    public void saveUserSpread(UserTokenInfo userInfo) throws ProxyException{
         ProxySpread proxySpread = new ProxySpread();
         InputStream is = null;
         File file = null;
@@ -409,16 +413,17 @@ public class ProxyService {
             byte[] piccodes = outputStream.toByteArray();
             proxySpread.setSpreadCodePic(piccodes);
             spreadRepository.save(proxySpread);
-            return true;
         } catch (IOException e) {
             logger.error(e.getMessage());
-            return false;
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new ProxyException(e.getMessage());
         }finally {
             try {
                 outputStream.close();
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new ProxyException(e.getMessage());
             }
             if(file.exists()&&file.isFile()){
                 file.delete();

@@ -119,21 +119,27 @@ public class FeignController {
     @ApiOperation(value = "保存合约，和创立合约操作", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/saveContract")
-    public Boolean saveContract(@RequestBody ContractModel model){
+    public ResponseModel<String> saveContract(@RequestBody ContractModel model){
         try {
-            return businessService.saveContract(model);
-        } catch (BusinessException e) {
+            businessService.saveContract(model);
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return ResponseModel.fail("",e.getMessage());
         }
-        return false;
+        return ResponseModel.sucessWithEmptyData("");
     }
 
 
     @ApiOperation(value = "新建用户的推广", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/saveUserSpread")
-    public Boolean saveUserSpread(@RequestBody UserTokenInfo userInfo) throws ProxyException{
-        return proxyService.saveUserSpread(userInfo);
+    public ResponseModel<String> saveUserSpread(@RequestBody UserTokenInfo userInfo) throws ProxyException{
+        try {
+            proxyService.saveUserSpread(userInfo);
+        } catch (ProxyException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
     }
 
 
@@ -208,12 +214,13 @@ public class FeignController {
     @ApiOperation(value = "卖出持仓股份", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/sellHoldStockEntrust")
-    public Boolean sellHoldStockEntrust(@RequestBody StockHoldingModel model){
+    public ResponseModel<String> sellHoldStockEntrust(@RequestBody StockHoldingModel model){
         try {
-            return businessService.sellHoldStock(model);
+            businessService.sellHoldStock(model);
         } catch (BusinessException e) {
-            return false;
+            return ResponseModel.fail("",e.getMessage());
         }
+        return ResponseModel.sucessWithEmptyData("");
     }
 
     @ApiOperation(value = "获取未完成订单", notes = "")
@@ -226,7 +233,7 @@ public class FeignController {
     @ApiOperation(value = "申请表撤单", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/entrustCancelOrder")
-    public ResponseModel<String> entrustCancelOrder(StockEntrustModel model){
+    public ResponseModel<String> entrustCancelOrder(@RequestBody StockEntrustModel model){
         try {
             businessService.cancelOrder(model);
         } catch (BusinessException e) {

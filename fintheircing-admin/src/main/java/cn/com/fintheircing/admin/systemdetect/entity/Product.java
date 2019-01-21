@@ -19,7 +19,7 @@ public class Product {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
-    private String uuid;
+    private String id;
     /**
      * 买入时收取的交易金额
      */
@@ -65,12 +65,12 @@ public class Product {
         this.allot = allot;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getEntryAmount() {

@@ -39,8 +39,17 @@ public class BusinessStockEntrust extends AbstractEntity {
     private Date dealTime;      //成交时间
     private String montherAccount;  //母账户
     private String holdingId;
+    private String cancelNo;
     @Version
     private Integer version;
+
+    public String getCancelNo() {
+        return cancelNo;
+    }
+
+    public void setCancelNo(String cancelNo) {
+        this.cancelNo = cancelNo;
+    }
 
     public String getCancelOrder() {
         return cancelOrder;

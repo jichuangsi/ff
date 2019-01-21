@@ -1,5 +1,6 @@
 package cn.com.fintheircing.customer.user.service;
 
+import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.utils.CommonUtil;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.constant.RoleCodes;
@@ -140,8 +141,10 @@ public class RegisterService {
 			UserTokenInfo userInfo = new UserTokenInfo();
 			userInfo.setUuid(userClientInfo.getUuid());
 			userInfo.setRoleGrade(userClientInfo.getRoleGrade());
-			if (!adminFeignService.saveUserSpread(userInfo)){
-				throw new RegisterheckExistException(ResultCode.SPREAD_CREATED_ERR);
+
+			ResponseModel<String> response = adminFeignService.saveUserSpread(userInfo);
+			if (!ResultCode.SUCESS.equals(response.getCode())){
+				throw new RegisterheckExistException(response.getMsg());
 			}
 
 

@@ -53,7 +53,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 100000
+            timeoutInMilliseconds: 10000
 ribbon:
   ConnectTimeout: 5000
   ReadTimeout: 5000
@@ -63,6 +63,8 @@ ribbon:
   MaxAutoRetries: 1
   # 对下一个实例重试的次数
   MaxAutoRetriesNextServer: 1
+  restclient:
+    enabled: false
 
 custom:
   swagger:

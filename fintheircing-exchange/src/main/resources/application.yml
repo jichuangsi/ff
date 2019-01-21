@@ -4,6 +4,16 @@ spring:
       dev
   application:
     name: ffexchange
+  datasource:
+      databaseplatform: org.hibernate.dialect.MySQL5InnoDBDialect
+      url: jdbc:mysql://127.0.0.1:3306/ff?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8
+      username: root
+      password: root
+  jpa:
+      show-sql: true
+      generate-ddl: true
+      hibernate:
+        ddl-auto: update
 server:
   port: 8085
 eureka:

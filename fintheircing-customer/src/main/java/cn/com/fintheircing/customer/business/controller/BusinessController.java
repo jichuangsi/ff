@@ -119,7 +119,7 @@ public class BusinessController {
     }
 
 
-    @ApiOperation(value = "卖出持有股", notes = "")
+    @ApiOperation(value = "卖出持有股申请", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })

@@ -22,6 +22,30 @@ eureka:
       defaultZone: http://127.0.0.1:8762/eureka/
 
 
+feign:
+  hystrix:
+    # 在feign中开启hystrix功能，默认情况下feign不开启hystrix功能
+    enabled: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  # 对所有操作都进行重试（ConnectTimeout和ReadTimeout都重试）
+  OkToRetryOnAllOperations: false
+  # 对当前实例重试次数
+  MaxAutoRetries: 1
+  # 对下一个实例重试的次数
+  MaxAutoRetriesNextServer: 1
+  restclient:
+    enabled: false
+
 custom:
   swagger:
     enable: true #是否启用swagger文档

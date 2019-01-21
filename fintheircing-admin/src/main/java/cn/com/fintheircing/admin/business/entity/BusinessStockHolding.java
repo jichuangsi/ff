@@ -32,6 +32,24 @@ public class BusinessStockHolding extends AbstractEntity {
     @Version
     private Integer version;
 
+    public BusinessStockHolding() {
+    }
+
+    public BusinessStockHolding(String contractId, String stockId, Integer amount, Integer canSell, Double costPrice, Double currentPrice, Double currentWorth, String motherAccount, Double floatMoney, Double floatRate, Integer coldAmount, Integer version) {
+        this.contractId = contractId;
+        this.stockId = stockId;
+        this.amount = amount;
+        this.canSell = canSell;
+        this.costPrice = costPrice;
+        this.currentPrice = currentPrice;
+        this.currentWorth = currentWorth;
+        this.motherAccount = motherAccount;
+        this.floatMoney = floatMoney;
+        this.floatRate = floatRate;
+        this.coldAmount = coldAmount;
+        this.version = version;
+    }
+
     public Integer getColdAmount() {
         return coldAmount;
     }

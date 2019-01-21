@@ -56,12 +56,12 @@ public interface IAdminFeignService {
 
     //创建合约
     @RequestMapping(value = "/adminF/saveContract")
-    Boolean saveContract(@RequestBody ContractModel model);
+    ResponseModel<String> saveContract(@RequestBody ContractModel model);
 
 
     //创建用户的推广
     @RequestMapping(value = "/adminF/saveUserSpread")
-    Boolean saveUserSpread(@RequestBody UserTokenInfo userInfo);
+    ResponseModel<String> saveUserSpread(@RequestBody UserTokenInfo userInfo);
 
 
     /*//判断是否存在相同合约编号
@@ -124,12 +124,12 @@ public interface IAdminFeignService {
 
     //卖出持仓
     @RequestMapping(value = "adminF/sellHoldStockEntrust")
-    Boolean sellHoldStockEntrust(@RequestBody StockHoldingModel model);
+    ResponseModel<String> sellHoldStockEntrust(@RequestBody StockHoldingModel model);
 
     @RequestMapping(value = "adminF/getUnFinishedEntrust")
     List<StockEntrustModel> getUnFinishedEntrust(@RequestBody ContractModel model);
 
     @RequestMapping(value = "adminF/entrustCancelOrder")
-    ResponseModel entrustCancelOrder(@RequestBody StockEntrustModel model);
+    ResponseModel<String> entrustCancelOrder(@RequestBody StockEntrustModel model);
 
 }

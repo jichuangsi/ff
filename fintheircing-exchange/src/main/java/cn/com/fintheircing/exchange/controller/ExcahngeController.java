@@ -3,37 +3,27 @@
  */
 package cn.com.fintheircing.exchange.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import cn.com.fintheircing.exchange.constant.AccountStatus;
-import cn.com.fintheircing.exchange.dao.repository.IParentAccountRepository;
-import cn.com.fintheircing.exchange.entity.SecuritiesInfo;
-import cn.com.fintheircing.exchange.model.*;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import cn.com.fintheircing.exchange.constant.ResultCode;
 import cn.com.fintheircing.exchange.controller.model.BuyOrderRequestModel;
 import cn.com.fintheircing.exchange.controller.model.CancleOrderRequestModel;
 import cn.com.fintheircing.exchange.controller.model.SellOrderRequestModel;
 import cn.com.fintheircing.exchange.exception.ExchangeException;
+import cn.com.fintheircing.exchange.model.*;
 import cn.com.fintheircing.exchange.service.ExchangeServiceRouter;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @Api("ExcahngeController（第三方交易接口）相关的api")
 public class ExcahngeController {
 	@Resource
 	private ExchangeServiceRouter exchangeService;
-	@Resource
-	private IParentAccountRepository iParentAccountRepository;
+/*	@Resource
+	private IParentAccountRepository iParentAccountRepository;*/
 
 	@ApiOperation(value = "查询当天成交", notes = "")
 	@ApiImplicitParams({

@@ -1,22 +1,7 @@
 package cn.com.fintheircing.exchange.controller;
 
-import cn.com.fintheircing.exchange.constant.ResultCode;
-import cn.com.fintheircing.exchange.dao.mapper.IParentAccountMapper;
-import cn.com.fintheircing.exchange.dao.repository.IParentAccountRepository;
-import cn.com.fintheircing.exchange.entity.ParentAccount;
-import cn.com.fintheircing.exchange.model.ResponseModel;
-import cn.com.fintheircing.exchange.model.parent.ParentAccountModel;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * ParentAccountController
@@ -27,7 +12,7 @@ import java.util.List;
 @RestController
 @Api("ParentAccountController 母账户的相关Controller")
 public class ParentAccountController {
-    @Resource
+   /* @Resource
     private IParentAccountRepository iParentAccountRepository;
     @Resource
     private IParentAccountMapper  iParentAccountMapper;
@@ -70,5 +55,5 @@ public class ParentAccountController {
     public ResponseModel closeParentAccount(String id ){
         return ResponseModel.sucess("",iParentAccountMapper.closeParentAccount(id));
     }
-
+*/
 }

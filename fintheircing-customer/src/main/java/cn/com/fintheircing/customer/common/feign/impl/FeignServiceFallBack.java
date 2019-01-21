@@ -65,15 +65,15 @@ public class FeignServiceFallBack implements IAdminFeignService {
     }
 
     @Override
-    public Boolean saveContract(ContractModel model) {
+    public ResponseModel<String> saveContract(ContractModel model) {
         logger.error("调用feign失败，保存合约失败");
-        return false;
+        return ResponseModel.fail("","保存合约失败");
     }
 
     @Override
-    public Boolean saveUserSpread(UserTokenInfo userInfo) {
+    public ResponseModel<String> saveUserSpread(UserTokenInfo userInfo) {
         logger.error("调用feign失败，保存用户推广页失败");
-        return false;
+        return ResponseModel.fail("","保存用户推广页失败");
     }
 
   /*  @Override
@@ -156,8 +156,8 @@ public class FeignServiceFallBack implements IAdminFeignService {
     }
 
     @Override
-    public Boolean sellHoldStockEntrust(StockHoldingModel model) {
+    public ResponseModel<String> sellHoldStockEntrust(StockHoldingModel model) {
         logger.error("调用feign失败，未委托卖出成功");
-        return false;
+        return ResponseModel.fail("","未委托卖出成功");
     }
 }
