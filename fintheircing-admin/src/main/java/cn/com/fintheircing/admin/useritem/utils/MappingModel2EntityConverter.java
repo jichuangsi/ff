@@ -67,7 +67,7 @@ public final class MappingModel2EntityConverter {
 
     public static TransactionSummary coverWithAbsoluteWhiteList(TransactionModel model) {
         TransactionSummary t =new TransactionSummary();
-        t.setStatus(Status.ABSOLUTE_WHITELIST);
+//        t.setStatus(Status.getStatus(model.getStatus()));
         t.setAlphabetCapitalization(model.getAlphabetCapitalization());
         t.setJoinTime(model.getJoinTime());
         t.setMartTemplate(model.getMartTemplate());
@@ -80,7 +80,7 @@ public final class MappingModel2EntityConverter {
 
     public static TransactionSummary coverWithStaticBlackList(TransactionModel model) {
         TransactionSummary t =new TransactionSummary();
-        t.setStatus(Status.STATIC_BLACKLIST);
+//        t.setStatus(Status.getStatus(model.getStatus()));
         t.setAlphabetCapitalization(model.getAlphabetCapitalization());
         t.setJoinTime(model.getJoinTime());
         t.setMartTemplate(model.getMartTemplate());

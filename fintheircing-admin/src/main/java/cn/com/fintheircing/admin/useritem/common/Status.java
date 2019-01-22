@@ -26,6 +26,14 @@ public enum Status {
         }
         return null;
     }
+    public static Integer getIndex(String name) {
+        for (Status c : Status.values()) {
+            if (c.getName().equals(name)) {
+                return c.index;
+            }
+        }
+        return null;
+    }
 
     public static Status getStatus(String name) {
         for (Status c : Status.values()) {

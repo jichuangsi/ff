@@ -37,5 +37,5 @@ public class ResultCode {
 	public static final String VISIT_VALIDITY_MSG = "非法访问，请从页面进行访问";
 	public static final String PIC_UPLODE_MSG = "图片上传错误";
 
-	public static final String KEEP_FAILED = "保存失败";
+
 }

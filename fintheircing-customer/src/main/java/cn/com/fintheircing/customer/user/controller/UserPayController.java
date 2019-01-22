@@ -11,6 +11,7 @@ import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
 import cn.com.fintheircing.customer.user.model.promise.AddPromiseMoneyModel;
 import cn.com.fintheircing.customer.user.model.promise.PromiseModel;
+import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import cn.com.fintheircing.customer.user.utlis.Entity2Model;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
 import io.swagger.annotations.Api;
@@ -33,6 +34,7 @@ public class UserPayController {
     private IPayMapper iPayMapper;
     @Resource
     private IUserAccountRepository iUserAccountRepository;
+
     @ApiOperation(value = "生成待确认充值记录", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
@@ -86,22 +88,41 @@ public class UserPayController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/addPromiseMoney")
-    public ResponseModel  savePromiseMoney(@ModelAttribute UserTokenInfo userInfo,@RequestBody AddPromiseMoneyModel model) {
-        if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid())<model.getCash()){
+    public ResponseModel savePromiseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody AddPromiseMoneyModel model) {
+        if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid()) < model.getCash()) {
             return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
         }
-        RecodeInfoPay p =new RecodeInfoPay();
+        RecodeInfoPay p = new RecodeInfoPay();
         p.setUserId(userInfo.getUuid());
         p.setWay(model.getWay());
         p.setRemark(model.getRemark());
         p.setCostCount(model.getCash());
         p.setBusinessContractId(model.getBusinessContractId());
-        if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))){
+        if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
             return ResponseModel.fail("", ResultCode.APPLY_FAIL);
-        }else {
-            return ResponseModel.sucessWithEmptyData("" );
+        } else {
+            return ResponseModel.sucessWithEmptyData("");
         }
 
     }
 
+    @ApiOperation(value = "体现申请并且生成待确认记录", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/withdrawCash")
+    public ResponseModel withdrawCash(@ModelAttribute UserTokenInfo userInfo, @RequestBody WithdrawModel model) {
+        if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid()) < model.getAmount()) {
+            return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
+        }
+        RecodeInfoPay r = new RecodeInfoPay();
+        r.setRemark("提现到" + model.getAim());
+        r.setWay(model.getAim());
+        r.setUserId(userInfo.getUuid());
+        r.setCostCount(model.getAmount());
+        RecodeInfoPay save = iRecodInfoPayRepository.save(r);
+        RecodInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(save);
+        return ResponseModel.sucess("", model1);
+
+    }
 }

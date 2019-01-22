@@ -17,7 +17,7 @@ public class TransactionModel {
     private String martTemplate;
     private Date joinTime;
     private String remake;
-    private Status status;
+    private String status;
 
     public String getId() {
         return id;
@@ -75,11 +75,31 @@ public class TransactionModel {
         this.remake = remake;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getStatus() {
+      return status;
+
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    int pageNum;
+    int pageSize;
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -22,28 +22,5 @@ public class MappingEntity2ModelConverter {
         });
         return models;
     }
-    public static final TransactionModel coverWithAbsoluteWhiteList(TransactionSummary Summary){
-        TransactionModel model=new TransactionModel();
-        model.setAlphabetCapitalization(Summary.getAlphabetCapitalization());
-        model.setJoinTime(Summary.getJoinTime());
-        model.setMartTemplate(Summary.getMartTemplate());
-        model.setRemake(Summary.getRemake());
-        model.setStockNum(Summary.getStockNum());
-        model.setId(Summary.getId());
-        model.setStockName(Summary.getStockName());
-        model.setStatus(Summary.getStatus());
-        return model;
-    }
-    public static final TransactionModel coverWithStaticBlackList(TransactionSummary Summary){
-        TransactionModel model=new TransactionModel();
-        model.setAlphabetCapitalization(Summary.getAlphabetCapitalization());
-        model.setJoinTime(Summary.getJoinTime());
-        model.setMartTemplate(Summary.getMartTemplate());
-        model.setRemake(Summary.getRemake());
-        model.setId(Summary.getId());
-        model.setStockNum(Summary.getStockNum());
-        model.setStockName(Summary.getStockName());
-        model.setStatus(Summary.getStatus());
-        return model;
-    }
+  
 }

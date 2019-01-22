@@ -27,15 +27,29 @@ public class TransactionSummary extends AbstractEntity {
     private String stockName;
     private String alphabetCapitalization;  //名称首字母大写
     private String martTemplate;    //市场模块
-    private Date   joinTime;
+    private Date   joinTime=new Date();
     private String remake;
-    private Status status;
+    private Integer status;
 
-    public Status getStatus() {
+
+    public TransactionSummary() {
+    }
+
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public TransactionSummary(String stockNum, String stockName, String alphabetCapitalization, String martTemplate, Date joinTime, String remake, Integer status) {
+        this.stockNum = stockNum;
+        this.stockName = stockName;
+        this.alphabetCapitalization = alphabetCapitalization;
+        this.martTemplate = martTemplate;
+        this.joinTime = joinTime;
+        this.remake = remake;
+        this.status = status;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

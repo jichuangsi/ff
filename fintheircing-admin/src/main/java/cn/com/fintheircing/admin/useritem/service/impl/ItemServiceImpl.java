@@ -10,6 +10,7 @@ import cn.com.fintheircing.admin.useritem.utils.MappingModel2EntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -20,52 +21,39 @@ import java.util.List;
  */
 @Service
 public class ItemServiceImpl implements ItemService {
-    @Autowired
+    @Resource
     private TransactionSummaryMapper transactionSummaryMapper;
     @Autowired
     private TransactionSummaryRepository transactionSummaryRepository;
+
     @Override
     public List<TransactionModel> findAllByWhite(TransactionModel model) {
-        List<TransactionModel> list = findAllList(model);
-        list.forEach(i->{
-            if(!i.getStatus().getName().equals(Status.ABSOLUTE_WHITELIST)){
-                list.remove(i);
-            }
-        });
-        return list;
+        return null;
     }
+
     @Override
     public List<TransactionModel> findAllWhiteList(TransactionModel model) {
-        List<TransactionModel> list = findAllList(model);
-        list.forEach(i->{
-            if(!i.getStatus().getName().equals(Status.WHITELIST)){
-                list.remove(i);
+        List<TransactionModel> allByTemplateAndStockName = transactionSummaryMapper.findAllByTemplateAndStockName(model);
+        allByTemplateAndStockName.forEach(a->{
+            if (a.getStatus().equalsIgnoreCase("0")){
+                a.setStatus(Status.getName(0));
             }
+
         });
-        return list;
+        return allByTemplateAndStockName;
     }
 
     @Override
     public List<TransactionModel> findAllBlackList(TransactionModel model) {
-        List<TransactionModel> list = findAllList(model);
-        list.forEach(i->{
-            if(!i.getStatus().getName().equals(Status.DYNAMIC_BLACKLIST)){
-                list.remove(i);
-            }
-        });
-        return list;
+        return null;
     }
 
     @Override
     public List<TransactionModel> findAllByBlack(TransactionModel model) {
-        List<TransactionModel> list = findAllList(model);
-        list.forEach(i->{
-            if(!i.getStatus().getName().equals(Status.STATIC_BLACKLIST)){
-                list.remove(i);
-            }
-        });
-        return list;
+        return null;
+
     }
+
     @Override
     public List<TransactionModel> findAll(TransactionModel model) {
         List<TransactionModel> list = transactionSummaryMapper.findAllByTemplateAndStockName(model);
@@ -87,10 +75,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public int deleteTransactionSummary(String[] ids) {
-        int a=0;
-        for (String id:ids
-             ) {
-            a+=transactionSummaryMapper.updateTransactionSummary(id);
+        int a = 0;
+        for (String id : ids
+        ) {
+            a += transactionSummaryMapper.updateTransactionSummary(id);
         }
         return a;
     }
@@ -102,25 +90,15 @@ public class ItemServiceImpl implements ItemService {
                         MappingModel2EntityConverter.coverWithStaticBlackList(model)));
 
     }
-    public final List<TransactionModel> findAllList(TransactionModel model){
+
+    public final List<TransactionModel> findAllList(TransactionModel model) {
         List<TransactionModel> list = transactionSummaryMapper.findAllByTemplateAndStockName(model);
         return list;
     }
 
     @Override
-    public Boolean isExistWhiteList(String  stockNum) {
-        Boolean flag = false;
-        List<TransactionModel> list = findAllList(new TransactionModel());
-        list.forEach(i->{
-            if(!i.getStatus().getName().equals(Status.WHITELIST)){
-                list.remove(i);
-            }
-        });
-        for (TransactionModel transactionModel:list){
-            if (transactionModel.getStockNum().equals(stockNum)){
-                flag = true;
-            }
-        }
-        return flag;
+    public Boolean isExistWhiteList(String stockNum) {
+
+        return null;
     }
 }

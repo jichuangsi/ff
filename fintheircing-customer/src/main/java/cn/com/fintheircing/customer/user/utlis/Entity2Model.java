@@ -15,6 +15,7 @@ public class Entity2Model {
         model.setUserId(r.getUserId());
         model.setRemark(r.getRemark());
         model.setAddCount(r.getAddCount());
+        model.setCostCount(r.getCostCount());
         model.setCreateTime(r.getCreateTime());
         model.setStatus(PayStatus.getName(r.getStatus()));
         return  model;

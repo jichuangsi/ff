@@ -3,33 +3,37 @@
  */
 package cn.com.fintheircing.exchange.controller;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import cn.com.fintheircing.exchange.model.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
 import cn.com.fintheircing.exchange.constant.ResultCode;
 import cn.com.fintheircing.exchange.controller.model.BuyOrderRequestModel;
 import cn.com.fintheircing.exchange.controller.model.CancleOrderRequestModel;
 import cn.com.fintheircing.exchange.controller.model.SellOrderRequestModel;
 import cn.com.fintheircing.exchange.exception.ExchangeException;
-import cn.com.fintheircing.exchange.model.*;
 import cn.com.fintheircing.exchange.service.ExchangeServiceRouter;
-import io.swagger.annotations.*;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 
 @RestController
 @Api("ExcahngeController（第三方交易接口）相关的api")
 public class ExcahngeController {
 	@Resource
 	private ExchangeServiceRouter exchangeService;
-/*	@Resource
-	private IParentAccountRepository iParentAccountRepository;*/
 
 	@ApiOperation(value = "查询当天成交", notes = "")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "motnerAccount", value = "母账户帐号（资金帐号）", required = true, dataType = "String") })
 	@GetMapping("/getTodayAcceptOrderList/{motnerAccount}")
-	public ResponseModel<List<TodayAcceptOrder>> getTodayAcceptOrderList(@PathVariable("motnerAccount") String motnerAccount) {
+	public ResponseModel<List<TodayAcceptOrder>> getTodayAcceptOrderList(@PathVariable String motnerAccount) {
 		List<TodayAcceptOrder> result;
 		try {
 			result = exchangeService.getTodayAcceptOrderList(motnerAccount);
@@ -47,7 +51,7 @@ public class ExcahngeController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "motnerAccount", value = "母账户帐号（资金帐号）", required = true, dataType = "String") })
 	@GetMapping("/getTodayOrderList/{motnerAccount}")
-	public ResponseModel<List<TodayOrder>> getTodayOrderList(@PathVariable("motnerAccount") String motnerAccount) {
+	public ResponseModel<List<TodayOrder>> getTodayOrderList(@PathVariable String motnerAccount) {
 		List<TodayOrder> result;
 		try {
 			result = exchangeService.getTodayOrderList(motnerAccount);
@@ -67,8 +71,8 @@ public class ExcahngeController {
 			@ApiImplicitParam(paramType = "path", name = "startDate", value = "开始日期，格式为20190101", required = true, dataType = "num"),
 			@ApiImplicitParam(paramType = "path", name = "endDate", value = "开始日期，格式为20190101", required = true, dataType = "num") })
 	@GetMapping("/getHistoryAcceptOrderList/{motnerAccount}/{startDate}/{endDate}")
-	public ResponseModel<List<HistoryAcceptOrder>> getHistoryAcceptOrderList(@PathVariable("motnerAccount") String motnerAccount,
-			@PathVariable("startDate") int startDate, @PathVariable("endDate") int endDate) {
+	public ResponseModel<List<HistoryAcceptOrder>> getHistoryAcceptOrderList(@PathVariable String motnerAccount,
+			@PathVariable int startDate, @PathVariable int endDate) {
 		List<HistoryAcceptOrder> result;
 		try {
 			result = exchangeService.getHistoryAcceptOrderList(motnerAccount, startDate, endDate);

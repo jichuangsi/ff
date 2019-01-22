@@ -111,11 +111,10 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/findWhiteList")
-    public ResponseModel<PageInfo<TransactionModel>> findAllWhiteList(@Validated @RequestBody TransactionModel model ,int pageNum,int pageSize) throws AdminLoginException {
-       // PageHelper.startPage(pageNum,pageSize);
+    public ResponseModel<PageInfo<TransactionModel>> findAllWhiteList(@Validated @RequestBody TransactionModel model) throws AdminLoginException {
+        PageHelper.startPage(model.getPageNum(),model.getPageSize());
         List<TransactionModel> allInfo = itemService.findAllWhiteList(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
-        /*System.out.println();*/
         return ResponseModel.sucess("",personPageInfo );
 
     }

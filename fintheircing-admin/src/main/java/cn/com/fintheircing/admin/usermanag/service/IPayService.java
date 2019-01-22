@@ -84,4 +84,20 @@ public interface IPayService {
   * @return
   */
    boolean passPromiseMoney(UserTokenInfo userInfo, PromiseModel model);
+
+ /**
+  * 提现申请
+  * @param userInfo
+  * @param model
+  * @return
+  */
+    boolean agreewithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model);
+
+ /**
+  * 驳回提现申请
+  * @param userInfo
+  * @param model
+  * @return
+  */
+ boolean passwithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model);
 }

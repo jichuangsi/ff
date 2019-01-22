@@ -1,4 +1,4 @@
-package cn.com.fintheircing.exchange.constant;
+package cn.com.fintheircing.admin.common.constant;
 
 public enum  AccountStatus {
      USEING("使用中",0),FORBID("禁买",1),CUSTOM_ACCOUNT("客户账户", 8), MONEY_ACCOUNT("资金账户", 9);

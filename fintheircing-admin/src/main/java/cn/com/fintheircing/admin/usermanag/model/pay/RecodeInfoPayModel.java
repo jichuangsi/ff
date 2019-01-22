@@ -9,6 +9,7 @@ import java.util.Date;
  * @date 2019/1/14
  */
 public class RecodeInfoPayModel {
+    private String RecodeInfoPayId;//个人记录Id;
     private String userId;
     /**
      * 金额
@@ -24,6 +25,14 @@ public class RecodeInfoPayModel {
     private String userName;
     private String operator;
     private String operatorId;
+
+    public String getRecodeInfoPayId() {
+        return RecodeInfoPayId;
+    }
+
+    public void setRecodeInfoPayId(String recodeInfoPayId) {
+        RecodeInfoPayId = recodeInfoPayId;
+    }
 
     public String getOperatorId() {
         return operatorId;

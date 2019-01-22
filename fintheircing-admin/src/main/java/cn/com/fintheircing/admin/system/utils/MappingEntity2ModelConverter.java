@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.system.utils;
 
+import cn.com.fintheircing.admin.common.constant.Status;
 import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 
@@ -31,7 +32,7 @@ public class MappingEntity2ModelConverter {
         model.setStockNum(Summary.getStockNum());
         model.setId(Summary.getId());
         model.setStockName(Summary.getStockName());
-        model.setStatus(Summary.getStatus());
+//        model.setStatus(Summary.getStatus().getName());
         return model;
     }
     public static final TransactionModel coverWithStaticBlackList(TransactionSummary summary){
@@ -43,7 +44,7 @@ public class MappingEntity2ModelConverter {
         model.setId(summary.getId());
         model.setStockNum(summary.getStockNum());
         model.setStockName(summary.getStockName());
-        model.setStatus(summary.getStatus());
+//        model.setStatus(summary.getStatus().getName());
         return model;
     }
 }
