@@ -68,27 +68,27 @@ public class QuotesTenModel {
 			buyTenPrice[0] = ColUtils.colProcess(cols[17], Float.class);
 			sellTenPrice[0] = ColUtils.colProcess(cols[18], Float.class);
 			buyTenQuantity[0] = ColUtils.colProcess(cols[19], Integer.class);
-			sellTenPrice[0] = ColUtils.colProcess(cols[20], Integer.class);
+			sellTenQuantity[0] = ColUtils.colProcess(cols[20], Integer.class);
 
 			buyTenPrice[1] = ColUtils.colProcess(cols[21], Float.class);
 			sellTenPrice[1] = ColUtils.colProcess(cols[22], Float.class);
 			buyTenQuantity[1] = ColUtils.colProcess(cols[23], Integer.class);
-			sellTenPrice[1] = ColUtils.colProcess(cols[24], Integer.class);
+			sellTenQuantity[1] = ColUtils.colProcess(cols[24], Integer.class);
 
 			buyTenPrice[2] = ColUtils.colProcess(cols[25], Float.class);
 			sellTenPrice[2] = ColUtils.colProcess(cols[26], Float.class);
 			buyTenQuantity[2] = ColUtils.colProcess(cols[27], Integer.class);
-			sellTenPrice[2] = ColUtils.colProcess(cols[28], Integer.class);
+			sellTenQuantity[2] = ColUtils.colProcess(cols[28], Integer.class);
 
 			buyTenPrice[3] = ColUtils.colProcess(cols[29], Float.class);
 			sellTenPrice[3] = ColUtils.colProcess(cols[30], Float.class);
 			buyTenQuantity[3] = ColUtils.colProcess(cols[31], Integer.class);
-			sellTenPrice[3] = ColUtils.colProcess(cols[32], Integer.class);
+			sellTenQuantity[3] = ColUtils.colProcess(cols[32], Integer.class);
 
 			buyTenPrice[4] = ColUtils.colProcess(cols[33], Float.class);
 			sellTenPrice[4] = ColUtils.colProcess(cols[34], Float.class);
 			buyTenQuantity[4] = ColUtils.colProcess(cols[35], Integer.class);
-			sellTenPrice[4] = ColUtils.colProcess(cols[36], Integer.class);
+			sellTenQuantity[4] = ColUtils.colProcess(cols[36], Integer.class);
 
 			setReserved4(ColUtils.colProcess(cols[37], String.class));
 			setTransactionNumber(ColUtils.colProcess(cols[38], String.class));
@@ -96,27 +96,27 @@ public class QuotesTenModel {
 			buyTenPrice[5] = ColUtils.colProcess(cols[42], Float.class);
 			sellTenPrice[5] = ColUtils.colProcess(cols[43], Float.class);
 			buyTenQuantity[5] = ColUtils.colProcess(cols[44], Integer.class);
-			sellTenPrice[5] = ColUtils.colProcess(cols[45], Integer.class);
+			sellTenQuantity[5] = ColUtils.colProcess(cols[45], Integer.class);
 
 			buyTenPrice[6] = ColUtils.colProcess(cols[46], Float.class);
 			sellTenPrice[6] = ColUtils.colProcess(cols[47], Float.class);
 			buyTenQuantity[6] = ColUtils.colProcess(cols[48], Integer.class);
-			sellTenPrice[6] = ColUtils.colProcess(cols[49], Integer.class);
+			sellTenQuantity[6] = ColUtils.colProcess(cols[49], Integer.class);
 
 			buyTenPrice[7] = ColUtils.colProcess(cols[50], Float.class);
 			sellTenPrice[7] = ColUtils.colProcess(cols[51], Float.class);
 			buyTenQuantity[7] = ColUtils.colProcess(cols[52], Integer.class);
-			sellTenPrice[7] = ColUtils.colProcess(cols[53], Integer.class);
+			sellTenQuantity[7] = ColUtils.colProcess(cols[53], Integer.class);
 
 			buyTenPrice[8] = ColUtils.colProcess(cols[54], Float.class);
 			sellTenPrice[8] = ColUtils.colProcess(cols[55], Float.class);
 			buyTenQuantity[8] = ColUtils.colProcess(cols[56], Integer.class);
-			sellTenPrice[8] = ColUtils.colProcess(cols[57], Integer.class);
+			sellTenQuantity[8] = ColUtils.colProcess(cols[57], Integer.class);
 
 			buyTenPrice[9] = ColUtils.colProcess(cols[58], Float.class);
 			sellTenPrice[9] = ColUtils.colProcess(cols[59], Float.class);
 			buyTenQuantity[9] = ColUtils.colProcess(cols[60], Integer.class);
-			sellTenPrice[9] = ColUtils.colProcess(cols[61], Integer.class);
+			sellTenQuantity[9] = ColUtils.colProcess(cols[61], Integer.class);
 
 			setBuyAvgPrice(ColUtils.colProcess(cols[62], Float.class));
 			setSellAvgPrice(ColUtils.colProcess(cols[63], Float.class));
