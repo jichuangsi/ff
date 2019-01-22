@@ -36,7 +36,7 @@ public interface IBusinessContractMapper {
     List<TranferControlContractModel> selectPageControl(TranferControlContractModel model);
 
 
-    @Select("<script>select t1.uuid as id,t1.chose_way as choseWay,t1.available_money as canUseMoney,t2.floatMoney as floatMoney,t1.cold_money as coldCash,t2.worth as worth from business_contract t1 LEFT JOIN (" +
+    @Select("<script>select t1.promised_money as promisedMoney,t1.uuid as id,t1.chose_way as choseWay,t1.available_money as canUseMoney,t2.floatMoney as floatMoney,t1.cold_money as coldCash,t2.worth as worth from business_contract t1 LEFT JOIN (" +
             "select contract_id,sum(float_money) as floatMoney,sum(current_worth) as worth from business_stock_holding where contract_id in (" +
             "select uuid from business_contract where user_id=#{userId} and delete_flag=\"0\"" +
             ")  and delete_flag=\"0\" GROUP BY contract_id) t2 on t1.uuid=t2.contract_id where t1.user_id=#{userId} and delete_flag=\"0\"</script>")

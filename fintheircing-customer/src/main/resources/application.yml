@@ -40,7 +40,10 @@ spring:
         max-idle: 10
         # 连接池中的最小空闲连接
         min-idle: 2
-
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
 # feign配置
 feign:
   hystrix:

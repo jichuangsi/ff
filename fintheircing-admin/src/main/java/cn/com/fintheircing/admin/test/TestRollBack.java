@@ -10,7 +10,6 @@ import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.model.StockModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
-import cn.com.fintheircing.admin.business.utils.BusinessUtils;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
 import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
 import org.junit.Test;
@@ -62,7 +61,7 @@ public class TestRollBack
         model.setAmount(300);
         model.setPrice(53.0);
         model.setStockNum("600600");
-        BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);
+        /*BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);*/
 
     }
 

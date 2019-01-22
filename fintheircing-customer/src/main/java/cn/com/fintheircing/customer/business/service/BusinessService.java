@@ -152,9 +152,9 @@ public class BusinessService {
 
 
    public void saveEntrust(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException{
-        if (!adminFeignService.isExistWhiteList(model.getStockNum())){
+        /*if (!adminFeignService.isExistWhiteList(model.getStockNum())){
             throw new BusinessException(ResultCode.STOCK_DANGER_ERR);
-        }//验证是否存在白名单,暂时接口不可用
+        }*///验证是否存在白名单,暂时接口不可用
         //保存购买股票申请单，并冻结资金
         model.setUserId(userInfo.getUuid());
         ResponseModel<String> response = adminFeignService.saveStockEntrust(model);
@@ -202,5 +202,14 @@ public class BusinessService {
        if (!ResultCode.SUCESS.equals(responseModel.getCode())){
            throw new BusinessException(responseModel.getMsg());
        }
+    }
+
+
+    public StockHoldingModel getMaxBuyAmount(UserTokenInfo userInfo,StockHoldingModel model) throws BusinessException{
+       /*if (model.getCostPrice()==null||0==model.getCostPrice()){
+           throw new BusinessException("有不花钱买股票的嘛？没点b数");
+       }
+       model.setUserId(userInfo.getUuid());*/
+       return adminFeignService.getMaxBuyAmount(model);
     }
 }

@@ -160,4 +160,10 @@ public class FeignServiceFallBack implements IAdminFeignService {
         logger.error("调用feign失败，未委托卖出成功");
         return ResponseModel.fail("","未委托卖出成功");
     }
+
+    @Override
+    public StockHoldingModel getMaxBuyAmount(StockHoldingModel model) {
+        logger.error("调用feign失败，未获得最大购买量");
+        return new StockHoldingModel();
+    }
 }

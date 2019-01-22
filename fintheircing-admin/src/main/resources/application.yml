@@ -14,6 +14,10 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
 server:
   port: 8081
 eureka:
@@ -67,6 +71,11 @@ custom:
     codeHeight: 300
     picFormat: jpg
     picSavePath: F://codeImg
+  entrust:
+    prefix: entrust_val_
+    entrustBusiness:  买卖
+    entrustCancel:  已撤
+    entrustSuccess: 已成
   urlKey:
     searchKey: url_val_search
     roleKey: role_
@@ -76,6 +85,7 @@ custom:
     autoBuy: autoBuy
     shangRegex:  ^(60)|(900)[0-9]*$
     shenRegex:  ^(000)|(002)|(300)|(200)[0-9]*$
+    chuangRegex:  ^3[0-9]*$
   pay:
     url: http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
     reciveWay: gatewayCheckstandPay
@@ -83,8 +93,6 @@ custom:
     queryPayResult: queryPayResult
     queryReconTrans: queryReconTrans
     QRcode: gatewayPayByQRcode
-  report:
-    isReport: 已报
   risk:
     maxBuyOne: 0.8
     venturEditionMax: 0.5

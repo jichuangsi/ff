@@ -43,6 +43,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class BusinessService {
@@ -96,8 +98,10 @@ public class BusinessService {
     private String shangRegex;
     @Value("${custom.system.shenRegex}")
     private String shenRegex;
-    @Value("${custom.report.isReport}")
-    private String report;
+    @Value("${custom.system.chuangRegex}")
+    private String chuangRegex;
+/*    @Value("${custom.report.isReport}")
+    private String report;*/
 
     public Boolean canBuy(Integer productNo,String userId) {
         Map<String,Object> params = new HashMap<String,Object>();
@@ -185,7 +189,7 @@ public class BusinessService {
         if (transactionSummary==null){
             throw new BusinessException(ResultCode.STOCK_BUSINESS_ERR);
         }
-        BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);//验证是否能交易，不能直接抛出异常
+        //BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel,chuangRegex);//验证是否能交易，不能直接抛出异常
         /**
          * 需要计算税费
          */
@@ -227,6 +231,7 @@ public class BusinessService {
         stockEntrust.setCreatorId(model.getUserId());
         stockEntrust.setCancelOrder(BusinessStockEntrust.STOCK_ORDER);
         stockEntrust.setEntrustStatus(EntrustStatus.ENTRUST_NOT_DEAL.getIndex());
+        stockEntrust.setColdMoney(coldMoney);
         stockEntrust = businessStockEntrustRepository.save(stockEntrust);
         if (StringUtils.isEmpty(stockEntrust.getUuid())){
             throw new BusinessException(ResultCode.STOCK_ENTRUST_SAVE_ERR);
@@ -582,7 +587,7 @@ public class BusinessService {
             if (null == response){
                 throw new BusinessException(ResultCode.STOCK_MSG_ERR);
             }
-            //response.setCode(ResultCode.SUCESS);//test
+            response.setCode(ResultCode.SUCESS);//test
             if (ResultCode.SUCESS.equals(response.getCode())){
                 entrust.setEntrustStatus(EntrustStatus.ENTRUST_BACK_ING.getIndex());
                 entrust.setUpdatedTime(new Date());
@@ -613,6 +618,41 @@ public class BusinessService {
     public void setAutoSystem(UserTokenInfo userInfo){
         Boolean auto = !Boolean.valueOf(redisTemplate.opsForValue().get(autoBuy));
         redisTemplate.opsForValue().set(autoBuy,auto.toString());
+    }
+
+
+    public StockHoldingModel getMaxBuyAmount(StockHoldingModel model) {
+        ContractModel contractModel = businessContractMapper.selectContract(model.getContractId());
+        if (null == contractModel){
+            return new StockHoldingModel();
+        }
+        StockHoldingModel stockHoldingModel = businessStockHoldingMapper.selectStockNum(model.getContractId(),model.getStockNo());
+        Pattern pattern = Pattern.compile(chuangRegex);
+        Matcher matcher = pattern.matcher(model.getStockNo());
+        Double rate = 0.0;
+        if (matcher.find()){
+            rate = contractModel.getVenturEditionMaxAccount();
+        }else{
+            rate = contractModel.getCustomerMaxAccount();
+        }
+        Double C0 = stockHoldingModel.getCurrentWorth();
+        Double A = BusinessUtils.addMethod(contractModel.getColdCash(),contractModel.getWorth(),contractModel.getCanUseMoney());
+        Double C1 = 0.0;
+        try {
+            C1 = BusinessUtils.minusMethod(A*rate,C0);
+        } catch (BusinessException e) {
+            logger.error("计算报错");
+        }
+        model.setCurrentWorth(C1);
+        return model;
+    }
+
+    public BusinessStockEntrust selectEntrust(String account,String dealNo){
+        return businessStockEntrustRepository.findByDeleteFlagAndMontherAccountAndDealNo("0",account,dealNo);
+    }
+
+    public void saveEntrus(BusinessStockEntrust entrust){
+        businessStockEntrustRepository.save(entrust);
     }
 
 }

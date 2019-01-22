@@ -132,4 +132,7 @@ public interface IAdminFeignService {
     @RequestMapping(value = "adminF/entrustCancelOrder")
     ResponseModel<String> entrustCancelOrder(@RequestBody StockEntrustModel model);
 
+    @RequestMapping(value = "adminF/getMaxBuyAmount")
+    StockHoldingModel getMaxBuyAmount(@RequestBody StockHoldingModel model);
+
 }

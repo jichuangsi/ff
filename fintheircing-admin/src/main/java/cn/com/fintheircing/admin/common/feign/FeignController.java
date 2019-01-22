@@ -243,4 +243,12 @@ public class FeignController {
     }
 
 
+    @ApiOperation(value = "获取最大的购买量", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getMaxBuyAmount")
+    public StockHoldingModel getMaxBuyAmount(@RequestBody StockHoldingModel model){
+        return businessService.getMaxBuyAmount(model);
+    }
+
+
 }
