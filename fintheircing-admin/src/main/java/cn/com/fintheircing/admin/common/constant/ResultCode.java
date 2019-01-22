@@ -8,7 +8,7 @@ public class ResultCode {
 	public static final String TOKEN_CHECK_ERR = "0031";//token校验异常
 	public static final String SYS_ERROR = "0050";//系统内部异常
 	public static final String SYS_BUSY = "0051";//熔断
-	
+
 	public static final String SUCESS_MSG = "成功";
 	public static final String PARAM_MISS_MSG = "缺少参数";
 	public static final String PARAM_ERR_MSG = "参数不正确";
@@ -59,5 +59,13 @@ public class ResultCode {
 	public static final String STOCK_BUSINESS_ERR = "交易失败";
 	public static final String UPDATE_ERR_MSG = "更新失败";
 	public static final String UPDATE_ALREAD_MSG = "已有人在处理";
-	public static final String KEEP_FAILED = "保存失败";
+
+	public static final String STOCK_SELL_LESS_ERR = "您的股票数目不足";
+	public static final String ENTRUST_IS_DEAL = "该单已完结";
+	public static final String ENTRUST_WAIT_DEAL = "该单正在处理中，不可撤单";
+	public static final String ENTRUST_BACK_ERR = "撤单失败";
+
+	public static final String MOTHER_NULL_ERR = "母账号未空";
+	public static final String STOCK_MSG_ERR = "证券无响应";
+	public static final String CANCEL_NULL_ERR = "此订单不可撤单";
 }
