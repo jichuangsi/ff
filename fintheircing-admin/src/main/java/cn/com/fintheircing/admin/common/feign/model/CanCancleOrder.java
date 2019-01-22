@@ -11,6 +11,9 @@ public class CanCancleOrder extends AbstractOrder {
 
 	private String timestamp;// 委托时间
 
+	public CanCancleOrder() {
+	}
+
 	public CanCancleOrder(String lineStr) {
 		try {
 			String[] cols = lineStr.split("\t");

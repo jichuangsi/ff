@@ -29,7 +29,7 @@ public class ExcahngeController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "motnerAccount", value = "母账户帐号（资金帐号）", required = true, dataType = "String") })
 	@GetMapping("/getTodayAcceptOrderList/{motnerAccount}")
-	public ResponseModel<List<TodayAcceptOrder>> getTodayAcceptOrderList(@PathVariable String motnerAccount) {
+	public ResponseModel<List<TodayAcceptOrder>> getTodayAcceptOrderList(@PathVariable("motnerAccount") String motnerAccount) {
 		List<TodayAcceptOrder> result;
 		try {
 			result = exchangeService.getTodayAcceptOrderList(motnerAccount);
@@ -47,7 +47,7 @@ public class ExcahngeController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "path", name = "motnerAccount", value = "母账户帐号（资金帐号）", required = true, dataType = "String") })
 	@GetMapping("/getTodayOrderList/{motnerAccount}")
-	public ResponseModel<List<TodayOrder>> getTodayOrderList(@PathVariable String motnerAccount) {
+	public ResponseModel<List<TodayOrder>> getTodayOrderList(@PathVariable("motnerAccount") String motnerAccount) {
 		List<TodayOrder> result;
 		try {
 			result = exchangeService.getTodayOrderList(motnerAccount);
@@ -67,8 +67,8 @@ public class ExcahngeController {
 			@ApiImplicitParam(paramType = "path", name = "startDate", value = "开始日期，格式为20190101", required = true, dataType = "num"),
 			@ApiImplicitParam(paramType = "path", name = "endDate", value = "开始日期，格式为20190101", required = true, dataType = "num") })
 	@GetMapping("/getHistoryAcceptOrderList/{motnerAccount}/{startDate}/{endDate}")
-	public ResponseModel<List<HistoryAcceptOrder>> getHistoryAcceptOrderList(@PathVariable String motnerAccount,
-			@PathVariable int startDate, @PathVariable int endDate) {
+	public ResponseModel<List<HistoryAcceptOrder>> getHistoryAcceptOrderList(@PathVariable("motnerAccount") String motnerAccount,
+			@PathVariable("startDate") int startDate, @PathVariable("endDate") int endDate) {
 		List<HistoryAcceptOrder> result;
 		try {
 			result = exchangeService.getHistoryAcceptOrderList(motnerAccount, startDate, endDate);

@@ -71,7 +71,7 @@ public final class BusinessUtils {
     }
 
     public static final Boolean throughRisk(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
-                                            ContractModel contractModel,StockModel stockModel) throws BusinessException{
+                                            ContractModel contractModel,StockModel stockModel,String chuangRegex) throws BusinessException{
         if (stockEntrustModel==null){
             throw new BusinessException(ResultCode.STOCK_ENTRUST_NULL);
         }
@@ -89,8 +89,7 @@ public final class BusinessUtils {
                 ||stockEntrustModel.getPrice()/yesterdayClose<0.9){
             throw new BusinessException(ResultCode.STOCK_BAD_ERR);
         }
-        String reg = "^3[0-9]*$";
-        Pattern pattern = Pattern.compile(reg);
+        Pattern pattern = Pattern.compile(chuangRegex);
         Matcher matcher = pattern.matcher(stockEntrustModel.getStockNum());
         if (matcher.find()){
             Boolean venturEditionMax = venturEditionMax(stockHoldingModel,stockEntrustModel,contractModel);

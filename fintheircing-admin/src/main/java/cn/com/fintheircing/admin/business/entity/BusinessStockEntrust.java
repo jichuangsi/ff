@@ -40,11 +40,20 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String montherAccount;  //母账户
     private String holdingId;
     private String cancelNo;
+    private Double coldMoney;
     @Version
     private Integer version;
 
     public String getCancelNo() {
         return cancelNo;
+    }
+
+    public Double getColdMoney() {
+        return coldMoney;
+    }
+
+    public void setColdMoney(Double coldMoney) {
+        this.coldMoney = coldMoney;
     }
 
     public void setCancelNo(String cancelNo) {

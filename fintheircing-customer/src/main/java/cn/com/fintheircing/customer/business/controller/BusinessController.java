@@ -110,7 +110,7 @@ public class BusinessController {
     })
     @PostMapping("/getCurrentHolding")
     @CrossOrigin
-    public ResponseModel getCurrentHolding(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockHoldingModel model){
+    public ResponseModel<StockHoldingModel> getCurrentHolding(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockHoldingModel model){
         try {
             return ResponseModel.sucess("",businessService.getCurrentStockHolding(userInfo,model));
         } catch (BusinessException e) {
@@ -140,6 +140,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getUnfinishedEtrust")
+    @CrossOrigin
     public ResponseModel<List<StockEntrustModel>> getUnfinishedEtrust(@ModelAttribute UserTokenInfo userInfo,@RequestBody ContractModel model){
         return ResponseModel.sucess("",businessService.getUnfinishedEntrust(userInfo,model));
     }
@@ -149,6 +150,7 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateEntrustCancelOrder")
+    @CrossOrigin
     public ResponseModel updateEntrustCancelOrder(@ModelAttribute UserTokenInfo userInfo,@RequestBody StockEntrustModel model){
         try {
             businessService.cancelOrder(userInfo,model);
@@ -156,6 +158,21 @@ public class BusinessController {
             return ResponseModel.fail("",e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
+    }
+
+
+    @ApiOperation(value = "获取最大买入值", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getMaxBuyAmount")
+    @CrossOrigin
+    public ResponseModel<StockHoldingModel> getMaxBuyAmount(@ModelAttribute UserTokenInfo userInfo,@RequestBody StockHoldingModel model){
+        try {
+            return ResponseModel.sucess("",businessService.getMaxBuyAmount(userInfo,model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
     }
 
 }

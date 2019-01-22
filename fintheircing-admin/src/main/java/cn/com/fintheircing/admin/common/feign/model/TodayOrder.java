@@ -10,6 +10,9 @@ public class TodayOrder extends AbstractOrder {
 	private String timeStr;// 委托时间
 	private Float cancleQuantity;// 撤单数量
 
+	public TodayOrder() {
+	}
+
 	public TodayOrder(String lineStr) {
 		try {
 			String[] cols = lineStr.split("\t");

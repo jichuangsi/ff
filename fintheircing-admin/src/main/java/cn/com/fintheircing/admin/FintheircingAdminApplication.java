@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient//服务发现
+@EnableScheduling
 @EnableAsync
 @MapperScan("cn.com.fintheircing.admin.*.dao.mapper")//扫描mybatism
 public class FintheircingAdminApplication {
