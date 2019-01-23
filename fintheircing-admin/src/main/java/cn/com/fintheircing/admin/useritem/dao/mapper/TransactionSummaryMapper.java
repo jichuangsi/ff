@@ -1,7 +1,7 @@
 package cn.com.fintheircing.admin.useritem.dao.mapper;
 
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
-import org.apache.ibatis.annotations.Param;
+
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -47,7 +47,7 @@ public interface TransactionSummaryMapper {
      * @return int
      */
 
-    @Update("<script>update admin_Transaction_Summary t1 set t1.remark=#{mark} where t1.stock_num=id</script>")
+    @Update("<script>update admin_transaction_summary t1 set t1.remark=#{mark} where t1.stock_num=id</script>")
     int updateRemark(Map<String,Object> map);
 
     /**
@@ -56,8 +56,8 @@ public interface TransactionSummaryMapper {
      * @return int
      */
 
-    @Update("<script>update admin_Transaction_Summary t1 set t1.delete_Flag=1 where t1.stock_num=id<</script>")
-    int updateTransactionSummary(@Param("id") String id);
+    @Update("<script>update admin_transaction_summary t1 set t1.delete_Flag=1 where t1.stock_num=id</script>")
+    int updateTransactionSummary(String id);
     @Select("<script> select t1.stock_num as stockNum" +
             ",t1.stock_name as stockName" +
             ",t1.alphabet_capitalization as alphabetCapitalization" +
@@ -86,6 +86,12 @@ public interface TransactionSummaryMapper {
             "<where> t1.delete_flag=0  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=1</where> " +
             " </script>")
     List<TransactionModel> findAllByWhite(TransactionModel model);
+
+    /**
+     * 查询黑名单
+     * @param model
+     * @return
+     */
     @Select("<script> select t1.stock_num as stockNum" +
             ",t1.stock_name as stockName" +
             ",t1.alphabet_capitalization as alphabetCapitalization" +

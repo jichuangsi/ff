@@ -69,6 +69,9 @@ public class ModelToEntity {
         p.setRemark(model.getRemark());
         p.setUserId(model.getUserId());
         p.setWay(model.getWay());
+        System.out.println();
         return p;
+
+
     }
 }
