@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/item")
 @Api("ItemController白名单列表的控制层")
+@CrossOrigin
 public class ItemController {
     @Resource
     private ItemService itemService;
@@ -34,8 +32,8 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/findWhite")
-    public ResponseModel<PageInfo<TransactionModel>> findAllByWhite(@Validated @RequestBody TransactionModel model ,int pageNum,int pageSize) throws AdminLoginException {
-        PageHelper.startPage(pageNum,pageSize);
+    public ResponseModel<PageInfo<TransactionModel>> findAllByWhite(@Validated @RequestBody TransactionModel model) throws AdminLoginException {
+        PageHelper.startPage(model.getPageNum(),model.getPageSize());
         List<TransactionModel> allInfo = itemService.findAllByWhite(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );
@@ -44,8 +42,8 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/findAll")
-    public ResponseModel<PageInfo<TransactionModel>> findAll(@Validated @RequestBody TransactionModel model ,int pageNum,int pageSize) throws AdminLoginException {
-        PageHelper.startPage(pageNum,pageSize);
+    public ResponseModel<PageInfo<TransactionModel>> findAll(@Validated @RequestBody TransactionModel model) throws AdminLoginException {
+        PageHelper.startPage(model.getPageNum(),model.getPageSize());
         List<TransactionModel> allInfo = itemService.findAll(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );
@@ -55,8 +53,8 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/findblack")
-    public ResponseModel<PageInfo<TransactionModel>> findAllByBlack(@Validated @RequestBody TransactionModel model ,int pageNum,int pageSize) throws AdminLoginException {
-        PageHelper.startPage(pageNum,pageSize);
+    public ResponseModel<PageInfo<TransactionModel>> findAllByBlack(@Validated @RequestBody TransactionModel model ) throws AdminLoginException {
+        PageHelper.startPage(model.getPageNum(),model.getPageSize());
         List<TransactionModel> allInfo = itemService.findAllByBlack(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );
@@ -84,8 +82,8 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/updateRemark")
-    public ResponseModel updateRemark(@Validated @RequestBody TransactionModel model ) throws AdminLoginException {
-        int i = itemService.updateRemark(model);
+    public ResponseModel updateRemark(String id,String mark ) throws AdminLoginException {
+        int i = itemService.updateRemark(id,mark);
         return ResponseModel.sucess("",null);
     }
     @ApiOperation(value = "白名单列表-删除信息", notes = "")
@@ -100,8 +98,8 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/findBlackList")
-    public ResponseModel<PageInfo<TransactionModel>> findAllBlackList(@Validated @RequestBody TransactionModel model ,int pageNum,int pageSize) throws AdminLoginException {
-        PageHelper.startPage(pageNum,pageSize);
+    public ResponseModel<PageInfo<TransactionModel>> findAllBlackList(@Validated @RequestBody TransactionModel model) throws AdminLoginException {
+        PageHelper.startPage(model.getPageNum(),model.getPageSize());
         List<TransactionModel> allInfo = itemService.findAllBlackList(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );

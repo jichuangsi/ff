@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /**
  * Demo class
  *
@@ -26,9 +29,21 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private TransactionSummaryRepository transactionSummaryRepository;
 
+    /**
+     * 查找全部绝对白名单
+     * @param model
+     * @return
+     */
     @Override
     public List<TransactionModel> findAllByWhite(TransactionModel model) {
-        return null;
+        List<TransactionModel> allByWhite = transactionSummaryMapper.findAllByWhite(model);
+        allByWhite.forEach(a->{
+            if (a.getStatus().equalsIgnoreCase("1")){
+                a.setStatus(Status.getName(1));
+            }
+
+        });
+        return allByWhite;
     }
 
     @Override
@@ -45,24 +60,51 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<TransactionModel> findAllBlackList(TransactionModel model) {
+        List<TransactionModel> allBlackList = transactionSummaryMapper.findAllBlackList(model);
+        allBlackList.forEach(a->{
+            if (a.getStatus().equalsIgnoreCase("3")){
+                a.setStatus(Status.getName(3));
+            }
+
+        });
         return null;
     }
 
+    /**
+     * 静态黑名单
+     * @param model
+     * @return
+     */
     @Override
     public List<TransactionModel> findAllByBlack(TransactionModel model) {
-        return null;
+        List<TransactionModel> allByBlack = transactionSummaryMapper.findAllByBlack(model);
+        allByBlack.forEach(a->{
+            if (a.getStatus().equalsIgnoreCase("2")){
+                a.setStatus(Status.getName(2));
+            }
+
+        });
+        return allByBlack;
 
     }
 
     @Override
     public List<TransactionModel> findAll(TransactionModel model) {
-        List<TransactionModel> list = transactionSummaryMapper.findAllByTemplateAndStockName(model);
+        List<TransactionModel> list = transactionSummaryMapper.findAll(model);
         return list;
     }
 
     @Override
-    public int updateRemark(TransactionModel model) {
-        return transactionSummaryMapper.updateRemark(model);
+    public Boolean isExistWhiteList(String stockNum) {
+        return null;
+    }
+
+    @Override
+    public int updateRemark(String id,String mark) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("id", id);
+        map.put("mark",mark);
+        return transactionSummaryMapper.updateRemark(map);
     }
 
     @Override
@@ -70,7 +112,6 @@ public class ItemServiceImpl implements ItemService {
         return MappingEntity2ModelConverter.coverWithAbsoluteWhiteList(
                 transactionSummaryRepository.save(
                         MappingModel2EntityConverter.coverWithAbsoluteWhiteList(model)));
-
     }
 
     @Override
@@ -91,14 +132,5 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-    public final List<TransactionModel> findAllList(TransactionModel model) {
-        List<TransactionModel> list = transactionSummaryMapper.findAllByTemplateAndStockName(model);
-        return list;
-    }
 
-    @Override
-    public Boolean isExistWhiteList(String stockNum) {
-
-        return null;
-    }
 }

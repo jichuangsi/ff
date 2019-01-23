@@ -10,6 +10,7 @@ import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
+import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import cn.com.fintheircing.customer.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -60,9 +61,9 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
-    @RequestMapping("/payForQRCode")
-    public ResponseModel<AppResultModel> payForQRCode(@ModelAttribute UserTokenInfo userInfo) {
-        return ResponseModel.sucess("", adminFeignService.payForQRCode());
+    @PostMapping("/payForQRCode")
+    public ResponseModel<AppResultModel> payForQRCode(@ModelAttribute UserTokenInfo userInfo,@RequestBody AppQueryModel model) {
+        return ResponseModel.sucess("", adminFeignService.payForQRCode(model));
     }
 
     @ApiOperation(value = "第三方网关支付地址", notes = "")

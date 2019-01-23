@@ -14,6 +14,7 @@ import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
+import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -132,7 +133,7 @@ public class FeignServiceFallBack implements IAdminFeignService {
      * @return
      */
     @Override
-    public AppResultModel payForQRCode() {
+    public AppResultModel payForQRCode(AppQueryModel model) {
         logger.error("读取二维码支付地址信息失败");
         return new AppResultModel();
     }

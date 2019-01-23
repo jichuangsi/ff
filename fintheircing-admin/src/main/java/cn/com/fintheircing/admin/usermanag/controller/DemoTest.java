@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -25,9 +26,15 @@ public class DemoTest {
         for (int i=0;i<5;i++) {
             TransactionSummary t =
                     new TransactionSummary(
-                            "789","杀马特","S","222",new Date(),"测试", 1);
+                            "178","蒙奇丶D·路飞","M","日本",new Date(),"海贼王", 3);
             iAdminClientInfoRepository.save(t);
 
         }
+    }
+    @Test
+    public void test1(){
+        List<String> list=null;
+        list.add("123");
+        System.out.println(list);
     }
 }

@@ -13,6 +13,7 @@ import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
+import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,7 +103,7 @@ public interface IAdminFeignService {
      * @return
      */
     @RequestMapping("adminF/payForQRCode")
-    AppResultModel payForQRCode();
+    AppResultModel payForQRCode(@RequestBody AppQueryModel model);
 
     /**
      * 返回更新用户信息

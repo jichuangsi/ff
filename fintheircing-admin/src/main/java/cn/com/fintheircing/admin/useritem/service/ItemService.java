@@ -15,7 +15,7 @@ public interface ItemService {
     List<TransactionModel> findAllByWhite(TransactionModel model);
     List<TransactionModel> findAllByBlack(TransactionModel model);
 
-    int updateRemark(TransactionModel model);
+    int updateRemark(String id,String mark);
 
     TransactionModel saveTransactionSummary(TransactionModel model);
 
