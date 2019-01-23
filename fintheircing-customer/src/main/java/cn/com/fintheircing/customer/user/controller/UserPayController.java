@@ -125,4 +125,14 @@ public class UserPayController {
         return ResponseModel.sucess("", model1);
 
     }
+
+    @ApiOperation(value = "消费或者增加用户资金记录", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/withdrawCash")
+    public ResponseModel addOrUseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody WithdrawModel model) {
+      return null;
+
+}
 }

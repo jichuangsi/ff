@@ -48,7 +48,7 @@ public interface TransactionSummaryMapper {
      * @return int
      */
 
-    @Update("<script>update admin_Transaction_Summary t1 set t1.remark=#{mark} where t1.stock_num=#{id}</script>")
+    @Update("<script>update admin_Transaction_Summary t1 set t1.remake=#{mark} where t1.stock_num=#{id}</script>")
     int updateRemark(Map<String,Object> map);
 
     /**
@@ -68,7 +68,7 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake" +
             ",t1.status as status " +
             " from  admin_transaction_summary t1 " +
-            "<where> t1.delete_flag=0  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=2</where> " +
+            "<where> t1.delete_flag=0 <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=2</where> " +
             " </script>")
     List<TransactionModel> findAllByBlack(TransactionModel model);
 

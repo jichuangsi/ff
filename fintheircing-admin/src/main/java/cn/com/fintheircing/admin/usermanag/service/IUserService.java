@@ -29,6 +29,8 @@ public interface IUserService {
 
     boolean updatebankCard(String id) throws UserServiceException;
 
+    List<AdminClientInfoModel> findAllDetails(String id);
+
 //    AskMoneyInfoModel changeMoneyBySelf(AskMoneyInfoModel model);
 
 //    AskMoneyInfoModel insideMoneyHandel(AskMoneyInfoModel model);

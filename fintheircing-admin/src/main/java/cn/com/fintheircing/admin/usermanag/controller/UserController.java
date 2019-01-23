@@ -53,11 +53,19 @@ public class UserController {
         PageInfo<AdminClientInfoModel> personPageInfo = new PageInfo<>(allUserInfo);
         return ResponseModel.sucess("",personPageInfo);
     }
+
     @ApiOperation(value = "用户列表-基本信息-修改所属代理", notes = "")
     @PostMapping("/changeProxyNum")
     public ResponseModel changeProxyNum(AdminClientInfoModel Model )throws UserServiceException{
         return ResponseModel.sucess("", userService.changeProxyNum(Model));
     }
+
+    @ApiOperation(value = "用户列表-基本信息-查看详情", notes = "")
+    @PostMapping("/findAllDetails")
+    public ResponseModel findAllDetails( String id)throws UserServiceException{
+        return ResponseModel.sucess("", userService.findAllDetails(id));
+    }
+
 //    @ApiOperation(value = "用户列表-合约信息-2", notes = "")
 //    @PostMapping("/contactRecode")
 //    public ResponseModel<PageInfo<ContactInfoModel>> contactRecode(String goodsType , int pageNum, int pageSize)throws UserServiceException{

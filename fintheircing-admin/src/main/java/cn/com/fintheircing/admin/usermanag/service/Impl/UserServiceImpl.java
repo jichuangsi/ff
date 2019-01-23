@@ -206,6 +206,23 @@ public class UserServiceImpl implements IUserService {
         }
 
     }
+
+    @Override
+    public List<AdminClientInfoModel> findAllDetails(String id) {
+        List<AdminClientInfoModel> allDetails = usermapper.findAllDetails(id);
+        allDetails.forEach(a->{
+         if (a.getAccountStatus().equalsIgnoreCase("0")){
+             a.setAccountStatus("正常");
+         }
+         if (a.getAccountStatus().equalsIgnoreCase("1")){
+             a.setAccountStatus("冻结");
+         }
+         if (StringUtils.isEmpty(a.getEmplooyeeId())){
+             a.setEmplooyeeId("无下级员工");
+         }
+        });
+        return allDetails;
+    }
     /*未实现*/
 //    @Override
 //    public AskMoneyInfoModel changeMoneyBySelf(AskMoneyInfoModel model) {

@@ -16,8 +16,17 @@ public class UserAccount extends AbstractEntity {
     private String uuid;
     private String userId;
     private Double account;
+    private double frezzeAmount;//冻结资金
     @Version
     private Integer version;
+
+    public double getFrezzeAmount() {
+        return frezzeAmount;
+    }
+
+    public void setFrezzeAmount(double frezzeAmount) {
+        this.frezzeAmount = frezzeAmount;
+    }
 
     public Integer getVersion() {
         return version;

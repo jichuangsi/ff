@@ -6,19 +6,54 @@ import java.util.Date;
 
 
 public class AdminClientInfoModel  {
-    Date createTime;//注册时间
-    Date endtime;//结束时间
-    String userId;//用户编号
-    String phoneNo;//手机号码
-    String userName;//用户名字
-    String cer;//是否实名
-    String source;//来源
-    String proxyId;//代理Id
-    String proxyName;//代理名称
-    String balanceMoney;//资金
-    String belongs;//所属 有或者无
-    String emplooyeeId;//所属员工编号
+    private Date createTime;//注册时间
+    private Date endtime;//结束时间
+    private String userId;//用户编号
+    private String phoneNo;//手机号码
+    private String userName;//用户名字
+    private String cer;//是否实名
+    private String source;//来源
+    private String proxyId;//代理Id
+    private String proxyName;//代理名称
+    private String balanceMoney;//余额
+    private String belongs;//所属 有或者无
+    private String emplooyeeId;//所属员工编号
+    private String accountStatus;//账号状态
+    private String idCard;//身份证号
+    private String frezzeAmount;//冻结余额
+    private String remark;
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getFrezzeAmount() {
+        return frezzeAmount;
+    }
+
+    public void setFrezzeAmount(String frezzeAmount) {
+        this.frezzeAmount = frezzeAmount;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
 
     public String getEmplooyeeId() {
         return emplooyeeId;

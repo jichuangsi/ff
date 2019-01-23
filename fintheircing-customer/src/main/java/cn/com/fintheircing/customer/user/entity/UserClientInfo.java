@@ -8,8 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class
-UserClientInfo extends AbstractEntity {
+public class UserClientInfo extends AbstractEntity {
 
 	public static final String STATUS_INIT = "0";
 	public static final String STATUS_ACTIVE = "1";
@@ -35,8 +34,25 @@ UserClientInfo extends AbstractEntity {
 	 */
 	private String displayname;
 	private Integer roleGrade;  //固定字段，用户
-
+	private String remark;//备注
 	private String inviterId;
+	private String idCard;//身份证号
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getInviterId() {
 		return inviterId;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+
 public interface IAdminRecodingMapper {
     @Select("<script>  SELECT t1.uuid AS userId, t1.user_name AS userName, t1.phone AS phone, t2.is_sucess AS isSucess, t2.task_type,t2.task_type AS taskType, t2.content AS content,t2.create_time AS createTime " +
             " FROM User_Client_Info t1,Recoding t2 " +

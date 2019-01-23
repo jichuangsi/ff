@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.useritem.service;
 
+import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public interface ItemService {
 
     TransactionModel saveTransactionSummary(TransactionModel model);
 
-    int deleteTransactionSummary(String[] ids);
+    int deleteTransactionSummary(IdModel ids);
 
     List<TransactionModel> findAllBlackList(TransactionModel model);
     List<TransactionModel> findAllWhiteList(TransactionModel model);

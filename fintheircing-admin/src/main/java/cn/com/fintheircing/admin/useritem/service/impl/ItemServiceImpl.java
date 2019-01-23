@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.useritem.service.impl;
 
+import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.system.utils.MappingEntity2ModelConverter;
 import cn.com.fintheircing.admin.useritem.common.Status;
 import cn.com.fintheircing.admin.useritem.dao.mapper.TransactionSummaryMapper;
@@ -96,9 +97,9 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public int updateRemark(String id,String mark) {
+    public int updateRemark(String stockNum,String mark) {
         Map<String,Object> map=new HashMap<>();
-        map.put("id", id);
+        map.put("id", stockNum);
         map.put("mark",mark);
         return transactionSummaryMapper.updateRemark(map);
     }
@@ -111,9 +112,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public int deleteTransactionSummary(String[] ids) {
+    public int deleteTransactionSummary(IdModel ids) {
+        List<String> ids1 = ids.getIds();
         int a = 0;
-        for (String id : ids
+        for (String id : ids1
         ) {
             a += transactionSummaryMapper.updateTransactionSummary(id);
         }

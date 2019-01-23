@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.useritem.controller;
 
+import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
@@ -53,12 +54,11 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/findblack")
-    public ResponseModel<PageInfo<TransactionModel>> findAllByBlack(@Validated @RequestBody TransactionModel model ) throws AdminLoginException {
+    public ResponseModel<PageInfo<TransactionModel>> findAllByBlack(@Validated @RequestBody TransactionModel model) throws AdminLoginException {
         PageHelper.startPage(model.getPageNum(),model.getPageSize());
         List<TransactionModel> allInfo = itemService.findAllByBlack(model);;
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );
-
     }
     @ApiOperation(value = "白名单列表-静态黑名单-保存", notes = "")
     @ApiImplicitParams({
@@ -82,15 +82,15 @@ public class ItemController {
     @ApiImplicitParams({
     })
     @PostMapping("/updateRemark")
-    public ResponseModel updateRemark(String id,String mark ) throws AdminLoginException {
-        int i = itemService.updateRemark(id,mark);
+    public ResponseModel updateRemark(@RequestBody TransactionModel model) throws AdminLoginException {
+        int i = itemService.updateRemark(model.getStockNum(),model.getRemake());
         return ResponseModel.sucess("",null);
     }
     @ApiOperation(value = "白名单列表-删除信息", notes = "")
     @ApiImplicitParams({
     })
     @PostMapping("/deleteRemark")
-    public ResponseModel deleteRemark(String[] ids ) throws AdminLoginException {
+    public ResponseModel deleteRemark(@RequestBody IdModel ids ) throws AdminLoginException {
         int i = itemService.deleteTransactionSummary(ids);
         return ResponseModel.sucess("",i);
     }
