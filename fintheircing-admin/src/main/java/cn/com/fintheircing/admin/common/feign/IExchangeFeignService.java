@@ -27,4 +27,9 @@ public interface IExchangeFeignService {
 
     @RequestMapping(value = "/getCanCancleOrderList/{motnerAccount}")
     public ResponseModel<List<CanCancleOrder>> getCanCancleOrderList(@PathVariable("motnerAccount") String motnerAccount);
+
+
+    @RequestMapping(value = "/getTodayAcceptOrderList/{motnerAccount}")
+    public ResponseModel<List<TodayAcceptOrder>> getTodayAcceptOrderList(@PathVariable("motnerAccount") String motnerAccount);
+
 }

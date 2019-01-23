@@ -24,8 +24,8 @@ public interface ItemService {
     List<TransactionModel> findAllBlackList(TransactionModel model);
     List<TransactionModel> findAllWhiteList(TransactionModel model);
     TransactionModel saveByStaticList(TransactionModel model);
-     List<TransactionModel> findAll(TransactionModel model);
+    List<TransactionModel> findAll(TransactionModel model);
 
      //匹配是否属于白名单
-     Boolean isExistWhiteList(String stockNum);
+    Boolean isExistWhiteList(String stockNum);
 }

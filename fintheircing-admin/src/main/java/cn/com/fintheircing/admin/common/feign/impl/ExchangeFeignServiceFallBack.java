@@ -34,4 +34,9 @@ public class ExchangeFeignServiceFallBack implements IExchangeFeignService {
     public ResponseModel<List<CanCancleOrder>> getCanCancleOrderList(String motnerAccount) {
         return ResponseModel.fail("");
     }
+
+    @Override
+    public ResponseModel<List<TodayAcceptOrder>> getTodayAcceptOrderList(String motnerAccount) {
+        return ResponseModel.fail("");
+    }
 }

@@ -21,6 +21,24 @@ public class BusinessControlContract extends AbstractEntity{
     private Double pickUpMoney;   //提取金额
     private Double windUpMoney;    //结算金额
     private Integer verifyStatus;    //审核状态
+    private Double businessMoney;   //服务费
+    private Double taxationMoney;   //税费
+
+    public Double getBusinessMoney() {
+        return businessMoney;
+    }
+
+    public void setBusinessMoney(Double businessMoney) {
+        this.businessMoney = businessMoney;
+    }
+
+    public Double getTaxationMoney() {
+        return taxationMoney;
+    }
+
+    public void setTaxationMoney(Double taxationMoney) {
+        this.taxationMoney = taxationMoney;
+    }
 
     public Double getCostMoney() {
         return costMoney;

@@ -35,14 +35,32 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String cancelOrder;
     private Double dealPrice;   //成交价钱
     private String dealNo;     //委托编号
-    private String dealNum;     //成交数量
+    private Integer dealNum;     //成交数量
     private Date dealTime;      //成交时间
     private String montherAccount;  //母账户
     private String holdingId;
     private String cancelNo;
     private Double coldMoney;
+    private Double businessMoney;
+    private Double taxationMoney;
     @Version
     private Integer version;
+
+    public Double getBusinessMoney() {
+        return businessMoney;
+    }
+
+    public void setBusinessMoney(Double businessMoney) {
+        this.businessMoney = businessMoney;
+    }
+
+    public Double getTaxationMoney() {
+        return taxationMoney;
+    }
+
+    public void setTaxationMoney(Double taxationMoney) {
+        this.taxationMoney = taxationMoney;
+    }
 
     public String getCancelNo() {
         return cancelNo;
@@ -165,11 +183,11 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.businessAmount = businessAmount;
     }
 
-    public String getDealNum() {
+    public Integer getDealNum() {
         return dealNum;
     }
 
-    public void setDealNum(String dealNum) {
+    public void setDealNum(Integer dealNum) {
         this.dealNum = dealNum;
     }
 

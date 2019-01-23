@@ -184,4 +184,44 @@ public final class BusinessUtils {
         return sum;
     }
 
+
+    public static Double avgMethod(Double... doubles){
+        Double sum = 0.0;
+        Integer num = 0;
+        for (int i = 0; i<doubles.length; i++){
+            if (null != doubles[i]){
+                sum += doubles[i];
+                num ++;
+            }
+        }
+        if (0 == num){
+            return 0.0;
+        }else {
+            return sum/num;
+        }
+    }
+    public static int addIntMethod(Integer... nums){
+        Integer sum = 0;
+        for (int i = 0; i< nums.length; i++){
+            if (null != nums[i]){
+                sum+=nums[i];
+            }
+        }
+        return sum;
+    }
+
+
+
+    public static  Integer minusIntMethod(Integer mother,Integer... doubles) {
+        if (mother==null){
+            mother = 0;
+        }
+        for (int i = 0; i<doubles.length; i++){
+            if (doubles[i]!=null){
+                mother-=doubles[i];
+            }
+        }
+        return mother;
+    }
+
 }

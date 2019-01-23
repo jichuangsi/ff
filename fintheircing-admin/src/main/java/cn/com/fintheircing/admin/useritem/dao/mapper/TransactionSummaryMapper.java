@@ -47,7 +47,11 @@ public interface TransactionSummaryMapper {
      * @return int
      */
 
+<<<<<<< Updated upstream
     @Update("<script>update admin_transaction_summary t1 set t1.remark=#{mark} where t1.stock_num=id</script>")
+=======
+    @Update("<script>update admin_Transaction_Summary t1 set t1.remark=#{mark} where t1.stock_num=#{id}</script>")
+>>>>>>> Stashed changes
     int updateRemark(Map<String,Object> map);
 
     /**
@@ -56,8 +60,13 @@ public interface TransactionSummaryMapper {
      * @return int
      */
 
+<<<<<<< Updated upstream
     @Update("<script>update admin_transaction_summary t1 set t1.delete_Flag=1 where t1.stock_num=id</script>")
     int updateTransactionSummary(String id);
+=======
+    @Update("<script>update admin_Transaction_Summary t1 set t1.delete_Flag=1 where t1.stock_num=#{id}</script>")
+    int updateTransactionSummary(@Param("id") String id);
+>>>>>>> Stashed changes
     @Select("<script> select t1.stock_num as stockNum" +
             ",t1.stock_name as stockName" +
             ",t1.alphabet_capitalization as alphabetCapitalization" +

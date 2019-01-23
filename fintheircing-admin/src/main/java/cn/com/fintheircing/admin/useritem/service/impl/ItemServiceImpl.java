@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,10 +93,7 @@ public class ItemServiceImpl implements ItemService {
         return list;
     }
 
-    @Override
-    public Boolean isExistWhiteList(String stockNum) {
-        return null;
-    }
+
 
     @Override
     public int updateRemark(String id,String mark) {
@@ -133,4 +129,21 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
+    @Override
+    public Boolean isExistWhiteList(String  stockNum) {
+        Boolean flag = false;
+        List<TransactionModel> list = findAllWhiteList(new TransactionModel());
+        list.forEach(i->{
+            if(!i.getStatus().equals(Status.WHITELIST.getName())){
+                list.remove(i);
+            }
+        });
+        for (TransactionModel transactionModel:list){
+            if (transactionModel.getStockNum().equals(stockNum)){
+                flag = true;
+            }
+        }
+        return flag;
+    }
 }
+

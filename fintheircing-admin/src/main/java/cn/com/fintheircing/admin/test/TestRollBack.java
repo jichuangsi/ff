@@ -10,15 +10,31 @@ import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.model.StockModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
+import cn.com.fintheircing.admin.business.service.MotherAccountQueryService;
+import cn.com.fintheircing.admin.common.feign.IExchangeFeignService;
+import cn.com.fintheircing.admin.common.feign.model.TodayAcceptOrder;
+import cn.com.fintheircing.admin.common.model.MotherAccount;
+import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.scheduling.model.DealJsonModel;
+import cn.com.fintheircing.admin.scheduling.utils.DealUtils;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
 import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
+import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -36,6 +52,35 @@ public class TestRollBack
     private TransactionSummaryRepository transactionSummaryRepository;
     @Resource
     private IBusinessStockHoldingMapper businessStockHoldingMapper;
+
+
+
+    Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Resource
+    private MotherAccountQueryService motherAccountQueryService;
+    @Resource
+    private IExchangeFeignService exchangeFeignService;
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
+    @Resource
+    private BusinessService businessService;
+
+
+    @Value("${custom.entrust.prefix}")
+    private String entrustPrefix;
+    @Value("${custom.entrust.entrustBusiness}")
+    private String entrustBusiness;
+    @Value("${custom.entrust.entrustCancel}")
+    private String entrustCancel;
+    /*@Value("${custom.entrust.entrustSuccess}")
+    private String entrustSuccess;*/
+    @Value("${custom.deal.prefix}")
+    private String dealPrefix;
+    @Value("${custom.deal.dealBuy}")
+    private String dealBuy;
+    @Value("${custom.deal.dealSell}")
+    private String dealSell;
 
     @Test
     public void main(){
@@ -73,5 +118,52 @@ public class TestRollBack
         summary.setRemake("测试");
         summary.setStockName("测试");
         transactionSummaryRepository.save(summary);
+    }
+
+    @Test
+    public void testNum(){
+        Integer i = null;
+        i = 1+i;
+        System.out.println(i);
+    }
+
+
+    @Test
+    public void testdeal(){
+        List<MotherAccount> motherAccounts = motherAccountQueryService.getAllAviable();
+        Map<String,TodayAcceptOrder> jsonMap = new HashMap<String,TodayAcceptOrder>();
+        for (MotherAccount account:motherAccounts){
+            ResponseModel<List<TodayAcceptOrder>> responseModel = exchangeFeignService.getTodayAcceptOrderList(account.getAccountNo());
+            List<TodayAcceptOrder> todayAcceptOrders = responseModel.getData();
+            String oldDeal = redisTemplate.opsForValue().get(dealPrefix+account.getAccountNo());
+            Map<String,TodayAcceptOrder> map = new HashMap<>();
+            if (!StringUtils.isEmpty(oldDeal)){
+                map = JSONObject.parseObject(oldDeal, DealJsonModel.class).getMap();
+            }
+            for (TodayAcceptOrder todayAcceptOrder:todayAcceptOrders){
+                if(!map.containsKey(todayAcceptOrder.getOrderNumber())
+                        || !DealUtils.BALANCEDEALORDER(todayAcceptOrder,map.get(todayAcceptOrder.getOrderNumber()))){
+                    if (dealBuy.equals(todayAcceptOrder.getOperName())){
+                        try {
+                            businessService.dealBuyMethod(todayAcceptOrder,account.getAccountNo());
+                        } catch (BusinessException e) {
+                            logger.error(e.getMessage());
+                        }
+                    }else if (dealSell.equals(todayAcceptOrder.getOperName())){
+                        try {
+                            businessService.dealSellMethod(todayAcceptOrder,account.getAccountNo());
+                        } catch (BusinessException e) {
+                            logger.error(e.getMessage());
+                        }
+                    }
+                }
+                jsonMap.put(todayAcceptOrder.getOrderNumber(),todayAcceptOrder);
+            }
+            DealJsonModel jsonModel = new DealJsonModel();
+            jsonModel.setMap(jsonMap);
+            redisTemplate.opsForValue().set(dealPrefix+account.getAccountNo(), JSONObject.toJSONString(jsonMap));
+        }
+
+
     }
 }

@@ -75,7 +75,10 @@ custom:
     prefix: entrust_val_
     entrustBusiness:  买卖
     entrustCancel:  已撤
-    entrustSuccess: 已成
+  deal:
+    prefix: deal_val_
+    dealBuy: 买入
+    dealSell: 卖出
   urlKey:
     searchKey: url_val_search
     roleKey: role_
@@ -99,6 +102,9 @@ custom:
     holdOverFiveAvg: 0.3
     holdOverCurrency: 0.005
     shockShutDown: 1
+  scheduled:
+    entrust:  0 0/1 9,10,11,12,13,14,15 * * 1/5
+    deal: 0 0/1 9,10,11,12,13,14,15 * * 1/5
 pagehelper:
   helperDialect: mysql
   reasonable: true

@@ -34,6 +34,42 @@ public class ContractModel {
     private Double holdOverCurrency;       //流通市值
     private Integer shockShutDown;      //跌停
     private Double businessRate;
+    private Double buyRate;
+    private Double overRate;
+    private Double warnRate;
+    private Double downRate;
+
+    public Double getOverRate() {
+        return overRate;
+    }
+
+    public void setOverRate(Double overRate) {
+        this.overRate = overRate;
+    }
+
+    public Double getWarnRate() {
+        return warnRate;
+    }
+
+    public void setWarnRate(Double warnRate) {
+        this.warnRate = warnRate;
+    }
+
+    public Double getDownRate() {
+        return downRate;
+    }
+
+    public void setDownRate(Double downRate) {
+        this.downRate = downRate;
+    }
+
+    public Double getBuyRate() {
+        return buyRate;
+    }
+
+    public void setBuyRate(Double buyRate) {
+        this.buyRate = buyRate;
+    }
 
     public Double getBusinessRate() {
         return businessRate;
