@@ -12,7 +12,7 @@ import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import org.slf4j.Logger;
@@ -145,9 +145,9 @@ public class FeignServiceFallBack implements IAdminFeignService {
      * @return
      */
     @Override
-    public RecodInfoPayModel updatePayInfo(RecodInfoPayModel model) {
+    public RecodeInfoPayModel updatePayInfo(RecodeInfoPayModel model) {
         logger.error("从操作员获取更新数据失败");
-        return new RecodInfoPayModel();
+        return new RecodeInfoPayModel();
     }
 
     @Override

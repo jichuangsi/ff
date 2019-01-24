@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.usermanag.service;
 
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
@@ -19,7 +20,7 @@ public interface IUserService {
     List<AdminClientInfoModel> findByOption(AdminClientInfoModel queryModel)throws UserServiceException;
 
     @Transactional
-    int changeProxyNum(AdminClientInfoModel model)throws UserServiceException;
+    int changeProxyNum(String userId, String proxyId)throws UserServiceException;
     @Transactional
     boolean returnStatus(String id)throws UserServiceException;
 //
@@ -30,6 +31,8 @@ public interface IUserService {
     boolean updatebankCard(String id) throws UserServiceException;
 
     List<AdminClientInfoModel> findAllDetails(String id);
+
+    boolean changeAmount(String id, double amount);
 
 //    AskMoneyInfoModel changeMoneyBySelf(AskMoneyInfoModel model);
 

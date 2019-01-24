@@ -10,7 +10,7 @@ import java.util.Date;
  * @author yaoxiong
  * @date 2019/1/14
  */
-public class RecodInfoPayModel {
+public class RecodeInfoPayModel {
     private String uuid;
     private String userId;
     /**
@@ -25,6 +25,15 @@ public class RecodInfoPayModel {
     private String status;
     private String phone;
     private String userName;
+    private String businessContractId;
+
+    public String getBusinessContractId() {
+        return businessContractId;
+    }
+
+    public void setBusinessContractId(String businessContractId) {
+        this.businessContractId = businessContractId;
+    }
 
     public Date getCreateTime() {
         return createTime;

@@ -6,11 +6,11 @@ import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
+import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.promise.AddPromiseMoneyModel;
-import cn.com.fintheircing.customer.user.model.promise.PromiseModel;
 import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import cn.com.fintheircing.customer.user.utlis.Entity2Model;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
@@ -22,8 +22,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 @Api("PayController相关的控制层 ")
 @RequestMapping("/pay")
@@ -40,15 +41,15 @@ public class UserPayController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @RequestMapping("/recodPayInfo")
-    public RecodInfoPayModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo, @RequestBody PayInfoModel model) {
-        RecodInfoPayModel m = new RecodInfoPayModel();
+    public RecodeInfoPayModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo, @RequestBody PayInfoModel model) {
+        RecodeInfoPayModel m = new RecodeInfoPayModel();
         m.setAddCount(model.getAmount());
         m.setRemark("充值了" + model.getAmount());
         m.setUserId(userInfo.getUuid());
         m.setWay(model.getWay());
         m.setPhone(userInfo.getPhone());
         m.setUserName(userInfo.getUserName());
-        RecodInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(iRecodInfoPayRepository.save(Model2Entity.CoverRecodInfoPayModel(m)));
+        RecodeInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(iRecodInfoPayRepository.save(Model2Entity.CoverRecodInfoPayModel(m)));
         return model1;
     }
 
@@ -57,7 +58,7 @@ public class UserPayController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @RequestMapping("/checkPayInfo")
-    public ResponseModel<List<RecodInfoPayModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo) {
+    public ResponseModel<List<RecodeInfoPayModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo) {
         List<RecodeInfoPay> allByUserId = iRecodInfoPayRepository.findAllByUserId(userInfo.getUuid());
         allByUserId.forEach(a -> {
             if ("0".equals(a.getStatus())) {
@@ -73,7 +74,7 @@ public class UserPayController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @RequestMapping("/updatePayInfo")
-    public ResponseModel updatePayInfo(@ModelAttribute UserTokenInfo userInfo, RecodInfoPayModel model) {
+    public ResponseModel updatePayInfo(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) {
         ;
         if (iPayMapper.updatePayInfo(model) > 0) {
             return ResponseModel.sucessWithEmptyData("");
@@ -121,7 +122,7 @@ public class UserPayController {
         r.setUserId(userInfo.getUuid());
         r.setCostCount(model.getAmount());
         RecodeInfoPay save = iRecodInfoPayRepository.save(r);
-        RecodInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(save);
+        RecodeInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(save);
         return ResponseModel.sucess("", model1);
 
     }
@@ -130,9 +131,26 @@ public class UserPayController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
-    @PostMapping("/withdrawCash")
-    public ResponseModel addOrUseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody WithdrawModel model) {
-      return null;
+    @PostMapping("/addOrUseMoney")
+    public ResponseModel addOrUseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody RecodeInfoPayModel model) {
+       if (model.getCostCount()>iUserAccountRepository.findAccountByUserId(model.getUserId()))
+        {
+           return ResponseModel.fail("",ResultCode.ACCOUNT_LESS_ERR);
+        }else{
+            Optional<UserAccount> byId = iUserAccountRepository.findById(model.getUserId());
+            if(byId.isPresent()){
+                //扣款
+                UserAccount userAccount = byId.get();
+                userAccount.setAccount(byId.get().getAccount()-model.getCostCount());
+                iUserAccountRepository.save(userAccount);
+                // 记录
+                iRecodInfoPayRepository.save(Model2Entity.UpdateRecodeInfoPayModel(model));
+                return ResponseModel.sucessWithEmptyData("");
+            }else{
+                return ResponseModel.fail("", ResultCode.ACCOUNT_PAY_ERR);
+            }
 
-}
+        }
+
+    }
 }

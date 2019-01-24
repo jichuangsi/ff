@@ -1,6 +1,6 @@
 package cn.com.fintheircing.customer.user.dao.mapper;
 
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -17,7 +17,7 @@ public interface IPayMapper {
      * 查询所有支付信息
      * */
     @Select("<script></script>")
-    List<RecodInfoPayModel> findAllPayInfo();
+    List<RecodeInfoPayModel> findAllPayInfo();
 
     /**
      * 更新字段
@@ -25,5 +25,5 @@ public interface IPayMapper {
      * @return
      */
     @Update("<script></script>")
-   int updatePayInfo(RecodInfoPayModel model);
+   int updatePayInfo(RecodeInfoPayModel model);
 }

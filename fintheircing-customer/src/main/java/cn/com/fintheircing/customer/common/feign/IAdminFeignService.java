@@ -11,7 +11,7 @@ import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -111,7 +111,7 @@ public interface IAdminFeignService {
      * @return
      */
     @RequestMapping("adminF/updatePayInfo")
-    RecodInfoPayModel updatePayInfo(@RequestBody RecodInfoPayModel model);
+    RecodeInfoPayModel updatePayInfo(@RequestBody RecodeInfoPayModel model);
 
     //保存股票申请
     @RequestMapping(value = "adminF/saveStockEntrust")

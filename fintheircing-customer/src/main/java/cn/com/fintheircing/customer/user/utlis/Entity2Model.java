@@ -3,13 +3,13 @@ package cn.com.fintheircing.customer.user.utlis;
 import cn.com.fintheircing.customer.common.constant.PayStatus;
 import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 
 import java.util.List;
 
 public class Entity2Model {
-    public static RecodInfoPayModel CoverRecodInfoPay(RecodeInfoPay r){
-        RecodInfoPayModel model=new RecodInfoPayModel();
+    public static RecodeInfoPayModel CoverRecodInfoPay(RecodeInfoPay r){
+        RecodeInfoPayModel model=new RecodeInfoPayModel();
         model.setUuid(r.getUuid());
         model.setWay(r.getWay());
         model.setUserId(r.getUserId());
@@ -20,15 +20,15 @@ public class Entity2Model {
         model.setStatus(PayStatus.getName(r.getStatus()));
         return  model;
     }
-    public static List<RecodInfoPayModel> CoverListRecodInfoPay(List<RecodeInfoPay> payList){
-        List<RecodInfoPayModel> models = null;
+    public static List<RecodeInfoPayModel> CoverListRecodInfoPay(List<RecodeInfoPay> payList){
+        List<RecodeInfoPayModel> models = null;
         payList.forEach(P->{
             models.add(CoverRecodInfoPay(P));
         });
         return models;
     }
-    public static List<RecodInfoPayModel> CoverListRecodeInfoPay(List<RecodeInfoPay> payList, UserTokenInfo user){
-        List<RecodInfoPayModel> models = null;
+    public static List<RecodeInfoPayModel> CoverListRecodeInfoPay(List<RecodeInfoPay> payList, UserTokenInfo user){
+        List<RecodeInfoPayModel> models = null;
         payList.forEach(P->{
             models.add(CoverRecodInfoPay(P));
         });

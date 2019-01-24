@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.usermanag.controller;
 
 import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IAdminRecodingMapper;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
@@ -54,10 +55,10 @@ public class UserController {
         return ResponseModel.sucess("",personPageInfo);
     }
 
-    @ApiOperation(value = "用户列表-基本信息-修改所属代理", notes = "")
+    @ApiOperation(value = "用户列表-查看详情-修改所属代理", notes = "")
     @PostMapping("/changeProxyNum")
-    public ResponseModel changeProxyNum(AdminClientInfoModel Model )throws UserServiceException{
-        return ResponseModel.sucess("", userService.changeProxyNum(Model));
+    public ResponseModel changeProxyNum(@ModelAttribute UserTokenInfo userInfo,String userId, String proxyId )throws UserServiceException{
+        return ResponseModel.sucess("", userService.changeProxyNum(userId,proxyId));
     }
 
     @ApiOperation(value = "用户列表-基本信息-查看详情", notes = "")
@@ -66,35 +67,11 @@ public class UserController {
         return ResponseModel.sucess("", userService.findAllDetails(id));
     }
 
-//    @ApiOperation(value = "用户列表-合约信息-2", notes = "")
-//    @PostMapping("/contactRecode")
-//    public ResponseModel<PageInfo<ContactInfoModel>> contactRecode(String goodsType , int pageNum, int pageSize)throws UserServiceException{
-//        PageHelper.startPage(pageNum,pageSize);
-//        List<ContactInfoModel> contactInfoModels = userService.contactRecode(goodsType);
-//        PageInfo<ContactInfoModel> personPageInfo = new PageInfo<>(contactInfoModels);
-//        return ResponseModel.sucess("",personPageInfo);
-//    }
-//    @ApiOperation(value = "资金申请-入金申请查询", notes = "")
-//    @PostMapping("/insideMoney")
-//    public ResponseModel<PageInfo<AskMoneyInfoModel>> insideMoney(AskMoneyInfoModel Model ,int pageNum, int pageSize)throws UserServiceException{
-//        PageHelper.startPage(pageNum,pageSize);
-//        List<AskMoneyInfoModel> askMoneyInfoModels = userService.insideMoney(Model);
-//        PageInfo<AskMoneyInfoModel> personPageInfo = new PageInfo<>(askMoneyInfoModels);
-//        return ResponseModel.sucess("",personPageInfo);
-//    }
-//    @ApiOperation(value = "资金申请-手动修改金额", notes = "")
-//    @PostMapping("/changeMoneyBySelf")
-//    public ResponseModel<AskMoneyInfoModel> changeMoneyBySelf(AskMoneyInfoModel Model )throws UserServiceException{
-//        AskMoneyInfoModel askMoneyInfoModels = userService.changeMoneyBySelf(Model);
-//        return ResponseModel.sucess("",askMoneyInfoModels);
-//    }
-//    @ApiOperation(value = "资金申请-入金申请-入金处理", notes = "")
-//    @PostMapping("/insideMoneyHandel")
-
-//    public ResponseModel<AskMoneyInfoModel> insideMoneyHandel(AskMoneyInfoModel Model )throws UserServiceException{
-//        AskMoneyInfoModel askMoneyInfoModels = userService.insideMoneyHandel(Model);
-//        return ResponseModel.sucess("",askMoneyInfoModels);
-//    }
+    @ApiOperation(value = "用户列表-查看详情-修改余额", notes = "")
+    @PostMapping("/findAllDetails")
+    public ResponseModel changeAmount( String id,double amount)throws UserServiceException{
+        return ResponseModel.sucess("", userService.changeAmount(id,amount));
+    }
     @ApiOperation(value = "银行卡管理-银行卡全部信息", notes = "")
     @PostMapping("/bankCard")
     public ResponseModel<PageInfo<BankCardModel>> bankCard(BankCardModel Model , int pageNum, int pageSize)throws UserServiceException{
