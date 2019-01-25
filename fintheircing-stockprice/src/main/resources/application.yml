@@ -12,9 +12,11 @@ eureka:
       defaultZone: http://127.0.0.1:8762/eureka/
 
 custom: 
-  stockMarketLv2Ips: 120.77.76.11:7709,120.77.76.34:7709,112.74.31.192:7709 #lv2行情接口地址及端口
+  stockMarketLv2Ips: 120.77.239.226:7709,183.3.223.36:7709,119.23.145.96:7709,120.77.76.11:7709,120.77.76.34:7709,112.74.31.192:7709 #lv2行情接口地址及端口
   stockMarketLv2UserName: DDP18566375526 #lv2行情接用户名
   stockMarketLv2Pwd: 11223344 #lv2行情接密码
+  stockMarketLv2replySeconds: 10 #心跳间隔
+  stockMarketMaxCount: 50 #单次最大查询股票数
   swagger:
     enable: true #是否启用swagger文档
   log: 

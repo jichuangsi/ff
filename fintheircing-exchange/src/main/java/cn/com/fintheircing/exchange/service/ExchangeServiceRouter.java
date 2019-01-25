@@ -26,7 +26,7 @@ import cn.com.fintheircing.exchange.model.TodayOrder;
 public class ExchangeServiceRouter implements InitializingBean {
 
 	private Map<String, ExcahngeService> servicesMap = new HashMap<>();
-	private int replySeconds = 120;// 心跳时间
+	private int replySeconds = 60;// 心跳时间
 	@Resource
 	private MotherAccountQueryService motherAccountQueryService;
 

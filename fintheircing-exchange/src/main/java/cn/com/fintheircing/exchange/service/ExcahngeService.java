@@ -64,9 +64,9 @@ public class ExcahngeService {
 			threadPool.scheduleAtFixedRate(() -> {
 				byte[] errorInfo1 = new byte[256];
 				logger.info(motherAccount.getAccountNo() + " 心跳维持连接" + replySeconds + "s一次...");
-				if (!tdxLibrary.IsConnectOK(clientId)) {
-					logger.info("链接已断开，再次登录");
-					synchronized (this) {
+				synchronized (this) {
+					if (!tdxLibrary.IsConnectOK(clientId)) {
+						logger.info("链接已断开，再次登录");
 						try {
 							this.clientId = tdxLibrary.Logon(Integer.parseInt(motherAccount.getQsId()),
 									motherAccount.getIp(), motherAccount.getPort(), motherAccount.getVersion(),
