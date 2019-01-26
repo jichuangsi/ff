@@ -1,7 +1,7 @@
 package cn.com.fintheircing.admin.common.feign.impl;
 
 import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
-import cn.com.fintheircing.admin.usermanag.model.MesModel;
+import cn.com.fintheircing.admin.usermanag.model.ｍes.MesModel;
 
 import java.util.ArrayList;
 import java.util.List;

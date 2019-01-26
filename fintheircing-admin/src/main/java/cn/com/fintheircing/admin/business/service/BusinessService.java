@@ -951,7 +951,7 @@ public class BusinessService {
     //每日获取买入量
     public void getFiveDayMaxAmount(){
        //判断是否是假期，是就不更新
-        long newTime = new Date().getTime();
+        long newTime = System.currentTimeMillis();
         boolean flag = systemService.isInHoliday(newTime);
         //否更新数据
         if (!flag){

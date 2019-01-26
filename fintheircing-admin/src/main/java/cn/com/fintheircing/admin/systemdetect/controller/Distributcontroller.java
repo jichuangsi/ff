@@ -3,7 +3,6 @@ package cn.com.fintheircing.admin.systemdetect.controller;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
-import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;

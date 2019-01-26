@@ -17,7 +17,7 @@ public class PayInfo {
     private double costCount;
     private String remark;
     private String way;//是把钱用去哪里了
-    private Date createTime;
+    private Date createTime=new Date();
     private Date updateTime;
     private String checkStatus;
     private String businessContractId;

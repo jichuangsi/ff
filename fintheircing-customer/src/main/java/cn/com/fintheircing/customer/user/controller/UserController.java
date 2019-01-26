@@ -1,13 +1,18 @@
 package cn.com.fintheircing.customer.user.controller;
 
+import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
+import cn.com.fintheircing.customer.user.dao.mapper.IUserMesInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
+import cn.com.fintheircing.customer.user.dao.repository.IUserMesInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
+import cn.com.fintheircing.customer.user.entity.UserMesInfo;
 import cn.com.fintheircing.customer.user.model.PayConfigModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.model.mes.UserMesInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
@@ -19,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -29,10 +35,9 @@ public class UserController {
     @Resource
     private IAdminFeignService adminFeignService;
     @Resource
-    private IRecodInfoPayRepository iRecodInfoPayRepository;
+    private IUserMesInfoRepository iUserMesInfoRepository;
     @Resource
-    private IPayMapper iPayMapper;
-
+    private IUserMesInfoMapper iUserMesInfoMapper;
     @ApiOperation(value = "获取指定用户信息", notes = "")
     @GetMapping("/getUserClientInfoByPhone")
     public UserClientInfo findOneByUserName(@RequestParam(value = "userName") String userName) {
@@ -52,7 +57,7 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
-    @RequestMapping("/getPayConfig")
+    @RequestMapping("/payForNet")
     public PayConfigModel payForNet(@ModelAttribute UserTokenInfo userInfo) {
         return userService.payForNet(userInfo);
     }
@@ -74,9 +79,48 @@ public class UserController {
     public ResponseModel<ResultModel> getWayToPay(@ModelAttribute UserTokenInfo userInfo) {
         return ResponseModel.sucess("", adminFeignService.getWayToPay());
     }
+    @ApiOperation(value = "我的页面信息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/userInfo")
+    public ResponseModel getUserInfo(@ModelAttribute UserTokenInfo userInfo) {
+
+        return ResponseModel.sucess("", userService.getUserInfo(userInfo));
+    }
+
+    @ApiOperation(value = "获取官方消息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/getMesInfo")
+    public ResponseModel<List<UserMesInfoModel>> getMesInfo(@ModelAttribute UserTokenInfo userInfo) {
+        return ResponseModel.sucess("",iUserMesInfoMapper.findAllUserMesInfo());
+    }
+
+    @ApiOperation(value = "统计未读的消息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/countMes")
+    public ResponseModel countMes(@ModelAttribute UserTokenInfo userInfo) {
+        List<UserMesInfo> allByIsRead = iUserMesInfoRepository.findAllByIsRead(0);
+        return ResponseModel.sucess("",allByIsRead.size());
+    }
+
+    @ApiOperation(value = "阅读消息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/readMes")
+    public ResponseModel readMes(@ModelAttribute UserTokenInfo userInfo,String mesId) {
+        int i = iUserMesInfoMapper.updateRead(mesId);
+        if (i>0){
+            return ResponseModel.sucessWithEmptyData("");
+        }
+        return ResponseModel.fail("", ResultCode.SYS_ERROR_MSG);
+    }
 
 }
-
-
 
 

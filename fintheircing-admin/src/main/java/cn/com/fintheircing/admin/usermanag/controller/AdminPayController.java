@@ -80,6 +80,7 @@ public class AdminPayController {
     @GetMapping("/AgreePromiseMoney")
     @ApiOperation(value = "同意申请追加保证金", notes = "")
     public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo, PromiseModel model) throws UserServiceException {
+
         if (iBusinessContractMapper.addPromiseMoney(model.getCash()) < 0) {
             return ResponseModel.fail("", ResultCode.ADD_PROMISE_MONEY_ERR);
         }

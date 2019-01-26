@@ -1,6 +1,5 @@
 package cn.com.fintheircing.customer.user.model.payresultmodel;
 
-import cn.com.fintheircing.customer.common.constant.PayStatus;
 
 import java.util.Date;
 

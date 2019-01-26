@@ -72,4 +72,5 @@ public class ResultCode {
 
 	public static final String STOCK_HOLDING_ERR = "您尚未持有该股";
 	public static final String STOCK_NULL_ERR = "查无此股的信息";
+	public static final String SEND_MES_FAILED = "消息发送失败";
 }

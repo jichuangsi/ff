@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.usermanag.model;
+package cn.com.fintheircing.admin.usermanag.model.ｍes;
 
 import cn.com.fintheircing.admin.common.constant.MesStatus;
 

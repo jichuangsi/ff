@@ -260,7 +260,6 @@ public class PayServiceImpl implements IPayService {
      */
     @Override
     public boolean agreePromiseMoney(UserTokenInfo userInfo, PromiseModel model) {
-
         PayInfo p = new PayInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());

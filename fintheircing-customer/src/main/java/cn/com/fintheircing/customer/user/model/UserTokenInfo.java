@@ -18,6 +18,14 @@ public class UserTokenInfo {
     private Integer roleGrade; //区别管理和用户
     private String roleName;
     private String applyOn;     //区别pc和app
+    private String txpassword;//提现密码
+
+    public String getTxpassword() {
+        return txpassword;
+    }
+    public void setTxpassword(String txpassword) {
+        this.txpassword = txpassword;
+    }
 
 
     public String getApplyOn() {

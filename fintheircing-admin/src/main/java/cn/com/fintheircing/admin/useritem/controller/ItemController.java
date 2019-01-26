@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.useritem.controller;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
+import cn.com.fintheircing.admin.useritem.ImportException;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
 import com.github.pagehelper.PageHelper;
@@ -10,8 +11,10 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -115,5 +118,12 @@ public class ItemController {
         PageInfo<TransactionModel> personPageInfo = new PageInfo<>(allInfo);
         return ResponseModel.sucess("",personPageInfo );
 
+    }
+    @ApiOperation(value = "白名单列表-文件导入进数据库", notes = "")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/importExcel")
+    public ResponseModel importExcel( @RequestParam(value = "file" ) MultipartFile[] file) throws ImportException {
+        return ResponseModel.sucess("",  itemService.importExcel(file));
     }
 }

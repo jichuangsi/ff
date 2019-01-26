@@ -2,8 +2,10 @@ package cn.com.fintheircing.admin.useritem.service;
 
 import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
+import cn.com.fintheircing.admin.useritem.ImportException;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 /**
@@ -31,5 +33,13 @@ public interface ItemService {
      //匹配是否属于白名单
     Boolean isExistWhiteList(String stockNum);
 
-    void oneDayUpdateStock(List<QuotesTenModel> models);
+    /**
+     * 导入上传excel文件
+     * @param
+     * @param file
+     * @return
+     */
+    boolean importExcel(MultipartFile[] file) throws ImportException;
+
+    int oneDayUpdateStock(List<QuotesTenModel> quotesTenModels);
 }

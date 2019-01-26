@@ -26,9 +26,9 @@ public class TransactionSummary extends AbstractEntity {
     private String stockName;
     private String alphabetCapitalization;  //名称首字母大写
     private String martTemplate;    //市场模块
-    private Date   joinTime=new Date();
+    private Date   joinTime;
     private String remake;
-    private Integer status;
+    private Integer status=0;
 
     private Double oneDay;
     private Double twoDay;

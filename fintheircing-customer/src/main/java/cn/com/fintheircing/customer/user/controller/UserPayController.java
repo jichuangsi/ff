@@ -12,6 +12,7 @@ import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.promise.AddPromiseMoneyModel;
 import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
+import cn.com.fintheircing.customer.user.service.UserService;
 import cn.com.fintheircing.customer.user.utlis.Entity2Model;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
 import io.swagger.annotations.Api;
@@ -35,7 +36,8 @@ public class UserPayController {
     private IPayMapper iPayMapper;
     @Resource
     private IUserAccountRepository iUserAccountRepository;
-
+    @Resource
+    private UserService userService;
     @ApiOperation(value = "生成待确认充值记录", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
@@ -133,24 +135,9 @@ public class UserPayController {
     })
     @PostMapping("/addOrUseMoney")
     public ResponseModel addOrUseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody RecodeInfoPayModel model) {
-       if (model.getCostCount()>iUserAccountRepository.findAccountByUserId(model.getUserId()))
-        {
-           return ResponseModel.fail("",ResultCode.ACCOUNT_LESS_ERR);
-        }else{
-            Optional<UserAccount> byId = iUserAccountRepository.findById(model.getUserId());
-            if(byId.isPresent()){
-                //扣款
-                UserAccount userAccount = byId.get();
-                userAccount.setAccount(byId.get().getAccount()-model.getCostCount());
-                iUserAccountRepository.save(userAccount);
-                // 记录
-                iRecodInfoPayRepository.save(Model2Entity.UpdateRecodeInfoPayModel(model));
-                return ResponseModel.sucessWithEmptyData("");
-            }else{
-                return ResponseModel.fail("", ResultCode.ACCOUNT_PAY_ERR);
-            }
-
+        if (userService.addOrUseMoney(model)) {
+            return ResponseModel.sucessWithEmptyData("");
         }
-
+        return ResponseModel.fail("", ResultCode.ACCOUNT_PAY_ERR);
     }
 }

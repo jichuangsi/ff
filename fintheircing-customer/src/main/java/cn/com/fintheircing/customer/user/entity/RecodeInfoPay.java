@@ -1,6 +1,9 @@
 package cn.com.fintheircing.customer.user.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -13,6 +16,8 @@ import java.util.Date;
 @Entity
 public class RecodeInfoPay {
     @Id
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String userId;
     private double addCount;
@@ -29,6 +34,8 @@ public class RecodeInfoPay {
      * 合约id
      */
     private String businessContractId;
+
+
 
     public String getBusinessContractId() {
         return businessContractId;
