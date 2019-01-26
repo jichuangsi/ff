@@ -5,18 +5,17 @@ import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockHoldingMapper
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessContractRiskRepository;
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockHoldingRepository;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
-import cn.com.fintheircing.admin.business.model.ContractModel;
-import cn.com.fintheircing.admin.business.model.StockEntrustModel;
-import cn.com.fintheircing.admin.business.model.StockHoldingModel;
-import cn.com.fintheircing.admin.business.model.StockModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.service.MotherAccountQueryService;
 import cn.com.fintheircing.admin.common.feign.IExchangeFeignService;
 import cn.com.fintheircing.admin.common.feign.model.TodayAcceptOrder;
+import cn.com.fintheircing.admin.common.feign.model.TodayOrder;
 import cn.com.fintheircing.admin.common.model.MotherAccount;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.scheduling.model.DealJsonModel;
+import cn.com.fintheircing.admin.scheduling.model.EntrustJsonModel;
 import cn.com.fintheircing.admin.scheduling.utils.DealUtils;
+import cn.com.fintheircing.admin.scheduling.utils.EntrustUtils;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
 import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
 import com.alibaba.fastjson.JSONObject;
@@ -31,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,11 +92,11 @@ public class TestRollBack
         }
     }
 
-    @Test
+   /* @Test
     public void testRisk() throws BusinessException{
         StockModel stockModel = new StockModel();//根据stockNum获取当前股票实时数据
         //BusinessContractRisk risk = businessContractRiskRepository.findBusinessContractRiskByContractId("40289f1a686084460168608694110000");
-        StockHoldingModel stockHoldingModel = businessStockHoldingMapper.selectStockNum("40289f1a686084460168608694110000","600600");
+        StockHoldingModel stockHoldingModel = businessStockHoldingMapper.selectStockNum("40289f1a686084460168608694110000","600600").get(0);
         ContractModel contract = businessContractMapper.selectContract("40289f1a686084460168608694110000");//获取相关合约
         stockModel.setYesterdayClose(54.0);
         stockModel.setTodayMax(55.0);
@@ -106,9 +106,9 @@ public class TestRollBack
         model.setAmount(300);
         model.setPrice(53.0);
         model.setStockNum("600600");
-        /*BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);*/
+        *//*BusinessUtils.throughRisk(stockHoldingModel,model,contract,stockModel);*//*
 
-    }
+    }*/
 
     @Test
     public void testSaveStock(){
@@ -138,7 +138,7 @@ public class TestRollBack
             String oldDeal = redisTemplate.opsForValue().get(dealPrefix+account.getAccountNo());
             Map<String,TodayAcceptOrder> map = new HashMap<>();
             if (!StringUtils.isEmpty(oldDeal)){
-                map = JSONObject.parseObject(oldDeal, DealJsonModel.class).getMap();
+                map = JSONObject.parseObject(oldDeal, DealJsonModel.class).getTodayAcceptOrders();
             }
             for (TodayAcceptOrder todayAcceptOrder:todayAcceptOrders){
                 if(!map.containsKey(todayAcceptOrder.getOrderNumber())
@@ -160,10 +160,63 @@ public class TestRollBack
                 jsonMap.put(todayAcceptOrder.getOrderNumber(),todayAcceptOrder);
             }
             DealJsonModel jsonModel = new DealJsonModel();
-            jsonModel.setMap(jsonMap);
+            jsonModel.setTodayAcceptOrders(jsonMap);
             redisTemplate.opsForValue().set(dealPrefix+account.getAccountNo(), JSONObject.toJSONString(jsonMap));
         }
+    }
 
 
+    @Test
+    public void testEntrust() throws BusinessException{
+        List<MotherAccount> motherAccounts = motherAccountQueryService.getAllAviable();
+        for (MotherAccount account:motherAccounts){
+            ResponseModel<List<TodayOrder>> responseModel
+                    = exchangeFeignService.getTodayOrderList(account.getAccountNo());
+            List<TodayOrder> todayOrders = responseModel.getData();
+            String oldOrdersJson = redisTemplate.opsForValue().get(entrustPrefix+account.getAccountNo());
+            Map<String,TodayOrder> oldOrders = new HashMap<>();
+            if (!StringUtils.isEmpty(oldOrdersJson)){
+                oldOrders = JSONObject.parseObject(oldOrdersJson, EntrustJsonModel.class).getTodayOrders();
+            }
+            Map<String,TodayOrder> map = new HashMap<String,TodayOrder>();
+            for(TodayOrder todayOrder :todayOrders) {
+                if(!oldOrders.containsKey(todayOrder.getOrderNumber())
+                        || !EntrustUtils.BALANCETODAYORDER(todayOrder,oldOrders.get(todayOrder.getOrderNumber()))){
+                    String orderTypeName = todayOrder.getOrderTypeName().trim();
+                    String orderStatus = todayOrder.getStatus().trim();
+                    String orderNo = todayOrder.getOrderNumber();
+                    if (entrustBusiness.trim().equals(orderTypeName)){
+                        if (entrustCancel.trim().equals(orderStatus)){
+                            businessService.updateColdMoneyAndSaveEntrust(todayOrder,account.getAccountNo());
+                        }
+                    }
+                }
+                map.put(todayOrder.getOrderNumber(),todayOrder);
+            }
+            EntrustJsonModel jsonModel = new EntrustJsonModel();
+            jsonModel.setTodayOrders(map);
+            redisTemplate.opsForValue().set(entrustPrefix+account.getAccountNo(),JSONObject.toJSONString(jsonModel));
+        }
+    }
+
+    @Test
+    public  void testQuotesTen(){
+        //businessService.getQuotesTenModel("600600","100100","200200","300300");
+        /*String[] strings = new String[]{"w","e","w","e","w","y","u","w"};
+        List<String[]> list = BusinessUtils.getListStringArray(strings,3);
+        System.out.println(list);*/
+       /* List<TestModel> list = new ArrayList<>();
+        list.add(new TestModel("1",2));
+        list.add(new TestModel("2",3));
+        list.add(new TestModel("3",4));
+        for (TestModel s:list){
+            if ("1".equals(s.getS())){
+                s.setI(5);
+            }
+        }
+        System.out.println(list);*/
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        String dd = sdf.format(new Date());
+        System.out.println(dd);
     }
 }

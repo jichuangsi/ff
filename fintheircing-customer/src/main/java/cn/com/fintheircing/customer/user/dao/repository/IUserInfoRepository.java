@@ -8,4 +8,6 @@ public interface IUserInfoRepository extends JpaRepository<UserClientInfo,String
 	
 	UserClientInfo findOneByUserName(String userName);
 
+	UserClientInfo findByUuid(String uuid);
+
 }

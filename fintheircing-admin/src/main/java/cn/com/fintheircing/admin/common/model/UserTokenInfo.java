@@ -19,6 +19,7 @@ public class UserTokenInfo {
     private String roleName;
     private String applyOn;     //区别pc和app
 
+
     public String getApplyOn() {
         return applyOn;
     }

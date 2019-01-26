@@ -57,6 +57,16 @@ public class Product {
      */
     private Integer allot;
 
+    private double onceServerMoney;//次利息收费利率
+
+    public double getOnceServerMoney() {
+        return onceServerMoney;
+    }
+
+    public void setOnceServerMoney(double onceServerMoney) {
+        this.onceServerMoney = onceServerMoney;
+    }
+
     public Integer getAllot() {
         return allot;
     }

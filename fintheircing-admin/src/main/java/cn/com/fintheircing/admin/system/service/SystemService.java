@@ -262,4 +262,9 @@ public class SystemService {
    public List<RoleModel> getRoles(){
        return adminRoleMapper.selectAllRole();
    }
+
+
+   public boolean isInHoliday(long nowTime){
+       return systemHolidayMapper.countInHoliday(nowTime)>0;
+   }
 }

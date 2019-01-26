@@ -20,6 +20,52 @@ public class StockHoldingModel {
     private String contractId;
     private String userId;
 
+    private Double oneDay;
+    private Double twoDay;
+    private Double threeDay;
+    private Double fourDay;
+    private Double fiveDay;
+
+    public Double getOneDay() {
+        return oneDay;
+    }
+
+    public void setOneDay(Double oneDay) {
+        this.oneDay = oneDay;
+    }
+
+    public Double getTwoDay() {
+        return twoDay;
+    }
+
+    public void setTwoDay(Double twoDay) {
+        this.twoDay = twoDay;
+    }
+
+    public Double getThreeDay() {
+        return threeDay;
+    }
+
+    public void setThreeDay(Double threeDay) {
+        this.threeDay = threeDay;
+    }
+
+    public Double getFourDay() {
+        return fourDay;
+    }
+
+    public void setFourDay(Double fourDay) {
+        this.fourDay = fourDay;
+    }
+
+    public Double getFiveDay() {
+        return fiveDay;
+    }
+
+    public void setFiveDay(Double fiveDay) {
+        this.fiveDay = fiveDay;
+    }
+
     public String getUserId() {
         return userId;
     }

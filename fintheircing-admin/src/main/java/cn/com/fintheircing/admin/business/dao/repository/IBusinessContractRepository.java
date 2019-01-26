@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface IBusinessContractRepository extends JpaRepository<BusinessContract,String>{
 
 
@@ -32,4 +34,7 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
             "select contract_id,sum(current_worth) as worth from business_stock_holding where delete_flag='0' group BY contract_id" +
             ") t4 on t3.uuid = t4.contract_id where t3.delete_flag='0') t1 LEFT JOIN business_contract_risk t2 on  t1.risk_id=t2.uuid where t1.uuid = :contractId and t2.delete_flag='0'",nativeQuery = true)
     ContractModel findBycontractId(@Param("contractId") String contractId);*/
+
+
+    List<BusinessContract> findByDeleteFlag(String delete);
 }

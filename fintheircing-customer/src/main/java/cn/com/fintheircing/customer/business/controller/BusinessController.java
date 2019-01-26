@@ -110,7 +110,7 @@ public class BusinessController {
     })
     @PostMapping("/getCurrentHolding")
     @CrossOrigin
-    public ResponseModel<StockHoldingModel> getCurrentHolding(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockHoldingModel model){
+    public ResponseModel<List<StockHoldingModel>> getCurrentHolding(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockHoldingModel model){
         try {
             return ResponseModel.sucess("",businessService.getCurrentStockHolding(userInfo,model));
         } catch (BusinessException e) {
@@ -173,6 +173,16 @@ public class BusinessController {
         } catch (BusinessException e) {
             return ResponseModel.fail("",e.getMessage());
         }
+    }
+
+    @ApiOperation(value = "获取当前用户的交易详情", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getBusinessInfo")
+    @CrossOrigin
+    public ResponseModel<ContractModel> getBusinessInfo(@ModelAttribute UserTokenInfo userInfo){
+        return ResponseModel.sucess("",businessService.getBusinessInfo(userInfo));
     }
 
 }

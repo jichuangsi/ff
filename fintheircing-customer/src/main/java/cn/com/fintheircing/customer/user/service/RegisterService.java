@@ -134,6 +134,7 @@ public class RegisterService {
 
 			UserAccount userAccount = new UserAccount();
 			userAccount.setUserId(userClientInfo.getUuid());
+			userAccount.setAccount(0.0);
 			userAccount.setCreatedTime(new Date());
 			userAccount.setUpdatedTime(new Date());
 			userAccountRepository.save(userAccount);
@@ -192,4 +193,7 @@ public class RegisterService {
 
 
 
+	public UserClientInfo getUserInfoByUuid(String uuid){
+		return userInfoRepository.findByUuid(uuid);
+	}
 }

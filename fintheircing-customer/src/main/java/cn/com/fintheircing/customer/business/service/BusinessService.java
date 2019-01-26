@@ -11,11 +11,15 @@ import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
+import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.service.RegisterService;
 import cn.com.fintheircing.customer.user.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -31,6 +35,10 @@ public class BusinessService {
     private UserService userService;
     @Resource
     private IAdminFeignService adminFeignService;
+    @Resource
+    private RegisterService registerService;
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
 
     @Value("${custom.contract.dateFormat}")
     private String sdformat;
@@ -53,7 +61,7 @@ public class BusinessService {
 
     public Boolean isRich(UserTokenInfo userInfo, ContractModel model){
         Double account = userAccountRepository.findAccountByUserId(userInfo.getUuid());
-        ProductModel productModel = adminFeignService.getProduct(model.getProductId());
+        ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
         model.setProductModel(productModel);
         if (account!=null){
             if (account>getNeedMoney(model.getProductModel(),model.getPromisedMoney())+model.getPromisedMoney()){
@@ -67,7 +75,7 @@ public class BusinessService {
     //判断资金是否充足并返回产品
     private ProductModel getProductIsRich(UserTokenInfo userInfo, ContractModel model) throws BusinessException{
         Double account = userAccountRepository.findAccountByUserId(userInfo.getUuid());
-        ProductModel productModel = adminFeignService.getProduct(model.getProductId());
+        ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
         if (productModel==null){
             throw new BusinessException(ResultCode.PRODUCT_NOTEXIST_ERR);
         }
@@ -83,6 +91,17 @@ public class BusinessService {
     //保存合约，扣除用户账户，创建合约操作
     @Transactional(rollbackFor = Exception.class)
     public void saveContract(UserTokenInfo userInfo,ContractModel model) throws BusinessException{
+        //判断是否实名
+        UserClientInfo userClientInfo = registerService.getUserInfoByUuid(userInfo.getUuid());
+        if (!UserClientInfo.CER_PASS.equals(userClientInfo.getCer())){
+            throw new BusinessException(ResultCode.CER_NOT_ERR);
+        }
+        if (null == model.getProductModel().getAllot()){
+            if (StringUtils.isEmpty(model.getProductModel().getAllotStr())){
+                throw new BusinessException(ResultCode.PARAM_MISS_MSG);
+            }
+            model.getProductModel().setAllot(ProductStatus.getStatus(model.getProductModel().getAllotStr()).getIndex());
+        }
         if (!adminFeignService.canBuy(model.getProductModel().getAllot(),userInfo.getUuid())){
             throw new BusinessException(ResultCode.PRODUCT_ISEXIST_ERR);
         }
@@ -166,14 +185,17 @@ public class BusinessService {
         }
    }
 
-   public StockHoldingModel getCurrentStockHolding(UserTokenInfo userInfo,
+   public List<StockHoldingModel> getCurrentStockHolding(UserTokenInfo userInfo,
                                                    StockHoldingModel model) throws BusinessException{
        model.setUserId(userInfo.getUuid());
-       model = adminFeignService.getCurrentHolding(model);
-       if (model==null){
+       if (null == model.getStockNo()){
+           model.setStockNo("");
+       }
+       List<StockHoldingModel> stockHoldingModels = adminFeignService.getCurrentHolding(model);
+       if (!(stockHoldingModels.size()>0)){
            throw new BusinessException(ResultCode.STOCK_HOLD_ERR);
        }
-       return model;
+       return stockHoldingModels;
    }
 
    public void sellHoldStockEntrust(UserTokenInfo userInfo,StockHoldingModel model) throws BusinessException{
@@ -211,5 +233,10 @@ public class BusinessService {
        }
        model.setUserId(userInfo.getUuid());*/
        return adminFeignService.getMaxBuyAmount(model);
+    }
+
+
+    public ContractModel getBusinessInfo(UserTokenInfo userInfo){
+       return  adminFeignService.getBusinessInfo(userInfo);
     }
 }

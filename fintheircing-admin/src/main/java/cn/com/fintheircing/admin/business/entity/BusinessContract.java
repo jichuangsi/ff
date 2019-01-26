@@ -22,6 +22,7 @@ public class BusinessContract extends AbstractEntity{
     private Double promisedMoney;   //保证金
     private Double dangerourPrpmised;   //超危保证金
     private Double borrowMoney;   //借款
+    private String expiredDay;  //到期日
     private Double coldMoney;   //冻结资金
     private String  riskId;     //关联风控
     private Double firstInterest;   //初次利息
@@ -30,6 +31,14 @@ public class BusinessContract extends AbstractEntity{
     private Integer rudeStatus;     //是否强制平仓
     @Version
     private int version;
+
+    public String getExpiredDay() {
+        return expiredDay;
+    }
+
+    public void setExpiredDay(String expiredDay) {
+        this.expiredDay = expiredDay;
+    }
 
     public Integer getContractStatus() {
         return contractStatus;

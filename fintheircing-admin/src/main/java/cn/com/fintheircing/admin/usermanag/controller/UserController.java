@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "用户列表-查看详情-修改余额", notes = "")
-    @PostMapping("/findAllDetails")
+    @PostMapping("/changeAmount")
     public ResponseModel changeAmount( String id,double amount)throws UserServiceException{
         return ResponseModel.sucess("", userService.changeAmount(id,amount));
     }

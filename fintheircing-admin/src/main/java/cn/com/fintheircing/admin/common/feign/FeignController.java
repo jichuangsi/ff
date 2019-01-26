@@ -206,7 +206,7 @@ public class FeignController {
     @ApiOperation(value = "获取当前持仓", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/getCurrentHolding")
-    public StockHoldingModel getCurrentHolding(@RequestBody StockHoldingModel model){
+    public List<StockHoldingModel> getCurrentHolding(@RequestBody StockHoldingModel model){
         return businessService.getCurrentHolding(model);
     }
 
@@ -251,4 +251,18 @@ public class FeignController {
     }
 
 
+  /*  @ApiOperation(value = "获取最大的购买量", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/testFeign")
+    public void testFeign() throws Exception{
+        Thread.sleep(5000);
+        System.out.println(1111);
+    }*/
+
+    @ApiOperation(value = "获取当前用户的交易信息", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getBusinessInfo")
+    public ContractModel getBusinessInfo(@RequestBody UserTokenInfo userInfo){
+        return businessService.getBusinessInfo(userInfo);
+    }
 }

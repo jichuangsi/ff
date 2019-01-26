@@ -31,13 +31,67 @@ public class ContractModel {
     private Double customerMaxAccount;  //最大买入单股
     private Double venturEditionMaxAccount;     //创业版最大买入单股
     private Double holdOverFiveAvg;     //五日交易平均
-    private Double holdOverCurrency;       //流通市值
-    private Integer shockShutDown;      //跌停
-    private Double businessRate;
-    private Double buyRate;
-    private Double overRate;
-    private Double warnRate;
-    private Double downRate;
+    private Double holdOverCurrency;       //流通市值 改：最大买入金额
+    private Integer stockShutDown;      //跌停
+    private Double businessRate;    //交易收费
+    private Double buyRate;     //买入收费
+    private Double overRate;    //收市收费
+    private Double warnRate;    //警戒线
+    private Double downRate;    //平仓
+    private String displayName;     //真实姓名
+    private Double moneyInContract; //开立合约
+    private Integer productRate;    //杠杆
+    private Integer productTime;    //配资时长
+    private Double onceGetServer;   //此收取服务费利率
+    private String idCard;  //身份证
+
+    public Double getMoneyInContract() {
+        return moneyInContract;
+    }
+
+    public void setMoneyInContract(Double moneyInContract) {
+        this.moneyInContract = moneyInContract;
+    }
+
+    public Integer getProductRate() {
+        return productRate;
+    }
+
+    public void setProductRate(Integer productRate) {
+        this.productRate = productRate;
+    }
+
+    public Integer getProductTime() {
+        return productTime;
+    }
+
+    public void setProductTime(Integer productTime) {
+        this.productTime = productTime;
+    }
+
+    public Double getOnceGetServer() {
+        return onceGetServer;
+    }
+
+    public void setOnceGetServer(Double onceGetServer) {
+        this.onceGetServer = onceGetServer;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
     public Double getOverRate() {
         return overRate;
@@ -114,12 +168,12 @@ public class ContractModel {
         this.holdOverCurrency = holdOverCurrency;
     }
 
-    public Integer getShockShutDown() {
-        return shockShutDown;
+    public Integer getStockShutDown() {
+        return stockShutDown;
     }
 
-    public void setShockShutDown(Integer shockShutDown) {
-        this.shockShutDown = shockShutDown;
+    public void setStockShutDown(Integer stockShutDown) {
+        this.stockShutDown = stockShutDown;
     }
 
     public Integer getVersion() {

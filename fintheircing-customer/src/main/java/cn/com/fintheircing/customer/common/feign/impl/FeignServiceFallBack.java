@@ -151,7 +151,7 @@ public class FeignServiceFallBack implements IAdminFeignService {
     }
 
     @Override
-    public StockHoldingModel getCurrentHolding(StockHoldingModel model) {
+    public List<StockHoldingModel> getCurrentHolding(StockHoldingModel model) {
         logger.error("调用feign失败,未获取持仓");
         return null;
     }
@@ -166,5 +166,15 @@ public class FeignServiceFallBack implements IAdminFeignService {
     public StockHoldingModel getMaxBuyAmount(StockHoldingModel model) {
         logger.error("调用feign失败，未获得最大购买量");
         return new StockHoldingModel();
+    }
+
+    /*@Override
+    public void testFeign() {
+
+    }*/
+
+    @Override
+    public ContractModel getBusinessInfo(UserTokenInfo userTokenInfo) {
+        return new ContractModel();
     }
 }

@@ -12,15 +12,15 @@ public final class MappingModel2EntityConverter {
         BusinessContract contract = new BusinessContract();
         contract.setBorrowMoney(model.getBorrowMoney());
         contract.setChoseWay(model.getChoseWay());
-        contract.setColdMoney(model.getColdCash());
+        contract.setColdMoney(model.getColdCash()==null?0.0:model.getColdCash());
         contract.setContractNum(model.getContractNum());
-        contract.setDangerourPrpmised(model.getDangerCash());
+        contract.setDangerourPrpmised(model.getDangerCash()==null?0.0:model.getDangerCash());
         contract.setProductId(model.getProductModel().getId());
-        contract.setPromisedMoney(model.getPromisedMoney());
+        contract.setPromisedMoney(model.getPromisedMoney()==null?0.0:model.getPromisedMoney());
         contract.setTransactorId(model.getSaleManId());
         contract.setUserId(model.getUserId());
         contract.setUuid(model.getId());
-        contract.setFirstInterest(model.getFirst());
+        contract.setFirstInterest(model.getFirst()==null?0.0:model.getFirst());
         return contract;
     }
 }

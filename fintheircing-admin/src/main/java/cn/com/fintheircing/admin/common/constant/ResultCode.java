@@ -69,4 +69,7 @@ public class ResultCode {
 	public static final String STOCK_MSG_ERR = "证券无响应";
 	public static final String CANCEL_NULL_ERR = "此订单不可撤单";
 	public static final String KEEP_FAILED = "添加母账户失败";
+
+	public static final String STOCK_HOLDING_ERR = "您尚未持有该股";
+	public static final String STOCK_NULL_ERR = "查无此股的信息";
 }

@@ -45,4 +45,6 @@ public class ResultCode {
 	public static final String STOCK_SELL_LESS_ERR = "您的可售股份不足";
 	public static final String STOCK_SELL_ERR = "出售股份失败";
 
+	public static final String CER_NOT_ERR = "您尚未实名认证，不能此操作";
+
 }

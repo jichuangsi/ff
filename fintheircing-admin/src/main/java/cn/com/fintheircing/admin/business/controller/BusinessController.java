@@ -87,4 +87,14 @@ public class BusinessController {
     }
 
 
+    @ApiOperation(value = "修改撤单申请单", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateBackEntrust")
+    public ResponseModel updateBackEntrust(@ModelAttribute UserTokenInfo userInfo,@RequestBody StockEntrustModel model){
+
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
 }

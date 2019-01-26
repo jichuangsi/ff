@@ -1,5 +1,6 @@
 package cn.com.fintheircing.admin.useritem.service;
 
+import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,4 +30,6 @@ public interface ItemService {
 
      //匹配是否属于白名单
     Boolean isExistWhiteList(String stockNum);
+
+    void oneDayUpdateStock(List<QuotesTenModel> models);
 }

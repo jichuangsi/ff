@@ -24,7 +24,7 @@ public class BusinessContractRisk extends AbstractEntity{
     private Double venturEditionMaxAccount;     //创业股最大购买
     private Double holdOverFiveAvg;     //持仓不超过五日平均
     private Double holdOverCurrency;       //持仓不超过流通市值
-    private Integer shockShutDown;      //跌停能否购买
+    private Integer stockShutDown;      //跌停能否购买
 
     public Double getCustomerMaxAccount() {
         return customerMaxAccount;
@@ -58,12 +58,12 @@ public class BusinessContractRisk extends AbstractEntity{
         this.holdOverCurrency = holdOverCurrency;
     }
 
-    public Integer getShockShutDown() {
-        return shockShutDown;
+    public Integer getStockShutDown() {
+        return stockShutDown;
     }
 
-    public void setShockShutDown(Integer shockShutDown) {
-        this.shockShutDown = shockShutDown;
+    public void setStockShutDown(Integer stockShutDown) {
+        this.stockShutDown = stockShutDown;
     }
 
     public String getUuid() {

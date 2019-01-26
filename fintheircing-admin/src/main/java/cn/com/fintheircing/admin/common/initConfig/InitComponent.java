@@ -41,7 +41,7 @@ public class InitComponent {
 
     @PostConstruct
     public void saveAutoBuy(){
-        redisTemplate.opsForValue().set(autoBuy,"true");//关闭自动购买
+        redisTemplate.opsForValue().set(autoBuy,"false");//关闭自动购买
     }
 
 

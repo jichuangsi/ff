@@ -7,13 +7,13 @@ import java.util.Map;
 
 public class DealJsonModel {
 
-    Map<String,TodayAcceptOrder> map = new HashMap<String,TodayAcceptOrder>();
+    Map<String,TodayAcceptOrder> todayAcceptOrders = new HashMap<String,TodayAcceptOrder>();
 
-    public Map<String, TodayAcceptOrder> getMap() {
-        return map;
+    public Map<String, TodayAcceptOrder> getTodayAcceptOrders() {
+        return todayAcceptOrders;
     }
 
-    public void setMap(Map<String, TodayAcceptOrder> map) {
-        this.map = map;
+    public void setTodayAcceptOrders(Map<String, TodayAcceptOrder> todayAcceptOrders) {
+        this.todayAcceptOrders = todayAcceptOrders;
     }
 }

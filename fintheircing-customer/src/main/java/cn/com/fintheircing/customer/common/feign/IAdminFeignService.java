@@ -120,7 +120,7 @@ public interface IAdminFeignService {
 
     //查看当前合约的该股持仓
     @RequestMapping(value = "adminF/getCurrentHolding")
-    StockHoldingModel getCurrentHolding(@RequestBody StockHoldingModel model);
+    List<StockHoldingModel> getCurrentHolding(@RequestBody StockHoldingModel model);
 
 
     //卖出持仓
@@ -135,5 +135,10 @@ public interface IAdminFeignService {
 
     @RequestMapping(value = "adminF/getMaxBuyAmount")
     StockHoldingModel getMaxBuyAmount(@RequestBody StockHoldingModel model);
+
+   /* @RequestMapping(value = "adminF/testFeign")
+    void testFeign();*/
+   @RequestMapping(value = "adminF/getBusinessInfo")
+   ContractModel getBusinessInfo(UserTokenInfo userTokenInfo);
 
 }

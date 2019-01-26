@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.system.dao.mapper;
 
 import cn.com.fintheircing.admin.system.model.holiday.HolidayModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidaySearchModel;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -26,4 +27,8 @@ public interface ISystemHolidayMapper {
             "<if test='longtime!=0'> and end_time &gt;= #{longtime}   </if>" +
             "</where></script>")
     List<HolidayModel> selectHolidays(HolidaySearchModel model);
+
+
+    @Select("<script>select count(1) from system_holiday where  begin_time &lt;= #{longtime} and  end_time &gt;= #{longtime}   </script>")
+    int countInHoliday(@Param("longtime") long nowTime);
 }

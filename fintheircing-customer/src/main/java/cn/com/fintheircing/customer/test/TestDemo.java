@@ -5,6 +5,7 @@ import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.business.service.BusinessService;
+import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
@@ -52,13 +53,22 @@ public class TestDemo {
 
         if (flag){  //账户充足才可继续保存合约
             contractModel.setBorrowMoney(20000D);//需要前端计算借款
-            try {
+           /* try {
                 businessService.saveContract(userInfo,contractModel);
             } catch (BusinessException e) {
                 System.out.println("返回错误信息");
-            }
+            }*/
         }
 
     }
+
+
+    @Resource
+    private IAdminFeignService adminFeignService;
+
+   /* @Test
+    public void testFeign(){
+        adminFeignService.testFeign();
+    }*/
 
 }

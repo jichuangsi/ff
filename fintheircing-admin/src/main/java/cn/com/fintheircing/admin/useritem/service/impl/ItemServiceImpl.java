@@ -1,10 +1,13 @@
 package cn.com.fintheircing.admin.useritem.service.impl;
 
+import cn.com.fintheircing.admin.business.utils.BusinessUtils;
+import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.system.utils.MappingEntity2ModelConverter;
 import cn.com.fintheircing.admin.useritem.common.Status;
 import cn.com.fintheircing.admin.useritem.dao.mapper.TransactionSummaryMapper;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
+import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
 import cn.com.fintheircing.admin.useritem.utils.MappingModel2EntityConverter;
@@ -146,6 +149,38 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         return flag;
+    }
+
+    @Override
+    public void oneDayUpdateStock(List<QuotesTenModel> models) {
+        List<TransactionSummary> summaries = transactionSummaryRepository.findByDeleteFlag("0");
+        for (QuotesTenModel model:models){
+            for (TransactionSummary summary:summaries){
+                if (model.getStockCode().equals(summary.getStockNum())){
+                    int cursor = summary.getNowCursor()==5?1:BusinessUtils.addIntMethod(summary.getNowCursor(),1);
+                    summary.setNowCursor(cursor);
+                    switch (cursor){
+                        case 1:
+                            summary.setOneDay((double)model.getAmount());
+                            break;
+                        case 2:
+                            summary.setTwoDay((double)model.getAmount());
+                            break;
+                        case 3:
+                            summary.setThreeDay((double)model.getAmount());
+                            break;
+                        case 4:
+                            summary.setFourDay((double)model.getAmount());
+                            break;
+                        case 5:
+                            summary.setFiveDay((double)model.getAmount());
+                            break;
+                    }
+                    break;
+                }
+            }
+        }
+        transactionSummaryRepository.saveAll(summaries);
     }
 }
 

@@ -5,10 +5,12 @@ import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
-import cn.com.fintheircing.admin.business.model.StockModel;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,29 +43,39 @@ public final class BusinessUtils {
     }
 
     //五日平均，暂无接口
-    public static final Boolean holdOverFiveAvg() throws BusinessException{
-
+    public static final Boolean holdOverFiveAvg(StockHoldingModel stockHoldingModel,StockEntrustModel stockEntrustModel) throws BusinessException{
+        Double avgFive = avgMethod(stockHoldingModel.getOneDay(),stockHoldingModel.getTwoDay(),stockHoldingModel.getThreeDay(),stockHoldingModel.getFourDay(),stockHoldingModel.getFiveDay());
+        Double C0 = stockHoldingModel.getCurrentWorth();
+        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
+        if (!(addMethod(C0,C1)<avgFive)){
+            throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
+        }
         return  true;
     }
 
     //获取流通市值，暂无接口
-    public static final Boolean holdOverCurrency() throws BusinessException{
-
+    public static final Boolean holdOverCurrency(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
+                                                 ContractModel contractModel) throws BusinessException{
+        Double C0 = stockHoldingModel.getCurrentWorth();
+        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
+        if (!(addMethod(C0,C1)<contractModel.getHoldOverCurrency())){
+            throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
+        }
         return true;
     }
 
     //跌停能否购买
-    public static final Boolean shockShutDown(StockModel stockModel,ContractModel contractModel) throws BusinessException{
+    public static final Boolean stockShutDown(QuotesTenModel quotesTenModel,ContractModel contractModel) throws BusinessException{
         Boolean shutDown = false;
-        Double todayMin = stockModel.getTodayMin();
-        Double yesterdayClose = stockModel.getYesterdayClose();
+        Double todayMin = (double)quotesTenModel.getBottomPrice();
+        Double yesterdayClose = (double)quotesTenModel.getClosePrice();
         BigDecimal b = new BigDecimal(exceptMethod(yesterdayClose,todayMin));
         double rate = b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
         if (rate<0.90){
             shutDown = true;
         }
         if (shutDown){
-            if (BusinessContractRisk.SHUTDOWN_NOT_BUY==contractModel.getShockShutDown()){
+            if (BusinessContractRisk.SHUTDOWN_NOT_BUY==contractModel.getStockShutDown()){
                 throw new BusinessException(ResultCode.STOCK_ENTRUST_DANGER);
             }
         }
@@ -71,20 +83,20 @@ public final class BusinessUtils {
     }
 
     public static final Boolean throughRisk(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
-                                            ContractModel contractModel,StockModel stockModel,String chuangRegex) throws BusinessException{
+                                            ContractModel contractModel, QuotesTenModel quotesTenModel, String chuangRegex) throws BusinessException{
         if (stockEntrustModel==null){
             throw new BusinessException(ResultCode.STOCK_ENTRUST_NULL);
         }
         if (stockHoldingModel==null){
             stockHoldingModel = new StockHoldingModel();
         }
-        if (stockModel==null){
+        if (quotesTenModel==null){
             throw new BusinessException(ResultCode.STOCK_NULL_FIND);
         }
         if (contractModel==null){
             throw new BusinessException(ResultCode.CONTRACT_NULL_FIND);
         }
-        Double yesterdayClose = stockModel.getYesterdayClose();
+        Double yesterdayClose = (double)quotesTenModel.getClosePrice();
         if (stockEntrustModel.getPrice()/yesterdayClose>1.1
                 ||stockEntrustModel.getPrice()/yesterdayClose<0.9){
             throw new BusinessException(ResultCode.STOCK_BAD_ERR);
@@ -96,9 +108,9 @@ public final class BusinessUtils {
         }else {
             Boolean maxBuyOneStock = maxBuyOneStock(stockHoldingModel,stockEntrustModel,contractModel);
         }
-        Boolean holdOverFiveAvg  = holdOverFiveAvg();
-        Boolean holdOverCurrency = holdOverCurrency();
-        Boolean shockShutDown = shockShutDown(stockModel,contractModel);
+        Boolean holdOverFiveAvg  = holdOverFiveAvg(stockHoldingModel,stockEntrustModel);
+        Boolean holdOverCurrency = holdOverCurrency(stockHoldingModel,stockEntrustModel,contractModel);
+        Boolean shockShutDown = stockShutDown(quotesTenModel,contractModel);
         return true;
     }
 
@@ -222,6 +234,29 @@ public final class BusinessUtils {
             }
         }
         return mother;
+    }
+
+
+    public static List<String[]> getListStringArray(String[] dd, int b) {
+        List<String[]> aa = new ArrayList<String[]>();
+        // tyy 取整代表可以拆分的数组个数
+        int f = dd.length / b;
+        for (int i = 0; i < f; i++) {
+            String[] bbb = new String[b];
+            for (int j = 0; j < b; j++) {
+                bbb[j] = dd[j + i * b];
+            }
+            aa.add(bbb);
+        }
+        int z = dd.length % b;
+        if (z != 0){
+            String[] ccc = new String[z];
+            for (int p = 0; p < z; p++){
+                ccc[p] = dd[p+f*b];
+            }
+            aa.add(ccc);
+        }
+        return aa;
     }
 
 }
