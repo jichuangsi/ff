@@ -29,6 +29,7 @@ import java.util.Optional;
 @RestController
 @Api("PayController相关的控制层 ")
 @RequestMapping("/pay")
+@CrossOrigin
 public class UserPayController {
     @Resource
     private IRecodInfoPayRepository iRecodInfoPayRepository;
@@ -38,6 +39,7 @@ public class UserPayController {
     private IUserAccountRepository iUserAccountRepository;
     @Resource
     private UserService userService;
+
     @ApiOperation(value = "生成待确认充值记录", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
@@ -88,26 +90,28 @@ public class UserPayController {
 
     @ApiOperation(value = "追加保证金", notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/addPromiseMoney")
+    @CrossOrigin
     public ResponseModel savePromiseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody AddPromiseMoneyModel model) {
-        if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid()) < model.getCash()) {
+        if (iUserAccountRepository.findAccountByUserId("1") < model.getCash()) {
             return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
         }
         RecodeInfoPay p = new RecodeInfoPay();
-        p.setUserId(userInfo.getUuid());
+        p.setUserId("1");
         p.setWay(model.getWay());
         p.setRemark(model.getRemark());
         p.setCostCount(model.getCash());
         p.setBusinessContractId(model.getBusinessContractId());
+        p.setTaskType("追加保证金");
+        p.setTaskId("0");
         if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
             return ResponseModel.fail("", ResultCode.APPLY_FAIL);
         } else {
             return ResponseModel.sucessWithEmptyData("");
         }
-
     }
+
 
     @ApiOperation(value = "体现申请并且生成待确认记录", notes = "")
     @ApiImplicitParams({
@@ -139,5 +143,23 @@ public class UserPayController {
             return ResponseModel.sucessWithEmptyData("");
         }
         return ResponseModel.fail("", ResultCode.ACCOUNT_PAY_ERR);
+    }
+
+    @ApiOperation(value = "扩大融资", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/expandMoney")
+    public ResponseModel expandMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody AddPromiseMoneyModel model) {
+        RecodeInfoPay p = new RecodeInfoPay();
+        p.setUserId(userInfo.getUuid());
+        p.setWay(model.getWay());
+        p.setRemark("扩大融资");
+        p.setAddCount(model.getCash());
+        if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
+            return ResponseModel.fail("", ResultCode.APPLY_FAIL);
+        } else {
+            return ResponseModel.sucessWithEmptyData("");
+        }
     }
 }

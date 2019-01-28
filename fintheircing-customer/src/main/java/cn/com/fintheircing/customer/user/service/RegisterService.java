@@ -63,9 +63,9 @@ public class RegisterService {
 				throw new RegisterheckExistException(phoneNo + "已存在");
 			}
 			// 看缓存中是否存在发送验证码记录
-			if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
-				throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
-			}
+//			if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
+//				throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
+//			}
 			String code = getRandomNumCode(valCodeLength);
 			Map<String, String> dataMap = new HashMap<>();
 			dataMap.put("phoneNo", phoneNo);

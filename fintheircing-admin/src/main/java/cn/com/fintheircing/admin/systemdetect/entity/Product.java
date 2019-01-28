@@ -43,6 +43,7 @@ public class Product {
     /**
      * 杠杆比率
      */
+
     private int leverRate;
     /**
      * 警戒线

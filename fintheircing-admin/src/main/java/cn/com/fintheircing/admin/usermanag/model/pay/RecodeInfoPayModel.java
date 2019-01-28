@@ -25,6 +25,51 @@ public class RecodeInfoPayModel {
     private String userName;
     private String operator;
     private String operatorId;
+    private String taskType;
+    private String taskId;
+    private String businessContractId;
+    private double accountAmount;//账户余额
+    private double iAccountAmount;//更改后账户余额
+
+    public double getAccountAmount() {
+        return accountAmount;
+    }
+
+    public void setAccountAmount(double accountAmount) {
+        this.accountAmount = accountAmount;
+    }
+
+    public double getiAccountAmount() {
+        return iAccountAmount;
+    }
+
+    public void setiAccountAmount(double iAccountAmount) {
+        this.iAccountAmount = iAccountAmount;
+    }
+
+    public String getBusinessContractId() {
+        return businessContractId;
+    }
+
+    public void setBusinessContractId(String businessContractId) {
+        this.businessContractId = businessContractId;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
 
     public String getRecodeInfoPayId() {
         return RecodeInfoPayId;

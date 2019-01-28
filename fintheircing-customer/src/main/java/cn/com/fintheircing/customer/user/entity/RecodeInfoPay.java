@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * 生成待确认充值记录 class
+ * 生成待确认记录 class
  *
  * @author yaoxiong
  * @date 2019/1/14
@@ -35,7 +35,24 @@ public class RecodeInfoPay {
      */
     private String businessContractId;
 
+    private String taskType;
+    private String taskId;
 
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
 
     public String getBusinessContractId() {
         return businessContractId;

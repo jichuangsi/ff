@@ -1,6 +1,9 @@
 package cn.com.fintheircing.admin.systemdetect.model;
 
 import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.Pattern;
 
 /**
  * ProductModel
@@ -33,6 +36,7 @@ public class ProductModel {
     /**
      * 杠杆比率
      */
+    @Pattern(regexp="^([1-9]|10)$",message = "只能是0到10的整数")
     private int leverRate;
     /**
      * 警戒线

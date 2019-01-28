@@ -18,6 +18,15 @@ public class PromiseModel {
     private String way;
     private String contractNum;
     private String phone;
+    private String taskTpye;
+
+    public String getTaskTpye() {
+        return taskTpye;
+    }
+
+    public void setTaskTpye(String taskTpye) {
+        this.taskTpye = taskTpye;
+    }
 
     public String getPhone() {
         return phone;

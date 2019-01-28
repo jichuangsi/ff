@@ -12,6 +12,7 @@ import cn.com.fintheircing.customer.user.model.PayConfigModel;
 import cn.com.fintheircing.customer.user.model.UserInfoModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
+import cn.com.fintheircing.customer.user.model.promise.AddPromiseMoneyModel;
 import cn.com.fintheircing.customer.user.service.UserService;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +98,17 @@ public class UserServiceImpl implements UserService {
 
 
         }
+    }
+
+    /**
+     * 申请扩大融资
+     *
+     * @param model
+     * @return
+     */
+    @Override
+    public boolean expandMoney(AddPromiseMoneyModel model) {
+
+        return false;
     }
 }

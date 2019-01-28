@@ -23,6 +23,15 @@ public class PayInfo {
     private String businessContractId;
     private String operaId;
     private String operaName;
+    private Integer taskType;
+
+    public Integer getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(Integer taskType) {
+        this.taskType = taskType;
+    }
 
     public String getOperaId() {
         return operaId;

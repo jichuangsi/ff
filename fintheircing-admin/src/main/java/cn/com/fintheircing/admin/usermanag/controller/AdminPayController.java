@@ -15,8 +15,10 @@ import cn.com.fintheircing.admin.usermanag.model.result.BillQueryModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import cn.com.fintheircing.admin.usermanag.uilts.ModelToEntity;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,7 @@ import java.util.List;
 @RestController
 @Api("支付相关的AdminPayController")
 @RequestMapping("/pay")
+@CrossOrigin
 public class AdminPayController {
     @Autowired
     private IPayService ipayService;
@@ -69,27 +72,33 @@ public class AdminPayController {
         List<RecodeInfoPayModel> allPayInfo = ipayService.findAllPayInfo();
         return ResponseModel.sucess("", allPayInfo);
     }
-
     @GetMapping("/addPromiseMoney")
     @ApiOperation(value = "管理查询所有申请追加保证金", notes = "")
     public ResponseModel<List<PromiseModel>> addPromiseMoney(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
         return ResponseModel.sucess("", ipayService.findAllApply());
-
     }
-
     @GetMapping("/AgreePromiseMoney")
     @ApiOperation(value = "同意申请追加保证金", notes = "")
-    public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo, PromiseModel model) throws UserServiceException {
-
-        if (iBusinessContractMapper.addPromiseMoney(model.getCash()) < 0) {
-            return ResponseModel.fail("", ResultCode.ADD_PROMISE_MONEY_ERR);
+    public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
+        try {
+            if (ipayService.agreePromiseMoney(userInfo, model)) {
+                return ResponseModel.sucessWithEmptyData("");
+            }
+        }catch (Exception e){
+            return ResponseModel.fail("", e.getMessage());
         }
-        return ResponseModel.sucess("", ipayService.agreePromiseMoney(userInfo, model));
+        return null;
+    }
+
+    @GetMapping("/expendMoney")
+    @ApiOperation(value = "同意扩大融资", notes = "")
+    public ResponseModel expendMoney(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
+        return ResponseModel.sucess("",ipayService.expendMoney(userInfo,model));
     }
 
     @GetMapping("/passPromiseMoney")
-    @ApiOperation(value = "驳回申请追加保证金", notes = "")
-    public ResponseModel passPromiseMoney(@ModelAttribute UserTokenInfo userInfo, PromiseModel model) throws UserServiceException {
+    @ApiOperation(value = "驳回申请并记录", notes = "")
+    public ResponseModel passPromiseMoney(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
         return ResponseModel.sucess("", ipayService.passPromiseMoney(userInfo, model));
 
     }
@@ -97,7 +106,14 @@ public class AdminPayController {
     @GetMapping("/withdrawCash")
     @ApiOperation(value = "同意提现申请并且记录", notes = "")
     public ResponseModel agreewithdrawCash(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
-        return ResponseModel.sucess("", ipayService.agreewithdrawCash(userInfo, model));
+        try {
+            if (ipayService.agreewithdrawCash(userInfo, model)) {
+                return ResponseModel.sucessWithEmptyData("");
+            }
+        }catch (Exception e){
+            return ResponseModel.fail("", e.getMessage());
+        }
+        return null;
     }
 
     @GetMapping("/passwithdrawCash")
@@ -105,4 +121,6 @@ public class AdminPayController {
     public ResponseModel passwithdrawCash(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
         return ResponseModel.sucess("", ipayService.passwithdrawCash(userInfo, model));
     }
+
+
 }

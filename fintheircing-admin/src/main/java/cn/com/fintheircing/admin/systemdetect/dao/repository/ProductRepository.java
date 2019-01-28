@@ -10,6 +10,6 @@ public interface ProductRepository extends JpaRepository<Product,String> {
 
     List<Product> findProductsByAllot(Integer productNo);
 
-
+    Product findOneById(String id);
 
 }

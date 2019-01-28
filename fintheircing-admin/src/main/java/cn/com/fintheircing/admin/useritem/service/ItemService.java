@@ -41,5 +41,5 @@ public interface ItemService {
      */
     boolean importExcel(MultipartFile[] file) throws ImportException;
 
-    int oneDayUpdateStock(List<QuotesTenModel> quotesTenModels);
+    void oneDayUpdateStock(List<QuotesTenModel> quotesTenModels);
 }

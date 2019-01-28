@@ -1,8 +1,14 @@
 package cn.com.fintheircing.admin.usermanag.service.Impl;
 
+import cn.com.fintheircing.admin.business.dao.repository.IBusinessContractRepository;
+import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
+import cn.com.fintheircing.admin.business.entity.BusinessContract;
+import cn.com.fintheircing.admin.business.entity.BusinessStockEntrust;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.constant.VerifyCode;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
+import cn.com.fintheircing.admin.systemdetect.dao.repository.ProductRepository;
+import cn.com.fintheircing.admin.systemdetect.entity.Product;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IPayInfoRepository;
 import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.*;
@@ -17,6 +23,7 @@ import cn.com.fintheircing.admin.usermanag.dao.repsitory.IBillRepository;
 import cn.com.fintheircing.admin.usermanag.model.result.*;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import cn.com.fintheircing.admin.usermanag.uilts.ModelToEntity;
+import org.assertj.core.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,6 +61,12 @@ public class PayServiceImpl implements IPayService {
     private IBillMapper iBillMapper;
     @Resource
     private IPayInfoRepository iPayInfoRepository;
+    @Resource
+    private IBusinessContractRepository iBusinessContractRepository;
+    @Resource
+    private ProductRepository productRepository;
+    @Resource
+    private IBusinessStockEntrustRepository iBusinessStockEntrustRepository;
 
     /**
      * 获取第三方支付信息并且返回支付地址
@@ -223,15 +236,27 @@ public class PayServiceImpl implements IPayService {
         Map<String, Object> parms = new HashMap<>();
         parms.put("userId", data.getUserId());
         parms.put("businessContractId", data.getBusinessContractId());
-
-        CheckPromiseModel model = iBillMapper.findAllPromise(parms);
+        CheckPromiseModel model = iBillMapper.findPromise(parms);
         model.setTaskType("追加保证金");
         return model;
     }
 
     @Override
-    public List<RecodeInfoPayModel> findAllPayInfo() {
-        return iBillMapper.findAllPayInfo();
+    public List<RecodeInfoPayModel> findAllPayInfo() throws UserServiceException {
+        List<RecodeInfoPayModel> allPayInfo = iBillMapper.findAllPayInfo();
+        if (allPayInfo.isEmpty()&&allPayInfo==null){
+            throw new UserServiceException(ResultCode.SELECT_NULL_MSG);
+        }
+        for (RecodeInfoPayModel m :allPayInfo
+                ) {
+            if (m.getCostCount()!=0){
+                m.setiAccountAmount(m.getAccountAmount()-m.getCostCount());
+            }
+            if (m.getAddCount()!=0){
+                m.setiAccountAmount(m.getAccountAmount()+m.getAddCount());
+            }
+        }
+        return allPayInfo;
 
     }
 
@@ -259,23 +284,40 @@ public class PayServiceImpl implements IPayService {
      * @return
      */
     @Override
-    public boolean agreePromiseMoney(UserTokenInfo userInfo, PromiseModel model) {
-        PayInfo p = new PayInfo();
-        if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
-            p.setWay(model.getWay());
-            p.setRemark(model.getRemark());
-            p.setCreateTime(model.getCreateTime());
-            p.setBusinessContractId(model.getBusinessContractId());
-            p.setCostCount(model.getCash());
-            p.setCheckStatus("0");
-            p.setUpdateTime(new Date());
-            p.setUserId(model.getUserId());
-            p.setOperaId(userInfo.getUuid());
-            p.setOperaName(userInfo.getUserName());
-            iPayInfoRepository.save(p);
-            return true;
+    public boolean agreePromiseMoney(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
+        BusinessContract businessContract = iBusinessContractRepository.findByUuid(model.getBusinessContractId());
+        if (StringUtils.isEmpty(businessContract)){
+            throw new UserServiceException(ResultCode.CONTACT_NOT_EXITS);
         }
+        double a=businessContract.getPromisedMoney()+model.getCostCount();
+        businessContract.setPromisedMoney(a);
+        iBusinessContractRepository.save(businessContract);
+        Map<String,Object> parms =new HashMap<>();
+        parms.put("userId", model.getUserId());
+        parms.put("money", model.getCostCount());
+        if (iBillMapper.updateCostUserAmount(parms)<0){
+            throw new UserServiceException(ResultCode.FAILE_COST);
+        }
+        if (model.getTaskId().equalsIgnoreCase("0")) {
+            PayInfo p = new PayInfo();
+            if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
+                p.setWay(model.getWay());
+                p.setRemark(model.getRemark());
+                p.setCreateTime(model.getCreatTime());
+                p.setBusinessContractId(model.getBusinessContractId());
+                p.setCostCount(model.getCostCount());
+                p.setCheckStatus(VerifyCode.getName(0));
+                p.setUpdateTime(new Date());
+                p.setUserId(model.getUserId());
+                p.setOperaId(userInfo.getUuid());
+                p.setOperaName(userInfo.getUserName());
+                iPayInfoRepository.save(p);
+                return true;
+            }else {
+                throw new UserServiceException(ResultCode.SAVE_OPERAT_FAILE);
+            }
 
+        }
         return false;
     }
 
@@ -287,40 +329,65 @@ public class PayServiceImpl implements IPayService {
      * @return
      */
     @Override
-    public boolean passPromiseMoney(UserTokenInfo userInfo, PromiseModel model) {
-        PayInfo p = new PayInfo();
+    public boolean passPromiseMoney(UserTokenInfo userInfo,RecodeInfoPayModel model) {
+
+
+            PayInfo p = new PayInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());
             p.setRemark(model.getRemark());
-            p.setCreateTime(model.getCreateTime());
+            p.setCreateTime(model.getCreatTime());
             p.setBusinessContractId(model.getBusinessContractId());
-            p.setCostCount(model.getCash());
-            p.setCheckStatus("1");
+            p.setCostCount(model.getCostCount());
+            p.setCheckStatus(VerifyCode.getName(1));
             p.setUpdateTime(new Date());
             p.setUserId(model.getUserId());
             p.setOperaId(userInfo.getUuid());
             p.setOperaName(userInfo.getUserName());
             iPayInfoRepository.save(p);
+
             return true;
+        }else {
+
         }
         return false;
     }
 
+
     /**
-     * 提现申请
+     * 同意提现申请
      *
      * @param userInfo
      * @param model
      * @return
      */
     @Override
-    public boolean agreewithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model) {
+    public boolean agreewithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
+        BusinessContract b = iBusinessContractRepository.findByUuid(model.getBusinessContractId());
+        if (StringUtils.isEmpty(b)){
+            //查询合约
+            throw new UserServiceException(ResultCode.CONTACT_NOT_EXITS);
+        }
+        b.setAvailableMoney(b.getAvailableMoney()-model.getAddCount());
+        BusinessContract businessContract = iBusinessContractRepository.save(b);
+        if (StringUtils.isEmpty(businessContract)){
+            //合约可用资金扣钱
+            throw new UserServiceException(ResultCode.WITHDRAW_DEDUCT_FAILE);
+        }
+        Map<String,Object> parms =new HashMap<>();
+        parms.put("userId", model.getUserId());
+        parms.put("money", model.getAddCount());
+        int i = iBillMapper.updateAddUserAmount(parms);
+        if (i<=0){
+            //个人提现
+            throw new UserServiceException(ResultCode.PERSON_WITHDRAW_FAILE);
+        }
         PayInfo p = new PayInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());
             p.setRemark(model.getRemark());
             p.setCreateTime(model.getCreatTime());
-            p.setCostCount(model.getCostCount());
+            p.setCostCount(model.getAddCount());
             p.setCheckStatus(VerifyCode.getName(0));
             p.setUpdateTime(new Date());
             p.setUserId(model.getUserId());
@@ -328,8 +395,10 @@ public class PayServiceImpl implements IPayService {
             p.setOperaName(userInfo.getUserName());
             iPayInfoRepository.save(p);
             return true;
+        }else {
+            throw new UserServiceException(ResultCode.SAVE_OPERAT_FAILE);
         }
-        return false;
+
     }
 
     /**
@@ -355,6 +424,45 @@ public class PayServiceImpl implements IPayService {
             p.setOperaName(userInfo.getUserName());
             iPayInfoRepository.save(p);
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean expendMoney(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
+        PayInfo p = new PayInfo();
+        if (model.getTaskId().equalsIgnoreCase("1")) {
+            List<BusinessStockEntrust> byDeleteFlagAndContractId = iBusinessStockEntrustRepository.findByDeleteFlagAndContractId("0", model.getBusinessContractId());
+            if (byDeleteFlagAndContractId.size() == 0) {
+                //持仓
+                throw new UserServiceException(ResultCode.HAS_HODING);
+            } else {
+                //查询产品id
+                String productId = iBusinessContractRepository.findByUuid(model.getBusinessContractId()).getProductId();
+               //查询合约
+                BusinessContract b = iBusinessContractRepository.findByUuid(model.getBusinessContractId());
+                //查询产品
+                Product oneById = productRepository.findOneById(productId);
+                //扩大资金=产品的杠杆 x 金额
+                b.setAvailableMoney(oneById.getLeverRate() * model.getCostCount()+b.getAvailableMoney());
+                BusinessContract save = iBusinessContractRepository.save(b);
+                if (StringUtils.isEmpty(save)){
+                    throw new UserServiceException(ResultCode.CONTACT_SAVE_FAILE);
+                }
+                iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId());
+                p.setWay(model.getWay());
+                p.setRemark(model.getRemark());
+                p.setCreateTime(model.getCreatTime());
+                p.setBusinessContractId(model.getBusinessContractId());
+                p.setCostCount(model.getCostCount());
+                p.setCheckStatus("1");
+                p.setUpdateTime(new Date());
+                p.setUserId(model.getUserId());
+                p.setOperaId(userInfo.getUuid());
+                p.setOperaName(userInfo.getUserName());
+                iPayInfoRepository.save(p);
+                return true;
+            }
         }
         return false;
     }

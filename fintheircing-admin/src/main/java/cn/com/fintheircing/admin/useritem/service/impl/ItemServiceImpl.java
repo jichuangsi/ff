@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.useritem.service.impl;
 
-import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.business.utils.BusinessUtils;
 import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.system.utils.MappingEntity2ModelConverter;
@@ -19,7 +19,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -167,86 +166,91 @@ public class ItemServiceImpl implements ItemService {
     public boolean importExcel(MultipartFile[] files) throws ImportException {
         Map<Integer, Map<Integer, Object>> map = new HashMap<>();
         try {
-            for (MultipartFile file:files
-                 ) {
+            for (MultipartFile file : files
+            ) {
 
-            map = ReadExcelUtil.readExcelContentz(file);
-            if (map.size()<0){
-                return false;
-            }else {
-                //excel数据存在map里，map.get(0).get(0)为excel第1行第1列的值，此处可对数据进行处理
-                for (int i = 0; i < map.size(); i++) {
-                    TransactionSummary t = new TransactionSummary();
-                    for (int j =0 ; j < map.get(i).size(); j++) {
+                map = ReadExcelUtil.readExcelContentz(file);
+                if (map.size() < 0) {
+                    return false;
+                } else {
+                    //excel数据存在map里，map.get(0).get(0)为excel第1行第1列的值，此处可对数据进行处理
+                    for (int i = 0; i < map.size(); i++) {
+                        TransactionSummary t = new TransactionSummary();
+                        for (int j = 0; j < map.get(i).size(); j++) {
 
-                        switch (j) {
-                            case 0: {
-                                if(StringUtils.isEmpty(map.get(i).get(j))){
-                                    t.setStockNum("");
-                                    break;
-                                }else {
-                                    t.setStockNum(map.get(i).get(j).toString());
-                                    break;
+                            switch (j) {
+                                case 0: {
+                                    if (StringUtils.isEmpty(map.get(i).get(j))) {
+                                        t.setStockNum("");
+                                        break;
+                                    } else {
+                                        t.setStockNum(map.get(i).get(j).toString());
+                                        break;
+                                    }
                                 }
+                                case 1: {
+                                    if (StringUtils.isEmpty(map.get(i).get(j))) {
+                                        t.setStockName("");
+                                        break;
+                                    } else {
+                                        t.setStockName(map.get(i).get(j).toString());
+
+                                        break;
+                                    }
+                                }
+                                case 2: {
+                                    if (StringUtils.isEmpty(map.get(i).get(j))) {
+                                        t.setAlphabetCapitalization("");
+                                        break;
+                                    } else {
+                                        t.setAlphabetCapitalization(map.get(i).get(j).toString());
+
+                                        break;
+                                    }
+                                }
+                                case 3: {
+                                    if (StringUtils.isEmpty(map.get(i).get(j))) {
+                                        t.setMartTemplate("");
+                                        break;
+                                    } else {
+                                        t.setMartTemplate(map.get(i).get(j).toString());
+
+                                        break;
+                                    }
+                                }
+                                case 4: {
+                                    if (StringUtils.isEmpty(map.get(i).get(j))) {
+                                        t.setJoinTime(new Date());
+                                        break;
+                                    } else {
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        Date parse = sdf.parse(map.get(i).get(j).toString());
+                                        t.setJoinTime(parse);
+
+                                        break;
+                                    }
+                                }
+                                case 5: {
+                                    if (StringUtils.isEmpty(map.get(i).get(j))) {
+                                        t.setRemake("");
+                                        break;
+                                    } else {
+                                        t.setRemake(map.get(i).get(j).toString());
+
+                                        break;
+                                    }
+                                }
+                                default:
+                                    throw new ImportException("无数据");
                             }
-                            case 1: {
-                                if(StringUtils.isEmpty(map.get(i).get(j))){
-                                    t.setStockName("");
-                                    break;
-                                }else {
-                                t.setStockName(map.get(i).get(j).toString());
-
-                                    break;
-                            }}
-                            case 2: {
-                                if(StringUtils.isEmpty(map.get(i).get(j))){
-                                    t.setAlphabetCapitalization("");
-                                    break;
-                                }else {
-                                t.setAlphabetCapitalization(map.get(i).get(j).toString());
-
-                                    break;
-                            }}
-                            case 3: {
-                                if(StringUtils.isEmpty(map.get(i).get(j))){
-                                    t.setMartTemplate("");
-                                    break;
-                                }else {
-                                t.setMartTemplate(map.get(i).get(j).toString());
-
-                                    break;
-                            }}
-                            case 4: {
-                                if(StringUtils.isEmpty(map.get(i).get(j))){
-                                    t.setJoinTime(new Date());
-                                    break;
-                                }else {
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    Date parse = sdf.parse(map.get(i).get(j).toString());
-                                    t.setJoinTime(parse);
-
-                                    break;
-                            }}
-                            case 5: {
-                                if(StringUtils.isEmpty(map.get(i).get(j))){
-                                    t.setRemake("");
-                                    break;
-                                }else {
-                                t.setRemake(map.get(i).get(j).toString());
-
-                                    break;
-                            }}
-                            default:
-                                throw new ImportException("无数据");
+                        }
+                        if (transactionSummaryRepository.findOneByStockNum(t.getStockNum()) != null) {
+                            continue;
+                        } else {
+                            TransactionSummary save = transactionSummaryRepository.save(t);
                         }
                     }
-                    if (transactionSummaryRepository.findOneByStockNum(t.getStockNum())!=null){
-                        continue;
-                    }else {
-                        TransactionSummary save = transactionSummaryRepository.save(t);
-                    }
                 }
-            }
             }
             return true;
 
@@ -258,6 +262,33 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void oneDayUpdateStock(List<QuotesTenModel> quotesTenModels) {
-
+        List<TransactionSummary> summaries = transactionSummaryRepository.findByDeleteFlag("0");
+        for (QuotesTenModel model : quotesTenModels) {
+            for (TransactionSummary summary : summaries) {
+                if (model.getStockCode().equals(summary.getStockNum())) {
+                    int cursor = summary.getNowCursor() == 5 ? 1 : BusinessUtils.addIntMethod(summary.getNowCursor(), 1);
+                    summary.setNowCursor(cursor);
+                    switch (cursor) {
+                        case 1:
+                            summary.setOneDay((double) model.getAmount());
+                            break;
+                        case 2:
+                            summary.setTwoDay((double) model.getAmount());
+                            break;
+                        case 3:
+                            summary.setThreeDay((double) model.getAmount());
+                            break;
+                        case 4:
+                            summary.setFourDay((double) model.getAmount());
+                            break;
+                        case 5:
+                            summary.setFiveDay((double) model.getAmount());
+                            break;
+                    }
+                    break;
+                }
+            }
+        }
+        transactionSummaryRepository.saveAll(summaries);
     }
 }

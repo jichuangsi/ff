@@ -5,6 +5,8 @@ import cn.com.fintheircing.customer.user.model.PayConfigModel;
 import cn.com.fintheircing.customer.user.model.UserInfoModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
+import cn.com.fintheircing.customer.user.model.promise.AddPromiseMoneyModel;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 public interface UserService {
     UserClientInfo findOneByUserName(String userName);
@@ -26,5 +28,13 @@ public interface UserService {
      * @param model
      * @return
      */
+    @RequestMapping("/addOrUseMoney")
      boolean addOrUseMoney(RecodeInfoPayModel model);
+
+    /**
+     * 申请扩大融资
+     * @param model
+     * @return
+     */
+    boolean expandMoney(AddPromiseMoneyModel model);
 }

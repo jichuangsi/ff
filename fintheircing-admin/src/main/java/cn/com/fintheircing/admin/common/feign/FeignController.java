@@ -187,7 +187,6 @@ public class FeignController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
-
     @RequestMapping("/showPayInfo")
     @ApiOperation(value = "展示第三方支付网关信息", notes = "")
     public ResultModel getWayToPay(@RequestBody NetQueryModel model) throws UserServiceException {

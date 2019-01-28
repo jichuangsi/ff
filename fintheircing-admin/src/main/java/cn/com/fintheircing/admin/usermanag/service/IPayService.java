@@ -60,7 +60,7 @@ public interface IPayService {
      */
     CheckPromiseModel addPromiseMoney(PromiseModel data, UserTokenInfo userInfo);
 
-     List<RecodeInfoPayModel> findAllPayInfo();
+     List<RecodeInfoPayModel> findAllPayInfo() throws UserServiceException;
 
     int updatePayInfo(RecodeInfoPayModel model);
  /**
@@ -75,7 +75,7 @@ public interface IPayService {
   * @param model
   * @return
   */
- boolean agreePromiseMoney(UserTokenInfo userInfo,PromiseModel model);
+ boolean agreePromiseMoney(UserTokenInfo userInfo,RecodeInfoPayModel model) throws UserServiceException;
 
  /**
   * 驳回追加保证金申请
@@ -83,7 +83,7 @@ public interface IPayService {
   * @param model
   * @return
   */
-   boolean passPromiseMoney(UserTokenInfo userInfo, PromiseModel model);
+   boolean passPromiseMoney(UserTokenInfo userInfo, RecodeInfoPayModel model);
 
  /**
   * 提现申请
@@ -91,7 +91,7 @@ public interface IPayService {
   * @param model
   * @return
   */
-    boolean agreewithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model);
+    boolean agreewithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException;
 
  /**
   * 驳回提现申请
@@ -100,4 +100,6 @@ public interface IPayService {
   * @return
   */
  boolean passwithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model);
+
+    boolean expendMoney(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException;
 }

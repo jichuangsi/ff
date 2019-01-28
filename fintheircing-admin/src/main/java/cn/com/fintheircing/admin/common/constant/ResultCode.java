@@ -73,4 +73,11 @@ public class ResultCode {
 	public static final String STOCK_HOLDING_ERR = "您尚未持有该股";
 	public static final String STOCK_NULL_ERR = "查无此股的信息";
 	public static final String SEND_MES_FAILED = "消息发送失败";
+	public static final String HAS_HODING = "已经有持仓,无法融资";
+	public static final String FAILE_COST = "用户扣款失败,提醒用户查看账户余额";
+	public static final String CONTACT_NOT_EXITS = "合约不存在";
+	public static final String WITHDRAW_DEDUCT_FAILE = "合约可用资金扣款失败";
+	public static final String PERSON_WITHDRAW_FAILE = "个人用户提现失败";
+	public static final String CONTACT_SAVE_FAILE = "合约保存失败";
+	public static final String SAVE_OPERAT_FAILE = "保存已操作的记录失败";
 }
