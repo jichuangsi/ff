@@ -1,6 +1,5 @@
 package cn.com.fintheircing.admin.useritem.utils;
 
-import com.github.pagehelper.util.StringUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;

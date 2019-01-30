@@ -56,7 +56,7 @@ import java.util.Date;
  * "yyyy.MM.dd a","年月日上午/下午，如:2009.10.01 上午"
  * </pre>
  */
-public class DateUtil {
+public class DateUtils {
 
     /**
      * 日期类型格式：yyyy-MM-dd
@@ -384,7 +384,7 @@ public class DateUtil {
      * @return 周几
      */
     public static int getWeekDay(String strDay){
-        Date day = DateUtil.addDay(parseDate(strDay, "yyyy-MM-dd"), -1);
+        Date day = DateUtils.addDay(parseDate(strDay, "yyyy-MM-dd"), -1);
         Calendar strDate = Calendar.getInstance();
         strDate.setTime(day);
         return strDate.get(Calendar.DAY_OF_WEEK);
@@ -397,7 +397,7 @@ public class DateUtil {
      * @throws ParseException 解析异常
      */
     public static int getWeekDay(Date date){
-        Date day = DateUtil.addDay(date, -1);
+        Date day = DateUtils.addDay(date, -1);
         Calendar strDate = Calendar.getInstance();
         strDate.setTime(day);
         return strDate.get(Calendar.DAY_OF_WEEK);
@@ -474,7 +474,7 @@ public class DateUtil {
      */
     public static boolean isSaturday(String date){
         try {
-            Date d = DateUtil.parseDate(date,YYYY_MM_DD);
+            Date d = DateUtils.parseDate(date,YYYY_MM_DD);
             Calendar calendar =Calendar.getInstance();
             calendar.setTime(d);
             int week =  calendar.get(Calendar.DAY_OF_WEEK);

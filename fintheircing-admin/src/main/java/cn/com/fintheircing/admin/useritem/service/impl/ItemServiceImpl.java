@@ -4,7 +4,7 @@ import cn.com.fintheircing.admin.business.utils.BusinessUtils;
 import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.system.utils.MappingEntity2ModelConverter;
-import cn.com.fintheircing.admin.useritem.ImportException;
+import cn.com.fintheircing.admin.useritem.exception.ImportException;
 import cn.com.fintheircing.admin.useritem.common.Status;
 import cn.com.fintheircing.admin.useritem.dao.mapper.TransactionSummaryMapper;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;

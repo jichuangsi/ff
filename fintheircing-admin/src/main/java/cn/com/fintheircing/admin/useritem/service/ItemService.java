@@ -2,7 +2,7 @@ package cn.com.fintheircing.admin.useritem.service;
 
 import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
-import cn.com.fintheircing.admin.useritem.ImportException;
+import cn.com.fintheircing.admin.useritem.exception.ImportException;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
