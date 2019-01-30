@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Version;
-import java.util.Date;
 
 /**
  * 委托单
@@ -20,6 +19,9 @@ public class BusinessStockEntrust extends AbstractEntity {
 
     public final static String STOCK_ORDER = "0";
     public final static String STOCK_CANCEL_ORDER = "1";
+
+    public final static String DEAL_ADMIN = "1";
+    public final static String DEAL_CUSTOMER = "0";
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
@@ -36,15 +38,33 @@ public class BusinessStockEntrust extends AbstractEntity {
     private Double dealPrice;   //成交价钱
     private String dealNo;     //委托编号
     private Integer dealNum;     //成交数量
-    private Date dealTime;      //成交时间
+    private long dealTime;      //成交时间
     private String montherAccount;  //母账户
     private String holdingId;
     private String cancelNo;
     private Double coldMoney;
     private Double businessMoney;
     private Double taxationMoney;
+    private String dealMan;
+    private String dealFrom;
     @Version
     private Integer version;
+
+    public String getDealFrom() {
+        return dealFrom;
+    }
+
+    public void setDealFrom(String dealFrom) {
+        this.dealFrom = dealFrom;
+    }
+
+    public String getDealMan() {
+        return dealMan;
+    }
+
+    public void setDealMan(String dealMan) {
+        this.dealMan = dealMan;
+    }
 
     public Double getBusinessMoney() {
         return businessMoney;
@@ -158,7 +178,6 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.entrustStatus = entrustStatus;
     }
 
-
     public Double getDealPrice() {
         return dealPrice;
     }
@@ -191,11 +210,11 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.dealNum = dealNum;
     }
 
-    public Date getDealTime() {
+    public long getDealTime() {
         return dealTime;
     }
 
-    public void setDealTime(Date dealTime) {
+    public void setDealTime(long dealTime) {
         this.dealTime = dealTime;
     }
 

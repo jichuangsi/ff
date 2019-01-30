@@ -259,4 +259,10 @@ public final class BusinessUtils {
         return aa;
     }
 
+    public static Double avgStockPrice(Double costPrice,Integer costAmount,Double dealPrice,Integer dealAmount){
+        Double cost = multiplicationMethod(costPrice , costAmount.doubleValue());
+        Double deal = multiplicationMethod(dealPrice , dealAmount.doubleValue());
+        return (cost + deal)/(costAmount +dealAmount);
+    }
+
 }

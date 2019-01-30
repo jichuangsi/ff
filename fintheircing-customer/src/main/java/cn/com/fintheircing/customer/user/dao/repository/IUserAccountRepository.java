@@ -16,4 +16,7 @@ public interface IUserAccountRepository extends JpaRepository<UserAccount,String
     @Query(value = "update user_account set account=account-:money WHERE user_id=:id",nativeQuery = true)
     int updatePayAccount(@Param("money") Double promisedMoney, @Param("id") String userId);
     UserAccount findOneByUserId(String id);
+
+
+    UserAccount findByUserId(String userId);
 }

@@ -79,6 +79,7 @@ custom:
     codeHeight: 300
     picFormat: jpg
     picSavePath: F://codeImg
+    uuid: adminControl_id
   entrust:
     prefix: entrust_val_
     entrustBusiness:  买卖
@@ -116,7 +117,14 @@ custom:
     entrust:  0,30 0/1 9,10,11,12,13,14,15 * * ?
     deal: 15,45 0/1 9,10,11,12,13,14,15 * * ?
     fiveAvg:  0 30 15 * * 1,2,3,4,5
-    everyDay: 0 30 20 * * ?
+    everyDay: 0 50 15 * * ?
+    updateStockPrice: 0/10 * 9,10,11,12,13,14,15 * * ?
+  highFrequent:
+    contractKey: contract_id_val
+    stockContractKey: stock_contract_id_val
+    controlContract: 0.01
+    downStockRate: -0.09
+    controlPrice: 0.01
 pagehelper:
   helperDialect: mysql
   reasonable: true

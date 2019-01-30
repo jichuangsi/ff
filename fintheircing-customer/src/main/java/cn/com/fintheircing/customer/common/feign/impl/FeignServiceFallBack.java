@@ -15,6 +15,7 @@ import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -68,13 +69,13 @@ public class FeignServiceFallBack implements IAdminFeignService {
     @Override
     public ResponseModel<String> saveContract(ContractModel model) {
         logger.error("调用feign失败，保存合约失败");
-        return ResponseModel.fail("","保存合约失败");
+        return ResponseModel.fail("", "保存合约失败");
     }
 
     @Override
     public ResponseModel<String> saveUserSpread(UserTokenInfo userInfo) {
         logger.error("调用feign失败，保存用户推广页失败");
-        return ResponseModel.fail("","保存用户推广页失败");
+        return ResponseModel.fail("", "保存用户推广页失败");
     }
 
   /*  @Override
@@ -112,14 +113,11 @@ public class FeignServiceFallBack implements IAdminFeignService {
         return false;
     }
 
-
     @Override
     public ResponseModel<String> saveStockEntrust(StockEntrustModel model) {
         logger.error("调用feign失败，保存买入申请单失败");
-        return ResponseModel.fail("",ResultCode.SYS_ERROR_MSG);
+        return ResponseModel.fail("", ResultCode.SYS_ERROR_MSG);
     }
-
-
 
     @Override
     public ResultModel getWayToPay() {
@@ -159,7 +157,7 @@ public class FeignServiceFallBack implements IAdminFeignService {
     @Override
     public ResponseModel<String> sellHoldStockEntrust(StockHoldingModel model) {
         logger.error("调用feign失败，未委托卖出成功");
-        return ResponseModel.fail("","未委托卖出成功");
+        return ResponseModel.fail("", "未委托卖出成功");
     }
 
     @Override
@@ -175,6 +173,19 @@ public class FeignServiceFallBack implements IAdminFeignService {
 
     @Override
     public ContractModel getBusinessInfo(UserTokenInfo userTokenInfo) {
+        logger.error("调用feign失败，未获得合约总交易数据");
         return new ContractModel();
+    }
+
+    @Override
+    public ResponseModel<String> endContract(ContractModel model) {
+        logger.error("调用feign失败，未中止合约");
+        return ResponseModel.fail("");
+    }
+
+    @Override
+    public ResponseModel<PageInfo<StockEntrustModel>> getContractEntrusts(StockEntrustModel model) {
+        logger.error("调用feign失败，未获取委托单");
+        return ResponseModel.fail("");
     }
 }

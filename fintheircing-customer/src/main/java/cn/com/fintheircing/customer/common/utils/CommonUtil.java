@@ -3,11 +3,15 @@ package cn.com.fintheircing.customer.common.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class CommonUtil {
+
 
 	// 检验手机号码
 	public static boolean isPhone(String phone) {
@@ -51,5 +55,37 @@ public class CommonUtil {
 			stringBuffer.append(temp);
 		}
 		return stringBuffer.toString();
+	}
+
+	public static Boolean isContainTime(String begin,String end,String format) throws Exception{
+		format = "yyyy-MM-dd "+format;
+		SimpleDateFormat simpleDateFormat =  new SimpleDateFormat(format);
+		long start = 0;
+		long finish = 0;
+		long nowTime = System.currentTimeMillis();
+		String today = getToday();
+		begin = today+" "+begin;
+		end = today+" "+end;
+		try {
+			Date date1 = simpleDateFormat.parse(begin);
+			start = date1.getTime();
+		} catch (ParseException e) {
+			throw new Exception("开市时间，转换失败");
+		}
+		try {
+			Date date2 = simpleDateFormat.parse(end);
+			finish = date2.getTime();
+		} catch (ParseException e) {
+			throw new Exception("下市时间，转换失败");
+		}
+		if (nowTime>start && nowTime<finish){
+			return true;
+		}
+		return false;
+	}
+
+	private static String  getToday(){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return simpleDateFormat.format(new Date());
 	}
 }

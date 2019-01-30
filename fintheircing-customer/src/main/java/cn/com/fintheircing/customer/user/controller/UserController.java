@@ -3,12 +3,12 @@ package cn.com.fintheircing.customer.user.controller;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
-import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserMesInfoMapper;
-import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserMesInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserMesInfo;
+import cn.com.fintheircing.customer.user.exception.LoginException;
+import cn.com.fintheircing.customer.user.model.PassWordModel;
 import cn.com.fintheircing.customer.user.model.PayConfigModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
@@ -29,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Api("UserController")
+@CrossOrigin
 public class UserController {
     @Resource
     private UserService userService;
@@ -67,7 +68,7 @@ public class UserController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/payForQRCode")
-    public ResponseModel<AppResultModel> payForQRCode(@ModelAttribute UserTokenInfo userInfo,@RequestBody AppQueryModel model) {
+    public ResponseModel<AppResultModel> payForQRCode(@ModelAttribute UserTokenInfo userInfo, @RequestBody AppQueryModel model) {
         return ResponseModel.sucess("", adminFeignService.payForQRCode(model));
     }
 
@@ -87,6 +88,35 @@ public class UserController {
     public ResponseModel getUserInfo(@ModelAttribute UserTokenInfo userInfo) {
 
         return ResponseModel.sucess("", userService.getUserInfo(userInfo));
+    }
+
+    @ApiOperation(value = "修改密码", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/updatePassWord")
+    public ResponseModel updatePassWord(@ModelAttribute UserTokenInfo userInfo, @RequestBody PassWordModel model){
+        try {
+            userService.updatePass(userInfo,model);
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+
+    @ApiOperation(value = "验证密码", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/validatePassWord")
+    public ResponseModel validatePassWord(@ModelAttribute UserTokenInfo userInfo,@RequestBody PassWordModel model){
+        try {
+            userService.validatePass(userInfo,model);
+        } catch (LoginException e) {
+            return ResponseModel.fail("");
+        }
+        return ResponseModel.sucessWithEmptyData("");
     }
 
     @ApiOperation(value = "获取官方消息", notes = "")

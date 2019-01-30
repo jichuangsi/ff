@@ -19,12 +19,21 @@ public class StockHoldingModel {
     private Double floatRate;
     private String contractId;
     private String userId;
+    private String dealFrom;
 
     private Double oneDay;
     private Double twoDay;
     private Double threeDay;
     private Double fourDay;
     private Double fiveDay;
+
+    public String getDealFrom() {
+        return dealFrom;
+    }
+
+    public void setDealFrom(String dealFrom) {
+        this.dealFrom = dealFrom;
+    }
 
     public Double getOneDay() {
         return oneDay;

@@ -6,12 +6,12 @@ import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
-import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.promise.AddPromiseMoneyModel;
 import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
+import cn.com.fintheircing.customer.user.service.UserPayService;
 import cn.com.fintheircing.customer.user.service.UserService;
 import cn.com.fintheircing.customer.user.utlis.Entity2Model;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Api("PayController相关的控制层 ")
@@ -39,6 +38,9 @@ public class UserPayController {
     private IUserAccountRepository iUserAccountRepository;
     @Resource
     private UserService userService;
+    @Resource
+    private UserPayService userPayService;
+
 
     @ApiOperation(value = "生成待确认充值记录", notes = "")
     @ApiImplicitParams({

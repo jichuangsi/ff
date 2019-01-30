@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 @Entity
-public class BusinessContract extends AbstractEntity{
+public class BusinessContract extends AbstractEntity {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -23,14 +23,23 @@ public class BusinessContract extends AbstractEntity{
     private Double dangerourPrpmised;   //超危保证金
     private Double borrowMoney;   //借款
     private String expiredDay;  //到期日
-    private Double coldMoney;   //冻结资金
-    private String  riskId;     //关联风控
+    private Double coldMoney;   //
+    private String riskId;     //关联风控冻结资金
     private Double firstInterest;   //初次利息
     private Double availableMoney;  //可用资金
     private Integer contractStatus;     //合约状态，新建，交易中，结束交易
     private Integer rudeStatus;     //是否强制平仓
+    private Double abortMoney;  //强平总额
     @Version
     private int version;
+
+    public Double getAbortMoney() {
+        return abortMoney;
+    }
+
+    public void setAbortMoney(Double abortMoney) {
+        this.abortMoney = abortMoney;
+    }
 
     public String getExpiredDay() {
         return expiredDay;
@@ -96,7 +105,6 @@ public class BusinessContract extends AbstractEntity{
         this.coldMoney = coldMoney;
     }
 
-
     public Double getDangerourPrpmised() {
         return dangerourPrpmised;
     }
@@ -104,7 +112,6 @@ public class BusinessContract extends AbstractEntity{
     public void setDangerourPrpmised(Double dangerourPrpmised) {
         this.dangerourPrpmised = dangerourPrpmised;
     }
-
 
     public String getUuid() {
         return uuid;

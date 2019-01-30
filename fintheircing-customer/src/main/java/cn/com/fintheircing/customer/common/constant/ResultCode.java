@@ -49,5 +49,7 @@ public class ResultCode {
 	public static final String STOCK_SELL_ERR = "出售股份失败";
 
 	public static final String CER_NOT_ERR = "您尚未实名认证，不能此操作";
-
+	public static final String BUSINESS_NOT_TIME = "不在交易时间，请在交易时间进行交易";
+	public static final String STOCK_AMOUNT_ERR  = "请输入股票数量";
+	public static final String ENTRUST_VALIDATE_ERR = "非正常访问";
 }

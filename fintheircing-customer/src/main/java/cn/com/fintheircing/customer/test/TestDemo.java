@@ -6,6 +6,7 @@ import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.business.service.BusinessService;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
+import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
@@ -70,5 +71,13 @@ public class TestDemo {
     public void testFeign(){
         adminFeignService.testFeign();
     }*/
+
+   @Test
+   public void testNull(){
+       String old = null;
+       StockEntrustModel stockEntrustModel = new StockEntrustModel();
+       stockEntrustModel.setUserId(old);
+       System.out.println(stockEntrustModel);
+   }
 
 }

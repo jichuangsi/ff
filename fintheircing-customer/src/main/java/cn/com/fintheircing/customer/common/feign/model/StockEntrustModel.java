@@ -14,18 +14,28 @@ public class StockEntrustModel {
     private String statusStr;
     private Double price;
     private Integer amount;
-    private String dealNum;
-    private String dealTime;
+    private Integer dealNum;
+    private long dealTime;
     private String contractId;
     private String userId;
     private String motherAccount;
     private String dealNo;
+    private Double dealPrice;
     private String cancelOrder;
     private Date createdTime;
+    private String contractNum;
 
 
     private Integer pageIndex;
     private Integer pageSize;
+
+    public Double getDealPrice() {
+        return dealPrice;
+    }
+
+    public void setDealPrice(Double dealPrice) {
+        this.dealPrice = dealPrice;
+    }
 
     public Date getCreatedTime() {
         return createdTime;
@@ -171,19 +181,27 @@ public class StockEntrustModel {
         this.amount = amount;
     }
 
-    public String getDealNum() {
+    public Integer getDealNum() {
         return dealNum;
     }
 
-    public void setDealNum(String dealNum) {
+    public void setDealNum(Integer dealNum) {
         this.dealNum = dealNum;
     }
 
-    public String getDealTime() {
+    public long getDealTime() {
         return dealTime;
     }
 
-    public void setDealTime(String dealTime) {
+    public void setDealTime(long dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
     }
 }

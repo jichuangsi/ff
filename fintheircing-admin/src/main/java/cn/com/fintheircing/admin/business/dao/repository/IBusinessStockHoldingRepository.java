@@ -13,4 +13,6 @@ public interface IBusinessStockHoldingRepository
    BusinessStockHolding findBusinessStockHoldingByDeleteFlagAndStockIdAndContractId(String delete,String stockId,String contractId);
 
     List<BusinessStockHolding> findByDeleteFlagAndContractId(String delete,String contractId);
+
+    List<BusinessStockHolding> findByDeleteFlag(String delete);
 }
