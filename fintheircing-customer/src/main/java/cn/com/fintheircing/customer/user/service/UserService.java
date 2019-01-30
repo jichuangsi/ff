@@ -30,11 +30,4 @@ public interface UserService {
      */
     @RequestMapping("/addOrUseMoney")
      boolean addOrUseMoney(RecodeInfoPayModel model);
-
-    /**
-     * 申请扩大融资
-     * @param model
-     * @return
-     */
-    boolean expandMoney(AddPromiseMoneyModel model);
 }

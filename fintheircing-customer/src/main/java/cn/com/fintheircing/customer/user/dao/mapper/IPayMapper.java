@@ -26,4 +26,8 @@ public interface IPayMapper {
      */
     @Update("<script></script>")
    int updatePayInfo(RecodeInfoPayModel model);
+    @Select("<script>select t1.add_count as addCount, t1.cost_count as costCount,t1.remark as remark,t1.way as way" +
+            " t1.create_time as createTime,t1.update_time as updateTime,t1.task_type as taskType,t1.task_id as taskId " +
+            " t2.account as blance,t1.ex_blance as exBlance  from recode_info_pay t1,user_account t2 where t1.user_id=t2.user_id=#{id}  </script>")
+    List<RecodeInfoPayModel> findAllRecodeInfo(String id);
 }

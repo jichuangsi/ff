@@ -63,13 +63,8 @@ public class UserPayController {
     })
     @RequestMapping("/checkPayInfo")
     public ResponseModel<List<RecodeInfoPayModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo) {
-        List<RecodeInfoPay> allByUserId = iRecodInfoPayRepository.findAllByUserId(userInfo.getUuid());
-        allByUserId.forEach(a -> {
-            if ("0".equals(a.getStatus())) {
-                allByUserId.remove(a);
-            }
-        });
-        return ResponseModel.sucess("", Entity2Model.CoverListRecodInfoPay(allByUserId));
+
+        return ResponseModel.sucess("", iPayMapper.findAllRecodeInfo(userInfo.getUuid()));
 
     }
 
@@ -123,10 +118,12 @@ public class UserPayController {
             return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
         }
         RecodeInfoPay r = new RecodeInfoPay();
-        r.setRemark("提现到" + model.getAim());
+        r.setRemark(model.getRemark());
         r.setWay(model.getAim());
         r.setUserId(userInfo.getUuid());
         r.setCostCount(model.getAmount());
+        r.setTaskId("2");
+        r.setTaskType("提现申请");
         RecodeInfoPay save = iRecodInfoPayRepository.save(r);
         RecodeInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(save);
         return ResponseModel.sucess("", model1);
@@ -154,8 +151,10 @@ public class UserPayController {
         RecodeInfoPay p = new RecodeInfoPay();
         p.setUserId(userInfo.getUuid());
         p.setWay(model.getWay());
-        p.setRemark("扩大融资");
+        p.setRemark(model.getRemark());
         p.setAddCount(model.getCash());
+        p.setTaskType("扩大融资");
+        p.setTaskId("1");
         if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
             return ResponseModel.fail("", ResultCode.APPLY_FAIL);
         } else {

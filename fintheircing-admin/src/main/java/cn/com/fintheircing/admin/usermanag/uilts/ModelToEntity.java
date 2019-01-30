@@ -5,7 +5,7 @@ import cn.com.fintheircing.admin.todotask.entity.TodoTaskInfo;
 import cn.com.fintheircing.admin.todotask.model.FeedbackModel;
 
 import cn.com.fintheircing.admin.usermanag.entity.Bill;
-import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
+import cn.com.fintheircing.admin.usermanag.entity.pay.RecodeInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
 
@@ -61,8 +61,8 @@ public class ModelToEntity {
         b.setTransTime(model.getTransTime());
         return b;
     }
-    public static PayInfo CoverPayInfo(RecodeInfoPayModel model){
-        PayInfo p =new PayInfo();
+    public static RecodeInfo CoverPayInfo(RecodeInfoPayModel model){
+        RecodeInfo p =new RecodeInfo();
         p.setCostCount(model.getCostCount());
         p.setAddCount(model.getAddCount());
         p.setCreateTime(model.getCreatTime());

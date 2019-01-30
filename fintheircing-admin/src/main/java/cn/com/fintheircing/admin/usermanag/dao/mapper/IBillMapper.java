@@ -1,8 +1,6 @@
 package cn.com.fintheircing.admin.usermanag.dao.mapper;
 
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
-import cn.com.fintheircing.admin.usermanag.model.promise.CheckPromiseModel;
-import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
 import cn.com.fintheircing.admin.usermanag.model.result.TransListModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -49,22 +47,7 @@ public interface IBillMapper {
             "  WHERE t1.status=0 AND t1.user_id=t2.uuid =t3.user_id</script>")
     List<RecodeInfoPayModel> findAllPayInfo();
 
-    /**
-     * 根据用户id 和合同businessContractId 返回一个审核
-     * @param parms
-     * @return
-     */
-    @Select("")
-    CheckPromiseModel findPromise(Map<String, Object> parms);
 
-    /**
-     * 查询申请保证金的基本信息
-     * @return
-     */
-    @Select("<script>select t1.user_id as userId, t1.business_contract_id as businessContractId, t1.cost_count as cash, t1.remark as remark,t1.way as way, t2.contract_num as contractNum, t3.phone as phone " +
-            "Recode_Info_Pay t1,Business_Contract t2,User_Client_Info t3 where t1.status=\"0\" " +
-            "and t1.user_id=t3.uuid and t1.business_contract_id=t2.uuid</script>")
-    List<PromiseModel> findAllApply();
 
     /**
      * 改变RecodeInfoPay的状态 status =1
@@ -72,8 +55,8 @@ public interface IBillMapper {
      */
     @Update("<script>update recode_info_pay t1 set t1.status=1 where t1.uuid=#{id}</script>")
     int updateRecodeInfo(String id);
-    @Update("<script>update user_account t1 set t1.account =t1.account-money where t1.user_id=#{userId}</script> ")
+    @Update("<script>update user_account t1,recode_info_pay t2 set t2.ex_blance=t1.account,t1.account =t1.account-#{money} where t1.user_id=#{userId}</script> ")
     int updateCostUserAmount(Map<String, Object> parms);
-    @Update("<script>update user_account t1 set t1.account =t1.account+money where t1.user_id=#{userId}</script> ")
+    @Update("<script>update user_account t1,recode_info_pay t2 set t2.ex_blance=t1.account,t1.account =t1.account+#{money} where t1.user_id=#{userId}</script> ")
     int updateAddUserAmount(Map<String, Object> parms);
 }

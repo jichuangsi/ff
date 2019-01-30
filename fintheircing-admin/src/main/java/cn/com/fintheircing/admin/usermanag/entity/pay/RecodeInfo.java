@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 @Entity
-public class PayInfo {
+public class RecodeInfo {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -21,9 +21,27 @@ public class PayInfo {
     private Date updateTime;
     private String checkStatus;
     private String businessContractId;
+    private String operatWay;//操作什么东东
     private String operaId;
     private String operaName;
     private Integer taskType;
+    private Integer delete_flag=0;
+
+    public Integer getDelete_flag() {
+        return delete_flag;
+    }
+
+    public void setDelete_flag(Integer delete_flag) {
+        this.delete_flag = delete_flag;
+    }
+
+    public String getOperatWay() {
+        return operatWay;
+    }
+
+    public void setOperatWay(String operatWay) {
+        this.operatWay = operatWay;
+    }
 
     public Integer getTaskType() {
         return taskType;

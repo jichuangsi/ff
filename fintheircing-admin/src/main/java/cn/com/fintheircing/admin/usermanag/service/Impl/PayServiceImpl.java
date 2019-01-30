@@ -10,10 +10,8 @@ import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.systemdetect.dao.repository.ProductRepository;
 import cn.com.fintheircing.admin.systemdetect.entity.Product;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IPayInfoRepository;
-import cn.com.fintheircing.admin.usermanag.entity.pay.PayInfo;
+import cn.com.fintheircing.admin.usermanag.entity.pay.RecodeInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.*;
-import cn.com.fintheircing.admin.usermanag.model.promise.CheckPromiseModel;
-import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
 import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.usermanag.uilts.GsonUtil;
 import cn.com.fintheircing.admin.usermanag.uilts.HttpUtils;
@@ -23,7 +21,6 @@ import cn.com.fintheircing.admin.usermanag.dao.repsitory.IBillRepository;
 import cn.com.fintheircing.admin.usermanag.model.result.*;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import cn.com.fintheircing.admin.usermanag.uilts.ModelToEntity;
-import org.assertj.core.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -231,15 +228,6 @@ public class PayServiceImpl implements IPayService {
         }
     }
 
-    @Override
-    public CheckPromiseModel addPromiseMoney(PromiseModel data, UserTokenInfo userInfo) {
-        Map<String, Object> parms = new HashMap<>();
-        parms.put("userId", data.getUserId());
-        parms.put("businessContractId", data.getBusinessContractId());
-        CheckPromiseModel model = iBillMapper.findPromise(parms);
-        model.setTaskType("追加保证金");
-        return model;
-    }
 
     @Override
     public List<RecodeInfoPayModel> findAllPayInfo() throws UserServiceException {
@@ -265,16 +253,7 @@ public class PayServiceImpl implements IPayService {
         return iBillMapper.updatePayInfo(model);
     }
 
-    /**
-     * 查询所有申请追加保证金的个人的信息
-     *
-     * @return
-     */
-    @Override
-    public List<PromiseModel> findAllApply() {
-        List<PromiseModel> allApply = iBillMapper.findAllApply();
-        return allApply;
-    }
+
 
     /**
      * 同意追加保证金申请
@@ -299,7 +278,7 @@ public class PayServiceImpl implements IPayService {
             throw new UserServiceException(ResultCode.FAILE_COST);
         }
         if (model.getTaskId().equalsIgnoreCase("0")) {
-            PayInfo p = new PayInfo();
+            RecodeInfo p = new RecodeInfo();
             if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
                 p.setWay(model.getWay());
                 p.setRemark(model.getRemark());
@@ -311,6 +290,7 @@ public class PayServiceImpl implements IPayService {
                 p.setUserId(model.getUserId());
                 p.setOperaId(userInfo.getUuid());
                 p.setOperaName(userInfo.getUserName());
+                p.setOperatWay("同意追加保证金");
                 iPayInfoRepository.save(p);
                 return true;
             }else {
@@ -332,7 +312,7 @@ public class PayServiceImpl implements IPayService {
     public boolean passPromiseMoney(UserTokenInfo userInfo,RecodeInfoPayModel model) {
 
 
-            PayInfo p = new PayInfo();
+            RecodeInfo p = new RecodeInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());
             p.setRemark(model.getRemark());
@@ -344,6 +324,7 @@ public class PayServiceImpl implements IPayService {
             p.setUserId(model.getUserId());
             p.setOperaId(userInfo.getUuid());
             p.setOperaName(userInfo.getUserName());
+            p.setOperatWay("驳回保证金申请");
             iPayInfoRepository.save(p);
 
             return true;
@@ -382,7 +363,7 @@ public class PayServiceImpl implements IPayService {
             //个人提现
             throw new UserServiceException(ResultCode.PERSON_WITHDRAW_FAILE);
         }
-        PayInfo p = new PayInfo();
+        RecodeInfo p = new RecodeInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());
             p.setRemark(model.getRemark());
@@ -393,7 +374,9 @@ public class PayServiceImpl implements IPayService {
             p.setUserId(model.getUserId());
             p.setOperaId(userInfo.getUuid());
             p.setOperaName(userInfo.getUserName());
+            p.setOperatWay("同意提现");
             iPayInfoRepository.save(p);
+
             return true;
         }else {
             throw new UserServiceException(ResultCode.SAVE_OPERAT_FAILE);
@@ -411,7 +394,7 @@ public class PayServiceImpl implements IPayService {
     @Override
     public boolean passwithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model) {
 
-        PayInfo p = new PayInfo();
+        RecodeInfo p = new RecodeInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());
             p.setRemark(model.getRemark());
@@ -422,6 +405,7 @@ public class PayServiceImpl implements IPayService {
             p.setUserId(model.getUserId());
             p.setOperaId(userInfo.getUuid());
             p.setOperaName(userInfo.getUserName());
+            p.setOperatWay("驳回提现");
             iPayInfoRepository.save(p);
             return true;
         }
@@ -430,7 +414,7 @@ public class PayServiceImpl implements IPayService {
 
     @Override
     public boolean expendMoney(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
-        PayInfo p = new PayInfo();
+        RecodeInfo p = new RecodeInfo();
         if (model.getTaskId().equalsIgnoreCase("1")) {
             List<BusinessStockEntrust> byDeleteFlagAndContractId = iBusinessStockEntrustRepository.findByDeleteFlagAndContractId("0", model.getBusinessContractId());
             if (byDeleteFlagAndContractId.size() == 0) {
@@ -460,6 +444,7 @@ public class PayServiceImpl implements IPayService {
                 p.setUserId(model.getUserId());
                 p.setOperaId(userInfo.getUuid());
                 p.setOperaName(userInfo.getUserName());
+                p.setOperatWay("同意扩大融资");
                 iPayInfoRepository.save(p);
                 return true;
             }

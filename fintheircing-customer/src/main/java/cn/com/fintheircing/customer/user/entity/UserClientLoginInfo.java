@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Entity
 public class UserClientLoginInfo extends AbstractEntity{
@@ -19,6 +20,24 @@ public class UserClientLoginInfo extends AbstractEntity{
 	private String clientInfoId;
 	private String ipAddress;
 	private String status;
+	private Date loginTime;
+	private Date logoutTime;
+
+	public Date getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public Date getLogoutTime() {
+		return logoutTime;
+	}
+
+	public void setLogoutTime(Date logoutTime) {
+		this.logoutTime = logoutTime;
+	}
 
 	public String getIpAddress() {
 		return ipAddress;

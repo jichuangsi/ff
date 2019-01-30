@@ -100,15 +100,5 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /**
-     * 申请扩大融资
-     *
-     * @param model
-     * @return
-     */
-    @Override
-    public boolean expandMoney(AddPromiseMoneyModel model) {
 
-        return false;
-    }
 }

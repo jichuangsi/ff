@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +54,23 @@ public class UserLoginController {
         }
         Map<String,String> map = new HashMap<String,String>();
         map.put("token",token);
+
         return ResponseModel.sucess("",map);
+    }
+
+    @ApiOperation(value = "用户登出", notes = "")
+    @ApiImplicitParams({})
+    @PostMapping("/userOut")
+    @CrossOrigin
+    public ResponseModel userOut(@ModelAttribute UserTokenInfo model, HttpServletRequest request) throws LoginException{
+       try {
+           if(loginService.outOnlineByUser(model.getUuid())){
+               return ResponseModel.sucessWithEmptyData("");
+           }
+       }catch (Exception e){
+           return ResponseModel.fail("", e.getMessage());
+       }
+
+        return null;
     }
 }

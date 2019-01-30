@@ -19,7 +19,10 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -41,7 +44,8 @@ public class AdminLoginService {
     @Resource
     private RedisTemplate redisTemplate;
 
-
+    @Resource
+    private IAdminClientLoginInfoMapper iAdminClientLoginInfoMapper;
 
 
 
@@ -63,6 +67,11 @@ public class AdminLoginService {
         }
         if(StringUtils.isEmpty(token)) throw new AdminLoginException(ResultCode.LOGIN_ADMIN_ERR);
         redisTemplate.opsForValue().set(tokrnPre+model.getUuid(),token,longTime, TimeUnit.MINUTES);
+        Map<String,Object> parms =new HashMap<>();
+        Date d =new Date();
+        parms.put("userId", model.getUuid());
+        parms.put("Date", d);
+        iAdminClientLoginInfoMapper.updateLoginTime(parms);
         return token;
     }
 
@@ -89,5 +98,17 @@ public class AdminLoginService {
 
     public int countAdmin(UserTokenInfo userTokenInfo){
         return adminClientLoginInfoMapper.selectCountAdmin(userTokenInfo);
+    }
+
+    public boolean loginout(String uuid) {
+        if (redisTemplate.delete(tokrnPre+uuid)){
+            Map<String,Object> parms =new HashMap<>();
+            Date d =new Date();
+            parms.put("userId", uuid);
+            parms.put("Date", d);
+            iAdminClientLoginInfoMapper.updateLogoutTime(parms);
+            return  true ;
+        }
+        return false;
     }
 }

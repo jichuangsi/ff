@@ -6,6 +6,7 @@ import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.WebCommonUtils;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
+import cn.com.fintheircing.admin.usermanag.entity.pay.RecodeInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -42,8 +43,18 @@ public class AdminLoginContoller {
         }
         Map<String,String> map = new HashMap<String,String>();
         map.put("token",token);
+
+
         return ResponseModel.sucess("",map);
     }
 
+    @ApiOperation(value = "管理员退出", notes = "")
+    @ApiImplicitParams({
+    })
+    @PostMapping("/adminloginout")
+    @CrossOrigin
+    public ResponseModel loginout(@Validated @RequestBody UserTokenInfo model , HttpServletRequest request) throws AdminLoginException {
+      return   ResponseModel.sucess("",adminLoginService.loginout(model.getUuid() )) ;
 
+    }
 }

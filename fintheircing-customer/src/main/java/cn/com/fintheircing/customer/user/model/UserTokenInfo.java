@@ -19,6 +19,24 @@ public class UserTokenInfo {
     private String roleName;
     private String applyOn;     //区别pc和app
     private String txpassword;//提现密码
+    private String ipAdreess;//地址
+    private Long validTime;//剩余时间
+
+    public String getIpAdreess() {
+        return ipAdreess;
+    }
+
+    public void setIpAdreess(String ipAdreess) {
+        this.ipAdreess = ipAdreess;
+    }
+
+    public Long getValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(Long validTime) {
+        this.validTime = validTime;
+    }
 
     public String getTxpassword() {
         return txpassword;

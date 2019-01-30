@@ -7,7 +7,7 @@ import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
 import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
-import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class CustomerFeignServiceFallBack implements ICustomerFeignService {
     }
 
     @Override
-    public List<OnlineUserInfo> findAllRecoding(OnlineUserInfo userInfo) {
+    public List<OnlineUserInfo> findAllRecoding() {
         return null;
     }
 

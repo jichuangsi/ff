@@ -23,6 +23,9 @@ public class ResultCode {
 	public static final String LOGIN_USER_STOP = "此号已被冻结";
 	public static final String LOGIN_USER_ERR = "用户登录失败";
 	public static final String LOGIN_TOKEN_ERR = "token转换失败";
+	public static final String LOGIN_OUT_FAILE = "登出失败";
+	public static final String LOGIN_OUT_ERR = "登出错误,请检查是否重复登出";
+	public static final String FORCE_LOGIN_OUT_ERR = "强制登出失败";
 
 	public static final String SYS_BUSY_BLACK = "黑名单访问，融断";
 	public static final String PRODUCT_GET_ERR = "获取产品失败";

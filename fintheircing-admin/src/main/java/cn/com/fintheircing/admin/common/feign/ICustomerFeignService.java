@@ -16,10 +16,16 @@ public interface ICustomerFeignService {
     List<OnlineUserInfo>  findAllInfo();
     @RequestMapping("/findAllUser")
     public List<UserTokenInfo> findAllUser();
-    @RequestMapping("/outLine")
+
+    /**
+     * 强制登出
+     * @param id
+     * @return
+     */
+    @RequestMapping("/isOut")
     public boolean outLine(String id);
-    @RequestMapping("/findAllRecoding")
-    public List<OnlineUserInfo> findAllRecoding(OnlineUserInfo userInfo);
+    @RequestMapping("/viewOnline")
+    public List<OnlineUserInfo> findAllRecoding();
     @RequestMapping("/deleteRecoding")
 
      int deleteRecoding(String userId);

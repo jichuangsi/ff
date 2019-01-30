@@ -2,8 +2,6 @@ package cn.com.fintheircing.admin.usermanag.service;
 
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.*;
-import cn.com.fintheircing.admin.usermanag.model.promise.CheckPromiseModel;
-import cn.com.fintheircing.admin.usermanag.model.promise.PromiseModel;
 import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.model.result.*;
@@ -53,21 +51,10 @@ public interface IPayService {
      */
     AppResultModel payForQRCode(AppQueryModel model, PayConfigModel payConfig) throws UserServiceException;
 
-    /**
-     * 返回申请
-     * @param data
-     * @return
-     */
-    CheckPromiseModel addPromiseMoney(PromiseModel data, UserTokenInfo userInfo);
 
      List<RecodeInfoPayModel> findAllPayInfo() throws UserServiceException;
 
     int updatePayInfo(RecodeInfoPayModel model);
- /**
-  * 查询所有申请追加保证金的个人的信息
-  * @return
-  */
-     List<PromiseModel> findAllApply();
 
  /**
   * 同意追加保证金申请

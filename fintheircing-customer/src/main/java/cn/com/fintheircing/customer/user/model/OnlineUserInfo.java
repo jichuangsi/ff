@@ -3,17 +3,22 @@ package cn.com.fintheircing.customer.user.model;
 import java.util.Date;
 
 public class OnlineUserInfo {
+    private String userId;
+    private String userName;
+    private String ipAddress;
+    private Date loginTime;
+    private Date lastTime;
+    private Long ExpiredTime;//过期时间
+    private String status;
+    private String operating;
 
-    String userId;
-    String userName;
-    String ipAdress;
-    Date loginTime;
-    Date lastTime;
-    Long ExpiredTime;//过期时间
-    String status;
-    String method;
-    String usage;
-    String operating;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -31,38 +36,12 @@ public class OnlineUserInfo {
         this.operating = operating;
     }
 
-    public String getMethod() {
-        return method;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
-    public void setUsage(String usage) {
-        this.usage = usage;
-    }
-
-
-    public String getUserId() {
-
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getIpAdress() {
-        return ipAdress;
-    }
-
-    public void setIpAdress(String ipAdress) {
-        this.ipAdress = ipAdress;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public Date getLoginTime() {

@@ -14,6 +14,7 @@ import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
+import cn.com.fintheircing.customer.user.model.OnlineUserInfo;
 import cn.com.fintheircing.customer.user.model.RegisterModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import com.alibaba.fastjson.JSONObject;
@@ -63,9 +64,9 @@ public class RegisterService {
 				throw new RegisterheckExistException(phoneNo + "已存在");
 			}
 			// 看缓存中是否存在发送验证码记录
-//			if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
-//				throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
-//			}
+			if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
+				throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
+			}
 			String code = getRandomNumCode(valCodeLength);
 			Map<String, String> dataMap = new HashMap<>();
 			dataMap.put("phoneNo", phoneNo);
@@ -166,6 +167,11 @@ public class RegisterService {
 	public UserTokenInfo getUserForLogin (UserTokenInfo model) {
 		model.setPwd(CommonUtil.toSha256(model.getPwd()));
 		return userClientInfoMapper.find(model);
+	}
+	//获得在线用户
+	public OnlineUserInfo getUserForLogin (String id) {
+
+		return userClientInfoMapper.findAllOnline( id);
 	}
 
 	// 生成随机数字

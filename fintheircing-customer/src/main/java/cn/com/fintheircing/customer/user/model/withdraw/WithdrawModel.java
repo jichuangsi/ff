@@ -8,6 +8,15 @@ package cn.com.fintheircing.customer.user.model.withdraw;
 public class WithdrawModel {
     private double amount;//提现金额
     private String aim;//提现地方--可以是银行卡,支付宝,微信
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public double getAmount() {
         return amount;

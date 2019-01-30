@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 
 public class OnlineUserInfo {
-
+    private String RecodeInfoId;
     String userId;
     String userName;
     String ipAdress;
@@ -14,9 +14,15 @@ public class OnlineUserInfo {
     @Value("${custom.token.longTime}")
     String ExpiredTime;//过期时间
     String status;
-    String method;
-    String usage;
     String operating;
+
+    public String getRecodeInfoId() {
+        return RecodeInfoId;
+    }
+
+    public void setRecodeInfoId(String recodeInfoId) {
+        RecodeInfoId = recodeInfoId;
+    }
 
     public String getUserName() {
         return userName;
@@ -33,23 +39,6 @@ public class OnlineUserInfo {
     public void setOperating(String operating) {
         this.operating = operating;
     }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
-    public void setUsage(String usage) {
-        this.usage = usage;
-    }
-
 
     public String getUserId() {
 

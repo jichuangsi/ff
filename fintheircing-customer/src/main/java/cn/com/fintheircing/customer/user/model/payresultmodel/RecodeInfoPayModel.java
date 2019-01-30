@@ -25,6 +25,51 @@ public class RecodeInfoPayModel {
     private String phone;
     private String userName;
     private String businessContractId;
+    private String account;
+    private double blance;//余额
+    private String taskType;
+    private String taskId;
+    private double exBlance;//扣款前的钱
+
+    public double getExBlance() {
+        return exBlance;
+    }
+
+    public void setExBlance(double exBlance) {
+        this.exBlance = exBlance;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public double getBlance() {
+        return blance;
+    }
+
+    public void setBlance(double blance) {
+        this.blance = blance;
+    }
 
     public String getBusinessContractId() {
         return businessContractId;
