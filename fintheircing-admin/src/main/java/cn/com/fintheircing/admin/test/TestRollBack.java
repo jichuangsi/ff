@@ -9,6 +9,9 @@ import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.service.MotherAccountQueryService;
 import cn.com.fintheircing.admin.common.feign.IExchangeFeignService;
+import cn.com.fintheircing.admin.common.feign.IStockPriceFeignService;
+import cn.com.fintheircing.admin.common.feign.model.GetQuotesTenListRequestModel;
+import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.feign.model.TodayAcceptOrder;
 import cn.com.fintheircing.admin.common.feign.model.TodayOrder;
 import cn.com.fintheircing.admin.common.model.MotherAccount;
@@ -64,6 +67,8 @@ public class TestRollBack {
     private TestComponent testComponent;
     @Resource
     private IBusinessStockEntrustRepository businessStockEntrustRepository;
+    @Resource
+    private IStockPriceFeignService stockPriceFeignService;
 
     @Value("${custom.entrust.prefix}")
     private String entrustPrefix;
@@ -218,13 +223,36 @@ public class TestRollBack {
 
     @Test
     public void testGet() {
-        Set<String> contractIds = new HashSet<String>();
+        List<String> contractIds = new ArrayList<String>();
         contractIds.add("1");
         contractIds.add("1");
         contractIds.add("2");
-        contractIds.remove("1");
+        String[] c = contractIds.toArray(new String[contractIds.size()]);
         System.out.println(contractIds);
     }
+
+    @Test
+    public void testGetOne() {
+       List<String> stockCode = new ArrayList<>();
+       List<String> marts = new ArrayList<>();
+       stockCode.add("000420");
+       marts.add("2");
+        GetQuotesTenListRequestModel requestModel = new GetQuotesTenListRequestModel();
+        requestModel.setStockCodes(stockCode);
+        requestModel.setMarkets(marts);
+       ResponseModel<List<QuotesTenModel>> responseModel = stockPriceFeignService.getQuotesTenList(requestModel);
+        System.out.println(requestModel);
+    }
+
+    @Test
+    public void testHasCode(){
+        try {
+            businessService.getFiveDayMaxAmount();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
 
 
 }

@@ -26,7 +26,7 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
 
     BusinessContract findByUuid(String id);
 
-    int countByDeleteFlagAndUuidAndUserId(String delete,String contractId,String userId);
+    int countByDeleteFlagAndUuidAndUserIdAndContractStatus(String delete,String contractId,String userId,Integer contractStatus);
 
     /*@Query(value = "select t1.version as version,t1.uuid as id,t1.borrow_money as borrowMoney,t2.customer_max_account as customerMaxAccount,t2.hold_over_currency as holdOverCurrency,t2.hold_over_five_avg as holdOverFiveAvg,t2.shock_shut_down as shockShutDown,t2.ventur_edition_max_account as venturEditionMaxAccount,t1.available_money as  canUseMoney,t1.promised_money as promisedMoney,t2.abort_line as abortLine,t2.warning_line as warningLine,t1.worth as worth,t1.cold as coldCash,t1.moneyInDeal as businessRate from (select t3.uuid,t4.worth,t3.borrow_money,t3.available_money,t3.promised_money,t3.risk_id,t3.cold_money as cold," +
             "t3.money_in_deal as moneyInDeal,t3.version" +
@@ -36,5 +36,5 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
     ContractModel findBycontractId(@Param("contractId") String contractId);*/
 
 
-    List<BusinessContract> findByDeleteFlag(String delete);
+    List<BusinessContract> findByDeleteFlagAndContractStatus(String delete,Integer contractStatus);
 }

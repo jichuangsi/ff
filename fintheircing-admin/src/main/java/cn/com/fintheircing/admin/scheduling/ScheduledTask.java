@@ -181,7 +181,7 @@ public class ScheduledTask {
     }
 
 
-    //@Scheduled(cron = "${custom.scheduled.updateStockPrice}")
+    @Scheduled(cron = "${custom.scheduled.updateStockPrice}")
     public void updateStockPrice(){
         try {
             businessService.updateStockPrice();

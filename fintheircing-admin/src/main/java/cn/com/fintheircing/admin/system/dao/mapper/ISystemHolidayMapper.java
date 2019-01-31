@@ -29,6 +29,6 @@ public interface ISystemHolidayMapper {
     List<HolidayModel> selectHolidays(HolidaySearchModel model);
 
 
-    @Select("<script>select count(1) from system_holiday where  begin_time &lt;= #{longtime} and  end_time &gt;= #{longtime}   </script>")
+    @Select("<script>select count(1) from system_holiday where  begin_time &lt;= #{longtime} and  end_time &gt;= #{longtime}  and status=\"0\" </script>")
     int countInHoliday(@Param("longtime") long nowTime);
 }

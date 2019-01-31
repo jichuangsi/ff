@@ -10,4 +10,6 @@ public interface IUserInfoRepository extends JpaRepository<UserClientInfo,String
 
 	UserClientInfo findByUuid(String uuid);
 
+	int countByDeleteFlagAndIdCard(String delete,String idCard);
+
 }

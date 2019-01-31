@@ -19,12 +19,12 @@ public interface IBusinessStockHoldingMapper {
 
     @Select("<script>select count(1)" +
             "  from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id <where> t1.contract_id=#{contractId}" +
-            " <if test='stockNum!=null and stockNum!=\"\"'> and t2.stock_num=#{stockNum}</if> and t1.delete_flag=\"0\" </where> GROUP BY t2.stock_num</script>")
+            " <if test='stockNum!=null and stockNum!=\"\"'> and t2.stock_num=#{stockNum}</if> and t1.delete_flag=\"0\" </where></script>")
     int countStockInContract(@Param("contractId")String contractId, @Param("stockNum") String stockNum);
 
-    @Select("<script>select t2.stock_num as stockNo,t2.id as stockId from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id where t1.delete_flag=\"0\" group by t2.stock_num</script>")
+    @Select("<script>select t2.stock_num as stockNo,t2.id as stockId,t1.version as version from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id where t1.delete_flag=\"0\"</script>")
     List<StockHoldingModel> selectHoldStockAll();
 
-    @Update("<script>UPDATE business_stock_holding set current_price=#{currentPrice},current_worth=#{currentPrice}*amount,float_money=(#{currentPrice}-cost_price)*amount,float_rate=((#{currentPrice}/cost_price)-1)  where stock_id=#{stockId} and delete_flag=\"0\"</script>")
+    @Update("<script>UPDATE business_stock_holding set current_price=#{currentPrice},current_worth=#{currentPrice}*amount,float_money=(#{currentPrice}-cost_price)*amount,float_rate=((#{currentPrice}/cost_price)-1),version=#{version}+1  where stock_id=#{stockId} and delete_flag=\"0\" and version=#{version}</script>")
     int updateHoldingStockPrice(StockHoldingModel model);
 }

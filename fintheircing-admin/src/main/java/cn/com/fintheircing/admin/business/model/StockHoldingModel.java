@@ -20,12 +20,21 @@ public class StockHoldingModel {
     private String contractId;
     private String userId;
     private String dealFrom;
+    private Integer version;
 
     private Double oneDay;
     private Double twoDay;
     private Double threeDay;
     private Double fourDay;
     private Double fiveDay;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public String getDealFrom() {
         return dealFrom;

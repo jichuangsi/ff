@@ -5,7 +5,7 @@ import java.util.Date;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
-	protected Date createdTime = new Date();
+	protected Date createdTime;
 	protected String creatorId;
 	protected String creatorName;
 	protected Date updatedTime = new Date();

@@ -12,6 +12,7 @@ public class PassWordModel {
     @Pattern(regexp = "^((?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16})$", message = "密码必须为8-16位数字与字母混合")
     private String newPassWord;
 
+
     public String getOldPassWord() {
         return oldPassWord;
     }

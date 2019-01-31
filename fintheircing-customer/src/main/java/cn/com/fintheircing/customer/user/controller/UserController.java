@@ -8,10 +8,7 @@ import cn.com.fintheircing.customer.user.dao.repository.IUserMesInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserMesInfo;
 import cn.com.fintheircing.customer.user.exception.LoginException;
-import cn.com.fintheircing.customer.user.model.PassWordModel;
-import cn.com.fintheircing.customer.user.model.PayConfigModel;
-import cn.com.fintheircing.customer.user.model.SpreadModel;
-import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.model.*;
 import cn.com.fintheircing.customer.user.model.mes.UserMesInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
@@ -149,6 +146,21 @@ public class UserController {
             return ResponseModel.sucessWithEmptyData("");
         }
         return ResponseModel.fail("", ResultCode.SYS_ERROR_MSG);
+    }
+
+
+    @ApiOperation(value = "实名认证", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/userCer")
+    public ResponseModel userCer(@ModelAttribute UserTokenInfo userInfo,@RequestBody UserCerModel model){
+        try {
+            userService.userCer(userInfo,model);
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
     }
 
 }

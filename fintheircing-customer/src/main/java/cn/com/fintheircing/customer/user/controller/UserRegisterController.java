@@ -39,14 +39,13 @@ public class UserRegisterController {
 		if (StringUtils.isEmpty(phoneNo) || !CommonUtil.isPhone(phoneNo)) {
 			return ResponseModel.fail("", "手机号码不正确");
 		}
-		
+		String code = "";
 		try {
-			registerService.getValCode(phoneNo);
+			code = registerService.getValCode(phoneNo);
 		} catch (RegisterheckExistException e) {
 			return ResponseModel.fail("", e.getMessage());
 		}
-
-		return ResponseModel.sucessWithEmptyData("");
+		return ResponseModel.sucess("",code);
 	}
 	
 	@ApiOperation(value = "注册", notes = "")

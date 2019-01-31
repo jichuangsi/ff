@@ -266,6 +266,9 @@ public class ItemServiceImpl implements ItemService {
         for (QuotesTenModel model : quotesTenModels) {
             for (TransactionSummary summary : summaries) {
                 if (model.getStockCode().equals(summary.getStockNum())) {
+                    if (null == summary.getNowCursor()){
+                        summary.setNowCursor(0);
+                    }
                     int cursor = summary.getNowCursor() == 5 ? 1 : BusinessUtils.addIntMethod(summary.getNowCursor(), 1);
                     summary.setNowCursor(cursor);
                     switch (cursor) {

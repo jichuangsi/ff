@@ -23,7 +23,7 @@ public interface IBusinessContractMapper {
     List<TranferContractModel> selectPageContracts(TranferContractModel contractModel);
 
     @Select("<script>select t1.version as version,t1.uuid as id,t1.borrow_money as borrowMoney,t2.customer_max_account as customerMaxAccount,t2.hold_over_currency as holdOverCurrency,t2.hold_over_five_avg as holdOverFiveAvg,t2.stock_shut_down as stockShutDown,t2.ventur_edition_max_account as venturEditionMaxAccount,t1.available_money as  canUseMoney,t1.promised_money as promisedMoney,t2.abort_line as abortLine,t2.warning_line as warningLine,t1.worth as worth,t1.cold as coldCash,t1.moneyInDeal as businessRate,t1.buyRate as buyRate,t1.overRate as overRate,t1.wornRate as wornRate,t1.downRate as downRate from (select t3.uuid,t4.worth,t3.borrow_money,t3.available_money,t3.promised_money,t3.risk_id,t3.cold_money as cold,t3.money_in_deal as moneyInDeal,t3.version,t3.buyRate,t3.overRate,t3.wornRate,t3.downRate " +
-            " from (select t5.uuid,t5.delete_flag,t5.borrow_money,t5.available_money,t5.promised_money,t5.risk_id,t5.cold_money,t6.money_in_deal,t5.version,t6.entry_amount as buyRate,t6.liquidation as overRate,t6.worn_line as wornRate,t6.out_amount as downRate from business_contract t5 LEFT JOIN systemdetect_product t6 on t5.product_id=t6.id) t3 LEFT JOIN (select contract_id,sum(current_worth) as worth from business_stock_holding where delete_flag=\"0\" group BY contract_id) t4 on t3.uuid = t4.contract_id where t3.delete_flag=\"0\") t1 LEFT JOIN business_contract_risk t2 on  t1.risk_id=t2.uuid where t1.uuid = #{id} and t2.delete_flag=\"0\"</script>")
+            " from (select t5.uuid,t5.delete_flag,t5.borrow_money,t5.available_money,t5.promised_money,t5.risk_id,t5.cold_money,t6.money_in_deal,t5.version,t6.entry_amount as buyRate,t6.liquidation as overRate,t6.worn_line as wornRate,t6.out_amount as downRate from business_contract t5 LEFT JOIN systemdetect_product t6 on t5.product_id=t6.id where t5.delete_flag=\"0\" and not(t5.contract_status=2)) t3 LEFT JOIN (select contract_id,sum(current_worth) as worth from business_stock_holding where delete_flag=\"0\" group BY contract_id) t4 on t3.uuid = t4.contract_id where t3.delete_flag=\"0\") t1 LEFT JOIN business_contract_risk t2 on  t1.risk_id=t2.uuid where t1.uuid = #{id} and t2.delete_flag=\"0\"</script>")
     ContractModel selectContract(@Param("id") String id);
 
     @Select("<scirpt></script>")
@@ -36,7 +36,7 @@ public interface IBusinessContractMapper {
             " t5 left join business_contract_risk t6 on t5.risk_id=t6.uuid where t5.user_id=#{userId} and t5.delete_flag=\"0\")" +
             " t3 LEFT JOIN systemdetect_product t4 on t3.product_id=t4.id)" +
             " t1 LEFT JOIN (" +
-            " select contract_id,sum(float_money) as floatMoney,sum(current_worth) as worth from business_stock_holding where contract_id in (select uuid from business_contract where user_id=#{userId} and delete_flag=\"0\")  and delete_flag=\"0\" GROUP BY contract_id" +
+            " select contract_id,sum(float_money) as floatMoney,sum(current_worth) as worth from business_stock_holding where contract_id in (select uuid from business_contract where user_id=#{userId}  and not(contract_status=2))  and delete_flag=\"0\" GROUP BY contract_id" +
             " ) t2 on t1.contractid=t2.contract_id</script>")
     List<ContractModel> selectCurrentContract(@Param("userId") String userId);
 
@@ -46,6 +46,6 @@ public interface IBusinessContractMapper {
     int addPromiseMoney(@Param("cash") double cash);
 
     @Select("<script>select t1.uuid as id,t1.promised_money as promisedMoney,t1.borrow_money as borrowMoney,t1.available_money as canUseMoney,t1.cold_money as coldCash,t2.abort_line as downRate,t1.worth as worth,t2.warning_line as warningLine from (select t3.promised_money,t3.borrow_money,t3.available_money,t3.cold_money,t4.worth,t3.risk_id,t3.uuid from business_contract t3 left join ( " +
-            "select contract_id,sum(float_money) as floatMoney,sum(current_worth) as worth from business_stock_holding GROUP BY contract_id) t4 on t3.uuid=t4.contract_id) t1 left join business_contract_risk t2 on t1.risk_id=t2.uuid</script>")
+            "select contract_id,sum(float_money) as floatMoney,sum(current_worth) as worth from business_stock_holding GROUP BY contract_id) t4 on t3.uuid=t4.contract_id where t3.delete_flag=\"0\" and not(t3.contract_status=2)) t1 left join business_contract_risk t2 on t1.risk_id=t2.uuid</script>")
     List<ContractModel> selectContractRisk();
 }

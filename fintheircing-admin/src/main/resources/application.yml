@@ -97,8 +97,8 @@ custom:
     sdformat: yyyyMMdd-HH:mm:ss
     hms: -00:00:00
     autoBuy: autoBuy
-    shangRegex:  ^(60)|(900)[0-9]*$
-    shenRegex:  ^(000)|(002)|(300)|(200)[0-9]*$
+    shangRegex:  ^((60)|(900))[0-9]*$
+    shenRegex:  ^((000)|(002)|(300)|(200))[0-9]*$
     chuangRegex:  ^3[0-9]*$
   pay:
     url: http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
@@ -118,7 +118,7 @@ custom:
     deal: 15,45 0/1 9,10,11,12,13,14,15 * * ?
     fiveAvg:  0 30 15 * * 1,2,3,4,5
     everyDay: 0 50 15 * * ?
-    updateStockPrice: 0/10 * 9,10,11,12,13,14,15 * * ?
+    updateStockPrice: 0/20 * 9,10,11,12,13,14,15 * * ?
   highFrequent:
     contractKey: contract_id_val
     stockContractKey: stock_contract_id_val
