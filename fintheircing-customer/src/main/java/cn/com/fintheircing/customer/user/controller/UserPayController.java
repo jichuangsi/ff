@@ -110,7 +110,7 @@ public class UserPayController {
     }
 
 
-    @ApiOperation(value = "体现申请并且生成待确认记录", notes = "")
+    @ApiOperation(value = "提现申请并且生成待确认记录", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })

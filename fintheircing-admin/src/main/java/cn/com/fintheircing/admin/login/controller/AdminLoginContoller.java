@@ -4,6 +4,7 @@ import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.WebCommonUtils;
+import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
 import cn.com.fintheircing.admin.usermanag.entity.pay.RecodeInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,8 @@ public class AdminLoginContoller {
 
     @Resource
     private AdminLoginService adminLoginService;
-
+    @Resource
+    private IAdminClientLoginInfoMapper iAdminClientLoginInfoMapper;
     @ApiOperation(value = "管理员登录", notes = "")
     @ApiImplicitParams({
     })
@@ -43,7 +46,11 @@ public class AdminLoginContoller {
         }
         Map<String,String> map = new HashMap<String,String>();
         map.put("token",token);
-
+        Map<String,Object> parms =new HashMap<>();
+        Date d =new Date();
+        parms.put("userId", model.getUuid());
+        parms.put("Date", d);
+        iAdminClientLoginInfoMapper.updateLoginTime(parms);
 
         return ResponseModel.sucess("",map);
     }

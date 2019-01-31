@@ -67,11 +67,7 @@ public class AdminLoginService {
         }
         if(StringUtils.isEmpty(token)) throw new AdminLoginException(ResultCode.LOGIN_ADMIN_ERR);
         redisTemplate.opsForValue().set(tokrnPre+model.getUuid(),token,longTime, TimeUnit.MINUTES);
-        Map<String,Object> parms =new HashMap<>();
-        Date d =new Date();
-        parms.put("userId", model.getUuid());
-        parms.put("Date", d);
-        iAdminClientLoginInfoMapper.updateLoginTime(parms);
+
         return token;
     }
 

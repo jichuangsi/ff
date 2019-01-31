@@ -108,6 +108,4 @@ public interface TransactionSummaryMapper {
             " </script>")
     List<TransactionModel> findAllBlackList(TransactionModel model);
 
-
-
 }

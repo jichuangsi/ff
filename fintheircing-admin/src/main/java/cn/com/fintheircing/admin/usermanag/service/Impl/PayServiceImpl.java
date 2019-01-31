@@ -310,8 +310,6 @@ public class PayServiceImpl implements IPayService {
      */
     @Override
     public boolean passPromiseMoney(UserTokenInfo userInfo,RecodeInfoPayModel model) {
-
-
             RecodeInfo p = new RecodeInfo();
         if (iBillMapper.updateRecodeInfo(model.getRecodeInfoPayId()) > 0) {
             p.setWay(model.getWay());
@@ -328,8 +326,6 @@ public class PayServiceImpl implements IPayService {
             iPayInfoRepository.save(p);
 
             return true;
-        }else {
-
         }
         return false;
     }
