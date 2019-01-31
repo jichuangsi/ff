@@ -44,5 +44,4 @@ public class InitComponent {
         redisTemplate.opsForValue().set(autoBuy,"true");//关闭自动购买
     }
 
-
 }

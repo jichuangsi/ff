@@ -171,7 +171,7 @@ public class ScheduledTask {
         }
     }
 
-    @Scheduled(cron = "0/3 * * * * ?")
+    /*@Scheduled(cron = "0/3 * * * * ?")*/
     public void highFrequency(){
         try {
             businessService.highFrequency();

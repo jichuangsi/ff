@@ -47,8 +47,10 @@ public final class BusinessUtils {
         Double avgFive = avgMethod(stockHoldingModel.getOneDay(),stockHoldingModel.getTwoDay(),stockHoldingModel.getThreeDay(),stockHoldingModel.getFourDay(),stockHoldingModel.getFiveDay());
         Double C0 = stockHoldingModel.getCurrentWorth();
         Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
-        if (!(addMethod(C0,C1)<avgFive)){
-            throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
+        if (avgFive!=0) {
+            if (!(addMethod(C0, C1) < avgFive)) {
+                throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
+            }
         }
         return  true;
     }

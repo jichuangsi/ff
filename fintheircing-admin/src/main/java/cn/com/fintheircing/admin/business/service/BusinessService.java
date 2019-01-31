@@ -261,6 +261,7 @@ public class BusinessService {
         stockEntrust.setUserId(model.getUserId());
         stockEntrust.setBusinessMoney(businessCash);
         stockEntrust.setTaxationMoney(taxation);
+        stockEntrust.setDealFrom(BusinessStockEntrust.DEAL_CUSTOMER);
         stockEntrust.setStockId(transactionSummary.getId());
         stockEntrust.setCreatedTime(new Date());
         stockEntrust.setContractId(contractId);
@@ -473,6 +474,7 @@ public class BusinessService {
         entrust.setBusinessAmount(model.getAmount());
         entrust.setBusinessPrice(model.getCostPrice());
         entrust.setUserId(model.getUserId());
+        entrust.setDealFrom(BusinessStockEntrust.DEAL_CUSTOMER);
         entrust.setContractId(model.getContractId());
         entrust.setBusinessTo(BusinessStockEntrust.STOCK_SELL);
         entrust.setHoldingId(holding.getUuid());
@@ -985,7 +987,7 @@ public class BusinessService {
             }
             GetQuotesTenListRequestModel requestModel = new GetQuotesTenListRequestModel();
             requestModel.setMarkets(markets);
-            requestModel.setMarkets(stockCodes);
+            requestModel.setStockCodes(stockCodes);
             ResponseModel<List<QuotesTenModel>> response = stockPriceFeignService.getQuotesTenList(requestModel);
             if (ResultCode.SUCESS.equals(response.getCode())) {
                 for (int z = 0; z < response.getData().size(); z++) {

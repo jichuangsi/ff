@@ -1,10 +1,11 @@
 package cn.com.fintheircing.stockprice.controller.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetQuotesTenListRequestModel {
-	private List<String> markets;//对应stockCodes的市场代码
-	private List<String> stockCodes;//股票代码
+	private List<String> markets = new ArrayList<String>();//对应stockCodes的市场代码
+	private List<String> stockCodes = new ArrayList<String>();//股票代码
 
 	public List<String> getMarkets() {
 		return markets;
