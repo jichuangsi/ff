@@ -145,4 +145,9 @@ public class UserServiceImpl implements UserService {
         userClientInfo.setUpdateUserName(userInfo.getUserName());
         userInfoRepository.save(userClientInfo);
     }
+
+    @Override
+    public UserTokenInfo getUserTokenInfo(String id) {
+        return userClientInfoMapper.findByUuid(id);
+    }
 }

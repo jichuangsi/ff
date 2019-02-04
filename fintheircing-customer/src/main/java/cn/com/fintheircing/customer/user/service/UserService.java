@@ -36,4 +36,6 @@ public interface UserService {
 
     void userCer(UserTokenInfo userInfo, UserCerModel model) throws LoginException;
 
+    UserTokenInfo getUserTokenInfo(String id);
+
 }

@@ -10,7 +10,7 @@ public class ContractModel {
     private String contractNum;   //合约编号
     private String userPhone;    //用户电话
     private String userName;    //用户姓名
-    private Date  createdTime;     //合约开始时间
+    private Date createdTime;     //合约开始时间
     private String productName;     //产品名称
     private Double borrowMoney;     //借款
     private Double promisedMoney;      //保证金
@@ -44,6 +44,15 @@ public class ContractModel {
     private Integer productTime;    //配资时长
     private Double onceGetServer;   //此收取服务费利率
     private String idCard;  //身份证
+    private Integer RudeEnd;    //强制平仓
+
+    public Integer getRudeEnd() {
+        return RudeEnd;
+    }
+
+    public void setRudeEnd(Integer rudeEnd) {
+        RudeEnd = rudeEnd;
+    }
 
     public Double getMoneyInContract() {
         return moneyInContract;

@@ -29,114 +29,26 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String uuid;
     private String userId;  //关联用户
     private String stockId;     //关联股票
-    private Integer businessTo;     //买卖方向
-    private Integer entrustStatus;      //委托状态
-    private Double businessPrice;      //交易单价
-    private Integer businessAmount;      ///总数量
+    private int businessTo;     //买卖方向
+    private int entrustStatus;      //委托状态
+    private double businessPrice;      //交易单价
+    private int businessAmount;      ///总数量
     private String contractId;
     private String cancelOrder;
-    private Double dealPrice;   //成交价钱
+    private double dealPrice;   //成交价钱
     private String dealNo;     //委托编号
-    private Integer dealNum;     //成交数量
+    private int dealNum;     //成交数量
     private long dealTime;      //成交时间
     private String montherAccount;  //母账户
     private String holdingId;
     private String cancelNo;
-    private Double coldMoney;
-    private Double businessMoney;
-    private Double taxationMoney;
+    private double coldMoney;
+    private double businessMoney;
+    private double taxationMoney;
     private String dealMan;
     private String dealFrom;
     @Version
-    private Integer version;
-
-    public String getDealFrom() {
-        return dealFrom;
-    }
-
-    public void setDealFrom(String dealFrom) {
-        this.dealFrom = dealFrom;
-    }
-
-    public String getDealMan() {
-        return dealMan;
-    }
-
-    public void setDealMan(String dealMan) {
-        this.dealMan = dealMan;
-    }
-
-    public Double getBusinessMoney() {
-        return businessMoney;
-    }
-
-    public void setBusinessMoney(Double businessMoney) {
-        this.businessMoney = businessMoney;
-    }
-
-    public Double getTaxationMoney() {
-        return taxationMoney;
-    }
-
-    public void setTaxationMoney(Double taxationMoney) {
-        this.taxationMoney = taxationMoney;
-    }
-
-    public String getCancelNo() {
-        return cancelNo;
-    }
-
-    public Double getColdMoney() {
-        return coldMoney;
-    }
-
-    public void setColdMoney(Double coldMoney) {
-        this.coldMoney = coldMoney;
-    }
-
-    public void setCancelNo(String cancelNo) {
-        this.cancelNo = cancelNo;
-    }
-
-    public String getCancelOrder() {
-        return cancelOrder;
-    }
-
-    public void setCancelOrder(String cancelOrder) {
-        this.cancelOrder = cancelOrder;
-    }
-
-    public String getHoldingId() {
-        return holdingId;
-    }
-
-    public void setHoldingId(String holdingId) {
-        this.holdingId = holdingId;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public String getContractId() {
-        return contractId;
-    }
-
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
-    }
-
-    public String getMontherAccount() {
-        return montherAccount;
-    }
-
-    public void setMontherAccount(String montherAccount) {
-        this.montherAccount = montherAccount;
-    }
+    private int version;
 
     public String getUuid() {
         return uuid;
@@ -162,51 +74,75 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.stockId = stockId;
     }
 
-    public Integer getBusinessTo() {
+    public int getBusinessTo() {
         return businessTo;
     }
 
-    public void setBusinessTo(Integer businessTo) {
+    public void setBusinessTo(int businessTo) {
         this.businessTo = businessTo;
     }
 
-    public Integer getEntrustStatus() {
+    public int getEntrustStatus() {
         return entrustStatus;
     }
 
-    public void setEntrustStatus(Integer entrustStatus) {
+    public void setEntrustStatus(int entrustStatus) {
         this.entrustStatus = entrustStatus;
     }
 
-    public Double getDealPrice() {
-        return dealPrice;
-    }
-
-    public void setDealPrice(Double dealPrice) {
-        this.dealPrice = dealPrice;
-    }
-
-    public Double getBusinessPrice() {
+    public double getBusinessPrice() {
         return businessPrice;
     }
 
-    public void setBusinessPrice(Double businessPrice) {
+    public void setBusinessPrice(double businessPrice) {
         this.businessPrice = businessPrice;
     }
 
-    public Integer getBusinessAmount() {
+    public int getBusinessAmount() {
         return businessAmount;
     }
 
-    public void setBusinessAmount(Integer businessAmount) {
+    public void setBusinessAmount(int businessAmount) {
         this.businessAmount = businessAmount;
     }
 
-    public Integer getDealNum() {
+    public String getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
+    }
+
+    public String getCancelOrder() {
+        return cancelOrder;
+    }
+
+    public void setCancelOrder(String cancelOrder) {
+        this.cancelOrder = cancelOrder;
+    }
+
+    public double getDealPrice() {
+        return dealPrice;
+    }
+
+    public void setDealPrice(double dealPrice) {
+        this.dealPrice = dealPrice;
+    }
+
+    public String getDealNo() {
+        return dealNo;
+    }
+
+    public void setDealNo(String dealNo) {
+        this.dealNo = dealNo;
+    }
+
+    public int getDealNum() {
         return dealNum;
     }
 
-    public void setDealNum(Integer dealNum) {
+    public void setDealNum(int dealNum) {
         this.dealNum = dealNum;
     }
 
@@ -218,11 +154,75 @@ public class BusinessStockEntrust extends AbstractEntity {
         this.dealTime = dealTime;
     }
 
-    public String getDealNo() {
-        return dealNo;
+    public String getMontherAccount() {
+        return montherAccount;
     }
 
-    public void setDealNo(String dealNo) {
-        this.dealNo = dealNo;
+    public void setMontherAccount(String montherAccount) {
+        this.montherAccount = montherAccount;
+    }
+
+    public String getHoldingId() {
+        return holdingId;
+    }
+
+    public void setHoldingId(String holdingId) {
+        this.holdingId = holdingId;
+    }
+
+    public String getCancelNo() {
+        return cancelNo;
+    }
+
+    public void setCancelNo(String cancelNo) {
+        this.cancelNo = cancelNo;
+    }
+
+    public double getColdMoney() {
+        return coldMoney;
+    }
+
+    public void setColdMoney(double coldMoney) {
+        this.coldMoney = coldMoney;
+    }
+
+    public double getBusinessMoney() {
+        return businessMoney;
+    }
+
+    public void setBusinessMoney(double businessMoney) {
+        this.businessMoney = businessMoney;
+    }
+
+    public double getTaxationMoney() {
+        return taxationMoney;
+    }
+
+    public void setTaxationMoney(double taxationMoney) {
+        this.taxationMoney = taxationMoney;
+    }
+
+    public String getDealMan() {
+        return dealMan;
+    }
+
+    public void setDealMan(String dealMan) {
+        this.dealMan = dealMan;
+    }
+
+    public String getDealFrom() {
+        return dealFrom;
+    }
+
+    public void setDealFrom(String dealFrom) {
+        this.dealFrom = dealFrom;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

@@ -20,17 +20,17 @@ public class BusinessStockHolding extends AbstractEntity {
     private String uuid;
     private String contractId;  //相关合约编号
     private String stockId;     //关联股票
-    private Integer amount;     //持仓
-    private Integer canSell;    //可用
-    private Double costPrice;    //成本单价
-    private Double currentPrice;    //   当前单价
-    private Double currentWorth;    //当前市值
+    private int amount;     //持仓
+    private int canSell;    //可用
+    private double costPrice;    //成本单价
+    private double currentPrice;    //   当前单价
+    private double currentWorth;    //当前市值
     private String motherAccount;   //母账号
-    private Double floatMoney;      //盈亏金额
-    private Double floatRate;       //盈亏比例
-    private Integer coldAmount;
+    private double floatMoney;      //盈亏金额
+    private double floatRate;       //盈亏比例
+    private int coldAmount;
     @Version
-    private Integer version;
+    private int version;
 
     public BusinessStockHolding() {
     }
@@ -47,22 +47,6 @@ public class BusinessStockHolding extends AbstractEntity {
         this.floatMoney = floatMoney;
         this.floatRate = floatRate;
         this.coldAmount = coldAmount;
-        this.version = version;
-    }
-
-    public Integer getColdAmount() {
-        return coldAmount;
-    }
-
-    public void setColdAmount(Integer coldAmount) {
-        this.coldAmount = coldAmount;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
         this.version = version;
     }
 
@@ -90,43 +74,43 @@ public class BusinessStockHolding extends AbstractEntity {
         this.stockId = stockId;
     }
 
-    public Integer getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
-    public Integer getCanSell() {
+    public int getCanSell() {
         return canSell;
     }
 
-    public void setCanSell(Integer canSell) {
+    public void setCanSell(int canSell) {
         this.canSell = canSell;
     }
 
-    public Double getCostPrice() {
+    public double getCostPrice() {
         return costPrice;
     }
 
-    public void setCostPrice(Double costPrice) {
+    public void setCostPrice(double costPrice) {
         this.costPrice = costPrice;
     }
 
-    public Double getCurrentPrice() {
+    public double getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(Double currentPrice) {
+    public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
     }
 
-    public Double getCurrentWorth() {
+    public double getCurrentWorth() {
         return currentWorth;
     }
 
-    public void setCurrentWorth(Double currentWorth) {
+    public void setCurrentWorth(double currentWorth) {
         this.currentWorth = currentWorth;
     }
 
@@ -138,19 +122,35 @@ public class BusinessStockHolding extends AbstractEntity {
         this.motherAccount = motherAccount;
     }
 
-    public Double getFloatMoney() {
+    public double getFloatMoney() {
         return floatMoney;
     }
 
-    public void setFloatMoney(Double floatMoney) {
+    public void setFloatMoney(double floatMoney) {
         this.floatMoney = floatMoney;
     }
 
-    public Double getFloatRate() {
+    public double getFloatRate() {
         return floatRate;
     }
 
-    public void setFloatRate(Double floatRate) {
+    public void setFloatRate(double floatRate) {
         this.floatRate = floatRate;
+    }
+
+    public int getColdAmount() {
+        return coldAmount;
+    }
+
+    public void setColdAmount(int coldAmount) {
+        this.coldAmount = coldAmount;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

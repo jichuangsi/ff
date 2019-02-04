@@ -6,6 +6,7 @@ import cn.com.fintheircing.admin.business.dao.repository.IBusinessContractRiskRe
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockHoldingRepository;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
+import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.service.MotherAccountQueryService;
 import cn.com.fintheircing.admin.common.feign.IExchangeFeignService;
@@ -16,6 +17,8 @@ import cn.com.fintheircing.admin.common.feign.model.TodayAcceptOrder;
 import cn.com.fintheircing.admin.common.feign.model.TodayOrder;
 import cn.com.fintheircing.admin.common.model.MotherAccount;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.common.utils.CommonUtil;
+import cn.com.fintheircing.admin.scheduling.ScheduledTask;
 import cn.com.fintheircing.admin.scheduling.model.DealJsonModel;
 import cn.com.fintheircing.admin.scheduling.model.EntrustJsonModel;
 import cn.com.fintheircing.admin.scheduling.utils.DealUtils;
@@ -69,6 +72,8 @@ public class TestRollBack {
     private IBusinessStockEntrustRepository businessStockEntrustRepository;
     @Resource
     private IStockPriceFeignService stockPriceFeignService;
+    @Resource
+    private ScheduledTask scheduledTask;
 
     @Value("${custom.entrust.prefix}")
     private String entrustPrefix;
@@ -250,6 +255,36 @@ public class TestRollBack {
             businessService.getFiveDayMaxAmount();
         } catch (Exception e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testThread(){
+        long time = CommonUtil.getExpiredTime(40);
+        System.out.println(time);
+    }
+
+    public class ThreadOne implements Runnable{
+        @Override
+        public void run() {
+            businessService.updateStockPrice();
+        }
+    }
+
+    public class ThreadTwo implements Runnable{
+        @Override
+        public void run() {
+            StockHoldingModel model = new StockHoldingModel();
+            model.setAmount(100);
+            model.setStockNo("000420");
+            model.setContractId("40289f1a68a1e9840168a1f47d700001");
+            model.setUserId("40289f1a68a1c1ca0168a1ecc9df0000");
+            model.setCostPrice(1.64);
+            try {
+                businessService.sellHoldStock(model);
+            } catch (BusinessException e) {
+                logger.error(e.getMessage());
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -266,5 +267,7 @@ public final class BusinessUtils {
         Double deal = multiplicationMethod(dealPrice , dealAmount.doubleValue());
         return (cost + deal)/(costAmount +dealAmount);
     }
+
+
 
 }

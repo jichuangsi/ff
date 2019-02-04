@@ -1,5 +1,7 @@
 package cn.com.fintheircing.customer.business.model;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * ProductModel
  *
@@ -21,7 +23,7 @@ public class ProductModel {
      */
     private double moneyInDeal;
     /**
-     *开立合约时收取的配资额
+     * 开立合约时收取的配资额
      */
     private double moneyInContact;
     /**
@@ -31,6 +33,7 @@ public class ProductModel {
     /**
      * 杠杆比率
      */
+    @Pattern(regexp = "^([1-9]|10)$", message = "只能是0到10的整数")
     private int leverRate;
     /**
      * 警戒线
@@ -47,7 +50,15 @@ public class ProductModel {
 
     private Integer allot;
 
+    private double oneServerMoney;
 
+    public double getOneServerMoney() {
+        return oneServerMoney;
+    }
+
+    public void setOneServerMoney(double oneServerMoney) {
+        this.oneServerMoney = oneServerMoney;
+    }
 
     public String getId() {
         return id;

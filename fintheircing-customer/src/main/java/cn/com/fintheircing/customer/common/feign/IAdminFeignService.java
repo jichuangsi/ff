@@ -131,7 +131,7 @@ public interface IAdminFeignService {
     ContractModel getBusinessInfo(UserTokenInfo userTokenInfo);
 
     @RequestMapping(value = "adminF/endContract")
-    ResponseModel<String> endContract(@RequestBody ContractModel model);
+    ResponseModel<ContractModel> endContract(@RequestBody ContractModel model);
 
     @RequestMapping(value = "adminF/getContractEntrusts")
     ResponseModel<PageInfo<StockEntrustModel>> getContractEntrusts(@RequestBody StockEntrustModel model);

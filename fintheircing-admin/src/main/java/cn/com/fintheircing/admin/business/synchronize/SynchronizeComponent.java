@@ -65,7 +65,7 @@ public class SynchronizeComponent {
         }
     }
 
-    public String synchronizedEndContract(ContractModel model) throws BusinessException{
+    public ContractModel synchronizedEndContract(ContractModel model) throws BusinessException{
         synchronized (model.getId().intern()){
             return businessService.endContract(model);
         }

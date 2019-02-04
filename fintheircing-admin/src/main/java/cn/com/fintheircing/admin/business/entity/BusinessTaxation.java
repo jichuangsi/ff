@@ -21,7 +21,7 @@ public class BusinessTaxation extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String taxName;     //税费名
-    private Double taxRate;     //税费比例
+    private double taxRate;     //税费比例
     private String bsuinessTo;     //买卖方向
     private String remarks;     //备注
 
@@ -41,11 +41,11 @@ public class BusinessTaxation extends AbstractEntity{
         this.taxName = taxName;
     }
 
-    public Double getTaxRate() {
+    public double getTaxRate() {
         return taxRate;
     }
 
-    public void setTaxRate(Double taxRate) {
+    public void setTaxRate(double taxRate) {
         this.taxRate = taxRate;
     }
 

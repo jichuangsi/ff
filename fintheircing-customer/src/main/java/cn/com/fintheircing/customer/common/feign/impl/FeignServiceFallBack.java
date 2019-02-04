@@ -178,7 +178,7 @@ public class FeignServiceFallBack implements IAdminFeignService {
     }
 
     @Override
-    public ResponseModel<String> endContract(ContractModel model) {
+    public ResponseModel<ContractModel> endContract(ContractModel model) {
         logger.error("调用feign失败，未中止合约");
         return ResponseModel.fail("");
     }

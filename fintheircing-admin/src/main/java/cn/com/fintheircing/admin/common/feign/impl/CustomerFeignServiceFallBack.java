@@ -1,6 +1,7 @@
 package cn.com.fintheircing.admin.common.feign.impl;
 
 
+import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
@@ -60,4 +61,8 @@ public class CustomerFeignServiceFallBack implements ICustomerFeignService {
         return new RecodeInfoPayModel();
     }
 
+    @Override
+    public ResponseModel<String> rudeEndContract(ContractModel model) {
+        return ResponseModel.fail("");
+    }
 }

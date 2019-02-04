@@ -256,7 +256,7 @@ public class FeignController {
     @ApiOperation(value = "结束选中的合约", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/endContract")
-    public ResponseModel<String> endContract(@RequestBody ContractModel model) {
+    public ResponseModel<ContractModel> endContract(@RequestBody ContractModel model) {
         try {
             return ResponseModel.sucess("", synchronizeComponent.synchronizedEndContract(model));
         } catch (BusinessException e) {

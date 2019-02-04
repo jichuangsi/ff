@@ -63,6 +63,7 @@ public class BusinessService {
     @Value("${custom.contract.dateFormat}")
     private String sdformat;
 
+    //获取产品，并告知可不可买
     public TranferProductModel getTranferProductModel(UserTokenInfo userInfo, ProductModel model) throws BusinessException {
         List<ProductModel> productModels = adminFeignService.getProductModels(model.getAllot());
         if (!(productModels.size() > 0)) {
@@ -79,6 +80,7 @@ public class BusinessService {
         return tranferProductModel;
     }
 
+    //是否资金充足
     public Boolean isRich(UserTokenInfo userInfo, ContractModel model) {
         Double account = userAccountRepository.findAccountByUserId(userInfo.getUuid());
         ProductModel productModel = adminFeignService.getProduct(model.getProductModel().getId());
@@ -161,6 +163,7 @@ public class BusinessService {
         userPayService.saveRecodeInfoPay(payInfo);//扣款后做关联
     }
 
+    //扣款
     private RecodeInfoPay costAccount(UserTokenInfo userInfo, ContractModel model) throws BusinessException {
         RecodeInfoPayModel payModel = new RecodeInfoPayModel();
         payModel.setCostCount(model.getPromisedMoney() + model.getFirst());
@@ -194,18 +197,7 @@ public class BusinessService {
         return productModels;
     }
 
-    //合约编号
-   /* private String newContractNum(int i) throws BusinessException{
-        if (i>4){
-            throw new BusinessException(ResultCode.CONTRACT_SAVE_ERR);
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat(sdformat);
-        String contractNum = sdf.format(new Date())+(int)Math.random()*10000;
-        if (!adminFeignService.existContractNum(contractNum)){
-            newContractNum(i+1);
-        }
-        return contractNum;
-    }*/
+    //新合约编号
     private String newContractNum() {
         SimpleDateFormat sdf = new SimpleDateFormat(sdformat);
         return sdf.format(new Date()) + (int) Math.random() * 10000;
@@ -216,8 +208,9 @@ public class BusinessService {
         return adminFeignService.getCurrentContract(userInfo.getUuid());
     }
 
+    //新建买入申报单
     public void saveEntrust(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException {
-        if (null == model.getAmount() || 0 == model.getAmount()){
+        if (null == model.getAmount() || 0 == model.getAmount()) {
             throw new BusinessException(ResultCode.STOCK_AMOUNT_ERR);
         }
         if (!isBusinessTime(businessOpenTime, businessCloseTime, businessFormatTime)) {
@@ -237,6 +230,7 @@ public class BusinessService {
         }
     }
 
+    //获取当前股票持仓
     public List<StockHoldingModel> getCurrentStockHolding(UserTokenInfo userInfo,
                                                           StockHoldingModel model) throws BusinessException {
         model.setUserId(userInfo.getUuid());
@@ -250,16 +244,11 @@ public class BusinessService {
         return stockHoldingModels;
     }
 
+    //出售股票申报
     public void sellHoldStockEntrust(UserTokenInfo userInfo, StockHoldingModel model) throws BusinessException {
-       /*StockHoldingModel stockHoldingModel = getCurrentStockHolding(userInfo,model);
-        if (model.getAmount()>stockHoldingModel.getCanSell()){
-            throw new BusinessException(ResultCode.STOCK_SELL_LESS_ERR);
+        if ("0".equals(model.getDealFrom())) {
+            throw new BusinessException(ResultCode.ENTRUST_VALIDATE_ERR);
         }
-        model.setMotherAccount(stockHoldingModel.getMotherAccount());
-        model.setId(stockHoldingModel.getId());*/
-       if ("0".equals(model.getDealFrom())){
-           throw new BusinessException(ResultCode.ENTRUST_VALIDATE_ERR);
-       }
         if (!isBusinessTime(businessOpenTime, businessCloseTime, businessFormatTime)) {
             throw new BusinessException(ResultCode.BUSINESS_NOT_TIME);
         }
@@ -270,11 +259,13 @@ public class BusinessService {
         }
     }
 
+    //获取未完成订单
     public List<StockEntrustModel> getUnfinishedEntrust(UserTokenInfo userInfo, ContractModel model) {
         model.setUserId(userInfo.getUuid());
         return adminFeignService.getUnFinishedEntrust(model);
     }
 
+    //撤单
     public void cancelOrder(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException {
         model.setUserId(userInfo.getUuid());
         ResponseModel responseModel = adminFeignService.entrustCancelOrder(model);
@@ -283,32 +274,35 @@ public class BusinessService {
         }
     }
 
+    //最大买入量
     public StockHoldingModel getMaxBuyAmount(UserTokenInfo userInfo, StockHoldingModel model) throws BusinessException {
-       /*if (model.getCostPrice()==null||0==model.getCostPrice()){
-           throw new BusinessException("有不花钱买股票的嘛？没点b数");
-       }
-       model.setUserId(userInfo.getUuid());*/
+        model.setUserId(userInfo.getUuid());
         return adminFeignService.getMaxBuyAmount(model);
     }
 
+    //获取交易总信息
     public ContractModel getBusinessInfo(UserTokenInfo userInfo) {
         return adminFeignService.getBusinessInfo(userInfo);
     }
 
+    //结束合约
     public String endContract(UserTokenInfo userInfo, ContractModel model) throws BusinessException {
         if (!isBusinessTime(endContractOpenTime, endContractCloseTime, endContractFormatTime)) {
             throw new BusinessException(ResultCode.BUSINESS_NOT_TIME);
         }
         model.setUserId(userInfo.getUuid());
-        ResponseModel<String> response = adminFeignService.endContract(model);
+        model.setRudeEnd(4);    //非强制平仓
+        ResponseModel<ContractModel> response = adminFeignService.endContract(model);
         if (!ResultCode.SUCESS.equals(response.getCode())) {
             throw new BusinessException(response.getMsg());
         }
-        Double lessMoney = Double.valueOf(response.getData());
+        model = response.getData();
+        Double lessMoney = Double.valueOf(model.getCanUseMoney());
         addAccount(userInfo, model, lessMoney);
-        return response.getData();
+        return response.getData().getCanUseMoney().toString();
     }
 
+    //结束合约加钱
     private RecodeInfoPay addAccount(UserTokenInfo userInfo, ContractModel model, Double lessMoney) throws BusinessException {
         RecodeInfoPayModel payModel = new RecodeInfoPayModel();
         payModel.setAddCount(lessMoney);
@@ -318,7 +312,7 @@ public class BusinessService {
         payModel.setUserName(userInfo.getUserName());
         payModel.setUpdateTime(new Date());
         payModel.setUserId(userInfo.getUuid());
-        payModel.setRemark("添加合约" + model.getContractNum());
+        payModel.setRemark("结束合约" + model.getContractNum());
         payModel.setBusinessContractId(model.getId());
         try {
             return userPayService.costAccount(payModel);
@@ -327,9 +321,16 @@ public class BusinessService {
         }
     }
 
+    //强制平仓结束合约
+    public void rudeEndContract(ContractModel model) throws BusinessException {
+        UserTokenInfo userInfo = userService.getUserTokenInfo(model.getId());
+        addAccount(userInfo, model, model.getCanUseMoney());
+    }
+
+    //获取合约内申报
     public PageInfo<StockEntrustModel> getContractEntrusts(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException {
-        if (null == model.getPageIndex()||0 == model.getPageIndex()
-                ||null == model.getPageSize()||0 == model.getPageSize()){
+        if (null == model.getPageIndex() || 0 == model.getPageIndex()
+                || null == model.getPageSize() || 0 == model.getPageSize()) {
             throw new BusinessException(ResultCode.PARAM_MISS_MSG);
         }
         model.setUserId(userInfo.getUuid());

@@ -18,53 +18,13 @@ public class BusinessContractRisk extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String contractId;      //关联合约表
-    private Double warningLine;    //警告线
-    private Double abortLine;    //平仓线
-    private Double customerMaxAccount;  //最大购买
-    private Double venturEditionMaxAccount;     //创业股最大购买
-    private Double holdOverFiveAvg;     //持仓不超过五日平均
-    private Double holdOverCurrency;       //持仓不超过流通市值
-    private Integer stockShutDown;      //跌停能否购买
-
-    public Double getCustomerMaxAccount() {
-        return customerMaxAccount;
-    }
-
-    public void setCustomerMaxAccount(Double customerMaxAccount) {
-        this.customerMaxAccount = customerMaxAccount;
-    }
-
-    public Double getVenturEditionMaxAccount() {
-        return venturEditionMaxAccount;
-    }
-
-    public void setVenturEditionMaxAccount(Double venturEditionMaxAccount) {
-        this.venturEditionMaxAccount = venturEditionMaxAccount;
-    }
-
-    public Double getHoldOverFiveAvg() {
-        return holdOverFiveAvg;
-    }
-
-    public void setHoldOverFiveAvg(Double holdOverFiveAvg) {
-        this.holdOverFiveAvg = holdOverFiveAvg;
-    }
-
-    public Double getHoldOverCurrency() {
-        return holdOverCurrency;
-    }
-
-    public void setHoldOverCurrency(Double holdOverCurrency) {
-        this.holdOverCurrency = holdOverCurrency;
-    }
-
-    public Integer getStockShutDown() {
-        return stockShutDown;
-    }
-
-    public void setStockShutDown(Integer stockShutDown) {
-        this.stockShutDown = stockShutDown;
-    }
+    private double warningLine;    //警告线
+    private double abortLine;    //平仓线
+    private double customerMaxAccount;  //最大购买
+    private double venturEditionMaxAccount;     //创业股最大购买
+    private double holdOverFiveAvg;     //持仓不超过五日平均
+    private double holdOverCurrency;       //持仓不超过流通市值
+    private int stockShutDown;      //跌停能否购买
 
     public String getUuid() {
         return uuid;
@@ -82,19 +42,59 @@ public class BusinessContractRisk extends AbstractEntity{
         this.contractId = contractId;
     }
 
-    public Double getWarningLine() {
+    public double getWarningLine() {
         return warningLine;
     }
 
-    public void setWarningLine(Double warningLine) {
+    public void setWarningLine(double warningLine) {
         this.warningLine = warningLine;
     }
 
-    public Double getAbortLine() {
+    public double getAbortLine() {
         return abortLine;
     }
 
-    public void setAbortLine(Double abortLine) {
+    public void setAbortLine(double abortLine) {
         this.abortLine = abortLine;
+    }
+
+    public double getCustomerMaxAccount() {
+        return customerMaxAccount;
+    }
+
+    public void setCustomerMaxAccount(double customerMaxAccount) {
+        this.customerMaxAccount = customerMaxAccount;
+    }
+
+    public double getVenturEditionMaxAccount() {
+        return venturEditionMaxAccount;
+    }
+
+    public void setVenturEditionMaxAccount(double venturEditionMaxAccount) {
+        this.venturEditionMaxAccount = venturEditionMaxAccount;
+    }
+
+    public double getHoldOverFiveAvg() {
+        return holdOverFiveAvg;
+    }
+
+    public void setHoldOverFiveAvg(double holdOverFiveAvg) {
+        this.holdOverFiveAvg = holdOverFiveAvg;
+    }
+
+    public double getHoldOverCurrency() {
+        return holdOverCurrency;
+    }
+
+    public void setHoldOverCurrency(double holdOverCurrency) {
+        this.holdOverCurrency = holdOverCurrency;
+    }
+
+    public int getStockShutDown() {
+        return stockShutDown;
+    }
+
+    public void setStockShutDown(int stockShutDown) {
+        this.stockShutDown = stockShutDown;
     }
 }

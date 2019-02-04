@@ -36,6 +36,7 @@ public class UserController {
     private IUserMesInfoRepository iUserMesInfoRepository;
     @Resource
     private IUserMesInfoMapper iUserMesInfoMapper;
+
     @ApiOperation(value = "获取指定用户信息", notes = "")
     @GetMapping("/getUserClientInfoByPhone")
     public UserClientInfo findOneByUserName(@RequestParam(value = "userName") String userName) {
@@ -82,6 +83,7 @@ public class UserController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @GetMapping("/userInfo")
+    @CrossOrigin
     public ResponseModel getUserInfo(@ModelAttribute UserTokenInfo userInfo) {
 
         return ResponseModel.sucess("", userService.getUserInfo(userInfo));

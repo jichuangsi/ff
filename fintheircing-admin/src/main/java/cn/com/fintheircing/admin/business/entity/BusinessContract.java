@@ -18,100 +18,21 @@ public class BusinessContract extends AbstractEntity {
     private String userId;    //关联用户
     private String productId;    //关联产品
     private String transactorId;   //关联销售
-    private Integer choseWay;    //选择付利息方式
-    private Double promisedMoney;   //保证金
-    private Double dangerourPrpmised;   //超危保证金
-    private Double borrowMoney;   //借款
-    private String expiredDay;  //到期日
-    private Double coldMoney;   //
+    private int choseWay;    //选择付利息方式
+    private double promisedMoney;   //保证金
+    private double dangerourPrpmised;   //超危保证金
+    private double borrowMoney;   //借款
+    private long expiredTime;  //到期日
+    private double onceServerMoney;
+    private double coldMoney;   //
     private String riskId;     //关联风控冻结资金
-    private Double firstInterest;   //初次利息
-    private Double availableMoney;  //可用资金
-    private Integer contractStatus;     //合约状态，新建，交易中，结束交易
-    private Integer rudeStatus;     //是否强制平仓
-    private Double abortMoney;  //强平总额
+    private double firstInterest;   //初次利息
+    private double availableMoney;  //可用资金
+    private int contractStatus;     //合约状态，新建，交易中，结束交易
+    private int rudeStatus;     //是否强制平仓
+    private double abortMoney;  //强平总额
     @Version
     private int version;
-
-    public Double getAbortMoney() {
-        return abortMoney;
-    }
-
-    public void setAbortMoney(Double abortMoney) {
-        this.abortMoney = abortMoney;
-    }
-
-    public String getExpiredDay() {
-        return expiredDay;
-    }
-
-    public void setExpiredDay(String expiredDay) {
-        this.expiredDay = expiredDay;
-    }
-
-    public Integer getContractStatus() {
-        return contractStatus;
-    }
-
-    public void setContractStatus(Integer contractStatus) {
-        this.contractStatus = contractStatus;
-    }
-
-    public Integer getRudeStatus() {
-        return rudeStatus;
-    }
-
-    public void setRudeStatus(Integer rudeStatus) {
-        this.rudeStatus = rudeStatus;
-    }
-
-    public String getRiskId() {
-        return riskId;
-    }
-
-    public void setRiskId(String riskId) {
-        this.riskId = riskId;
-    }
-
-    public Double getAvailableMoney() {
-        return availableMoney;
-    }
-
-    public void setAvailableMoney(Double availableMoney) {
-        this.availableMoney = availableMoney;
-    }
-
-    public Double getFirstInterest() {
-        return firstInterest;
-    }
-
-    public void setFirstInterest(Double firstInterest) {
-        this.firstInterest = firstInterest;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public Double getColdMoney() {
-        return coldMoney;
-    }
-
-    public void setColdMoney(Double coldMoney) {
-        this.coldMoney = coldMoney;
-    }
-
-    public Double getDangerourPrpmised() {
-        return dangerourPrpmised;
-    }
-
-    public void setDangerourPrpmised(Double dangerourPrpmised) {
-        this.dangerourPrpmised = dangerourPrpmised;
-    }
 
     public String getUuid() {
         return uuid;
@@ -153,28 +74,115 @@ public class BusinessContract extends AbstractEntity {
         this.transactorId = transactorId;
     }
 
-    public Integer getChoseWay() {
+    public int getChoseWay() {
         return choseWay;
     }
 
-    public void setChoseWay(Integer choseWay) {
+    public void setChoseWay(int choseWay) {
         this.choseWay = choseWay;
     }
 
-    public Double getPromisedMoney() {
+    public double getPromisedMoney() {
         return promisedMoney;
     }
 
-    public void setPromisedMoney(Double promisedMoney) {
+    public void setPromisedMoney(double promisedMoney) {
         this.promisedMoney = promisedMoney;
     }
 
-    public Double getBorrowMoney() {
+    public double getDangerourPrpmised() {
+        return dangerourPrpmised;
+    }
+
+    public void setDangerourPrpmised(double dangerourPrpmised) {
+        this.dangerourPrpmised = dangerourPrpmised;
+    }
+
+    public double getBorrowMoney() {
         return borrowMoney;
     }
 
-    public void setBorrowMoney(Double borrowMoney) {
+    public void setBorrowMoney(double borrowMoney) {
         this.borrowMoney = borrowMoney;
     }
 
+    public long getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    public double getOnceServerMoney() {
+        return onceServerMoney;
+    }
+
+    public void setOnceServerMoney(double onceServerMoney) {
+        this.onceServerMoney = onceServerMoney;
+    }
+
+    public double getColdMoney() {
+        return coldMoney;
+    }
+
+    public void setColdMoney(double coldMoney) {
+        this.coldMoney = coldMoney;
+    }
+
+    public String getRiskId() {
+        return riskId;
+    }
+
+    public void setRiskId(String riskId) {
+        this.riskId = riskId;
+    }
+
+    public double getFirstInterest() {
+        return firstInterest;
+    }
+
+    public void setFirstInterest(double firstInterest) {
+        this.firstInterest = firstInterest;
+    }
+
+    public double getAvailableMoney() {
+        return availableMoney;
+    }
+
+    public void setAvailableMoney(double availableMoney) {
+        this.availableMoney = availableMoney;
+    }
+
+    public int getContractStatus() {
+        return contractStatus;
+    }
+
+    public void setContractStatus(int contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
+    public int getRudeStatus() {
+        return rudeStatus;
+    }
+
+    public void setRudeStatus(int rudeStatus) {
+        this.rudeStatus = rudeStatus;
+    }
+
+    public double getAbortMoney() {
+        return abortMoney;
+    }
+
+    public void setAbortMoney(double abortMoney) {
+        this.abortMoney = abortMoney;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 }

@@ -14,79 +14,15 @@ public class BusinessControlContract extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String contractId;
-    private Integer controlType;   //ControlCode
-    private Double costMoney;       //合约操作内扣款
-    private Double addMoney;        //合约操作内补资金
-    private Double lessMoney;       //操作后合约剩余
-    private Double pickUpMoney;   //提取金额
-    private Double windUpMoney;    //结算金额
-    private Integer verifyStatus;    //审核状态
-    private Double businessMoney;   //服务费
-    private Double taxationMoney;   //税费
-
-    public Double getBusinessMoney() {
-        return businessMoney;
-    }
-
-    public void setBusinessMoney(Double businessMoney) {
-        this.businessMoney = businessMoney;
-    }
-
-    public Double getTaxationMoney() {
-        return taxationMoney;
-    }
-
-    public void setTaxationMoney(Double taxationMoney) {
-        this.taxationMoney = taxationMoney;
-    }
-
-    public Double getCostMoney() {
-        return costMoney;
-    }
-
-    public void setCostMoney(Double costMoney) {
-        this.costMoney = costMoney;
-    }
-
-    public Double getAddMoney() {
-        return addMoney;
-    }
-
-    public void setAddMoney(Double addMoney) {
-        this.addMoney = addMoney;
-    }
-
-    public Integer getVerifyStatus() {
-        return verifyStatus;
-    }
-
-    public void setVerifyStatus(Integer verifyStatus) {
-        this.verifyStatus = verifyStatus;
-    }
-
-    public Double getPickUpMoney() {
-        return pickUpMoney;
-    }
-
-    public void setPickUpMoney(Double pickUpMoney) {
-        this.pickUpMoney = pickUpMoney;
-    }
-
-    public Double getWindUpMoney() {
-        return windUpMoney;
-    }
-
-    public void setWindUpMoney(Double windUpMoney) {
-        this.windUpMoney = windUpMoney;
-    }
-
-    public Double getLessMoney() {
-        return lessMoney;
-    }
-
-    public void setLessMoney(Double lessMoney) {
-        this.lessMoney = lessMoney;
-    }
+    private int controlType;   //ControlCode
+    private double costMoney;       //合约操作内扣款
+    private double addMoney;        //合约操作内补资金
+    private double lessMoney;       //操作后合约剩余
+    private double pickUpMoney;   //提取金额
+    private double windUpMoney;    //结算金额
+    private int verifyStatus;    //审核状态
+    private double businessMoney;   //服务费
+    private double taxationMoney;   //税费
 
     public String getUuid() {
         return uuid;
@@ -104,11 +40,75 @@ public class BusinessControlContract extends AbstractEntity{
         this.contractId = contractId;
     }
 
-    public Integer getControlType() {
+    public int getControlType() {
         return controlType;
     }
 
-    public void setControlType(Integer controlType) {
+    public void setControlType(int controlType) {
         this.controlType = controlType;
+    }
+
+    public double getCostMoney() {
+        return costMoney;
+    }
+
+    public void setCostMoney(double costMoney) {
+        this.costMoney = costMoney;
+    }
+
+    public double getAddMoney() {
+        return addMoney;
+    }
+
+    public void setAddMoney(double addMoney) {
+        this.addMoney = addMoney;
+    }
+
+    public double getLessMoney() {
+        return lessMoney;
+    }
+
+    public void setLessMoney(double lessMoney) {
+        this.lessMoney = lessMoney;
+    }
+
+    public double getPickUpMoney() {
+        return pickUpMoney;
+    }
+
+    public void setPickUpMoney(double pickUpMoney) {
+        this.pickUpMoney = pickUpMoney;
+    }
+
+    public double getWindUpMoney() {
+        return windUpMoney;
+    }
+
+    public void setWindUpMoney(double windUpMoney) {
+        this.windUpMoney = windUpMoney;
+    }
+
+    public int getVerifyStatus() {
+        return verifyStatus;
+    }
+
+    public void setVerifyStatus(int verifyStatus) {
+        this.verifyStatus = verifyStatus;
+    }
+
+    public double getBusinessMoney() {
+        return businessMoney;
+    }
+
+    public void setBusinessMoney(double businessMoney) {
+        this.businessMoney = businessMoney;
+    }
+
+    public double getTaxationMoney() {
+        return taxationMoney;
+    }
+
+    public void setTaxationMoney(double taxationMoney) {
+        this.taxationMoney = taxationMoney;
     }
 }

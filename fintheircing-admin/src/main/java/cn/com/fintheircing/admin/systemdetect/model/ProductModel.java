@@ -1,8 +1,5 @@
 package cn.com.fintheircing.admin.systemdetect.model;
 
-import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
-import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.Pattern;
 
 /**
@@ -26,7 +23,7 @@ public class ProductModel {
      */
     private double moneyInDeal;
     /**
-     *开立合约时收取的配资额
+     * 开立合约时收取的配资额
      */
     private double moneyInContact;
     /**
@@ -36,7 +33,7 @@ public class ProductModel {
     /**
      * 杠杆比率
      */
-    @Pattern(regexp="^([1-9]|10)$",message = "只能是0到10的整数")
+    @Pattern(regexp = "^([1-9]|10)$", message = "只能是0到10的整数")
     private int leverRate;
     /**
      * 警戒线
@@ -51,9 +48,17 @@ public class ProductModel {
      */
     private String allotStr;
 
-    private String allot;
+    private Integer allot;
 
+    private double oneServerMoney;
 
+    public double getOneServerMoney() {
+        return oneServerMoney;
+    }
+
+    public void setOneServerMoney(double oneServerMoney) {
+        this.oneServerMoney = oneServerMoney;
+    }
 
     public String getId() {
         return id;
@@ -135,11 +140,11 @@ public class ProductModel {
         this.allotStr = allotStr;
     }
 
-    public String getAllot() {
+    public Integer getAllot() {
         return allot;
     }
 
-    public void setAllot(String allot) {
+    public void setAllot(Integer allot) {
         this.allot = allot;
     }
 }

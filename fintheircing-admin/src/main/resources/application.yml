@@ -1,7 +1,7 @@
 spring:
   profiles:
     active:
-      dev
+      prod
   application:
     name: ffadmin
   datasource:
@@ -119,12 +119,14 @@ custom:
     fiveAvg:  0 30 15 * * 1,2,3,4,5
     everyDay: 0 50 15 * * ?
     updateStockPrice: 0/20 * 9,10,11,12,13,14,15 * * ?
+    serverMoney:  0 0 8 * * ?
   highFrequent:
     contractKey: contract_id_val
     stockContractKey: stock_contract_id_val
     controlContract: 0.01
     downStockRate: -0.09
     controlPrice: 0.01
+    rudeEndContractKey: rude_contract_id_val
 pagehelper:
   helperDialect: mysql
   reasonable: true
