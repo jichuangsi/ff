@@ -79,6 +79,7 @@ custom:
     codeHeight: 300
     picFormat: jpg
     picSavePath: F://codeImg
+    #一定要有admin
     uuid: adminControl_id
   entrust:
     prefix: entrust_val_
@@ -120,6 +121,8 @@ custom:
     everyDay: 0 50 15 * * ?
     updateStockPrice: 0/20 * 9,10,11,12,13,14,15 * * ?
     serverMoney:  0 0 8 * * ?
+    contractRudeEnd: 0 0/3 9,10,11,12,13,14,15 * * ?
+    highFrequency: 5/20 * 9,10,11,12,13,14,15 * * ?
   highFrequent:
     contractKey: contract_id_val
     stockContractKey: stock_contract_id_val

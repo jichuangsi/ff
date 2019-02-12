@@ -2,25 +2,28 @@ package cn.com.fintheircing.admin.business.dao.repository;
 
 import cn.com.fintheircing.admin.business.entity.BusinessStockHolding;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.util.List;
 
 public interface IBusinessStockHoldingRepository
         extends JpaRepository<BusinessStockHolding,String> {
 
-    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Query(value = "select t from BusinessStockHolding t where t.deleteFlag=:delete and t.uuid=:uuid ")
+    @Transactional
+    @Query(value = "select * from business_stock_holding where delete_flag=:delete and uuid=:uuid FOR UPDATE ",nativeQuery = true)
     BusinessStockHolding findByDeleteFlagAndUuid(@Param("delete") String delete, @Param("uuid") String uuid);
 
-    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Query(value = "select t from BusinessStockHolding t where t.deleteFlag=:delete and t.stockId=:stock and t.contractId=:contractId ")
-   BusinessStockHolding findBusinessStockHoldingByDeleteFlagAndStockIdAndContractId(@Param("delete") String delete,@Param("stock") String stockId,@Param("contractId") String contractId);
+    @Transactional
+    @Query(value = "select * from business_stock_holding t where delete_flag=:delete and stock_id=:stock and contract_id=:contractId FOR UPDATE ",nativeQuery = true)
+    BusinessStockHolding findBusinessStockHoldingByDeleteFlagAndStockIdAndContractId(@Param("delete") String delete,@Param("stock") String stockId,@Param("contractId") String contractId);
 
     List<BusinessStockHolding> findByDeleteFlagAndContractId(String delete,String contractId);
 
-    List<BusinessStockHolding> findByDeleteFlag(String delete);
+   // List<BusinessStockHolding> findByDeleteFlag(String delete);
+
+    @Transactional
+    @Query(value = "select * from business_stock_holding  where delete_flag=:delete and uuid=:uuid for UPDATE ",nativeQuery = true)
+    BusinessStockHolding findByDeleteFlag(@Param("delete") String delete,@Param("uuid") String uuid);
 }

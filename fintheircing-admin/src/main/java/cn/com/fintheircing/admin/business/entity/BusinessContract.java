@@ -30,9 +30,17 @@ public class BusinessContract extends AbstractEntity {
     private double availableMoney;  //可用资金
     private int contractStatus;     //合约状态，新建，交易中，结束交易
     private int rudeStatus;     //是否强制平仓
-    private double abortMoney;  //强平总额
+    private double highRate;       //高频监控数字
     @Version
     private int version;
+
+    public double getHighRate() {
+        return highRate;
+    }
+
+    public void setHighRate(double highRate) {
+        this.highRate = highRate;
+    }
 
     public String getUuid() {
         return uuid;
@@ -170,13 +178,6 @@ public class BusinessContract extends AbstractEntity {
         this.rudeStatus = rudeStatus;
     }
 
-    public double getAbortMoney() {
-        return abortMoney;
-    }
-
-    public void setAbortMoney(double abortMoney) {
-        this.abortMoney = abortMoney;
-    }
 
     public int getVersion() {
         return version;

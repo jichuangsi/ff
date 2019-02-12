@@ -45,7 +45,10 @@ public interface IBusinessContractMapper {
      */
     int addPromiseMoney(@Param("cash") double cash);
 
-    @Select("<script>select t1.uuid as id,t1.promised_money as promisedMoney,t1.borrow_money as borrowMoney,t1.available_money as canUseMoney,t1.cold_money as coldCash,t2.abort_line as abortLine,t1.worth as worth,t2.warning_line as warningLine from (select t3.promised_money,t3.borrow_money,t3.available_money,t3.cold_money,t4.worth,t3.risk_id,t3.uuid from business_contract t3 left join ( " +
+    @Select("<script>select t1.uuid as id,t1.promised_money as promisedMoney,t1.borrow_money as borrowMoney,t1.available_money as canUseMoney,t1.cold_money as coldCash,t2.abort_line as abortLine,t1.worth as worth,t2.warning_line as warningLine,t1.highRate as highRate from (select t3.promised_money,t3.borrow_money,t3.available_money,t3.cold_money,t4.worth,t3.risk_id,t3.uuid,t3.high_rate as highRate,t3.rude_status as RudeEnd from business_contract t3 left join ( " +
             "select contract_id,sum(float_money) as floatMoney,sum(current_worth) as worth from business_stock_holding GROUP BY contract_id) t4 on t3.uuid=t4.contract_id where t3.delete_flag=\"0\" and not(t3.contract_status=2)) t1 left join business_contract_risk t2 on t1.risk_id=t2.uuid</script>")
     List<ContractModel> selectContractRisk();
+
+    @Select("<script>SELECT t1.available_money AS canUseMoney,t1.cold_money AS coldCash,t1.borrow_money AS borrowMoney,t1.promised_money AS promisedMoney,t2.abort_line AS abortLine FROM business_contract t1 LEFT JOIN business_contract_risk t2 ON t1.uuid=t2.contract_id WHERE t1.uuid=#{id} AND t1.contract_status=1 and t1.delete_flag=\"0\"</script>")
+    ContractModel selectContractById(@Param("id") String id);
 }

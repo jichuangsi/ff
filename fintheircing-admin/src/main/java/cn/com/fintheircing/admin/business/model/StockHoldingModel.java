@@ -27,6 +27,15 @@ public class StockHoldingModel {
     private Double threeDay;
     private Double fourDay;
     private Double fiveDay;
+    private Integer rudeEnd;
+
+    public Integer getRudeEnd() {
+        return rudeEnd;
+    }
+
+    public void setRudeEnd(Integer rudeEnd) {
+        this.rudeEnd = rudeEnd;
+    }
 
     public Integer getVersion() {
         return version;

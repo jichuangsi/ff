@@ -171,7 +171,7 @@ public class ScheduledTask {
         }
     }
 
-    /*@Scheduled(cron = "0/3 * * * * ?")*/
+    @Scheduled(cron = "${custom.scheduled.highFrequency}")
     public void highFrequency() {
         try {
             businessService.highFrequency();
@@ -193,6 +193,15 @@ public class ScheduledTask {
     public void costServerMoney() {
         try {
             businessService.chargeServerMoney();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    @Scheduled(cron = "${custom.scheduled.contractRudeEnd}")
+    public void contractRudeEnd(){
+        try {
+            businessService.contractRudeEnd();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

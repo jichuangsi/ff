@@ -288,6 +288,22 @@ public class TestRollBack {
         }
     }
 
+    @Test
+    public void testRudeEnd(){
+        try {
+            businessService.highFrequency();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Test
+    public void testForUpdate(){
+        try {
+            businessService.testForUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

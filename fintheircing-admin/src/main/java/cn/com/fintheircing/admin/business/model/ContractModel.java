@@ -45,6 +45,15 @@ public class ContractModel {
     private Double onceGetServer;   //此收取服务费利率
     private String idCard;  //身份证
     private Integer RudeEnd;    //强制平仓
+    private double highRate;
+
+    public double getHighRate() {
+        return highRate;
+    }
+
+    public void setHighRate(double highRate) {
+        this.highRate = highRate;
+    }
 
     public Integer getRudeEnd() {
         return RudeEnd;

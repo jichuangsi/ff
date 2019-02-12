@@ -11,7 +11,7 @@ public interface IBusinessStockHoldingMapper {
 
     @Select("<script>select t1.uuid as id,t1.stock_id as stockId,t2.stock_num as stockNo,t2.stock_name as stockName,SUM(t1.amount) as amount,Avg(t1.cost_price) as costPrice" +
             ",sum(t1.current_worth) as currentWorth,sum(t1.can_sell) as canSell,sum(t1.float_money) as floatMoney,sum(t1.float_rate) as floatRate,SUM(t1.current_price) as currentPrice" +
-            ",t1.mother_account as motherAccount" +
+            ",t1.mother_account as motherAccount,t1.rude_end as rudeEnd" +
             " from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id <where> t1.contract_id=#{contractId}" +
             "<if test='stockNum!=null and stockNum!=\"\"'> and t2.stock_num=#{stockNum}</if> <if test='stockId!=null and stockId!=\"\"'> and t2.id=#{stockId}</if> and t1.delete_flag=\"0\" and (amount>0 or cold_amount>0)</where> GROUP BY t2.stock_num</script>")
     List<StockHoldingModel> selectStockNum(@Param("contractId")String contractId, @Param("stockNum") String stockNum,@Param("stockId") String stockId);

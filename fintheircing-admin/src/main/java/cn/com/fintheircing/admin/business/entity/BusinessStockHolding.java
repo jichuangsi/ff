@@ -29,8 +29,17 @@ public class BusinessStockHolding extends AbstractEntity {
     private double floatMoney;      //盈亏金额
     private double floatRate;       //盈亏比例
     private int coldAmount;
+    private int rudeEnd;
     @Version
     private int version;
+
+    public int getRudeEnd() {
+        return rudeEnd;
+    }
+
+    public void setRudeEnd(int rudeEnd) {
+        this.rudeEnd = rudeEnd;
+    }
 
     public BusinessStockHolding() {
     }

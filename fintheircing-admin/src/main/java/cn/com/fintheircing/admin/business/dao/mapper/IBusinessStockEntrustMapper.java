@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.business.dao.mapper;
 
 import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface IBusinessStockEntrustMapper {
             " or t2.stock_name like concat(\"%\",#{stockNum},\"%\")</if>" +
             "</where> order by t1.created_time</script>")
     List<StockEntrustModel> getContractEntrusts(StockEntrustModel model);
+
+    @Select("<script>select t1.uuid as id,t1.contract_id as contractId,t1.deal_no as dealNo,t2.stock_num as stockNum  from business_stock_entrust t1 left join admin_transaction_summary t2 on t1.stock_id=t2.id where t1.contract_id=#{contractId} and t1.entrust_status in (0,1,2) and t1.deal_from=\"0\" and t1.delete_flag=\"0\" and t1.creator_id not like CONCAT(\"%\",\"admin\",\"%\")</script>")
+    List<StockEntrustModel> getCancelEntrust(@Param("contractId") String contractId);
 }

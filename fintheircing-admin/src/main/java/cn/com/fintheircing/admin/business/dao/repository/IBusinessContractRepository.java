@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
 import java.util.List;
@@ -24,8 +25,8 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
     int updateColdMoney(@Param("contractId") String contractId,
                         @Param("coldMoney") Double coldMoney, @Param("version") Integer version);
 
+    @Transactional
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Query(value = "select t from BusinessContract t where t.uuid=:id")
     BusinessContract findByUuid(@Param("id") String id);
 
     int countByDeleteFlagAndUuidAndUserIdAndContractStatus(String delete,String contractId,String userId,Integer contractStatus);
@@ -38,4 +39,8 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
     ContractModel findBycontractId(@Param("contractId") String contractId);*/
 
     List<BusinessContract> findByDeleteFlagAndContractStatus(String delete,Integer contractStatus);
+
+    BusinessContract findByDeleteFlagAndUuidAndUserId(String delete,String uuid,String userId);
+
+    BusinessContract findByDeleteFlagAndUuid(String delete,String uuid);
 }
