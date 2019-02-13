@@ -263,6 +263,9 @@ public class BusinessService {
             }
         }
         ContractModel contract = businessContractMapper.selectContract(contractId, model.getUserId());//获取相关合约
+        if (BusinessStatus.BUSINESS_RUDE.getNum() == contract.getRudeEnd()){
+            throw new BusinessException(ResultCode.RUDE_CONTRACT_ERR);
+        }
         TransactionSummary transactionSummary = transactionSummaryRepository.findByDeleteFlagAndStockNum("0", model.getStockNum());
         if (transactionSummary == null) {
             throw new BusinessException(ResultCode.STOCK_BUSINESS_ERR);
@@ -487,6 +490,18 @@ public class BusinessService {
         if (BusinessStatus.BUSINESS_CONTROL.getNum() == holding.getRudeEnd()) {
             throw new BusinessException(ResultCode.SELL_CONTROL_STOCK);
         }
+        BusinessContract contract = null;
+        if (adminUuid.equals(model.getUserId())){
+            contract = businessContractRepository.findByDeleteFlagAndUuid("0",model.getContractId());
+        }else {
+            contract = businessContractRepository.findByDeleteFlagAndUuidAndUserId("0",model.getContractId(), model.getUserId());
+        }
+        if (null == contract) {
+            throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
+        }
+        if (BusinessStatus.BUSINESS_RUDE.getNum() == contract.getRudeStatus()){
+            throw new BusinessException(ResultCode.RUDE_CONTRACT_ERR);
+        }
         Integer canSell = holding.getCanSell();
         Integer cold = holding.getColdAmount();
         if (model.getAmount() > canSell) {
@@ -524,15 +539,7 @@ public class BusinessService {
             logger.error("userId:" + model.getUserId() + ",msg:保存出售股票委托失败");
             throw new BusinessException(e.getMessage());
         }
-        BusinessContract contract = null;
-        if (adminUuid.equals(model.getUserId())){
-            contract = businessContractRepository.findByDeleteFlagAndUuid("0",entrust.getContractId());
-        }else {
-            contract = businessContractRepository.findByDeleteFlagAndUuidAndUserId("0",entrust.getContractId(), model.getUserId());
-        }
-        if (null == contract) {
-            throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
-        }
+
         BusinessControlContract controlContract = new BusinessControlContract();
         controlContract.setCreatorId(entrust.getUserId());
         controlContract.setCreatedTime(new Date());
@@ -656,11 +663,14 @@ public class BusinessService {
                 EntrustStatus.ENTRUST_BACK_ING.getIndex() == entrust.getEntrustStatus()) {
             throw new BusinessException(ResultCode.ENTRUST_WAIT_DEAL);
         }
+        BusinessContract contract = businessContractRepository.findByUuid(entrust.getContractId());
+        if (BusinessStatus.BUSINESS_RUDE.getNum() == contract.getRudeStatus()){
+            throw new BusinessException(ResultCode.RUDE_CONTRACT_ERR);
+        }
         if (EntrustStatus.ENTRUST_NOT_DEAL.getIndex() == entrust.getEntrustStatus()) {
             if (BusinessStockEntrust.STOCK_SELL.equals(entrust.getBusinessTo())) {
                 entrust.setEntrustStatus(EntrustStatus.ENTRUST_BACK.getIndex());
                 entrust.setUpdatedTime(new Date());//返回冻结股份
-                BusinessContract contract = businessContractRepository.findByUuid(entrust.getContractId());
 
                 BusinessControlContract controlContract = new BusinessControlContract();
                 controlContract.setControlType(ControlCode.CONTROL_SELLBACK.getIndex());
@@ -680,7 +690,7 @@ public class BusinessService {
             } else if (BusinessStockEntrust.STOCK_BUY.equals(entrust.getBusinessTo())) {  //撤单买入
                 entrust.setEntrustStatus(EntrustStatus.ENTRUST_BACK.getIndex());
                 entrust.setUpdatedTime(new Date());//返回冻结金
-                BusinessContract contract = businessContractRepository.findByUuid(entrust.getContractId());
+
                 contract.setColdMoney(BusinessUtils.minusMethod(contract.getColdMoney(), entrust.getColdMoney(), entrust.getBusinessMoney(), entrust.getTaxationMoney()));
                 contract.setAvailableMoney(BusinessUtils.addMethod(contract.getAvailableMoney(), entrust.getColdMoney(), entrust.getTaxationMoney(), entrust.getBusinessMoney()));
                 BusinessControlContract controlContract = new BusinessControlContract();
@@ -702,16 +712,16 @@ public class BusinessService {
             if (!autoDealBack(entrust, model.getStockNum())) {
                 throw new BusinessException(ResultCode.ENTRUST_BACK_ERR);
             }
-            ContractModel contract = businessContractMapper.selectContract(entrust.getContractId(), entrust.getUserId());
-            if (null == contract) {
+            ContractModel contractModel = businessContractMapper.selectContract(entrust.getContractId(), entrust.getUserId());
+            if (null == contractModel) {
                 throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
             }
             BusinessControlContract controlContract = new BusinessControlContract();
             controlContract.setCreatorId(entrust.getUserId());
             controlContract.setCreatedTime(new Date());
-            controlContract.setLessMoney(BusinessUtils.addMethod(contract.getCanUseMoney(), contract.getColdCash()));
+            controlContract.setLessMoney(BusinessUtils.addMethod(contractModel.getCanUseMoney(), contractModel.getColdCash()));
             controlContract.setVerifyStatus(VerifyCode.VERIFY_S.getIndex());
-            controlContract.setContractId(contract.getId());
+            controlContract.setContractId(contractModel.getId());
             controlContract.setControlType(ControlCode.CONTROL_ENTRUSTBACKSTOCK.getIndex());
             businessControlContractRepository.save(controlContract);
         }
@@ -1226,11 +1236,11 @@ public class BusinessService {
             Set<String> contractIds = JSONObject.parseObject(redisTemplate.opsForValue().get(controlContractKey), ContractJsonModel.class).getContractIds();
             for (String contractId : contractIds) {
                 ContractModel model = businessContractMapper.selectContractById(contractId);
-                List<StockHoldingModel> holdings = businessStockHoldingMapper.selectStockNum(contractId, "", "");
-                double strongWorth = (model.getPromisedMoney() + model.getBorrowMoney()) * model.getAbortLine() - model.getColdCash() - model.getCanUseMoney();
-                if (holdings.size() == 0) {
+                if (null == model){
                     continue;
                 }
+                List<StockHoldingModel> holdings = businessStockHoldingMapper.selectStockNum(contractId, "", "");
+                double strongWorth = (model.getPromisedMoney() + model.getBorrowMoney()) * model.getAbortLine() - model.getColdCash() - model.getCanUseMoney();
                 double sumMoney = 0;
                 int sumQuantity = 0;
                 List<String> stockCodes = new ArrayList<String>();
@@ -1247,6 +1257,14 @@ public class BusinessService {
                     quantitiesCanSell.put(holdingModel.getStockNo(), holdingModel.getCanSell());
                 }
                 if (0 == sumQuantity) {
+                    if (strongWorth >= 0) {     //无股份，且到达强平线，强平结束合约
+                        ContractJsonModel contractJsonModel = new ContractJsonModel();
+                        if (redisTemplate.hasKey(rudeEndContractKey)) {
+                            contractJsonModel = JSONObject.parseObject(redisTemplate.opsForValue().get(rudeEndContractKey), ContractJsonModel.class);
+                        }
+                        contractJsonModel.getContractIds().add(contractId);
+                        redisTemplate.opsForValue().set(rudeEndContractKey, JSONObject.toJSONString(contractJsonModel));
+                    }
                     continue;
                 }
                 List<QuotesTenModel> quotesTenModels = getQuotesTenModel(stockCodes.toArray(new String[stockCodes.size()]));
@@ -1317,6 +1335,8 @@ public class BusinessService {
                 logger.error(model.getContractId()+"平仓出售"+model.getStockNo()+"股份失败");
             }
         }
+        BusinessContract contract =  businessContractRepository.findByDeleteFlagAndUuid("0",contractId);
+        contract.setRudeStatus(BusinessStatus.BUSINESS_RUDE.getNum());
         //如果确认平仓，将id放入rudeEndContractKey
         ContractJsonModel contractJsonModel = new ContractJsonModel();
         if (redisTemplate.hasKey(rudeEndContractKey)) {
@@ -1394,6 +1414,7 @@ public class BusinessService {
                 for (ContractHoldingModel holdingModel : contractHoldingModels) {
                     if (stockCode.equals(holdingModel.getStockCode())) {
                         BusinessStockHolding holding = businessStockHoldingRepository.findByDeleteFlagAndUuid("0", holdingModel.getHoldingId());
+                        holding.setRudeEnd(BusinessStatus.BUSINESS_CONTROL.getNum());
                         if (0 != holding.getCanSell()) {
                             StockHoldingModel model = new StockHoldingModel();
                             model.setAmount(holding.getCanSell());

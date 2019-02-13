@@ -84,4 +84,5 @@ public class ResultCode {
     public static final String DEAL_IS_EXIST = "已有工作人员在处理";
     public static final String ENTRUST_IS_EXIST = "仍有订单存在，不能结束合约";
     public static final String SELL_CONTROL_STOCK = "该股为监控股份，不可擅自卖出";
+    public static final String RUDE_CONTRACT_ERR  = "强制平仓状态，不可操作";
 }
