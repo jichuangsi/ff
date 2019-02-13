@@ -300,7 +300,7 @@ public class TestRollBack {
     @Test
     public void testForUpdate(){
         try {
-            businessService.testForUpdate();
+            businessService.contractRudeEnd();
         } catch (Exception e) {
             e.printStackTrace();
         }

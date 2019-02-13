@@ -38,7 +38,7 @@ public class UserPayService {
                     account.setAccount(account.getAccount() - model.getCostCount());
                     iUserAccountRepository.save(account);
                 } else if (0 != model.getAddCount()) {  //加钱
-                    account.setAccount(account.getAccount() + model.getCostCount());
+                    account.setAccount(account.getAccount() + model.getAddCount());
                     iUserAccountRepository.save(account);
                 }
                 // 记录

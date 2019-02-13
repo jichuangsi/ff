@@ -323,7 +323,7 @@ public class BusinessService {
 
     //强制平仓结束合约
     public void rudeEndContract(ContractModel model) throws BusinessException {
-        UserTokenInfo userInfo = userService.getUserTokenInfo(model.getId());
+        UserTokenInfo userInfo = userService.getUserTokenInfo(model.getUserId());
         addAccount(userInfo, model, model.getCanUseMoney());
     }
 

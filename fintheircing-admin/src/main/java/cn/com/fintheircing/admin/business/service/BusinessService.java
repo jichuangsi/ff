@@ -1420,7 +1420,7 @@ public class BusinessService {
                     ContractModel model = new ContractModel();
                     model.setId(id);
                     model.setRudeEnd(BusinessStatus.BUSINESS_RUDE.getNum());
-                    model = endContract(model);
+                    model = synchronizeComponent.synchronizedEndContract(model);
                     ResponseModel responseModel = customerFeignService.rudeEndContract(model);
                     if (ResultCode.SUCESS.equals(responseModel.getCode())) {
                         contractIds.remove(id);
