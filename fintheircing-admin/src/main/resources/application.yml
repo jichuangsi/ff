@@ -36,6 +36,8 @@ feign:
           connectTimeout: 1000
           readTimeout: 1000
           loggerLevel: full
+  httpclient:
+    enabled: true
 
 hystrix:
   command:

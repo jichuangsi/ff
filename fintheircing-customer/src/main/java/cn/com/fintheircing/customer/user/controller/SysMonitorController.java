@@ -13,8 +13,7 @@ import java.util.List;
 @RequestMapping("/sys")
 @Api("配资客户登录controller")
 public class SysMonitorController {
-    @Resource
-    private LoginService loginService;
+
 
     @RequestMapping("/findAllUser")
     public List<UserTokenInfo> findAllUser(String id) {

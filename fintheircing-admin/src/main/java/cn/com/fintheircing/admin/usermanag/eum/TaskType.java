@@ -32,7 +32,9 @@ public enum  TaskType {
 
     public static String getName(int index) {
         for (TaskType c : TaskType.values()) {
-
+            if (c.index==index){
+                return c.name;
+            }
         }
         return null;
     }

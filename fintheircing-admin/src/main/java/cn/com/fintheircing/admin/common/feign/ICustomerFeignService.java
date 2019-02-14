@@ -7,9 +7,11 @@ import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
 import cn.com.fintheircing.admin.common.feign.impl.CustomerFeignServiceFallBack;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
+import cn.com.fintheircing.admin.usermanag.model.ｍes.MesInfoModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
@@ -54,4 +56,8 @@ public interface ICustomerFeignService {
 
     @RequestMapping("/Cu/rudeEndContract")
     ResponseModel<String> rudeEndContract(@RequestBody ContractModel model);
+
+
+    @RequestMapping(value = "/updateMesInfo")
+    public ResponseModel sendMesg(@RequestBody MesInfoModel model);
 }

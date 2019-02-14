@@ -38,15 +38,14 @@ public class UserPayController {
     private IUserAccountRepository iUserAccountRepository;
     @Resource
     private UserService userService;
-    @Resource
-    private UserPayService userPayService;
+
 
 
     @ApiOperation(value = "生成待确认充值记录", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
-    @RequestMapping("/recodPayInfo")
+    @PostMapping("/recodPayInfo")
     public RecodeInfoPayModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo, @RequestBody PayInfoModel model) {
         RecodeInfoPayModel m = new RecodeInfoPayModel();
         m.setAddCount(model.getAmount());

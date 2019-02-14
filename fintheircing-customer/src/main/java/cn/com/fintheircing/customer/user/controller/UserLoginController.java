@@ -9,6 +9,7 @@ import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.service.LoginService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -52,14 +53,16 @@ public class UserLoginController {
         } catch (LoginException e) {
             return ResponseModel.fail("",e.getMessage());
         }
-        Map<String,String> map = new HashMap<String,String>();
+            Map<String,String> map = new HashMap<String,String>();
         map.put("token",token);
 
         return ResponseModel.sucess("",map);
     }
 
     @ApiOperation(value = "用户登出", notes = "")
-    @ApiImplicitParams({})
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
     @PostMapping("/userOut")
     @CrossOrigin
     public ResponseModel userOut(@ModelAttribute UserTokenInfo model, HttpServletRequest request) throws LoginException{

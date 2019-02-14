@@ -101,6 +101,7 @@ public class LoginService {
 
     }
     public boolean outOnlineByUser(String id) throws LoginException{
+
         return redisTemplate.delete(tokrnPre+id);
 
 }

@@ -1,6 +1,4 @@
-package cn.com.fintheircing.admin.usermanag.model.ｍes;
-
-import cn.com.fintheircing.admin.common.entity.AbstractEntity;
+package cn.com.fintheircing.customer.user.model.mes;
 
 import java.util.Date;
 
@@ -29,6 +27,22 @@ public class MesInfoModel {
         this.pageNum = pageNum;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
+    }
+
     public String getMesId() {
         return mesId;
     }
@@ -51,21 +65,5 @@ public class MesInfoModel {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Date getSendTime() {
-        return sendTime;
-    }
-
-    public void setSendTime(Date sendTime) {
-        this.sendTime = sendTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

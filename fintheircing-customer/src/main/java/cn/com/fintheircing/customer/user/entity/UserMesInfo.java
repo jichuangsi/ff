@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
+
 @Entity
 @Table(name = "customer_UserMesInfo")
 public class UserMesInfo {
@@ -16,14 +18,23 @@ public class UserMesInfo {
     private String title;
     private String content;
     private Integer isRead=0;//是否已读
-    private Integer delete_flag=0;
+    private Integer deleteFlag =0;
+    private Date sendTime =new Date();
 
-    public Integer getDelete_flag() {
-        return delete_flag;
+    public Date getSendTime() {
+        return sendTime;
     }
 
-    public void setDelete_flag(Integer delete_flag) {
-        this.delete_flag = delete_flag;
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public Integer getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(Integer deleteFlag) {
+        this.deleteFlag = deleteFlag;
     }
 
     public Integer getIsRead() {

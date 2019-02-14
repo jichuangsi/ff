@@ -9,6 +9,7 @@ import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
 import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
 
+import cn.com.fintheircing.admin.usermanag.model.ｍes.MesInfoModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -64,5 +65,10 @@ public class CustomerFeignServiceFallBack implements ICustomerFeignService {
     @Override
     public ResponseModel<String> rudeEndContract(ContractModel model) {
         return ResponseModel.fail("");
+    }
+
+    @Override
+    public ResponseModel sendMesg(MesInfoModel model) {
+        return new ResponseModel();
     }
 }

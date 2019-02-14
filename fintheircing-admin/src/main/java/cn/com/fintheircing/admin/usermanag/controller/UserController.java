@@ -1,6 +1,7 @@
 package cn.com.fintheircing.admin.usermanag.controller;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
@@ -21,7 +22,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @Api("userController相关控制层")
 @CrossOrigin
@@ -35,7 +40,8 @@ public class UserController {
     private IAdminRecodingMapper iAdminRecodingMapper;
     @Resource
     private IMesInfoRepository iMesInfoRepository;
-
+    @Resource
+    private ICustomerFeignService iCustomerFeignService;
     @ApiOperation(value = "用户列表-查询所有用户信息", notes = "")
     @PostMapping("/findAll")
     public ResponseModel<PageInfo<AdminClientInfoModel>> findAllUserInfo(@RequestBody AdminClientInfoModel queryModel) throws UserServiceException {
@@ -119,9 +125,15 @@ public class UserController {
 
     @ApiOperation(value = "系统管理-信息发布-查询信息", notes = "")
     @PostMapping("/findMesBymark")
-    public ResponseModel<PageInfo<MesInfoModel>> findMesBymark(int pageNum, int pageSize, String title) throws UserServiceException {
-        PageHelper.startPage(pageNum, pageSize);
-        List<MesInfoModel> allMessage = iAdminRecodingMapper.findMesBymark(title);
+    @CrossOrigin
+    public ResponseModel<PageInfo<MesInfoModel>> findMesBymark(@RequestBody MesInfoModel mesInfoModel) throws UserServiceException {
+        PageHelper.startPage(mesInfoModel.getPageNum(), mesInfoModel.getPageSize());
+        Map<String,Object> parms =new HashMap<>();
+        if (mesInfoModel.getTitle()==null){
+            mesInfoModel.setTitle("");
+        }
+        parms.put("title", mesInfoModel.getTitle());
+        List<MesInfoModel> allMessage = iAdminRecodingMapper.findMesBymark(parms);
         PageInfo<MesInfoModel> personPageInfo = new PageInfo<>(allMessage);
         return ResponseModel.sucess("", personPageInfo);
     }
@@ -148,14 +160,13 @@ public class UserController {
 
     @ApiOperation(value = "系统管理-信息发布-发布信息", notes = "")
     @PostMapping("/updateMesInfo")
-    public ResponseModel updateMesInfo(String mesId) throws UserServiceException {
-        MesInfo oneByUuid = iMesInfoRepository.findOneByUuid(mesId);
-        iAdminRecodingMapper.saveRecodeInfoPay(oneByUuid);
-        int i = iAdminRecodingMapper.updateMesInfo(mesId);
-        if (i > 0) {
-            return ResponseModel.sucess("", i);
+    public ResponseModel updateMesInfo(@RequestBody MesInfoModel model) throws UserServiceException {
+        model.setSendTime(new Date());
+        model.setStatus("1");
+        if (iAdminRecodingMapper.updateMesInfo(model)>0) {
+            return iCustomerFeignService.sendMesg(model);
         }
-        return ResponseModel.fail("", ResultCode.SEND_MES_FAILED);
+        return ResponseModel.fail("", ResultCode.MESSAGE_SEND_FAILED);
     }
 
     @ApiOperation(value = "系统管理-信息发布-修改信息", notes = "")

@@ -8,8 +8,7 @@ import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IBankMapper;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IUserMapper;
 
-import cn.com.fintheircing.admin.usermanag.dao.repsitory.IBankIdRepository;
-import cn.com.fintheircing.admin.usermanag.entity.BankCard;
+
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
 import cn.com.fintheircing.admin.usermanag.service.IUserService;
@@ -34,8 +33,7 @@ public class UserServiceImpl implements IUserService {
     IUserMapper usermapper;
     @Resource
     IAdminClientInfoRepository adminClientInfoRepository;
-    @Resource
-    IBankIdRepository iBankIdRepository;
+
     @Resource
     IBankMapper iBankMapper;
 
@@ -148,27 +146,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean updatebankCard(String id) throws UserServiceException {
-        try {
-            if (StringUtils.isEmpty(id)) {
-                throw new UserServiceException(ResultCode.PARAM_MISS_MSG);
-            } else {
-                BankCard oneByUuid = iBankIdRepository.findOneByUuid(id);
-                if (oneByUuid == null || "0".equals(oneByUuid.getStatus())) {
-                    throw new UserServiceException(ResultCode.USER_EXITS);
-                } else {
-                    oneByUuid.setStatus("1");
-                    BankCard save = iBankIdRepository.save(oneByUuid);
-                    if (StringUtils.isEmpty(save)) {
-                        return false;
-                    }
-                    return true;
-                }
-
-            }
-        } catch (Exception e) {
-            throw new UserServiceException(e.getMessage());
+        if(iBankMapper.UpdateBankCard(id)>0){
+            return true;
         }
-
+        return false;
     }
 
     @Override

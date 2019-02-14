@@ -22,6 +22,15 @@ public class UserClientLoginInfo extends AbstractEntity{
 	private String status;
 	private Date loginTime;
 	private Date logoutTime;
+	private String photo;
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 
 	public Date getLoginTime() {
 		return loginTime;

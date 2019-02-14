@@ -23,6 +23,7 @@ public class ResultCode {
     public static final String POWER_VISIT_ERR = "无权限访问";
     public static final String LOGIN_TOKEN_ERR = "token生成失败";
     public static final String LOGIN_ADMIN_ERR = "管理员登录失败";
+    public static final String RUDE_CONTRACT_ERR = "强制平仓失败";
 
     public static final String UPDATE_ERR = "修改失败";
     public static final String PROXY_ISEXIST_ERR = "已存在该代理";
@@ -84,5 +85,7 @@ public class ResultCode {
     public static final String DEAL_IS_EXIST = "已有工作人员在处理";
     public static final String ENTRUST_IS_EXIST = "仍有订单存在，不能结束合约";
     public static final String SELL_CONTROL_STOCK = "该股为监控股份，不可擅自卖出";
-    public static final String RUDE_CONTRACT_ERR  = "强制平仓状态，不可操作";
+    public static final String MESSAGE_SEND_FAILED = "发送信息失败,检查是否从新发送";
+
+
 }

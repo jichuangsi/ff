@@ -16,12 +16,16 @@ import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel
 import cn.com.fintheircing.customer.user.service.RegisterService;
 import cn.com.fintheircing.customer.user.service.UserService;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
+import cn.com.fintheircing.customer.user.utlis.MultipartFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +80,9 @@ public class UserServiceImpl implements UserService {
         model.setUserId(userInfo.getUuid());
         model.setPhone(userInfo.getPhone());
         model.setAccount(iUserAccountRepository.findAccountByUserId(userInfo.getUuid()));
+        UserClientLoginInfo oneByUuid = userClientLoginInfoRepository.findOneByAndClientInfoId(userInfo.getUuid());
+        String photo = oneByUuid.getPhoto();
+        model.setPhoto(photo);
         return model;
     }
 
@@ -133,9 +140,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void userCer(UserTokenInfo userInfo, UserCerModel model) throws LoginException {
-        /*if (userInfoRepository.countByDeleteFlagAndIdCard("0",model.getIdCard())>0){
-            throw new LoginException(ResultCode.CER_VALIDATE_ERR);
-        }*/
         UserClientInfo userClientInfo = userInfoRepository.findByUuid(userInfo.getUuid());
         userClientInfo.setCer(UserClientInfo.CER_PASS);
         userClientInfo.setDisplayname(model.getRealName());
@@ -146,6 +150,17 @@ public class UserServiceImpl implements UserService {
         userInfoRepository.save(userClientInfo);
     }
 
+    @Override
+    public boolean setAvatar(Encode64 base64, String uuid) throws IOException {
+        UserClientLoginInfo oneByAndClientInfoId = userClientLoginInfoRepository.findOneByAndClientInfoId(uuid);
+//        UserClientLoginInfo u =new UserClientLoginInfo();
+        oneByAndClientInfoId.setPhoto(base64.getBase64());
+        UserClientLoginInfo save = userClientLoginInfoRepository.save(oneByAndClientInfoId);
+        if (StringUtils.isEmpty(save)){
+            return false;
+        }
+        return true;
+    }
     @Override
     public UserTokenInfo getUserTokenInfo(String id) {
         return userClientInfoMapper.findByUuid(id);

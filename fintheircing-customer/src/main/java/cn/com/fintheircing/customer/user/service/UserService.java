@@ -6,6 +6,8 @@ import cn.com.fintheircing.customer.user.model.*;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+
 public interface UserService {
     UserClientInfo findOneByUserName(String userName);
 
@@ -36,6 +38,11 @@ public interface UserService {
 
     void userCer(UserTokenInfo userInfo, UserCerModel model) throws LoginException;
 
+    /**
+     * 修改头像
+     * @param base64
+     * @param uuid
+     */
+    boolean setAvatar(Encode64 base64, String uuid) throws IOException;
     UserTokenInfo getUserTokenInfo(String id);
-
 }

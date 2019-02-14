@@ -1,15 +1,16 @@
-package cn.com.fintheircing.admin.usermanag.entity;
+package cn.com.fintheircing.customer.user.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
 /**
  * BankCard class
  *
- * @author keriezhang
- * @date 2016/10/31
+ * @author yaoxiong
+ * @date 2019/1/31
  */
 @Entity
 public class BankCard {
@@ -20,6 +21,33 @@ public class BankCard {
     private String bankId;
     private String bankName;
     private String status="0";
+    private String userId;
+    private String userName;
+    private String phoneNo;
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getStatus() {
         return status;

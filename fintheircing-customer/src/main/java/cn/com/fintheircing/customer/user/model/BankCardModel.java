@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.usermanag.model;
+package cn.com.fintheircing.customer.user.model;
 /**
  * BankCardModel class
  *

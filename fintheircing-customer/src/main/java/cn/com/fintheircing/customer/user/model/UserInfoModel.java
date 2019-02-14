@@ -11,6 +11,15 @@ public class UserInfoModel {
     private String userName;
     private String phone;
     private double account;
+    private String photo;
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public String getUserId() {
         return userId;

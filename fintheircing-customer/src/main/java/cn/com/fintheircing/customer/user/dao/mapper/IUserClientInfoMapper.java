@@ -42,4 +42,11 @@ public interface IUserClientInfoMapper {
 	UserClientInfo selectSaleMan(Map<String, Object> params);
 	@Select("<script>selcet t1.uuid as,t1.user_name as userName ,t2.ip_address as ipAddress ,t2.status as status　from user_client_info t1,user_client_login_info t2 where t1.uuid=t2.client_info_id and t1.uuid=#{id}</script>")
 	OnlineUserInfo findAllOnline(String id);
+
+	/**
+	 * 修改头像
+	 * @param parms
+	 */
+	@Update("<script>update user_client_login_info t1 set t1.photo=#{bytes} where t1.client_info_id=#{uuid}</script>")
+	int updateAvatar(Map<String, Object> parms);
 }

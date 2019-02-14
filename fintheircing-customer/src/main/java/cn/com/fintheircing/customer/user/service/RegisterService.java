@@ -58,11 +58,11 @@ public class RegisterService {
 
 	// 根据手机号获取验证码
 	public String getValCode(String phoneNo) throws RegisterheckExistException {
-		synchronized (phoneNo.intern()) {
+
 			// 使用手机号作为用户名
-			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
-				throw new RegisterheckExistException(phoneNo + "已存在");
-			}
+//			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
+//				throw new RegisterheckExistException(phoneNo + "已存在");
+//			}
 			// 看缓存中是否存在发送验证码记录
 			if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
 				throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
@@ -77,7 +77,7 @@ public class RegisterService {
 			// 记录短信发送记录在缓存
 			redisTemplate.opsForValue().set(valsmsPre + phoneNo, code, valZSendInterSeconds, TimeUnit.SECONDS);
 			return code;
-		}
+
 	}
 
 	// 新增注册
@@ -88,10 +88,10 @@ public class RegisterService {
 		String phoneNo = registerModel.getPhoneNo();
 		String pwd = registerModel.getPwd();
 		String valCode = registerModel.getValCode();
-		if (!StringUtils.isEmpty(registerModel.getInvitCode())){
-			invitId = adminFeignService.getInviteId(registerModel.getInvitCode());
-		}
-		synchronized (phoneNo.intern()) {
+//		if (!StringUtils.isEmpty(registerModel.getInvitCode())){
+//			invitId = adminFeignService.getInviteId(registerModel.getInvitCode());
+//		}
+
 			// 使用手机号作为用户名
 			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
 				throw new RegisterheckExistException(phoneNo + "已存在");
@@ -144,10 +144,10 @@ public class RegisterService {
 			userInfo.setUuid(userClientInfo.getUuid());
 			userInfo.setRoleGrade(userClientInfo.getRoleGrade());
 
-			ResponseModel<String> response = adminFeignService.saveUserSpread(userInfo);
-			if (!ResultCode.SUCESS.equals(response.getCode())){
-				throw new RegisterheckExistException(response.getMsg());
-			}
+//			ResponseModel<String> response = adminFeignService.saveUserSpread(userInfo);
+//			if (!ResultCode.SUCESS.equals(response.getCode())){
+//				throw new RegisterheckExistException(response.getMsg());
+//			}
 
 
 			/*//创建待办注册审核任务
@@ -161,7 +161,7 @@ public class RegisterService {
 			}*/
 		}
 
-	}
+
 	
 	//登录时获取用户信息
 	public UserTokenInfo getUserForLogin (UserTokenInfo model) {
