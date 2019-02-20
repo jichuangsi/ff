@@ -5,25 +5,26 @@ import java.util.Date;
 public class StockEntrustModel {
 
     private String id;
-    private String userName;
-    private String stockNum;
-    private String stockName;
-    private Integer business;
-    private Integer status;
-    private String businessStr;
-    private String statusStr;
-    private Double price;
-    private Integer amount;
-    private Integer dealNum;
-    private long dealTime;
-    private String contractId;
-    private String userId;
-    private String motherAccount;
-    private String dealNo;
-    private Double dealPrice;
-    private String cancelOrder;
-    private Date createdTime;
-    private String contractNum;
+    private String userName;    //用户名
+    private String stockNum;    //股票代码
+    private String stockName;   //股票名
+    private Integer business;   //买卖方向num
+    private Integer status;     //状态num
+    private String businessStr;     //买卖方向
+    private String statusStr;   //状态
+    private Double price;   //委托价格
+    private Integer amount;     //委托数量
+    private Integer dealNum;    //成交数量
+    private long dealTime;  //成交时间
+    private String contractId;  //合约id
+    private String userId;  //用户id
+    private String motherAccount;   //母账号
+    private String dealNo;  //委托单号
+    private Double dealPrice;   //成交单价
+    private String cancelOrder;     //是否撤单
+    private Date createdTime;   //委托时间
+    private String contractNum;     //合约编号
+
 
 
     private Integer pageIndex;

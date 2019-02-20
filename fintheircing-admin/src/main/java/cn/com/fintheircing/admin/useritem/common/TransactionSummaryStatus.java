@@ -5,7 +5,7 @@ package cn.com.fintheircing.admin.useritem.common;
  * @author YAOXIONG
  * @date 2018/12/27
  */
-public enum Status {
+public enum TransactionSummaryStatus {
     WHITELIST("白名单", 0), ABSOLUTE_WHITELIST("绝对白名单", 1),
     STATIC_BLACKLIST("静态黑名单", 2),DYNAMIC_BLACKLIST("动态黑名单",3)
     ;
@@ -13,13 +13,13 @@ public enum Status {
     private int index;
 
     // 构造方法
-    private Status(String name, int index) {
+    private TransactionSummaryStatus(String name, int index) {
         this.name = name;
         this.index = index;
     }
 
     public static String getName(int index) {
-        for (Status c : Status.values()) {
+        for (TransactionSummaryStatus c : TransactionSummaryStatus.values()) {
             if (c.getIndex() == index) {
                 return c.name;
             }
@@ -27,7 +27,7 @@ public enum Status {
         return null;
     }
     public static Integer getIndex(String name) {
-        for (Status c : Status.values()) {
+        for (TransactionSummaryStatus c : TransactionSummaryStatus.values()) {
             if (c.getName().equals(name)) {
                 return c.index;
             }
@@ -35,8 +35,8 @@ public enum Status {
         return null;
     }
 
-    public static Status getStatus(String name) {
-        for (Status c : Status.values()) {
+    public static TransactionSummaryStatus getStatus(String name) {
+        for (TransactionSummaryStatus c : TransactionSummaryStatus.values()) {
             if (c.getName().equalsIgnoreCase(name)) {
                 return c;
             }

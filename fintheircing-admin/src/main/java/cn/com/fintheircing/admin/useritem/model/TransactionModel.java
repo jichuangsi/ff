@@ -1,7 +1,5 @@
 package cn.com.fintheircing.admin.useritem.model;
 
-import cn.com.fintheircing.admin.useritem.common.Status;
-
 import java.util.Date;
 /**
  * Demo class

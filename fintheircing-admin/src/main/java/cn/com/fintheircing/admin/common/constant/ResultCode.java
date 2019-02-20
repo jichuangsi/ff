@@ -86,6 +86,9 @@ public class ResultCode {
     public static final String ENTRUST_IS_EXIST = "仍有订单存在，不能结束合约";
     public static final String SELL_CONTROL_STOCK = "该股为监控股份，不可擅自卖出";
     public static final String MESSAGE_SEND_FAILED = "发送信息失败,检查是否从新发送";
+    
 
-
+    public static final String TAX_CREATED_ERR  = "生成新税收失败";
+    public static final String TAX_DELETE_ERR  = "删除税收失败";
+    public static final String TAX_UPDATERATE_ERR  = "不可修改税率";
 }

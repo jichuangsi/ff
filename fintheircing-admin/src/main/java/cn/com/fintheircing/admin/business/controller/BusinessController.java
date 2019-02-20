@@ -2,11 +2,14 @@ package cn.com.fintheircing.admin.business.controller;
 
 import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import cn.com.fintheircing.admin.business.model.tranfer.TranferEntrustModel;
+import cn.com.fintheircing.admin.business.model.tranfer.TranferHoldingModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferStockEntrustModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.synchronize.SynchronizeComponent;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -100,7 +103,6 @@ public class BusinessController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
-
     @ApiOperation(value = "返回当前操作状态", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
@@ -108,5 +110,36 @@ public class BusinessController {
     @PostMapping("/getAuto")
     public ResponseModel<Map<String,String>> getAuto(@ModelAttribute UserTokenInfo userInfo){
         return ResponseModel.sucess("",businessService.getAuto());
+    }
+
+    @ApiOperation(value = "查询委托相关信息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getSystemEntrusts")
+    public ResponseModel<PageInfo<TranferEntrustModel>> getSystemEntrusts(@ModelAttribute UserTokenInfo userInfo,@RequestBody TranferEntrustModel model){
+        try {
+            return ResponseModel.sucess("",businessService.getSystemEntrusts(model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "获取委托相关查询", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getEntrustCondition")
+    public ResponseModel<Map<String,Object>> getEntrustCondition(@ModelAttribute UserTokenInfo userInfo){
+        return ResponseModel.sucess("",businessService.getEntrustCondition());
+    }
+
+    @ApiOperation(value = "获取持仓数据", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getHoldings")
+    public ResponseModel<PageInfo<TranferHoldingModel>> getHoldings(@ModelAttribute UserTokenInfo userInfo,@RequestBody TranferHoldingModel model){
+        return ResponseModel.sucess("",businessService.getPageHolding(model));
     }
 }

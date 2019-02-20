@@ -1,6 +1,6 @@
-package cn.com.fintheircing.admin.business.dao.repository;
+package cn.com.fintheircing.admin.taxation.dao.repository;
 
-import cn.com.fintheircing.admin.business.entity.BusinessTaxationRelation;
+import cn.com.fintheircing.admin.taxation.entity.BusinessTaxationRelation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IBusinessTaxationRelationRepository

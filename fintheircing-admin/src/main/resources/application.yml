@@ -132,6 +132,8 @@ custom:
     downStockRate: -0.09
     controlPrice: 0.01
     rudeEndContractKey: rude_contract_id_val
+  pattern:
+    entrustPattern: yyyyMMdd
 pagehelper:
   helperDialect: mysql
   reasonable: true

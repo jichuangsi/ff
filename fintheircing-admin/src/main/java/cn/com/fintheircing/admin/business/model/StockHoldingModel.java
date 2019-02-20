@@ -7,8 +7,8 @@ public class StockHoldingModel {
     private String id;
     private String stockId;
     @Pattern(regexp = "^\\d{6}$",message = "股票代码不正确")
-    private String stockNo;
-    private String stockName;
+    private String stockNo;     //股票代码
+    private String stockName;   //股票名称
     private Integer amount;     //持仓
     private Integer canSell;    //可用
     private Double costPrice;    //成本单价
@@ -16,18 +16,18 @@ public class StockHoldingModel {
     private Double currentWorth;    //当前市值
     private String motherAccount;   //母账号
     private Double floatMoney;      //盈亏金额
-    private Double floatRate;
-    private String contractId;
+    private Double floatRate;   //盈亏比例
+    private String contractId;  //合约id
     private String userId;
     private String dealFrom;
     private Integer version;
 
-    private Double oneDay;
-    private Double twoDay;
-    private Double threeDay;
-    private Double fourDay;
-    private Double fiveDay;
-    private Integer rudeEnd;
+    private Double oneDay;  //风控
+    private Double twoDay;  //风控
+    private Double threeDay;    //风控
+    private Double fourDay; //风控
+    private Double fiveDay; //风控
+    private Integer rudeEnd;    //是否在强平
 
     public Integer getRudeEnd() {
         return rudeEnd;

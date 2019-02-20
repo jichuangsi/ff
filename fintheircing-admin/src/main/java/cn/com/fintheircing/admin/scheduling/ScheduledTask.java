@@ -67,6 +67,9 @@ public class ScheduledTask {
                 ResponseModel<List<TodayOrder>> responseModel
                         = exchangeFeignService.getTodayOrderList(account.getAccountNo());
                 List<TodayOrder> todayOrders = responseModel.getData();
+                if (null == todayOrders){
+                    return;
+                }
                 String oldOrdersJson = redisTemplate.opsForValue().get(entrustPrefix + account.getAccountNo());
                 Map<String, TodayOrder> oldOrders = new HashMap<>();
                 if (!StringUtils.isEmpty(oldOrdersJson)) {
@@ -117,6 +120,9 @@ public class ScheduledTask {
             for (MotherAccount account : motherAccounts) {
                 ResponseModel<List<TodayAcceptOrder>> responseModel = exchangeFeignService.getTodayAcceptOrderList(account.getAccountNo());
                 List<TodayAcceptOrder> todayAcceptOrders = responseModel.getData();
+                if (null == todayAcceptOrders){
+                    return;
+                }
                 String oldDeal = redisTemplate.opsForValue().get(dealPrefix + account.getAccountNo());
                 Map<String, TodayAcceptOrder> map = new HashMap<>();
                 if (!StringUtils.isEmpty(oldDeal)) {

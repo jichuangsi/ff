@@ -2,7 +2,7 @@ package cn.com.fintheircing.admin.test;
 
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockHoldingMapper;
-import cn.com.fintheircing.admin.business.dao.repository.IBusinessContractRiskRepository;
+import cn.com.fintheircing.admin.risk.dao.repository.IBusinessContractRiskRepository;
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockHoldingRepository;
 import cn.com.fintheircing.admin.business.exception.BusinessException;

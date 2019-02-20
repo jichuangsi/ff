@@ -4,9 +4,8 @@ package cn.com.fintheircing.admin.business.constant;
  * 合约的状态和平仓状态
  */
 public enum BusinessStatus {
-    CONTRACT_NEW("新建合约",0),CONTRACT_BUSINESS("交易中",1),CONTRACT_END("结束",2),
-    BUSINESS_RUDE("强制平仓",3),BUSINESS_NOT_RUDE("非强制平仓",4),BUSINESS_NOT("未平仓",5)
-    ,BUSINESS_CONTROL("监控中",6);
+    CONTRACT_NEW("新建合约",0),CONTRACT_BUSINESS("交易中",1),CONTRACT_END("结束",2);
+
 
     private String name;
     private Integer num;

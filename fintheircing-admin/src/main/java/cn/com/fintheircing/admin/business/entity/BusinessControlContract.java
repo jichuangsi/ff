@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Entity
 public class BusinessControlContract extends AbstractEntity{
@@ -23,6 +24,69 @@ public class BusinessControlContract extends AbstractEntity{
     private int verifyStatus;    //审核状态
     private double businessMoney;   //服务费
     private double taxationMoney;   //税费
+    private double borrowMoney;
+    private double promisedMoney;
+    private double warnningLine;
+    private double abortLine;
+    private double borrowRate;
+    private Date borrowTime;
+    private double firstInterest;
+
+    public double getWarnningLine() {
+        return warnningLine;
+    }
+
+    public void setWarnningLine(double warnningLine) {
+        this.warnningLine = warnningLine;
+    }
+
+    public double getAbortLine() {
+        return abortLine;
+    }
+
+    public void setAbortLine(double abortLine) {
+        this.abortLine = abortLine;
+    }
+
+    public double getBorrowRate() {
+        return borrowRate;
+    }
+
+    public void setBorrowRate(double borrowRate) {
+        this.borrowRate = borrowRate;
+    }
+
+    public Date getBorrowTime() {
+        return borrowTime;
+    }
+
+    public void setBorrowTime(Date borrowTime) {
+        this.borrowTime = borrowTime;
+    }
+
+    public double getFirstInterest() {
+        return firstInterest;
+    }
+
+    public void setFirstInterest(double firstInterest) {
+        this.firstInterest = firstInterest;
+    }
+
+    public double getBorrowMoney() {
+        return borrowMoney;
+    }
+
+    public void setBorrowMoney(double borrowMoney) {
+        this.borrowMoney = borrowMoney;
+    }
+
+    public double getPromisedMoney() {
+        return promisedMoney;
+    }
+
+    public void setPromisedMoney(double promisedMoney) {
+        this.promisedMoney = promisedMoney;
+    }
 
     public String getUuid() {
         return uuid;

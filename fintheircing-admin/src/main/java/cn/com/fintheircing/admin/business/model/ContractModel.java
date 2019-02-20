@@ -44,8 +44,17 @@ public class ContractModel {
     private Integer productTime;    //配资时长
     private Double onceGetServer;   //此收取服务费利率
     private String idCard;  //身份证
-    private Integer RudeEnd;    //强制平仓
+    private Integer rudeEnd;    //强制平仓
     private double highRate;
+    private String productId;
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public double getHighRate() {
         return highRate;
@@ -56,11 +65,11 @@ public class ContractModel {
     }
 
     public Integer getRudeEnd() {
-        return RudeEnd;
+        return rudeEnd;
     }
 
     public void setRudeEnd(Integer rudeEnd) {
-        RudeEnd = rudeEnd;
+        this.rudeEnd = rudeEnd;
     }
 
     public Double getMoneyInContract() {

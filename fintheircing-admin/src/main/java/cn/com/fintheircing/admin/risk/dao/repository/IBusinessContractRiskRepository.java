@@ -1,6 +1,6 @@
-package cn.com.fintheircing.admin.business.dao.repository;
+package cn.com.fintheircing.admin.risk.dao.repository;
 
-import cn.com.fintheircing.admin.business.entity.BusinessContractRisk;
+import cn.com.fintheircing.admin.risk.entity.BusinessContractRisk;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IBusinessContractRiskRepository extends JpaRepository<BusinessContractRisk,String> {

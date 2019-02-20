@@ -6,7 +6,6 @@ import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
 import cn.com.fintheircing.customer.business.service.BusinessService;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
-import cn.com.fintheircing.customer.common.feign.model.StockEntrustModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
@@ -18,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -74,10 +75,10 @@ public class TestDemo {
 
    @Test
    public void testNull(){
-       String old = null;
-       StockEntrustModel stockEntrustModel = new StockEntrustModel();
-       stockEntrustModel.setUserId(old);
-       System.out.println(stockEntrustModel);
+       Map<String,String> map = new HashMap<String,String>();
+       map.put("123",null);
+       String string = map.get("123");
+       System.out.println(string);
    }
 
 }

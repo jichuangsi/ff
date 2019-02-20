@@ -23,4 +23,6 @@ public interface IDistributService {
     List<ProductModel> getProducts(Integer productNo);
 
     ProductModel getProduct(String productId);
+
+    String getProductName(String productId);
 }

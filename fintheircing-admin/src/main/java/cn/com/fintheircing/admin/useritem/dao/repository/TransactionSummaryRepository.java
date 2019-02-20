@@ -12,4 +12,6 @@ public interface TransactionSummaryRepository extends JpaRepository<TransactionS
     List<TransactionSummary> findByDeleteFlag(String delete);
 
     TransactionSummary findOneByStockNum(String stockNum);
+
+    List<TransactionSummary> findAllByIdIn(List<String> ids);
 }

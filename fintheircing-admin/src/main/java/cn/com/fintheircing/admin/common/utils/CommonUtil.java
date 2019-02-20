@@ -115,4 +115,15 @@ public class CommonUtil {
         calendar.add(Calendar.MONTH, 1);// num为增加的天数，可以改变的
         return calendar.getTime().getTime();
     }
+
+    public static Date getDateFromStr(String pattern,String str){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        Date result = null;
+        try {
+            result = simpleDateFormat.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

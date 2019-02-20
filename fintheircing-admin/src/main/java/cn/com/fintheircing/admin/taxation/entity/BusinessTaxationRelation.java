@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.business.entity;
+package cn.com.fintheircing.admin.taxation.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 

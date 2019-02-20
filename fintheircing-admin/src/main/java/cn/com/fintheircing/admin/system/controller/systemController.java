@@ -30,22 +30,20 @@ public class systemController {
     @Resource
     private SystemService systemService;
 
-
-
     @ApiOperation(value = "添加假期", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveHoliday")
     @CrossOrigin
-    public ResponseModel saveHoliday(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody HolidayModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel saveHoliday(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody HolidayModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
         try {
-            systemService.saveHoliday(userInfo,model);
+            systemService.saveHoliday(userInfo, model);
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
@@ -56,14 +54,14 @@ public class systemController {
     })
     @PostMapping("/updateHoliday")
     @CrossOrigin
-    public ResponseModel updateHoliday(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody HolidayModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel updateHoliday(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody HolidayModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
         try {
-            systemService.updateHoliday(userInfo,model);
+            systemService.updateHoliday(userInfo, model);
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
@@ -74,12 +72,12 @@ public class systemController {
     })
     @DeleteMapping("/deleteHolidays")
     @CrossOrigin
-    public ResponseModel deleteHolidays(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel deleteHolidays(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
-        if(!systemService.deleteHolidates(userInfo,model)){
-            return ResponseModel.fail("",ResultCode.DELETE_FAIL_MSG);
+        if (!systemService.deleteHolidates(userInfo, model)) {
+            return ResponseModel.fail("", ResultCode.DELETE_FAIL_MSG);
         }
         return ResponseModel.sucessWithEmptyData("");
     }
@@ -90,18 +88,18 @@ public class systemController {
     })
     @PostMapping("/getPageHolidays")
     @CrossOrigin
-    public ResponseModel<PageInfo<HolidayModel>> getPageHolidays(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody HolidaySearchModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel<PageInfo<HolidayModel>> getPageHolidays(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody HolidaySearchModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
-        if(model.getPage()==0||model.getPage()==null
-                ||model.getLimit()==null||model.getLimit()==0){
-            return ResponseModel.fail("",ResultCode.PARAM_MISS_MSG);
+        if (model.getPage() == 0 || model.getPage() == null
+                || model.getLimit() == null || model.getLimit() == 0) {
+            return ResponseModel.fail("", ResultCode.PARAM_MISS_MSG);
         }
         try {
-            return ResponseModel.sucess("",systemService.getPageHolidays(model));
+            return ResponseModel.sucess("", systemService.getPageHolidays(model));
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
     }
 
@@ -111,18 +109,17 @@ public class systemController {
     })
     @PostMapping("/saveBrand")
     @CrossOrigin
-    public ResponseModel saveBrand(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, BrandModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel saveBrand(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, BrandModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
         try {
-            systemService.saveBrand(userInfo,model,file);
+            systemService.saveBrand(userInfo, model, file);
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
-
 
     @ApiOperation(value = "删除轮播图", notes = "")
     @ApiImplicitParams({
@@ -130,16 +127,15 @@ public class systemController {
     })
     @DeleteMapping("/deleteBrands")
     @CrossOrigin
-    public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo,@RequestBody IdModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
-        if(!systemService.deleteBrands(userInfo,model)){
-            return ResponseModel.fail("",ResultCode.DELETE_FAIL_MSG);
+        if (!systemService.deleteBrands(userInfo, model)) {
+            return ResponseModel.fail("", ResultCode.DELETE_FAIL_MSG);
         }
         return ResponseModel.sucessWithEmptyData("");
     }
-
 
     @ApiOperation(value = "修改轮播图form表单提交", notes = "")
     @ApiImplicitParams({
@@ -147,14 +143,14 @@ public class systemController {
     })
     @PostMapping("/updateBrand")
     @CrossOrigin
-    public ResponseModel updateBrand(@RequestParam MultipartFile file,@ModelAttribute UserTokenInfo userInfo, BrandModel model){
-        if(!IsManage(userInfo)){
+    public ResponseModel updateBrand(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, BrandModel model) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
         try {
-            systemService.updateBrand(file,model,userInfo);
+            systemService.updateBrand(file, model, userInfo);
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
@@ -165,15 +161,15 @@ public class systemController {
     })
     @PostMapping("/getBrands")
     @CrossOrigin
-    public ResponseModel<List<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo){
-        if(!IsManage(userInfo)){
+    public ResponseModel<List<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo) {
+        if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
-        return ResponseModel.sucess("",systemService.getBrands());
+        return ResponseModel.sucess("", systemService.getBrands());
     }
 
-    private Boolean IsManage(UserTokenInfo userInfo){
-        if (RoleCodes.ROLE_KEY_STRING.get("M").equals(userInfo.getRoleGrade())){
+    private Boolean IsManage(UserTokenInfo userInfo) {
+        if (RoleCodes.ROLE_KEY_STRING.get("M").equals(userInfo.getRoleGrade())) {
             return true;
         }
         return false;

@@ -43,4 +43,6 @@ public interface IBusinessContractRepository extends JpaRepository<BusinessContr
     BusinessContract findByDeleteFlagAndUuidAndUserId(String delete,String uuid,String userId);
 
     BusinessContract findByDeleteFlagAndUuid(String delete,String uuid);
+
+    List<BusinessContract> findByDeleteFlagAndRudeStatus(String delete,Integer rudeStatus);
 }
