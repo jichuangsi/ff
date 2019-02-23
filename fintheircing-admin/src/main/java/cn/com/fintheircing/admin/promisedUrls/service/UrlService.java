@@ -2,7 +2,7 @@ package cn.com.fintheircing.admin.promisedUrls.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.constant.RoleCodes;
-import cn.com.fintheircing.admin.common.entity.AdminRole;
+import cn.com.fintheircing.admin.account.entity.AdminRole;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.promisedUrls.dao.mapper.IPermisedUrlsMapper;

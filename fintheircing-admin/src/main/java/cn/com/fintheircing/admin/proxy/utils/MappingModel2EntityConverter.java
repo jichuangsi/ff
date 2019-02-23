@@ -1,6 +1,6 @@
 package cn.com.fintheircing.admin.proxy.utils;
 
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.account.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;
 import org.springframework.util.StringUtils;
 

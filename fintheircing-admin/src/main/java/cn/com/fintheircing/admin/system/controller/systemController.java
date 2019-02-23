@@ -6,6 +6,7 @@ import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.system.exception.SystemException;
+import cn.com.fintheircing.admin.system.model.black.BlackModel;
 import cn.com.fintheircing.admin.system.model.brand.BrandModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidayModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidaySearchModel;
@@ -25,7 +26,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/system")
 @Api("系统管理controller")
-public class systemController {
+@CrossOrigin
+public class SystemController {
 
     @Resource
     private SystemService systemService;
@@ -53,7 +55,6 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateHoliday")
-    @CrossOrigin
     public ResponseModel updateHoliday(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody HolidayModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -71,7 +72,6 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @DeleteMapping("/deleteHolidays")
-    @CrossOrigin
     public ResponseModel deleteHolidays(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -87,7 +87,6 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getPageHolidays")
-    @CrossOrigin
     public ResponseModel<PageInfo<HolidayModel>> getPageHolidays(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody HolidaySearchModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -108,7 +107,6 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveBrand")
-    @CrossOrigin
     public ResponseModel saveBrand(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, BrandModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -126,7 +124,6 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @DeleteMapping("/deleteBrands")
-    @CrossOrigin
     public ResponseModel deleteBrands(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -142,7 +139,6 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/updateBrand")
-    @CrossOrigin
     public ResponseModel updateBrand(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, BrandModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -160,12 +156,49 @@ public class systemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getBrands")
-    @CrossOrigin
     public ResponseModel<List<BrandModel>> getBrands(@ModelAttribute UserTokenInfo userInfo) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
         }
         return ResponseModel.sucess("", systemService.getBrands());
+    }
+
+    @ApiOperation(value = "添加黑名单", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/saveBlack")
+    public ResponseModel saveBlack(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody BlackModel model){
+        try {
+            systemService.saveBlack(userInfo,model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "查看黑名单列表", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getBlacks/{index}/{size}")
+    public ResponseModel<PageInfo<BlackModel>> getBlacks(@ModelAttribute UserTokenInfo userInfo
+            ,@PathVariable("index") int index,@PathVariable("size") int size){
+        return ResponseModel.sucess("",systemService.getPageBlack(index,size));
+    }
+
+    @ApiOperation(value = "移除黑名单", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @DeleteMapping("/deleteBlackIp/{id}")
+    public ResponseModel deleteBlackIp(@ModelAttribute UserTokenInfo userInfo,@PathVariable("id") String id){
+        try {
+            systemService.deleteBlack(userInfo,id);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
     }
 
     private Boolean IsManage(UserTokenInfo userInfo) {

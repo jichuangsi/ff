@@ -6,7 +6,6 @@ import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.business.service.BusinessService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
-import cn.com.fintheircing.customer.user.dao.mapper.IUserMesInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IUserMesInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserMesInfo;
 import cn.com.fintheircing.customer.user.model.OnlineUserInfo;
@@ -17,7 +16,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;

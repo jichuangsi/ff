@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.business.model;
 import java.util.Date;
 
 public class StockEntrustModel {
+    public static String ENTRUST_RUDE = "1";
 
     private String id;
     private String userName;    //用户名
@@ -24,8 +25,15 @@ public class StockEntrustModel {
     private String cancelOrder;     //是否撤单
     private Date createdTime;   //委托时间
     private String contractNum;     //合约编号
+    private String rudeStatus;
 
+    public String getRudeStatus() {
+        return rudeStatus;
+    }
 
+    public void setRudeStatus(String rudeStatus) {
+        this.rudeStatus = rudeStatus;
+    }
 
     private Integer pageIndex;
     private Integer pageSize;

@@ -14,4 +14,8 @@ public interface TransactionSummaryRepository extends JpaRepository<TransactionS
     TransactionSummary findOneByStockNum(String stockNum);
 
     List<TransactionSummary> findAllByIdIn(List<String> ids);
+
+    TransactionSummary findByStockNameContainingAndStockNum(String stockName,String stockCode);
+
+    TransactionSummary findOneById(String id);
 }

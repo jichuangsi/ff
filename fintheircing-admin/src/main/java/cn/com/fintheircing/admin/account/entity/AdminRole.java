@@ -1,5 +1,6 @@
-package cn.com.fintheircing.admin.common.entity;
+package cn.com.fintheircing.admin.account.entity;
 
+import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class AdminRole  extends AbstractEntity{
+public class AdminRole  extends AbstractEntity {
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")

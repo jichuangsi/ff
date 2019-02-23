@@ -81,7 +81,7 @@ public class FeignController {
     @ApiImplicitParams({})
     @RequestMapping("/isExistBlackList")
     public Boolean isExistBlackList(@RequestParam("ip") String ip) {
-        return adminLoginService.isExistBlackList(ip);
+        return systemService.isExistBlackList(ip);
     }
 
     @ApiOperation(value = "传递role角色", notes = "")

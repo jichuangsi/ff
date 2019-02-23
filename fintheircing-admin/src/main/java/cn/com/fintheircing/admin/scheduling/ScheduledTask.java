@@ -8,6 +8,7 @@ import cn.com.fintheircing.admin.common.feign.model.TodayAcceptOrder;
 import cn.com.fintheircing.admin.common.feign.model.TodayOrder;
 import cn.com.fintheircing.admin.common.model.MotherAccount;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
+import cn.com.fintheircing.admin.dividend.service.DividendService;
 import cn.com.fintheircing.admin.scheduling.model.DealJsonModel;
 import cn.com.fintheircing.admin.scheduling.model.EntrustJsonModel;
 import cn.com.fintheircing.admin.scheduling.utils.DealUtils;
@@ -41,6 +42,8 @@ public class ScheduledTask {
     private RedisTemplate<String, String> redisTemplate;
     @Resource
     private BusinessService businessService;
+    @Resource
+    private DividendService dividendService;
 
     @Value("${custom.entrust.prefix}")
     private String entrustPrefix;
@@ -208,6 +211,15 @@ public class ScheduledTask {
     public void contractRudeEnd(){
         try {
             businessService.contractRudeEnd();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    @Scheduled(cron = "${custom.scheduled.dividend}")
+    public void dividend(){
+        try {
+            dividendService.scheduledDividend();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

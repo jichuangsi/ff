@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  * interface
  *
@@ -18,24 +20,29 @@ import java.util.List;
 @Transactional
 public interface ItemService {
     List<TransactionModel> findAllByWhite(TransactionModel model);
+
     List<TransactionModel> findAllByBlack(TransactionModel model);
 
-    int updateRemark(String id,String mark);
+    int updateRemark(String id, String mark);
 
     TransactionModel saveTransactionSummary(TransactionModel model);
 
     int deleteTransactionSummary(IdModel ids);
 
     List<TransactionModel> findAllBlackList(TransactionModel model);
+
     List<TransactionModel> findAllWhiteList(TransactionModel model);
+
     TransactionModel saveByStaticList(TransactionModel model);
+
     List<TransactionModel> findAll(TransactionModel model);
 
-     //匹配是否属于白名单
+    //匹配是否属于白名单
     Boolean isExistWhiteList(String stockNum);
 
     /**
      * 导入上传excel文件
+     *
      * @param
      * @param file
      * @return
@@ -45,4 +52,8 @@ public interface ItemService {
     void oneDayUpdateStock(List<QuotesTenModel> quotesTenModels);
 
     void updateBlackStock(IdModel model) throws TransactionSummaryException;
+
+    String getStockIdByStockNameAndStockCode(String stockName, String stockCode);
+
+    Map<String,String> getStockNameAndStockCodeById(String id);
 }

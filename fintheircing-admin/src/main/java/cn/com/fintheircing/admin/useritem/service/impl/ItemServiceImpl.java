@@ -299,12 +299,32 @@ public class ItemServiceImpl implements ItemService {
     public void updateBlackStock(IdModel model) throws TransactionSummaryException {
         List<String> ids = model.getIds();
         List<TransactionSummary> summaries = transactionSummaryRepository.findAllByIdIn(ids);
-        if (0 == summaries.size()){
+        if (0 == summaries.size()) {
             throw new TransactionSummaryException(ResultCode.SELECT_NULL_MSG);
         }
-        for (TransactionSummary summary:summaries){
+        for (TransactionSummary summary : summaries) {
             summary.setStatus(TransactionSummaryStatus.DYNAMIC_BLACKLIST.getIndex());
         }
         transactionSummaryRepository.saveAll(summaries);
+    }
+
+    @Override
+    public String getStockIdByStockNameAndStockCode(String stockName, String stockCode) {
+        TransactionSummary summary = transactionSummaryRepository.findByStockNameContainingAndStockNum(stockName, stockCode);
+        if (null != summary) {
+            return summary.getId();
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getStockNameAndStockCodeById(String id) {
+        TransactionSummary summary = transactionSummaryRepository.findOneById(id);
+        Map<String,String> map = new HashMap<String, String>();
+        if (null != summary){
+            map.put("name",summary.getStockName());
+            map.put("code",summary.getStockNum());
+        }
+        return map;
     }
 }

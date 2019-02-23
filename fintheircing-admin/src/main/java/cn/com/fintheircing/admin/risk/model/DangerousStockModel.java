@@ -4,19 +4,19 @@ import java.util.Date;
 
 public class DangerousStockModel {
 
-    private String holdingId;
-    private String stockId;
-    private Integer stockStatus;
-    private String stockCode;
-    private String stockName;
-    private Date createdTime;
-    private Integer holdingAmount;
-    private Double holdingWorth;
-    private Integer globalAmount;
-    private Double globalWorth;
-    private Double dangerousRate;
-    private Double globalRate;
-    private String toBlack = "yes";
+    private String holdingId;   //持仓id
+    private String stockId;     //股票id
+    private Integer stockStatus;    //股票状态
+    private String stockCode;   //股票代码
+    private String stockName;   //股票名称
+    private Date createdTime;   //创建时间
+    private Integer holdingAmount;  //持仓数量
+    private Double holdingWorth;    //持仓价值
+    private Integer globalAmount;   //全局数量
+    private Double globalWorth;     //全局价值
+    private Double dangerousRate;   //高危占比
+    private Double globalRate;      //全局占比
+    private String toBlack = "yes";     //是否能进黑名单
 
     public String getToBlack() {
         return toBlack;

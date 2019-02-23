@@ -24,6 +24,12 @@ public class BusinessControlContract extends AbstractEntity{
     private int verifyStatus;    //审核状态
     private double businessMoney;   //服务费
     private double taxationMoney;   //税费
+
+    private int addStock;
+    private int costStock;
+    private int lessStock;
+    private String stockId;
+
     private double borrowMoney;
     private double promisedMoney;
     private double warnningLine;
@@ -31,6 +37,38 @@ public class BusinessControlContract extends AbstractEntity{
     private double borrowRate;
     private Date borrowTime;
     private double firstInterest;
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
+    }
+
+    public int getAddStock() {
+        return addStock;
+    }
+
+    public void setAddStock(int addStock) {
+        this.addStock = addStock;
+    }
+
+    public int getCostStock() {
+        return costStock;
+    }
+
+    public void setCostStock(int costStock) {
+        this.costStock = costStock;
+    }
+
+    public int getLessStock() {
+        return lessStock;
+    }
+
+    public void setLessStock(int lessStock) {
+        this.lessStock = lessStock;
+    }
 
     public double getWarnningLine() {
         return warnningLine;

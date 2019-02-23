@@ -2,18 +2,17 @@ package cn.com.fintheircing.admin.proxy.service;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.constant.RoleCodes;
-import cn.com.fintheircing.admin.common.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.account.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.MatrixToImageWriter;
 import cn.com.fintheircing.admin.login.entity.AdminClientLoginInfo;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
-import cn.com.fintheircing.admin.proxy.dao.mapper.IAdminClientInfoMapper;
-import cn.com.fintheircing.admin.proxy.dao.mapper.ICommissionMapper;
+import cn.com.fintheircing.admin.account.dao.mapper.IAdminClientInfoMapper;
 import cn.com.fintheircing.admin.proxy.dao.mapper.ISpreadMapper;
-import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientInfoRepository;
-import cn.com.fintheircing.admin.proxy.dao.repository.IAdminClientLoginInfoRepository;
+import cn.com.fintheircing.admin.account.dao.repository.IAdminClientInfoRepository;
+import cn.com.fintheircing.admin.login.dao.repository.IAdminClientLoginInfoRepository;
 import cn.com.fintheircing.admin.proxy.dao.repository.ICommissionRepository;
 import cn.com.fintheircing.admin.proxy.dao.repository.ISpreadRepository;
 import cn.com.fintheircing.admin.proxy.entity.ProxyCommission;
@@ -59,6 +58,8 @@ public class ProxyService {
     private String picFormat;
     @Value("${custom.admin.picSavePath}")
     private String picSavePath;
+    @Value("${custom.admin.bornday}")
+    private String bornday;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -68,8 +69,6 @@ public class ProxyService {
     private IAdminClientLoginInfoRepository adminClientLoginInfoRepository;
     @Resource
     private ICommissionRepository commissionRepository;
-    @Resource
-    private ICommissionMapper commissionMapper;
     @Resource
     private IAdminClientInfoMapper adminClientInfoMapper;
     @Resource
@@ -97,7 +96,6 @@ public class ProxyService {
     @Transactional(rollbackFor = Exception.class)
     public String saveProxy(UserTokenInfo userInfo, ProxyModel proxyModel) throws ProxyException {
         UserTokenInfo userTokenInfo = new UserTokenInfo();
-        userTokenInfo.setPwd(changePwd(pwd));
         userTokenInfo.setLoginName(proxyModel.getProxyName());
         if (adminLoginService.countAdmin(userTokenInfo) > 0) {
             throw new ProxyException(ResultCode.PROXY_ISEXIST_ERR);
@@ -120,7 +118,9 @@ public class ProxyService {
         info.setCreatorId(userInfo.getUuid());
         info.setCreatorName(userInfo.getUserName());
         info.setUpdatedTime(new Date());
+        info.setBornDay(bornday);
         info.setUpdateUserId(userInfo.getUuid());
+        info.setSex(AdminClientInfo.SEX_MALE);
         info.setUpdateUserName(userInfo.getUserName());
         info = adminClientInfoRepository.save(info);
         AdminClientLoginInfo loginInfo = new AdminClientLoginInfo();

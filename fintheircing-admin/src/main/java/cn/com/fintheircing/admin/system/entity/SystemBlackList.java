@@ -1,5 +1,6 @@
-package cn.com.fintheircing.admin.common.entity;
+package cn.com.fintheircing.admin.system.entity;
 
+import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -9,12 +10,12 @@ import javax.persistence.Id;
 @Entity
 public class SystemBlackList extends AbstractEntity {
 
-    public final static String STATUS_EXIST = "0";
+/*    public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
 
     public final static String SERIOUS_SLIGHT = "0";
     public final static String SERIOUS_NORMAL = "1";
-    public final static String SERIOUS_BADLY = "2";
+    public final static String SERIOUS_BADLY = "2";*/
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
@@ -22,8 +23,8 @@ public class SystemBlackList extends AbstractEntity {
     private String uuid;
     private String ipAddress;
     private String cause;
-    private String status;
-    private String serious;
+/*    private String status;
+    private String serious;*/
 
     public String getUuid() {
         return uuid;
@@ -49,19 +50,5 @@ public class SystemBlackList extends AbstractEntity {
         this.cause = cause;
     }
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getSerious() {
-        return serious;
-    }
-
-    public void setSerious(String serious) {
-        this.serious = serious;
-    }
 }

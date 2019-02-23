@@ -54,10 +54,10 @@ public class RiskController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
-    @GetMapping("/getDangerousStockList/{keyWord}/{index}/{size}/{orderBy}")
+    @GetMapping("/getDangerousStockList/{orderBy}")
     public ResponseModel<PageInfo<DangerousStockModel>> getDangourStockList(@ModelAttribute UserTokenInfo userInfo,
-                                                                            @PathVariable(value = "keyWord",required = false) String keyWord,@PathVariable(value = "orderBy") Integer orderBy,
-                                                                            @PathVariable("index") Integer index,@PathVariable("size") Integer size){
+                                                                            @RequestParam(value = "keyWord",required = false) String keyWord,@PathVariable(value = "orderBy") Integer orderBy,
+                                                                            @RequestParam("index") Integer index,@RequestParam("size") Integer size){
         try {
             return ResponseModel.sucess("",riskService.getPageDangerousStock(keyWord,index,size,orderBy));
         } catch (RiskException e) {
@@ -83,10 +83,10 @@ public class RiskController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
-    @GetMapping("/getDangerousContract/{keyWord}/{warnRate1}/{warnRate2}/{index}/{size}/{orderBy}")
-    public ResponseModel<PageInfo<RiskContractModel>> getDangerousContract(@ModelAttribute UserTokenInfo userInfo,@PathVariable(value = "keyWord",required = false) String keyWord,
+    @GetMapping("/getDangerousContract/{warnRate1}/{warnRate2}/{orderBy}")
+    public ResponseModel<PageInfo<RiskContractModel>> getDangerousContract(@ModelAttribute UserTokenInfo userInfo,@RequestParam(value = "keyWord",required = false) String keyWord,
                                               @PathVariable(value = "warnRate1",required = false) Double warnRate1,@PathVariable(value = "warnRate2",required = false) Double warnRate2,
-                                              @PathVariable("index") Integer index,@PathVariable("size") Integer size,@PathVariable("orderBy") Integer orderBy){
+                                              @RequestParam("index") Integer index,@RequestParam("size") Integer size,@PathVariable("orderBy") Integer orderBy){
         try {
             return ResponseModel.sucess("",riskService.getDangerousContract(keyWord,index,size,orderBy,warnRate1,warnRate2));
         } catch (RiskException e) {

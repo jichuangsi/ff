@@ -7,7 +7,7 @@ import cn.com.fintheircing.admin.common.utils.WebCommonUtils;
 import cn.com.fintheircing.admin.login.dao.mapper.IAdminClientLoginInfoMapper;
 import cn.com.fintheircing.admin.login.exception.AdminLoginException;
 import cn.com.fintheircing.admin.login.service.AdminLoginService;
-import cn.com.fintheircing.admin.usermanag.entity.pay.RecodeInfo;
+import cn.com.fintheircing.admin.system.service.SystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -29,13 +29,15 @@ public class AdminLoginContoller {
     private AdminLoginService adminLoginService;
     @Resource
     private IAdminClientLoginInfoMapper iAdminClientLoginInfoMapper;
+    @Resource
+    private SystemService systemService;
+
     @ApiOperation(value = "管理员登录", notes = "")
-    @ApiImplicitParams({
-    })
+    @ApiImplicitParams({})
     @PostMapping("/adminLogin")
     @CrossOrigin
     public ResponseModel login(@Validated @RequestBody UserTokenInfo model , HttpServletRequest request) throws AdminLoginException {
-        if(request==null||adminLoginService.isExistBlackList(WebCommonUtils.getClientIp(request))){
+        if(request==null||systemService.isExistBlackList(WebCommonUtils.getClientIp(request))){
             return  ResponseModel.fail("",ResultCode.IP_VISIT_ERR);
         }
         String token = null;
@@ -56,8 +58,7 @@ public class AdminLoginContoller {
     }
 
     @ApiOperation(value = "管理员退出", notes = "")
-    @ApiImplicitParams({
-    })
+    @ApiImplicitParams({})
     @PostMapping("/adminloginout")
     @CrossOrigin
     public ResponseModel loginout(@Validated @RequestBody UserTokenInfo model , HttpServletRequest request) throws AdminLoginException {

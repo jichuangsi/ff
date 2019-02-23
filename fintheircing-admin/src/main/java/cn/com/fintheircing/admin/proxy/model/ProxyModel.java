@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.proxy.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 public class ProxyModel {
     private String proxyId;
     private String proxyNum;    //代理编号
+    @NotBlank(message = "用户名不可为空")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{4,16}$",message = "用户名应为4到16位（字母，数字，下划线，减号）")
     private String proxyName;   //代理名称
     private Integer roleGrade;  //角色定位，1为代理1,2为代理2
     private String linkMan;     //联系人

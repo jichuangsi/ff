@@ -44,7 +44,7 @@ public interface IBusinessStockHoldingMapper {
     List<TranferHoldingModel> getAllHolding(TranferHoldingModel model);
 
     @Select("<script>select t2.stock_num as stockCode,t2.stock_name as stockName,t2.status as stockStatus,t2.id as stockId,t1.created_time as createdTime,t1.uuid as holdingId,t1.amount as holdingAmount,t1.current_worth as holdingWorth from business_stock_holding t1  LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id <where>" +
-            "<if test='keyWord!=null and keyWord!=\"\"'> and t2.stock_name like CONCAT(\"%\",#{keyWord},\"%\")</if><if test='list!=null'> and t1.contract_id in <foreach collection=\"list\" index=\"index\" item=\"item\" open=\"(\" separator=\",\" close=\")\"> " +
+            "<if test='keyWord!=null and keyWord!=\"\"'> and t2.stock_name like CONCAT(\"%\",#{keyWord},\"%\")</if><if test='list.size>0'> and t1.contract_id in <foreach collection=\"list\" index=\"index\" item=\"item\" open=\"(\" separator=\",\" close=\")\"> " +
             "            #{item}   </foreach></if></where></script>")
     List<DangerousStockModel> getDangerousStockModels(Map<String,Object> params);
 

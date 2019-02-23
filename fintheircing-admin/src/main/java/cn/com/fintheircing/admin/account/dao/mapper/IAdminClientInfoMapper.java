@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.proxy.dao.mapper;
+package cn.com.fintheircing.admin.account.dao.mapper;
 
 import cn.com.fintheircing.admin.proxy.model.EmployeeModel;
 import cn.com.fintheircing.admin.proxy.model.ProxyModel;

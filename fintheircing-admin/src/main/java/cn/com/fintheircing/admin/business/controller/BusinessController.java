@@ -140,6 +140,10 @@ public class BusinessController {
     })
     @PostMapping("/getHoldings")
     public ResponseModel<PageInfo<TranferHoldingModel>> getHoldings(@ModelAttribute UserTokenInfo userInfo,@RequestBody TranferHoldingModel model){
-        return ResponseModel.sucess("",businessService.getPageHolding(model));
+        try {
+            return ResponseModel.sucess("",businessService.getPageHolding(model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
     }
 }

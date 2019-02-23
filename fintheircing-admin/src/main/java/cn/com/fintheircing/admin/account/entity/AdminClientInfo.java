@@ -1,5 +1,6 @@
-package cn.com.fintheircing.admin.common.entity;
+package cn.com.fintheircing.admin.account.entity;
 
+import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -10,6 +11,9 @@ import javax.persistence.Id;
 public class AdminClientInfo extends AbstractEntity {
     public final static String STATUS_EXIST = "0";
     public final static String STATUS_NOTEXIST = "1";
+
+    public final static String SEX_MALE = "0";
+    public final static String SEX_FEMALE = "1";
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
@@ -24,6 +28,33 @@ public class AdminClientInfo extends AbstractEntity {
     private String bossId;  //上级id
     private Integer roleGrade;  //固定字段，管理员
     private String userClientInfoId;
+    private String sex;
+    private String bornDay;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBornDay() {
+        return bornDay;
+    }
+
+    public void setBornDay(String bornDay) {
+        this.bornDay = bornDay;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public String getUserClientInfoId() {
         return userClientInfoId;

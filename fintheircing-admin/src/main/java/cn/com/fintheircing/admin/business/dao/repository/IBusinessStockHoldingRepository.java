@@ -26,4 +26,8 @@ public interface IBusinessStockHoldingRepository
     @Transactional
     @Query(value = "select * from business_stock_holding  where delete_flag=:delete and uuid=:uuid for UPDATE ",nativeQuery = true)
     BusinessStockHolding findByDeleteFlag(@Param("delete") String delete,@Param("uuid") String uuid);
+
+    List<BusinessStockHolding> findByStockId(String stockId);
+
+    BusinessStockHolding findByContractIdAndStockId(String contractId,String stockId);
 }
