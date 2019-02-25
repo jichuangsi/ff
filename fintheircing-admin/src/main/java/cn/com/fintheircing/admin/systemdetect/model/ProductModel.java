@@ -33,8 +33,8 @@ public class ProductModel {
     /**
      * 杠杆比率
      */
-    @Pattern(regexp = "^([1-9]|10)$", message = "只能是0到10的整数")
-    private int leverRate;
+    @Pattern(regexp = "^([1-9]|10)$", message = "只能是1到10的整数")
+    private String leverRate;
     /**
      * 警戒线
      */
@@ -118,11 +118,11 @@ public class ProductModel {
         this.financingTime = financingTime;
     }
 
-    public int getLeverRate() {
+    public String getLeverRate() {
         return leverRate;
     }
 
-    public void setLeverRate(int leverRate) {
+    public void setLeverRate(String leverRate) {
         this.leverRate = leverRate;
     }
 

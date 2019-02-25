@@ -52,6 +52,11 @@ public interface IPayService {
     AppResultModel payForQRCode(AppQueryModel model, PayConfigModel payConfig) throws UserServiceException;
 
 
+    /**
+     * 查询所有未审核的
+     * @return
+     * @throws UserServiceException
+     */
      List<RecodeInfoPayModel> findAllPayInfo() throws UserServiceException;
 
     int updatePayInfo(RecodeInfoPayModel model);
@@ -88,5 +93,5 @@ public interface IPayService {
   */
  boolean passwithdrawCash(UserTokenInfo userInfo, RecodeInfoPayModel model);
 
-    boolean expendMoney(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException;
+ boolean expendMoney(UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException;
 }

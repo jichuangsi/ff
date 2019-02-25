@@ -6,6 +6,7 @@ public class ContractControlModel {
 
     private String id;
     private String contractNo;  //合约编号
+    private String userId;
     private String phone;   //电话
     private String name;    //姓名
     private String controlStr;  //操作
@@ -17,18 +18,124 @@ public class ContractControlModel {
     private Double promisedMoney;   //保证金
     private Double gainMoney;   //收益
     private Double endMoney;    //结算
-    private Double warnningLine;    //警戒线
+    private Double warnningLine;    //预警线
     private Double abortLine;   //平仓线
     private Double borrowRate;  //借款利率
     private long borrowTime;    //借款时间
+    private Long expiredTime; //还款时间
+    private Long lessTime;
     private Double firstMoney;
-    private Double lessMoney;   //剩余金额
+    private Double lessMoney;   //剩余金额 /可用金额
     private Integer verifyStatus;   //审核num
     private String verifyStr;   //审核
     private String productId;
-
+    private double currentWorth;//当前市值
+    private double totalAssets;//总资产
+    private double netAssets;//净资产
+    private String proxyNum;//代理
+    private String proxyName;//代理名称
     private Integer pageSize;
     private Integer pageIndex;
+    private double coldMoney;//冻结资金
+    private String businessControlContractId;
+    private String remark;//备注
+    private String BusinessContractId;//合约Id
+
+    public String getBusinessContractId() {
+        return BusinessContractId;
+    }
+
+    public void setBusinessContractId(String businessContractId) {
+        BusinessContractId = businessContractId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getBusinessControlContractId() {
+        return businessControlContractId;
+    }
+
+    public void setBusinessControlContractId(String businessControlContractId) {
+        this.businessControlContractId = businessControlContractId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public double getColdMoney() {
+        return coldMoney;
+    }
+
+    public void setColdMoney(double coldMoney) {
+        this.coldMoney = coldMoney;
+    }
+
+    public String getProxyNum() {
+        return proxyNum;
+    }
+
+    public void setProxyNum(String proxyNum) {
+        this.proxyNum = proxyNum;
+    }
+
+    public String getProxyName() {
+        return proxyName;
+    }
+
+    public void setProxyName(String proxyName) {
+        this.proxyName = proxyName;
+    }
+
+    public double getNetAssets() {
+        return netAssets;
+    }
+
+    public void setNetAssets(double netAssets) {
+        this.netAssets = netAssets;
+    }
+
+    public Long getLessTime() {
+        return lessTime;
+    }
+
+    public void setLessTime(Long lessTime) {
+        this.lessTime = lessTime;
+    }
+
+    public double getTotalAssets() {
+        return totalAssets;
+    }
+
+    public void setTotalAssets(double totalAssets) {
+        this.totalAssets = totalAssets;
+    }
+
+    public Long getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(Long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    public double getCurrentWorth() {
+        return currentWorth;
+    }
+
+    public void setCurrentWorth(double currentWorth) {
+        this.currentWorth = currentWorth;
+    }
 
     public String getProductId() {
         return productId;

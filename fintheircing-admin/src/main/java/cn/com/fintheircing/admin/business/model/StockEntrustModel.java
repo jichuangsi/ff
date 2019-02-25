@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class StockEntrustModel {
     public static String ENTRUST_RUDE = "1";
-
     private String id;
     private String userName;    //用户名
+    private String stockId;//关联股票Id
     private String stockNum;    //股票代码
     private String stockName;   //股票名
     private Integer business;   //买卖方向num
@@ -25,7 +25,53 @@ public class StockEntrustModel {
     private String cancelOrder;     //是否撤单
     private Date createdTime;   //委托时间
     private String contractNum;     //合约编号
+    private String BusinessStockEntrustId;
     private String rudeStatus;
+    private double userfulMoney;//可用资金
+    private double codeMoney;//冻结资金
+    private Date buyTime;//买入卖出时间
+    private String remark;//备注
+    private String applyType;//申请类型
+
+    public String getApplyType() {
+        return applyType;
+    }
+
+    public void setApplyType(String applyType) {
+        this.applyType = applyType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getBuyTime() {
+        return buyTime;
+    }
+
+    public void setBuyTime(Date buyTime) {
+        this.buyTime = buyTime;
+    }
+
+    public double getUserfulMoney() {
+        return userfulMoney;
+    }
+
+    public void setUserfulMoney(double userfulMoney) {
+        this.userfulMoney = userfulMoney;
+    }
+
+    public double getCodeMoney() {
+        return codeMoney;
+    }
+
+    public void setCodeMoney(double codeMoney) {
+        this.codeMoney = codeMoney;
+    }
 
     public String getRudeStatus() {
         return rudeStatus;
@@ -33,6 +79,22 @@ public class StockEntrustModel {
 
     public void setRudeStatus(String rudeStatus) {
         this.rudeStatus = rudeStatus;
+    }
+
+    public String getBusinessStockEntrustId() {
+        return BusinessStockEntrustId;
+    }
+
+    public void setBusinessStockEntrustId(String businessStockEntrustId) {
+        BusinessStockEntrustId = businessStockEntrustId;
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
     }
 
     private Integer pageIndex;

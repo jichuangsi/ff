@@ -37,6 +37,15 @@ public class BusinessControlContract extends AbstractEntity{
     private double borrowRate;
     private Date borrowTime;
     private double firstInterest;
+    private double abortingLine;//预警平仓线
+
+    public double getAbortingLine() {
+        return abortingLine;
+    }
+
+    public void setAbortingLine(double abortingLine) {
+        this.abortingLine = abortingLine;
+    }
 
     public String getStockId() {
         return stockId;

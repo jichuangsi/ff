@@ -38,6 +38,15 @@ public class UserClientInfo extends AbstractEntity {
 	private String inviterId;
 	private String idCard;//身份证号
 	private String txPassword;//提现密码
+	private String source;//app或PC
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
 
 	public String getTxPassword() {
 		return txPassword;

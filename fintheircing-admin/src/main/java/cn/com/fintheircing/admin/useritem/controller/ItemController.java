@@ -121,8 +121,8 @@ public class ItemController {
     @ApiOperation(value = "白名单列表-文件导入进数据库", notes = "")
     @ApiImplicitParams({
     })
-    @PostMapping("/importExcel")
-    public ResponseModel importExcel( @RequestParam(value = "file" ) MultipartFile[] file) throws ImportException {
+    @PostMapping(value = "/importExcel",consumes = "mutipart/*",headers = "content-type=multipart/form-data")
+    public ResponseModel importExcel( @RequestParam("file") MultipartFile[] file) throws ImportException {
         return ResponseModel.sucess("",  itemService.importExcel(file));
     }
 

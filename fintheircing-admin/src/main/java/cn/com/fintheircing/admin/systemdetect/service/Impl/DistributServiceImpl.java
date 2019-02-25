@@ -1,12 +1,15 @@
 package cn.com.fintheircing.admin.systemdetect.service.Impl;
 
+import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
 import cn.com.fintheircing.admin.systemdetect.dao.mapper.IProductMapper;
 import cn.com.fintheircing.admin.systemdetect.dao.repository.ProductRepository;
+import cn.com.fintheircing.admin.systemdetect.entity.Product;
 import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import cn.com.fintheircing.admin.systemdetect.utils.MappingEntity2ModelConverter;
 import cn.com.fintheircing.admin.systemdetect.utils.MappingModel2EntityConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -22,25 +25,53 @@ public class DistributServiceImpl implements IDistributService {
 
     @Override
     public List<ProductModel> findForDayAllot() {
-        return productMapper.findAllByDay();
+        List<ProductModel> allBySpec = productMapper.findAllByDay();
+        for (ProductModel p :allBySpec
+        ) {
+            p.setAllotStr(ProductStatus.getName(p.getAllot()));
+        }
+        return allBySpec;
     }
 
     @Override
     public List<ProductModel> findForMonthAllot() {
+        List<ProductModel> allBySpec = productMapper.findAllByMonth();
+        for (ProductModel p :allBySpec
+        ) {
+            p.setAllotStr(ProductStatus.getName(p.getAllot()));
+        }
+        return allBySpec;
 
-        return productMapper.findAllByMonth();
     }
 
     @Override
     public List<ProductModel> findForSpecialAllot() {
-        return productMapper.findAllBySpec();
+        List<ProductModel> allBySpec = productMapper.findAllBySpec();
+        for (ProductModel p :allBySpec
+             ) {
+            p.setAllotStr(ProductStatus.getName(p.getAllot()));
+        }
+        return allBySpec;
     }
 
     @Override
     public ProductModel updateProduce(ProductModel model) {
-        return MappingEntity2ModelConverter.coverProduct(
-                productRepository.save(
-                        MappingModel2EntityConverter.coverProduct(model)));
+        Product p =new Product();
+        p.setId(model.getId());
+        p.setAllot(model.getAllot());
+        p.setEntryAmount(model.getEntryAmount());
+        p.setFinancingTime(model.getFinancingTime());
+        p.setLeverRate(Integer.parseInt(model.getLeverRate()));
+        p.setLiquidation(model.getLiquidation());
+        p.setMoneyInContact(model.getMoneyInContact());
+        p.setOutAmount(model.getOutAmount());
+        p.setWornLine(model.getWornLine());
+        p.setMoneyInDeal(model.getMoneyInDeal());
+        Product save = productRepository.save(p);
+        if (StringUtils.isEmpty(save)){
+            return new ProductModel();
+        }
+        return model;
 
     }
 

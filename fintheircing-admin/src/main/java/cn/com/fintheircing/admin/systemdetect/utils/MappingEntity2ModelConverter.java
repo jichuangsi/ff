@@ -7,24 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MappingEntity2ModelConverter {
-    public static final List<ProductModel> coverProductList(List<Product> productList) {
-        List<ProductModel> models = new ArrayList<>();
-        productList.forEach(p -> {
-            ProductModel model = new ProductModel();
-            model.setAllot(p.getAllot());
-            model.setEntryAmount(p.getEntryAmount());
-            model.setFinancingTime(p.getFinancingTime());
-            model.setId(p.getId());
-            model.setLeverRate(p.getLeverRate());
-            model.setLiquidation(p.getLiquidation());
-            model.setMoneyInContact(p.getMoneyInContact());
-            model.setOutAmount(p.getOutAmount());
-            model.setWornLine(p.getWornLine());
-            model.setMoneyInDeal(p.getMoneyInDeal());
-            models.add(model);
-        });
-        return models;
-    }
     public static final ProductModel coverProduct(Product p) {
         ProductModel model =new ProductModel() ;
 
@@ -32,7 +14,7 @@ public class MappingEntity2ModelConverter {
             model.setEntryAmount(p.getEntryAmount());
             model.setFinancingTime(p.getFinancingTime());
             model.setId(p.getId());
-            model.setLeverRate(p.getLeverRate());
+            model.setLeverRate(Integer.toString(p.getLeverRate()));
             model.setLiquidation(p.getLiquidation());
             model.setMoneyInContact(p.getMoneyInContact());
             model.setOutAmount(p.getOutAmount());

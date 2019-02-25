@@ -60,6 +60,8 @@ public class Product {
 
     private String productName;
 
+    private double onceServerMoney;//次利息收费利率
+
     public String getProductName() {
         return productName;
     }
@@ -67,8 +69,6 @@ public class Product {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
-    private double onceServerMoney;//次利息收费利率
 
     public double getOnceServerMoney() {
         return onceServerMoney;

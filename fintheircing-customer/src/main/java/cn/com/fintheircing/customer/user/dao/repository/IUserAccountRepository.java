@@ -18,5 +18,5 @@ public interface IUserAccountRepository extends JpaRepository<UserAccount,String
     UserAccount findOneByUserId(String id);
 
 
-    UserAccount findByUserId(String userId);
+
 }

@@ -1,12 +1,17 @@
 package cn.com.fintheircing.admin.usermanag.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 
 public class AdminClientInfoModel  {
-    private Date createTime;//注册时间
-    private Date endtime;//结束时间
+    @Pattern(regexp="yyyy-MM-dd HH:MM:SS")
+    private String createTime;//注册时间
+    @Pattern(regexp="yyyy-MM-dd HH:MM:SS")
+    private String endtime;//结束时间
     private String userId;//用户编号
     private String phoneNo;//手机号码
     private String userName;//用户名字
@@ -21,6 +26,15 @@ public class AdminClientInfoModel  {
     private String idCard;//身份证号
     private String frezzeAmount;//冻结余额
     private String remark;
+    private String bossId;
+
+    public String getBossId() {
+        return bossId;
+    }
+
+    public void setBossId(String bossId) {
+        this.bossId = bossId;
+    }
 
     public String getRemark() {
         return remark;
@@ -86,11 +100,19 @@ public class AdminClientInfoModel  {
         this.userName = userName;
     }
 
-    public Date getEndtime() {
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getEndtime() {
         return endtime;
     }
 
-    public void setEndtime(Date endtime) {
+    public void setEndtime(String endtime) {
         this.endtime = endtime;
     }
 
@@ -108,14 +130,6 @@ public class AdminClientInfoModel  {
 
     public void setBelongs(String belongs) {
         this.belongs = belongs;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public String getCer() {

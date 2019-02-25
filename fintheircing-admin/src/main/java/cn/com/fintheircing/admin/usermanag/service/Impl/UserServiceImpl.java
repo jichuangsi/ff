@@ -1,8 +1,10 @@
 package cn.com.fintheircing.admin.usermanag.service.Impl;
 
-import cn.com.fintheircing.admin.common.constant.ResultCode;
-import cn.com.fintheircing.admin.account.entity.AdminClientInfo;
 import cn.com.fintheircing.admin.account.dao.repository.IAdminClientInfoRepository;
+import cn.com.fintheircing.admin.account.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.common.constant.ResultCode;
+
+import cn.com.fintheircing.admin.useritem.utils.DateUtils;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IBankMapper;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IUserMapper;
@@ -13,6 +15,7 @@ import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
 import cn.com.fintheircing.admin.usermanag.service.IUserService;
 
 import com.github.pagehelper.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -41,9 +44,15 @@ public class UserServiceImpl implements IUserService {
     ) throws UserServiceException {
         List<AdminClientInfo> users = null;
         try {
-
             List<AdminClientInfoModel> all = usermapper.findAll(Model);
-
+            for (AdminClientInfoModel m :all
+                    ) {
+                if (StringUtils.isEmpty(m.getBossId())){
+                    m.setBelongs("无");
+                }else{
+                    m.setBelongs("有");
+                }
+            }
             return all;
 
         } catch (Exception e) {

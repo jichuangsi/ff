@@ -54,7 +54,6 @@ public class UserRegisterController {
 	@PostMapping("/register")
 	@CrossOrigin
 	public ResponseModel<String> register(@Validated @RequestBody RegisterModel registerModel) {
-		
 		try {
 			registerService.register(registerModel);
 		} catch (RegisterheckExistException e) {
@@ -72,6 +71,4 @@ public class UserRegisterController {
 		logger.debug("user Info:"+model);
 		return ResponseModel.sucessWithEmptyData("");
 	}
-	
-	
 }

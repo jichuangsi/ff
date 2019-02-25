@@ -49,4 +49,6 @@ public interface IUserClientInfoMapper {
 	 */
 	@Update("<script>update user_client_login_info t1 set t1.photo=#{bytes} where t1.client_info_id=#{uuid}</script>")
 	int updateAvatar(Map<String, Object> parms);
+	@Update("<script>update user_client_info t1 set t1.tx_password =#{txPassword} where t1.uuid=#{uuid}</script>")
+    int addOrChangePassword( Map<String,Object> parms );
 }

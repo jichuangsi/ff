@@ -47,6 +47,15 @@ public class ContractModel {
     private Integer rudeEnd;    //强制平仓
     private double highRate;
     private String productId;
+    private double abortingLine;//预警平仓线
+
+    public double getAbortingLine() {
+        return abortingLine;
+    }
+
+    public void setAbortingLine(double abortingLine) {
+        this.abortingLine = abortingLine;
+    }
 
     public String getProductId() {
         return productId;

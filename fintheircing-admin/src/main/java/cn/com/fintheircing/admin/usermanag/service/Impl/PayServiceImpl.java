@@ -96,7 +96,6 @@ public class PayServiceImpl implements IPayService {
         }
 
     }
-
     /**
      * 支付宝微信支付信息并且返回支付
      *
@@ -228,7 +227,11 @@ public class PayServiceImpl implements IPayService {
         }
     }
 
-
+    /**
+     * 查询所有未审核的
+     * @return
+     * @throws UserServiceException
+     */
     @Override
     public List<RecodeInfoPayModel> findAllPayInfo() throws UserServiceException {
         List<RecodeInfoPayModel> allPayInfo = iBillMapper.findAllPayInfo();
@@ -324,7 +327,6 @@ public class PayServiceImpl implements IPayService {
             p.setOperaName(userInfo.getUserName());
             p.setOperatWay("驳回保证金申请");
             iPayInfoRepository.save(p);
-
             return true;
         }
         return false;
@@ -413,7 +415,7 @@ public class PayServiceImpl implements IPayService {
         RecodeInfo p = new RecodeInfo();
         if (model.getTaskId().equalsIgnoreCase("1")) {
             List<BusinessStockEntrust> byDeleteFlagAndContractId = iBusinessStockEntrustRepository.findByDeleteFlagAndContractId("0", model.getBusinessContractId());
-            if (byDeleteFlagAndContractId.size() == 0) {
+            if (byDeleteFlagAndContractId.size() > 0) {
                 //持仓
                 throw new UserServiceException(ResultCode.HAS_HODING);
             } else {

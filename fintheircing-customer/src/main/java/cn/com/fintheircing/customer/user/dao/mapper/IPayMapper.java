@@ -30,4 +30,6 @@ public interface IPayMapper {
             " t1.create_time as createTime,t1.update_time as updateTime,t1.task_type as taskType,t1.task_id as taskId " +
             " t2.account as blance,t1.ex_blance as exBlance  from recode_info_pay t1,user_account t2 where t1.user_id=t2.user_id=#{id}  </script>")
     List<RecodeInfoPayModel> findAllRecodeInfo(String id);
+
+    void checkContact(String uuid);
 }

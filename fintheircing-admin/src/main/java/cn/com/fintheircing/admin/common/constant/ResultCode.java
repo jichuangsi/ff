@@ -91,9 +91,10 @@ public class ResultCode {
     public static final String TAX_CREATED_ERR  = "生成新税收失败";
     public static final String TAX_DELETE_ERR  = "删除税收失败";
     public static final String TAX_UPDATERATE_ERR  = "不可修改税率";
-
-    public static final String CONTRACT_ALREAD_ABORT  = "合约已经结束";
-    public static final String STOCK_VALIDATE_ERR  = "股票名称和代码不匹配";
-
-    public static final String BLACK_ALREAD_EXIST  = "黑名单已存在";
+    public static final String OPEN_FAILED = "母账户开启失败";
+    public static final String CLOSE_FAILED = "母账户关闭失败";
+    public static final String SAVE_TRANS_FAILD ="股票保存失败" ;
+    public static final String CONTRACT_ALREAD_ABORT = "合约已经结束";
+    public static final String STOCK_VALIDATE_ERR ="股票名称和代码不匹配" ;
+    public static final String BLACK_ALREAD_EXIST ="黑名单已存在" ;
 }

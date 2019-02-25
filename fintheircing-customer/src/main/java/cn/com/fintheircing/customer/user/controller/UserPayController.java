@@ -1,11 +1,14 @@
 package cn.com.fintheircing.customer.user.controller;
 
+import cn.com.fintheircing.customer.business.model.ContractModel;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
+import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
+import cn.com.fintheircing.customer.user.exception.AccountPayException;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
@@ -38,7 +41,8 @@ public class UserPayController {
     private IUserAccountRepository iUserAccountRepository;
     @Resource
     private UserService userService;
-
+    @Resource
+    private IAdminFeignService iAdminFeignService;
 
 
     @ApiOperation(value = "生成待确认充值记录", notes = "")
@@ -75,7 +79,6 @@ public class UserPayController {
     })
     @RequestMapping("/updatePayInfo")
     public ResponseModel updatePayInfo(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) {
-        ;
         if (iPayMapper.updatePayInfo(model) > 0) {
             return ResponseModel.sucessWithEmptyData("");
         } else {
@@ -86,11 +89,12 @@ public class UserPayController {
 
     @ApiOperation(value = "追加保证金", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/addPromiseMoney")
     @CrossOrigin
     public ResponseModel savePromiseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody AddPromiseMoneyModel model) {
-        if (iUserAccountRepository.findAccountByUserId("1") < model.getCash()) {
+        if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid()) < model.getCash()) {
             return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
         }
         RecodeInfoPay p = new RecodeInfoPay();
@@ -114,21 +118,21 @@ public class UserPayController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/withdrawCash")
-    public ResponseModel withdrawCash(@ModelAttribute UserTokenInfo userInfo, @RequestBody WithdrawModel model) {
-        if (iUserAccountRepository.findAccountByUserId(userInfo.getUuid()) < model.getAmount()) {
-            return ResponseModel.fail("", ResultCode.ACCOUNT_LESS_ERR);
+    public ResponseModel withdrawCash(@ModelAttribute UserTokenInfo userInfo, @RequestBody WithdrawModel model) throws AccountPayException {
+        try {
+            return ResponseModel.sucess("", userService.withdrawCash(userInfo.getUuid(), model));
+        } catch (Exception e) {
+            throw new AccountPayException(e.getMessage());
         }
-        RecodeInfoPay r = new RecodeInfoPay();
-        r.setRemark(model.getRemark());
-        r.setWay(model.getAim());
-        r.setUserId(userInfo.getUuid());
-        r.setCostCount(model.getAmount());
-        r.setTaskId("2");
-        r.setTaskType("提现申请");
-        RecodeInfoPay save = iRecodInfoPayRepository.save(r);
-        RecodeInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(save);
-        return ResponseModel.sucess("", model1);
+    }
 
+    @ApiOperation(value = "用户所持有的合同", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/checkContact")
+    public ResponseModel<List<ContractModel>> checkContact(@ModelAttribute UserTokenInfo userInfo) throws AccountPayException {
+        return ResponseModel.sucess("", iAdminFeignService.getCurrentContract(userInfo.getUuid()));
     }
 
     @ApiOperation(value = "消费或者增加用户资金记录", notes = "")
@@ -161,5 +165,30 @@ public class UserPayController {
         } else {
             return ResponseModel.sucessWithEmptyData("");
         }
+    }
+
+    @ApiOperation(value = "修改或增加支付密码", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/addOrChangePassword")
+    public ResponseModel addOrChangePassword(@ModelAttribute UserTokenInfo userInfo, String txPassword) throws AccountPayException {
+        try {
+            if (userService.addOrChangePassword(userInfo.getUuid(), txPassword)) {
+                return ResponseModel.sucessWithEmptyData("");
+            }
+        } catch (Exception e) {
+            throw new AccountPayException(e.getMessage());
+        }
+        return null;
+    }
+
+    @ApiOperation(value = "检查是否设置支付密码", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/checkTxPassword")
+    public ResponseModel checkTxPassword(@ModelAttribute UserTokenInfo userInfo) throws AccountPayException {
+        return ResponseModel.sucess("", userService.checkTxPassword(userInfo.getUuid()));
     }
 }

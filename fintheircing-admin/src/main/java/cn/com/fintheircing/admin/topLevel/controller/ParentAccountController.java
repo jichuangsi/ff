@@ -37,7 +37,7 @@ public class ParentAccountController {
     @ApiOperation(value = "添加", notes = "")
     @ApiResponse(code = 200, message = "返回添加成功的信息")
     @PostMapping("/saveParentAccount")
-    public ResponseModel<ParentAccountModel> saveParentAccount(@Validated @RequestBody ParentAccountModel model){
+    public ResponseModel<ParentAccountModel> saveParentAccount( @RequestBody ParentAccountModel model){
         ParentAccount p =new ParentAccount();
         p.setTradeAccount(model.getTradeAccount());
         p.setPassWord(model.getPassWord());
@@ -60,7 +60,7 @@ public class ParentAccountController {
         p.setSzAccout(model.getSzAccout());
         p.setShAccout(model.getShAccout());
         p.setSecurities(model.getSecurities());
-        if (StringUtils.isEmpty(iParentAccountRepository.save(p))){
+        if (!StringUtils.isEmpty(iParentAccountRepository.save(p))){
             return ResponseModel.sucess("", model);
         }else {
             return ResponseModel.fail("", ResultCode.KEEP_FAILED);
@@ -84,12 +84,18 @@ public class ParentAccountController {
     @ApiResponse(code = 200, message = "返回是否修改成功")
     @PostMapping("/openParentAccount")
     public ResponseModel openParentAccount(String id ){
+        if(iParentAccountRepository.findOneByUuid(id).getStatus()==0){
+            return ResponseModel.fail("", ResultCode.OPEN_FAILED);
+        }
         return ResponseModel.sucess("",iParentAccountMapper.openParentAccount(id));
     }
     @ApiOperation(value = "关闭账号状态", notes = "")
     @ApiResponse(code = 200, message = "返回是否修改成功")
     @PostMapping("/closeParentAccount")
     public ResponseModel closeParentAccount(String id ){
+        if(iParentAccountRepository.findOneByUuid(id).getStatus()==1){
+            return ResponseModel.fail("", ResultCode.CLOSE_FAILED);
+        }
         return ResponseModel.sucess("",iParentAccountMapper.closeParentAccount(id));
     }
 

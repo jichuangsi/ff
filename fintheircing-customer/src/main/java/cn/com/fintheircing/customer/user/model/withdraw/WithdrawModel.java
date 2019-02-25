@@ -7,8 +7,17 @@ package cn.com.fintheircing.customer.user.model.withdraw;
  */
 public class WithdrawModel {
     private double amount;//提现金额
-    private String aim;//提现地方--可以是银行卡,支付宝,微信
+    private String businessContractId;//提现地方--可以是银行卡,支付宝,微信
     private String remark;
+    private String txPassword;//提现密码
+
+    public String getTxPassword() {
+        return txPassword;
+    }
+
+    public void setTxPassword(String txPassword) {
+        this.txPassword = txPassword;
+    }
 
     public String getRemark() {
         return remark;
@@ -26,12 +35,11 @@ public class WithdrawModel {
         this.amount = amount;
     }
 
-    public String getAim() {
-        return aim;
+    public String getBusinessContractId() {
+        return businessContractId;
     }
 
-    public void setAim(String aim) {
-        this.aim = aim;
+    public void setBusinessContractId(String businessContractId) {
+        this.businessContractId = businessContractId;
     }
-
 }

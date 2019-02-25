@@ -1,11 +1,11 @@
 package cn.com.fintheircing.admin.usermanag.uilts;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.SimpleFormatter;
+
+import cn.com.fintheircing.admin.useritem.utils.DateUtils;
 import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import org.apache.http.HttpEntity;
@@ -207,17 +207,7 @@ public class HttpUtils {
 
     @Test
     public void testDemoTest(){
-        Map<String, String> formData = new HashMap<>();
-        formData.put("orderId","201612010000123");
-        formData.put("orderName","");
-        formData.put("payerNo","110022003300");
-        formData.put("payerName","张三");
-        formData.put("amount","50000");
-        formData.put("tradeId","shanghu001");
-        formData.put("noticeUrl","");
-        formData.put("encryptionParams","cf80ca6c648491b61fcc5ec5df2b9037");
-        String json = HttpUtils.doPost("http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/gatewayCheckstandPay",formData);
-        ResultModel resultModel = GsonUtil.jsonToObject(json, ResultModel.class);
-        System.out.println(resultModel);
+        Date parse = DateUtils.parse("2019-2-18 18:39:42");
+        System.out.println((System.currentTimeMillis()-parse.getTime())/1000/60/60/24);
     }
 }

@@ -18,10 +18,12 @@ public class BusinessContract extends AbstractEntity {
     private String userId;    //关联用户
     private String productId;    //关联产品
     private String transactorId;   //关联销售
+    private String transactionSummaryId;//关联股票
     private int choseWay;    //选择付利息方式
     private double promisedMoney;   //保证金
     private double dangerourPrpmised;   //超危保证金
     private double borrowMoney;   //借款
+    private Long borrowTime;   //借款日
     private long expiredTime;  //到期日
     private double onceServerMoney;
     private double coldMoney;   //
@@ -31,8 +33,25 @@ public class BusinessContract extends AbstractEntity {
     private int contractStatus;     //合约状态，新建，交易中，结束交易
     private int rudeStatus;     //是否强制平仓
     private int warnningStatus;
+
     @Version
     private int version;
+
+    public String getTransactionSummaryId() {
+        return transactionSummaryId;
+    }
+
+    public void setTransactionSummaryId(String transactionSummaryId) {
+        this.transactionSummaryId = transactionSummaryId;
+    }
+
+    public Long getBorrowTime() {
+        return borrowTime;
+    }
+
+    public void setBorrowTime(Long borrowTime) {
+        this.borrowTime = borrowTime;
+    }
 
     public int getWarnningStatus() {
         return warnningStatus;

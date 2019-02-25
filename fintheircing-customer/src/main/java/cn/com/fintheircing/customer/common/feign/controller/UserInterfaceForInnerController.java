@@ -28,7 +28,7 @@ import java.util.List;
  */
 @RestController
 @Api("/对外开放的user")
-//@RequestMapping("/Cu")
+@RequestMapping("/Cu")
 public class UserInterfaceForInnerController {
     @Resource
     private IPayMapper iPayMapper;

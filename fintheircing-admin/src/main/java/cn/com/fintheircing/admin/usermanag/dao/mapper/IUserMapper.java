@@ -1,11 +1,9 @@
 package cn.com.fintheircing.admin.usermanag.dao.mapper;
 
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +21,16 @@ public interface IUserMapper {
      * @return
      */
     @Select("<script>select t1.uuid as userId,t1.phone as phoneNo,t1.user_name as userName,t1.created_time as createTime,t1.cer as cer,t1.source as source,t2.proxy_num as proxyId,t2.user_name as proxyName" +
-            " from User_Client_Info t1 left join Admin_Client_Info t2 on t1.inviter_id =t2.uuid where t1.status=\"0\"</script>")
+            ",t2.boss_id as bossId  from user_client_info t1 left join admin_client_info t2 on t1.inviter_id =t2.uuid <where>" +
+            " <if test=\"createTime!=null and createTime!=''\"> t1.created_time &lt;= STR_TO_DATE('${createTime}','%Y-%m-%d %H:%i:%S')</if>" +
+            " <if test=\"endtime!=null and endtime!=''\">and t1.created_time &gt;= STR_TO_DATE('${endtime}','%Y-%m-%d %H:%i:%S')</if>" +
+            " <if test=\"userId!=null and userId!=''\">and t1.uuid=#{userId}</if>" +
+            " <if test=\"phoneNo!=null and phoneNo!=''\"> and t1.phone=#{phoneNo}</if>" +
+            " <if test=\"userName!=null and userName!=''\"> and t1.user_name=#{userName}</if>" +
+            "  <if test=\"source!=null and source!=''\"> and t1.source#{source}</if>" +
+            "  <if test=\"proxyId!=null and proxyId!=''\"> and t2.proxy_num =#{proxyId}</if> " +
+            "  <if test=\"emplooyeeId!=null and emplooyeeId!=''\">and t2.uuid=#{emplooyeeId}</if>" +
+            "and t1.status=\"0\"</where> </script>")
     List<AdminClientInfoModel> findAll( AdminClientInfoModel queryModel);
 
     /**
@@ -31,8 +38,17 @@ public interface IUserMapper {
      * @param queryModel
      * @return
      */
-    @Select("<script>select t1.uuid as userId,t1.phone as phoneNo,t1.user_name as userName,t1.created_time as createTime,t1.cer as cer,t1.source as source,t2.proxy_num as proxyId,t2.user_name as proxyName" +
-            " from User_Client_Info t1 left join Admin_Client_Info t2 on t1.inviter_id =t2.uuid where t1.status=\"1\"</script>")
+    @Select("<script>select t1.uuid as userId,t1.phone as phoneNo,t1.user_name as userName,t1.created_time as createTime,t1.cer as cer,t1.source as source,t2.proxy_num as proxyId,t2.user_name as proxyName " +
+            ",t2.boss_id as bossId  from user_client_info t1 left join admin_client_info t2 on t1.inviter_id =t2.uuid <where> " +
+            " <if test=\"createTime!=null and createTime!=''\"> t1.created_time &lt;= STR_TO_DATE('${createTime}','%Y-%m-%d %H:%i:%S')</if> " +
+            " <if test=\"endtime!=null and endtime!=''\">and t1.created_time &gt;= STR_TO_DATE('${endtime}','%Y-%m-%d %H:%i:%S')</if> "+
+           " <if test=\"userId!=null and userId!=''\">and t1.uuid=#{userId}</if> "  +
+           " <if test=\"phoneNo!=null and phoneNo!=''\"> and t1.phone=#{phoneNo}</if> " +
+            " <if test=\"userName!=null and userName!=''\"> and t1.user_name=#{userName}</if> " +
+            "  <if test=\"source!=null and source!=''\"> and t1.source#{source}</if> " +
+            "  <if test=\"proxyId!=null and proxyId!=''\"> and t2.proxy_num =#{proxyId}</if> "  +
+            "  <if test=\"emplooyeeId!=null and emplooyeeId!=''\">and t2.uuid=#{emplooyeeId}</if> " +
+            "and t1.status=\"1\"</where> </script>")
     List<AdminClientInfoModel> findAllUseless(@Param("queryModel") AdminClientInfoModel queryModel);
 
     @Update("<script>update user_client_info t1 set t1.inviter_id=#{proxyId} where t1.uuid=#{userId}</script>")

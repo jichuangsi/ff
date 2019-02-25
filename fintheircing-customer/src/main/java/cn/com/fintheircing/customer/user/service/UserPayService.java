@@ -31,7 +31,7 @@ public class UserPayService {
         if (model.getCostCount() > iUserAccountRepository.findAccountByUserId(model.getUserId())) {
             throw new AccountPayException(ResultCode.ACCOUNT_LESS_ERR);
         } else {
-            UserAccount account = iUserAccountRepository.findByUserId(model.getUserId());
+            UserAccount account = iUserAccountRepository.findOneByUserId(model.getUserId());
             if (null != account) {
                 //扣款
                 if (0 != model.getCostCount()) {

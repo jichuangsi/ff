@@ -15,6 +15,8 @@ import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import cn.com.fintheircing.admin.usermanag.uilts.ModelToEntity;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -64,15 +66,18 @@ public class AdminPayController {
     }
 
     @GetMapping("/findAllPayInfo")
-    @ApiOperation(value = "查询所有未审核的", notes = "")
+    @ApiOperation(value = "查询所有合约未审核的", notes = "")
     public ResponseModel<List<RecodeInfoPayModel>> findAllPayInfo(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
         List<RecodeInfoPayModel> allPayInfo = ipayService.findAllPayInfo();
         return ResponseModel.sucess("", allPayInfo);
     }
 
-    @GetMapping("/AgreePromiseMoney")
+    @PostMapping("/AgreePromiseMoney")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
     @ApiOperation(value = "同意申请追加保证金", notes = "")
-    public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
+    public ResponseModel AgreePromiseMoney(@ModelAttribute UserTokenInfo userInfo,@RequestBody RecodeInfoPayModel model) throws UserServiceException {
         try {
             if (ipayService.agreePromiseMoney(userInfo, model)) {
                 return ResponseModel.sucessWithEmptyData("");
@@ -104,7 +109,7 @@ public class AdminPayController {
                 return ResponseModel.sucessWithEmptyData("");
             }
         }catch (Exception e){
-            return ResponseModel.fail("", e.getMessage());
+            throw new UserServiceException(e.getMessage());
         }
         return null;
     }

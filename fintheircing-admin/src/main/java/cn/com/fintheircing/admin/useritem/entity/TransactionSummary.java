@@ -29,7 +29,6 @@ public class TransactionSummary extends AbstractEntity {
     private Date   joinTime;
     private String remake;
     private Integer status=0;
-
     private Double oneDay;
     private Double twoDay;
     private Double threeDay;

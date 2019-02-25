@@ -7,25 +7,26 @@ import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
+import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
 import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
+import cn.com.fintheircing.customer.user.exception.AccountPayException;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.*;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
+import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import cn.com.fintheircing.customer.user.service.RegisterService;
 import cn.com.fintheircing.customer.user.service.UserService;
+import cn.com.fintheircing.customer.user.utlis.Entity2Model;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
-import cn.com.fintheircing.customer.user.utlis.MultipartFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +34,9 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    IUserInfoRepository userInfoRepository;
+    private IUserInfoRepository userInfoRepository;
     @Resource
-    IUserClientInfoMapper userClientInfoMapper;
+    private IUserClientInfoMapper userClientInfoMapper;
     @Resource
     private IRecodInfoPayRepository iRecodInfoPayRepository;
     @Resource
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean addOrUseMoney(RecodeInfoPayModel model) {
-        if (model.getCostCount() > iUserAccountRepository.findAccountByUserId(model.getUserId())) {
+        if (model.getCostCount() >=iUserAccountRepository.findAccountByUserId(model.getUserId())) {
             return false;
         } else {
             UserAccount byId = iUserAccountRepository.findOneByUserId(model.getUserId());
@@ -108,11 +109,8 @@ public class UserServiceImpl implements UserService {
             } else {
                 return false;
             }
-
-
         }
     }
-
     @Override
     public void updatePass(UserTokenInfo userInfo, PassWordModel model) throws LoginException{
         validatePass(userInfo,model);
@@ -153,7 +151,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean setAvatar(Encode64 base64, String uuid) throws IOException {
         UserClientLoginInfo oneByAndClientInfoId = userClientLoginInfoRepository.findOneByAndClientInfoId(uuid);
-//        UserClientLoginInfo u =new UserClientLoginInfo();
         oneByAndClientInfoId.setPhoto(base64.getBase64());
         UserClientLoginInfo save = userClientLoginInfoRepository.save(oneByAndClientInfoId);
         if (StringUtils.isEmpty(save)){
@@ -164,5 +161,64 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserTokenInfo getUserTokenInfo(String id) {
         return userClientInfoMapper.findByUuid(id);
+    }
+
+    @Override
+    public RecodeInfoPayModel withdrawCash(String uuid, WithdrawModel model) throws AccountPayException {
+        UserClientInfo byUuid = userInfoRepository.findByUuid(uuid);
+
+        if (!model.getTxPassword().equalsIgnoreCase(byUuid.getTxPassword())) {
+            throw new AccountPayException(ResultCode.PASSWORD_IS_MISTAKE);
+        }else {
+            if (iUserAccountRepository.findAccountByUserId(uuid) < model.getAmount()) {
+                throw new AccountPayException(ResultCode.ACCOUNT_LESS_ERR);
+            }
+            RecodeInfoPay r = new RecodeInfoPay();
+            r.setRemark(model.getRemark());
+            r.setBusinessContractId(model.getBusinessContractId());
+            r.setUserId(uuid);
+            r.setCostCount(model.getAmount());
+            r.setTaskId("2");
+            r.setTaskType("提现申请");
+            RecodeInfoPay save = iRecodInfoPayRepository.save(r);
+            RecodeInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(save);
+            return model1;
+        }
+    }
+    /**
+     * 增加或者修改支付密码
+     *  @param uuid
+     * @param txPassword
+     */
+    @Override
+    public boolean addOrChangePassword(String uuid, String txPassword)throws AccountPayException{
+       if (StringUtils.isEmpty(uuid)){
+           throw new  AccountPayException(ResultCode.ENTRUST_VALIDATE_ERR);
+       }
+       if (StringUtils.isEmpty(txPassword)){
+           throw new AccountPayException(ResultCode.PASSWORD_NOT_EMPTY);
+       }
+       Map<String,Object> parms =new HashMap<>();
+       parms.put("uuid",uuid);
+       parms.put("txPassword",txPassword);
+       if (userClientInfoMapper.addOrChangePassword(parms)==1){
+           return true;
+       }
+        return false;
+    }
+
+    /**
+     * 检查是否设置支付密码
+     *
+     * @param uuid
+     * @return
+     */
+    @Override
+    public boolean checkTxPassword(String uuid) {
+        String txPassword = userInfoRepository.findByUuid(uuid).getTxPassword();
+        if (StringUtils.isEmpty(txPassword)){
+            return false;
+        }
+        return true;
     }
 }

@@ -31,11 +31,11 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String stockId;     //关联股票
     private int businessTo;     //买卖方向
     private int entrustStatus;      //委托状态
-    private double businessPrice;      //交易单价
+    private double businessPrice;      //委托交易出去的单价
     private int businessAmount;      ///总数量
     private String contractId;
     private String cancelOrder;
-    private double dealPrice;   //成交价钱
+    private double dealPrice;   //买入,卖出的成交价钱
     private String dealNo;     //委托编号
     private int dealNum;     //成交数量
     private long dealTime;      //成交时间
@@ -44,7 +44,7 @@ public class BusinessStockEntrust extends AbstractEntity {
     private String cancelNo;
     private double coldMoney;
     private double businessMoney;
-    private double taxationMoney;
+    private double taxationMoney;//税收
     private String dealMan;
     private String dealFrom;
     @Version

@@ -244,8 +244,10 @@ public class BusinessService {
         control.setBorrowTime(new Date());
         control.setFirstInterest(contract.getFirstInterest());
         control.setCreatorId(contract.getUserId());
+        control.setAbortingLine(model.getAbortingLine());
         businessControlContractRepository.save(control);
-
+        //记录借款时间戳
+        contract.setBorrowTime(System.currentTimeMillis());
         if (ProductStatus.SPECIAL.getIndex() != contract.getChoseWay()) {
             BusinessControlContract controlTwo = new BusinessControlContract();
             controlTwo.setContractId(contract.getUuid());

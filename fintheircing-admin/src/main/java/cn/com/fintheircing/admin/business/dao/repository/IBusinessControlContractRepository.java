@@ -4,4 +4,5 @@ import cn.com.fintheircing.admin.business.entity.BusinessControlContract;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IBusinessControlContractRepository extends JpaRepository<BusinessControlContract,String> {
+    BusinessControlContract findOneByUuid(String businessControlContractId);
 }

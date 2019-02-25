@@ -48,10 +48,6 @@ public class ReadExcelUtil {
             while (j < colNum ) {
                 //获得第i+1的第J列
                 Object obj = getCellFormatValue(row.getCell(j));
-                    if (StringUtils.isEmpty(obj)){
-                    j++;
-                    continue;
-                }
                     j++;
                     cellValue.put(a, obj);
                     a++;
@@ -95,6 +91,7 @@ public class ReadExcelUtil {
     private static Workbook getWb(MultipartFile mf){
         String filepath = mf.getOriginalFilename();
         String ext = filepath.substring(filepath.lastIndexOf("."));
+//        String contentType = mf.getContentType();
         Workbook wb = null;
         try {
             InputStream is = mf.getInputStream();

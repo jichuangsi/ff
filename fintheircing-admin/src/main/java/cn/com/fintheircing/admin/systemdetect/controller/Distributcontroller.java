@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -59,8 +60,8 @@ public class Distributcontroller {
     @ApiOperation(value = "产品列表-修改", notes = "")
     @ApiImplicitParams({
     })
-    @GetMapping("/update")
-    public ResponseModel<ProductModel> findForSpecialAllot(ProductModel model){
+    @PostMapping("/update")
+    public ResponseModel<ProductModel> findForSpecialAllot(@Validated @RequestBody ProductModel model){
         return ResponseModel.sucess("",iDistributService.updateProduce(model));
     }
 

@@ -44,9 +44,8 @@ public interface IBillMapper {
             "  t1.remark AS remark,t1.way AS way,t1.create_time AS creatTime,t1.business_contract_id AS businessContractId, " +
             "  t1.task_type AS taskType,t1.task_id AS taskId, t2.user_name AS userName, t2.phone AS phone,  " +
             "  t3.account AS accountAmount FROM recode_info_pay t1,user_client_info t2,user_account t3  " +
-            "  WHERE t1.status=0 AND t1.user_id=t2.uuid =t3.user_id</script>")
+            "  WHERE t1.status=0 AND t1.user_id=t2.uuid AND t2.uuid=t3.user_id</script>")
     List<RecodeInfoPayModel> findAllPayInfo();
-
 
 
     /**
