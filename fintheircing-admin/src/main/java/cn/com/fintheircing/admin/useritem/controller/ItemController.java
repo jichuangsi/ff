@@ -79,7 +79,6 @@ public class ItemController {
         TransactionModel allInfo = itemService.saveTransactionSummary(model);;
         return ResponseModel.sucess("",allInfo);
     }
-
     @ApiOperation(value = "白名单列表-更新字段", notes = "")
     @ApiImplicitParams({
     })

@@ -34,8 +34,25 @@ public class TransactionSummary extends AbstractEntity {
     private Double threeDay;
     private Double fourDay;
     private Double fiveDay;
-
+    private String productId; //对应 product 的uuid
+    private String parentId;//对应parentAccount 的uuid;
     private Integer nowCursor;
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public Integer getNowCursor() {
         return nowCursor;

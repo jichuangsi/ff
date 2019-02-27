@@ -52,6 +52,10 @@ public class StockPriceController {
 		}
 	}
 
+	/**
+	 * 要修改方法名getQuotesTenListTest 要记得提醒我(姚雄)  IStockPriceFeignService有feign
+	 * @return
+	 */
 	@PostMapping("/getQuotesTenListTest")
 	public ResponseModel<List<QuotesTenModel>> getQuotesTenListTest() {
 		List<QuotesTenModel> result;

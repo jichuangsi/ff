@@ -1,11 +1,14 @@
 package cn.com.fintheircing.admin.topLevel.controller;
 
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.feign.IStockPriceFeignService;
+import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.utils.EntityToModel;
 import cn.com.fintheircing.admin.topLevel.dao.mapper.IParentAccountMapper;
 import cn.com.fintheircing.admin.topLevel.dao.repository.IParentAccountRepository;
 import cn.com.fintheircing.admin.topLevel.entity.ParentAccount;
+import cn.com.fintheircing.admin.topLevel.model.HodingStockModel;
 import cn.com.fintheircing.admin.topLevel.model.ParentAccountModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +36,8 @@ public class ParentAccountController {
     private IParentAccountRepository iParentAccountRepository;
     @Resource
     private IParentAccountMapper  iParentAccountMapper;
-
+    @Resource
+    private IStockPriceFeignService iStockPriceFeignService;
     @ApiOperation(value = "添加", notes = "")
     @ApiResponse(code = 200, message = "返回添加成功的信息")
     @PostMapping("/saveParentAccount")
@@ -99,4 +103,31 @@ public class ParentAccountController {
         return ResponseModel.sucess("",iParentAccountMapper.closeParentAccount(id));
     }
 
+    /**
+     * //差个持仓数量差额, 差额市值
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "持仓差异表", notes = "")
+    @ApiResponse(code = 200, message = "返回是否修改成功")
+    @PostMapping("/hodingStock")
+    public ResponseModel<List<HodingStockModel>> hodingStock(String id ) {
+        ResponseModel<List<QuotesTenModel>> quotesTenListTest = iStockPriceFeignService.getQuotesTenListTest();
+        List<QuotesTenModel> data = quotesTenListTest.getData();
+        List<HodingStockModel> list=new ArrayList<>();
+        for (QuotesTenModel d :data
+                ) {
+            String stockCode = d.getStockCode();
+            HodingStockModel hodingStockModel = iParentAccountMapper.QueryHodingAndAccount(stockCode);
+            if (StringUtils.isEmpty(hodingStockModel)){
+                continue;
+            }
+            hodingStockModel.setClosingPrice(d.getClosePrice());
+
+            hodingStockModel.setHodingMargin(0);
+            hodingStockModel.setMarginMarketValue(0);
+            list.add(hodingStockModel);
+        }
+        return ResponseModel.sucess("", list);
+    }
 }

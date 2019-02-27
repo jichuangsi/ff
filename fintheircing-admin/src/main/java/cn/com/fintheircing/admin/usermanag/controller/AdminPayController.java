@@ -119,6 +119,4 @@ public class AdminPayController {
     public ResponseModel passwithdrawCash(@ModelAttribute UserTokenInfo userInfo, RecodeInfoPayModel model) throws UserServiceException {
         return ResponseModel.sucess("", ipayService.passwithdrawCash(userInfo, model));
     }
-
-
 }

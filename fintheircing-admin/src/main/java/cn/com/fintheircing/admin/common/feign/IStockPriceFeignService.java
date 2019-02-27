@@ -15,4 +15,6 @@ public interface IStockPriceFeignService {
 
     @PostMapping("/getQuotesTenList")
     public ResponseModel<List<QuotesTenModel>> getQuotesTenList(@RequestBody GetQuotesTenListRequestModel model);
+    @PostMapping("/getQuotesTenListTest")
+    public ResponseModel<List<QuotesTenModel>> getQuotesTenListTest();
 }

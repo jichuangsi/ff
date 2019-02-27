@@ -32,7 +32,6 @@ public interface IBusinessContractControlMapper {
             "</where></script>")
     List<ContractControlModel> getContractControls(ContractControlModel model);
 
-
     @Select("<script>select t4.uuid as businessControlContractId, t1.user_id as userId,t6.phone as phone,t6.user_name as name" +
             " ,t1.uuid as BusinessContractId,t1.cold_money as coldMoney,t5.user_name as proxyName," +
             " t5.proxy_num as proxyNum, t1.first_interest as firstMoney ," +
@@ -48,7 +47,7 @@ public interface IBusinessContractControlMapper {
             " <if test= \"productStr!=null and productStr!=''\"> and t2.product_name =#{productStr}</if>" +
             " and t1.delete_flag=\"0\"</where></script>")
     List<ContractControlModel> findAllContact(String productStr);
-    @Select("<script>select t1.user_id as userId,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_num as stockNum,stock_name as stockName,t1.deal_num as dealNum,t1.deal_price as dealPrice," +
+    @Select("<script>select t3.user_id as userId,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_num as stockNum,t2.stock_name as stockName,t1.amount as dealNum,t1.cost_price as dealPrice," +
             " t1.deal_time as buyTime, t1.uuid as BusinessStockEntrustId ,t3.account as userfulMoney," +
             " t3.frezze_amount as codeMoney" +
             " from business_stock_entrust t1 left join admin_transaction_summary t2 left join" +

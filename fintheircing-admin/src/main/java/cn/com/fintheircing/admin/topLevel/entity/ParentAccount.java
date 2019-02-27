@@ -2,10 +2,7 @@ package cn.com.fintheircing.admin.topLevel.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 /**
  * 母账户
@@ -20,6 +17,8 @@ public class ParentAccount {
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String accountId;//自增账号ID
     private String tradeAccount;//交易账号
     private String passWord;
     private String jyPassword;//交易密码
@@ -44,6 +43,14 @@ public class ParentAccount {
     private String szAccout;// 深圳股东账户
     private String shAccout;// 上海股东账户
     private int status=0;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
     public String getJyPassword() {
         return jyPassword;
