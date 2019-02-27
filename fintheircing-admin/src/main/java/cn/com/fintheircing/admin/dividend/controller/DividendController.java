@@ -5,6 +5,7 @@ import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.model.ValidateModel;
 import cn.com.fintheircing.admin.dividend.exception.DividendException;
 import cn.com.fintheircing.admin.dividend.model.DividendControlModel;
+import cn.com.fintheircing.admin.dividend.model.DividendHoldingModel;
 import cn.com.fintheircing.admin.dividend.model.DividendModel;
 import cn.com.fintheircing.admin.dividend.service.DividendService;
 import com.github.pagehelper.PageInfo;
@@ -39,8 +40,8 @@ public class DividendController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
-    @GetMapping("/getDividendList/{index}/{size}")
-    public ResponseModel<PageInfo<DividendModel>> getDividendList(@ModelAttribute UserTokenInfo userInfo,@PathVariable("index") int index,@PathVariable("size") int size){
+    @GetMapping("/getDividendList")
+    public ResponseModel<PageInfo<DividendModel>> getDividendList(@ModelAttribute UserTokenInfo userInfo,@RequestParam("index") int index,@RequestParam("size") int size){
         return ResponseModel.sucess("",dividendService.getDividendList(index,size));
     }
 
@@ -78,5 +79,15 @@ public class DividendController {
         } catch (DividendException e) {
             return ResponseModel.fail("",e.getMessage());
         }
+    }
+
+    @ApiOperation(value = "通过股票代码搜索合约持有", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getContractHolding")
+    public ResponseModel<PageInfo<DividendHoldingModel>> getContractHolding(@ModelAttribute UserTokenInfo userInfo, @RequestParam("index") int index,
+                                                                            @RequestParam("size") int size, @RequestParam("keyWord") String keyWord){
+        return ResponseModel.sucess("",dividendService.getContractHolding(index,size,keyWord));
     }
 }

@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.test;
 
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockHoldingMapper;
+import cn.com.fintheircing.admin.business.entity.BusinessStockHolding;
 import cn.com.fintheircing.admin.dividend.service.DividendService;
 import cn.com.fintheircing.admin.risk.dao.repository.IBusinessContractRiskRepository;
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
@@ -302,11 +303,9 @@ public class TestRollBack {
 
     @Test
     public void testForUpdate(){
-        try {
-            dividendService.scheduledDividend();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        BusinessStockHolding holding = new BusinessStockHolding();
+        int i = holding.getAmount()+1;
+        System.out.println(i);
     }
 
 }

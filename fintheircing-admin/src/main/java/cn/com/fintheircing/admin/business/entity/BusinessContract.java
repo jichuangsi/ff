@@ -33,9 +33,18 @@ public class BusinessContract extends AbstractEntity {
     private int contractStatus;     //合约状态，新建，交易中，结束交易
     private int rudeStatus;     //是否强制平仓
     private int warnningStatus;
+    private double highRate;
 
     @Version
     private int version;
+
+    public double getHighRate() {
+        return highRate;
+    }
+
+    public void setHighRate(double highRate) {
+        this.highRate = highRate;
+    }
 
     public String getTransactionSummaryId() {
         return transactionSummaryId;

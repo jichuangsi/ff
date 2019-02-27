@@ -3,20 +3,22 @@ package cn.com.fintheircing.admin.business.service;
 import cn.com.fintheircing.admin.business.constant.BusinessStatus;
 import cn.com.fintheircing.admin.business.constant.EntrustStatus;
 import cn.com.fintheircing.admin.business.constant.RudeStatus;
-import cn.com.fintheircing.admin.business.dao.mapper.*;
-import cn.com.fintheircing.admin.business.dao.repository.*;
-import cn.com.fintheircing.admin.business.entity.*;
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockEntrustMapper;
+import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockHoldingMapper;
+import cn.com.fintheircing.admin.business.dao.repository.IBusinessContractRepository;
+import cn.com.fintheircing.admin.business.dao.repository.IBusinessControlContractRepository;
+import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
+import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockHoldingRepository;
+import cn.com.fintheircing.admin.business.entity.BusinessContract;
+import cn.com.fintheircing.admin.business.entity.BusinessControlContract;
+import cn.com.fintheircing.admin.business.entity.BusinessStockEntrust;
+import cn.com.fintheircing.admin.business.entity.BusinessStockHolding;
+import cn.com.fintheircing.admin.business.entity.record.StockEquityRecord;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
-import cn.com.fintheircing.admin.risk.dao.repository.IBusinessContractRiskRepository;
-import cn.com.fintheircing.admin.risk.entity.BusinessContractRisk;
-import cn.com.fintheircing.admin.risk.model.DangerousStockModel;
-import cn.com.fintheircing.admin.risk.model.RiskContractModel;
-import cn.com.fintheircing.admin.risk.model.RiskControlModel;
-import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
-import cn.com.fintheircing.admin.taxation.model.TaxationModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferEntrustModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferHoldingModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferStockEntrustModel;
@@ -35,16 +37,24 @@ import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.common.utils.MappingModel2EntityConverter;
+import cn.com.fintheircing.admin.dividend.model.DividendHoldingModel;
+import cn.com.fintheircing.admin.risk.dao.repository.IBusinessContractRiskRepository;
+import cn.com.fintheircing.admin.risk.entity.BusinessContractRisk;
+import cn.com.fintheircing.admin.risk.model.DangerousStockModel;
+import cn.com.fintheircing.admin.risk.model.RiskContractModel;
+import cn.com.fintheircing.admin.risk.model.RiskControlModel;
 import cn.com.fintheircing.admin.scheduling.model.ContractHoldingJsonModel;
 import cn.com.fintheircing.admin.scheduling.model.ContractHoldingModel;
 import cn.com.fintheircing.admin.scheduling.model.ContractJsonModel;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.common.ProductStatus;
+import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import cn.com.fintheircing.admin.taxation.dao.mapper.IBusinessTaxationMapper;
 import cn.com.fintheircing.admin.taxation.dao.repository.IBusinessTaxationRelationRepository;
 import cn.com.fintheircing.admin.taxation.dao.repository.IBusinessTaxationRepository;
 import cn.com.fintheircing.admin.taxation.entity.BusinessTaxation;
 import cn.com.fintheircing.admin.taxation.entity.BusinessTaxationRelation;
+import cn.com.fintheircing.admin.taxation.model.TaxationModel;
 import cn.com.fintheircing.admin.useritem.common.TransactionSummaryStatus;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
 import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
@@ -191,6 +201,7 @@ public class BusinessService {
         contract.setUpdateUserId(adminUuid);
         contract.setWarnningStatus(RudeStatus.CONTRACT_NOT_WARN.getNum());
         contract.setOnceServerMoney(model.getProductModel().getOneServerMoney());
+        contract.setHighRate(highFrequency);
         contract = businessContractRepository.save(contract);
         //绑定风控
         BusinessContractRisk businessContractRisk = new BusinessContractRisk();
@@ -1613,7 +1624,8 @@ public class BusinessService {
                 if (BusinessTaxation.FIXED_MONEY.equals(taxationModel.getFixed())) {
                     taxation = taxationModel.getTaxationRate();
                 }
-                entrustModel.getMap().put(taxationModel.getLabelName(), String.valueOf(taxation));
+                taxationModel.setTaxationRate(taxation);
+                entrustModel.getList().add(taxationModel);
             }
         }
         PageInfo<TranferEntrustModel> pageInfo = new PageInfo<TranferEntrustModel>(stockEntrustModels);
@@ -1621,7 +1633,7 @@ public class BusinessService {
     }
 
     //获取查询委托相关条件
-    public Map<String, Object> getEntrustCondition() {
+    public Map<String, Object> getEntrustCondition(TranferEntrustModel model) throws BusinessException{
         Map<String, Object> map = new HashMap<String, Object>();
         ProductStatus[] productStatuses = ProductStatus.values();
         List<EnumTypeModel> products = new ArrayList<EnumTypeModel>();
@@ -1639,10 +1651,18 @@ public class BusinessService {
             enumTypeModel.setTypeStr(status.getName());
             entrusts.add(enumTypeModel);
         }
-        List<TaxationModel> taxationModels = businessTaxationMapper.getEntrustTaxLabel();
+        PageInfo<TranferEntrustModel> pageInfo = getSystemEntrusts(model);
+        Set<String> entrustIds = new HashSet<String>();
+        for (TranferEntrustModel entrustModel:pageInfo.getList()){
+            entrustIds.add(entrustModel.getId());
+        }
+        List<TaxationModel> taxationModels = businessTaxationMapper.selectEntrustTaxIn(new ArrayList<String>(entrustIds));
         map.put("products", products);
         map.put("entrusts", entrusts);
         map.put("taxations", taxationModels);
+        map.put("index",pageInfo.getPageNum());
+        map.put("size",pageInfo.getPageSize());
+        map.put("total",pageInfo.getTotal());
         return map;
     }
 
@@ -2114,23 +2134,145 @@ public class BusinessService {
         return holdings;
     }
 
+    //根据合约id和stockId获取持有
     public BusinessStockHolding getHoldingByContractIdAndStockId(String contractId,String stockId){
         return businessStockHoldingRepository.findByContractIdAndStockId(contractId,stockId);
     }
 
+    //保存持有
     public void saveHolding(BusinessStockHolding holding){
         businessStockHoldingRepository.save(holding);
     }
 
+    //根据id获取合约
     public BusinessContract getContractByContractId(String contractId){
         return businessContractRepository.findByUuid(contractId);
     }
 
+    //保存合约
     public void saveContract(BusinessContract contract){
         businessContractRepository.save(contract);
     }
 
+    //保存合约操作
     public void saveContractControl(BusinessControlContract controlContract){
+        businessControlContractRepository.save(controlContract);
+    }
+
+    //根据股票代码获取持有
+    public PageInfo<DividendHoldingModel> getPageHolding(int index,int size,String keyWord){
+        PageHelper.startPage(index,size);
+        List<DividendHoldingModel> models = businessStockHoldingMapper.getPageDividendHolding(keyWord);
+        PageInfo<DividendHoldingModel> pageInfo = new PageInfo<DividendHoldingModel>(models);
+        return pageInfo;
+    }
+
+    //根据合约id 获取持仓分页
+    public PageInfo<StockHoldingModel> getEquityHolding(String contractId,int index,int size){
+        PageHelper.startPage(index,size);
+        List<StockHoldingModel> holdingModels = businessStockHoldingMapper.getPageHolding(contractId);
+        PageInfo<StockHoldingModel> pageInfo = new PageInfo<StockHoldingModel>(holdingModels);
+        return pageInfo;
+    }
+
+    //根据合约id查询合约
+    public ContractModel getContractById(String contractId){
+        return businessContractMapper.selectContractById(contractId);
+    }
+
+    //审核后添加股份
+    public void addStockAfterValidate(StockEquityRecord record) throws BusinessException{
+        BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0",record.getContactId());
+        if (null == contract){
+            throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
+        }
+        BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(),record.getStockId());
+        if (null == holding){
+            holding = new BusinessStockHolding();
+            holding.setCreatedTime(new Date());
+            holding.setCreatorId(record.getCreatorId());
+            String account = "";
+            List<MotherAccount> motherAccounts = motherAccountQueryService.getAllAviable();
+            if (motherAccounts.size() > 0) {
+                Random random = new Random(BusinessUtils.fromStringWhitoutHyphens(record.getCreatorId()).getLeastSignificantBits());
+                account = motherAccounts.get(random.nextInt(motherAccounts.size())).getAccountNo();
+            } else {
+                throw new BusinessException(ResultCode.MOTHER_NULL_ERR);
+            }
+            holding.setMotherAccount(account);
+            holding.setContractId(record.getContactId());
+            holding.setStockId(record.getStockId());
+        }
+        int amount = holding.getAmount();
+        contract.setAvailableMoney(contract.getAvailableMoney()+record.getBalance());
+        holding.setAmount(holding.getAmount()+record.getAmount());
+        holding.setColdAmount(holding.getColdAmount()+record.getAmount());
+        holding.setCostPrice((amount*holding.getCostPrice()+record.getDealPrice()*record.getAmount())/(record.getAmount()+amount));
+        businessContractRepository.save(contract);
+        businessStockHoldingRepository.save(holding);
+
+        BusinessControlContract controlContract = new BusinessControlContract();
+        controlContract.setStockId(record.getStockId());
+        controlContract.setLessStock(holding.getAmount());
+        controlContract.setAddStock(record.getAmount());
+        controlContract.setLessMoney(contract.getAvailableMoney());
+        controlContract.setVerifyStatus(VerifyCode.VERIFY_S.getIndex());
+        controlContract.setContractId(contract.getUuid());
+        controlContract.setCreatedTime(new Date());
+        controlContract.setCreatorId(record.getUpdateUserId());
+        controlContract.setUpdateUserId(record.getUpdateUserId());
+        controlContract.setControlType(ControlCode.CONTROL_EQUITY.getIndex());
+        if (0 > record.getBalance()){
+            controlContract.setCostMoney(Math.abs(record.getBalance()));
+        }else{
+            controlContract.setAddMoney(Math.abs(record.getBalance()));
+        }
+        businessControlContractRepository.save(controlContract);
+    }
+
+    //审核后删减股份
+    public void multStockAfterValidate(StockEquityRecord record) throws BusinessException{
+        BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0",record.getContactId());
+        if (null == contract){
+            throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
+        }
+        BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(),record.getStockId());
+        int amount = holding.getAmount();
+        if (amount<record.getAmount()){
+            throw new BusinessException(ResultCode.STOCK_SELL_LESS_ERR);
+        }
+        holding.setAmount(holding.getAmount()-record.getAmount());
+        if (0 != holding.getAmount()) {
+            if (record.getAmount() > holding.getColdAmount()) {
+                int less = record.getAmount() - holding.getColdAmount();
+                holding.setColdAmount(0);
+                holding.setCanSell(holding.getCanSell() - less);
+            } else {
+                holding.setColdAmount(holding.getColdAmount() - record.getAmount());
+            }
+            businessStockHoldingRepository.save(holding);
+        }else {
+            businessStockHoldingRepository.delete(holding);
+        }
+        contract.setAvailableMoney(contract.getAvailableMoney()+record.getBalance());
+        businessContractRepository.save(contract);
+
+        BusinessControlContract controlContract = new BusinessControlContract();
+        controlContract.setStockId(record.getStockId());
+        controlContract.setLessStock(holding.getAmount());
+        controlContract.setCostStock(record.getAmount());
+        controlContract.setLessMoney(contract.getAvailableMoney());
+        controlContract.setVerifyStatus(VerifyCode.VERIFY_S.getIndex());
+        controlContract.setContractId(contract.getUuid());
+        controlContract.setCreatedTime(new Date());
+        controlContract.setCreatorId(record.getUpdateUserId());
+        controlContract.setUpdateUserId(record.getUpdateUserId());
+        controlContract.setControlType(ControlCode.CONTROL_EQUITY.getIndex());
+        if (0 > record.getBalance()){
+            controlContract.setCostMoney(Math.abs(record.getBalance()));
+        }else{
+            controlContract.setAddMoney(Math.abs(record.getBalance()));
+        }
         businessControlContractRepository.save(controlContract);
     }
 }

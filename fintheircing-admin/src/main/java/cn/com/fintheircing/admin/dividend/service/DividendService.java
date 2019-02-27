@@ -17,6 +17,7 @@ import cn.com.fintheircing.admin.dividend.entity.Dividend;
 import cn.com.fintheircing.admin.dividend.entity.DividendRelation;
 import cn.com.fintheircing.admin.dividend.exception.DividendException;
 import cn.com.fintheircing.admin.dividend.model.DividendControlModel;
+import cn.com.fintheircing.admin.dividend.model.DividendHoldingModel;
 import cn.com.fintheircing.admin.dividend.model.DividendModel;
 import cn.com.fintheircing.admin.dividend.utils.MappingEntity2ModelConverter;
 import cn.com.fintheircing.admin.system.exception.SystemException;
@@ -217,8 +218,12 @@ public class DividendService {
     //查看操作
     public PageInfo<DividendControlModel> getValidateRecord(UserTokenInfo userInfo,DividendControlModel model) throws DividendException{
         try {
-            model.setBeginTime(CommonUtil.getlongTime(model.getBegin(),sdformat));
-            model.setEndTime(CommonUtil.getEndLongTime(model.getEnd(),sdformat));
+            if (!StringUtils.isEmpty(model.getBegin())) {
+                model.setBeginTime(CommonUtil.getlongTime(model.getBegin(), sdformat));
+            }
+            if (!StringUtils.isEmpty(model.getEnd())) {
+                model.setEndTime(CommonUtil.getEndLongTime(model.getEnd(), sdformat));
+            }
         } catch (SystemException e) {
             throw new DividendException(e.getMessage());
         }
@@ -226,8 +231,20 @@ public class DividendService {
         List<DividendControlModel> models = dividendMapper.getDividendControl(model);
         for (DividendControlModel model1:models){
             model1.setProduct(ProductStatus.getName(model1.getChoseWay()));
+            if (DividendRelation.VALIDATE_WAIT.equals(model1.getValidateStatus())){
+                model1.setValidateStatus("未审核");
+            }else if (DividendRelation.VALIDATE_PASS.equals(model1.getValidateStatus())){
+                model1.setValidateStatus("未通过");
+            }else if (DividendRelation.VALIDATE_SUS.equals(model1.getValidateStatus())){
+                model1.setValidateStatus("通过");
+            }
         }
         PageInfo<DividendControlModel> pageInfo = new PageInfo<DividendControlModel>(models);
         return pageInfo;
+    }
+
+    //根据关键字查询合约持有
+    public PageInfo<DividendHoldingModel> getContractHolding(int index,int size,String keyWord){
+        return businessService.getPageHolding(index,size,keyWord);
     }
 }

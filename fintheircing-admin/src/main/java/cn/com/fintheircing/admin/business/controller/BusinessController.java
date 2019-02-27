@@ -130,8 +130,12 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getEntrustCondition")
-    public ResponseModel<Map<String,Object>> getEntrustCondition(@ModelAttribute UserTokenInfo userInfo){
-        return ResponseModel.sucess("",businessService.getEntrustCondition());
+    public ResponseModel<Map<String,Object>> getEntrustCondition(@ModelAttribute UserTokenInfo userInfo,@RequestBody TranferEntrustModel model){
+        try {
+            return ResponseModel.sucess("",businessService.getEntrustCondition(model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
     }
 
     @ApiOperation(value = "获取持仓数据", notes = "")

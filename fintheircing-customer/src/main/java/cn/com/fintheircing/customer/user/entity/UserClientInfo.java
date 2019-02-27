@@ -40,6 +40,16 @@ public class UserClientInfo extends AbstractEntity {
 	private String txPassword;//提现密码
 	private String source;//app或PC
 
+	private String userCode;
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
+	}
+
 	public String getSource() {
 		return source;
 	}

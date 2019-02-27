@@ -1,6 +1,7 @@
 package cn.com.fintheircing.admin.common.initConfig;
 
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
+import cn.com.fintheircing.admin.proxy.service.ProxyService;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,8 @@ public class InitComponent {
     private SystemService systemService;
     @Resource
     private RedisTemplate<String,String> redisTemplate;
+    @Resource
+    private ProxyService proxyService;
 
     @Value("${custom.system.autoBuy}")
     private String autoBuy;
@@ -44,4 +47,12 @@ public class InitComponent {
         redisTemplate.opsForValue().set(autoBuy,"true");//关闭自动购买
     }
 
+    @PostConstruct
+    public void saveAdmin(){
+        try {
+            proxyService.saveAdmin();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
 }

@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.proxy.entity;
 import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ public class ProxySpread extends AbstractEntity {
     private String salemanId;  //销售人员
     private String inviteCode;  //邀请码
     private String spreadLink;  //邀请链接
+    @Column(columnDefinition = "longblob")
     private byte[] spreadCodePic;  //二维码邀请
 
     public String getId() {

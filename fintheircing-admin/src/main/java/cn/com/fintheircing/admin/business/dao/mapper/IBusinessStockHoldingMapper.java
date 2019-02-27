@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.business.dao.mapper;
 
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferHoldingModel;
+import cn.com.fintheircing.admin.dividend.model.DividendHoldingModel;
 import cn.com.fintheircing.admin.risk.model.DangerousStockModel;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -50,4 +51,11 @@ public interface IBusinessStockHoldingMapper {
 
     @Select("<script>select t2.stock_num as stockCode,t2.stock_name as stockName,t1.created_time as createdTime,t1.uuid as holdingId,sum(t1.amount) as holdingAmount,sum(t1.current_worth) as holdingWorth from business_stock_holding t1  LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id  group by t1.stock_id</script>")
     List<DangerousStockModel> getAllStockModles();
+
+    @Select("<script>select t6.displayname as userName,t6.phone as phone,t5.contract_num as contractNo,t5.stock_num as stockNo,stock_name as stockName,t5.amount  as amount from (select t3.*,t4.contract_num,t4.user_id from (select t1.stock_num,t1.stock_name,t2.* from admin_transaction_summary t1 right join business_stock_holding t2 on t1.id=t2.stock_id) t3 left join business_contract t4 on t3.contract_id=t4.uuid) t5 LEFT JOIN user_client_info t6 on t5.user_id=t6.uuid " +
+            "<where><if test='keyWord!=null and keyWord!=\"\"'> and t5.stock_num like CONCAT(\"%\",#{keyWord},\"%\")</if></where> order by t5.stock_num</script>")
+    List<DividendHoldingModel> getPageDividendHolding(@Param("keyWord") String keyWord);
+
+    @Select("<script>select t1.uuid as id,t2.stock_num as stockNo,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as costPrice,t1.created_time as createdTime from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id where t1.delete_flag=\"0\" and t1.contract_id=#{contractId}</script>")
+    List<StockHoldingModel> getPageHolding(@Param("contractId") String contractId);
 }

@@ -6,21 +6,21 @@ public class DividendModel {
 
     private String id;
     private String stockId;
-    private String stockCode;
-    private String stockName;
-    private String dividendId;
-    private Double money;
-    private Integer amount;
-    private String activeTimeMoney;
-    private String activeTimeAmount;
-    private Double cost;
-    private Integer dividendAmount;
+    private String stockCode;   //股份代码
+    private String stockName;   //股票名
+    private String dividendId;  //除权除息id
+    private Double money;   //金钱
+    private Integer amount;     //股份数量
+    private String activeTimeMoney;     //添加金钱时间
+    private String activeTimeAmount;    //添加股份数量时间
+    private Double cost;    //股份扣款
+    private Integer dividendAmount; //除权除息 总股份 基数
 
-    private String userName;
-    private String contractId;
-    private String contractNo;
-    private Date createdTime;
-    private String crossNum;
+    private String userName;    //用户名
+    private String contractId;  //合约id
+    private String contractNo;  //合约编号
+    private Date createdTime;   //创建时间
+    private String crossNum;    //经手人编号
 
     public Integer getDividendAmount() {
         return dividendAmount;

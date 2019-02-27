@@ -10,4 +10,6 @@ public interface IAdminClientInfoRepository extends JpaRepository<AdminClientInf
     List<AdminClientInfo> findAllByBossIdAndStatus(String BossId, String status);
 
     AdminClientInfo findOneByUuid(String id);
+
+    int countByRoleGradeAndDeleteFlag(Integer role,String delete);
 }

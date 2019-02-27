@@ -1,6 +1,7 @@
 package cn.com.fintheircing.admin.business.model;
 
 import javax.validation.constraints.Pattern;
+import java.util.Date;
 
 public class StockHoldingModel {
 
@@ -22,12 +23,22 @@ public class StockHoldingModel {
     private String dealFrom;
     private Integer version;
 
+    private Date createdTime;
+
     private Double oneDay;  //风控
     private Double twoDay;  //风控
     private Double threeDay;    //风控
     private Double fourDay; //风控
     private Double fiveDay; //风控
     private Integer rudeEnd;    //是否在强平
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
 
     public Integer getRudeEnd() {
         return rudeEnd;

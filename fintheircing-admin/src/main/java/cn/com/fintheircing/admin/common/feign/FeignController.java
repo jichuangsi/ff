@@ -131,11 +131,10 @@ public class FeignController {
     @RequestMapping("/saveUserSpread")
     public ResponseModel<String> saveUserSpread(@RequestBody UserTokenInfo userInfo) throws ProxyException {
         try {
-            proxyService.saveUserSpread(userInfo);
+            return ResponseModel.sucess("",proxyService.saveUserSpread(userInfo));
         } catch (ProxyException e) {
             return ResponseModel.fail("", e.getMessage());
         }
-        return ResponseModel.sucessWithEmptyData("");
     }
 
     @ApiOperation(value = "获取当前用户的推广", notes = "")

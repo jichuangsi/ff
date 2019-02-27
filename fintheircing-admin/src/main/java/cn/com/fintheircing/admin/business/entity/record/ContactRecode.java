@@ -1,4 +1,4 @@
-package cn.com.fintheircing.admin.business.entity.recode;
+package cn.com.fintheircing.admin.business.entity.record;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -25,7 +25,7 @@ public class ContactRecode {
     private String userName;
     private String phone;
     private String applyType;//申请类型
-    private Date createTime=new Date();
+    private Date createTime;
     private String remark;
     private Integer checkStatus=0;//0为未审核,1为通过,2为未通过
     private double warnLine;//修改后的

@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.system.entity;
 import cn.com.fintheircing.admin.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,6 +22,7 @@ public class SystemBrand extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String brandName;
+    @Column(columnDefinition = "longblob")
     private byte[] content;
     private String applyOn;
 /*    private String status;

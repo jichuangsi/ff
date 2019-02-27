@@ -9,7 +9,7 @@ public enum  ControlCode {
     ,CONTROL_ENTRUSTBACKSTOCK("委托撤单",8),CONTROL_GETLEVERMONEY("发放杠杆资金",9)
     ,CONTROL_BUYSTOCK("买入股票",10),CONTROL_SELLSTOCK("卖出股票",11),CONTROL_TAXATION("收取税费",12),
     CONTROL_BUYBACK("买入撤单返还",13),CONTROL_SELLBACK("卖出撤单返还",14),CONTROL_EVERYDAY_BACK("每日返回",15),
-    CONTROL_DIVIDEND("除权除息",16);
+    CONTROL_DIVIDEND("除权除息",16),CONTROL_EQUITY("合约权益调整",17);
 
     private String name;
     private Integer index;

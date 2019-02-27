@@ -1,10 +1,9 @@
 package cn.com.fintheircing.admin.business.model.tranfer;
 
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import cn.com.fintheircing.admin.taxation.model.TaxationModel;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TranferEntrustModel extends StockEntrustModel {
 
@@ -27,7 +26,7 @@ public class TranferEntrustModel extends StockEntrustModel {
     private long dealEnd;//条件
     private String dealFlag;    //判断查询种类，委托0，成交1，流水2
     private String productName;     //产品名
-    private Map<String,String> map = new HashMap<String, String>();     //税收全部分类
+    private List<TaxationModel> list = new ArrayList<TaxationModel>();     //税收全部分类
 
     private long entrustTime;
 
@@ -47,12 +46,12 @@ public class TranferEntrustModel extends StockEntrustModel {
         this.entrustTime = entrustTime;
     }
 
-    public Map<String, String> getMap() {
-        return map;
+    public List<TaxationModel> getList() {
+        return list;
     }
 
-    public void setMap(Map<String, String> map) {
-        this.map = map;
+    public void setList(List<TaxationModel> list) {
+        this.list = list;
     }
 
     public String getProductName() {

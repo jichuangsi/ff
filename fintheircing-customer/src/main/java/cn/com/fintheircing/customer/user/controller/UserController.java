@@ -194,5 +194,19 @@ public class UserController {
         return ResponseModel.fail("", ResultCode.SYS_ERROR);
     }
 
+    @ApiOperation(value = "实名认证", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/userCer")
+    public ResponseModel userCer(@ModelAttribute UserTokenInfo userInfo,@RequestBody UserCerModel model){
+        try {
+            userService.userCer(userInfo,model);
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
 
 }

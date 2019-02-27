@@ -60,6 +60,8 @@ public class ProxyService {
     private String picSavePath;
     @Value("${custom.admin.bornday}")
     private String bornday;
+    @Value("${custom.admin.uuid}")
+    private String adminUuid;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -108,9 +110,7 @@ public class ProxyService {
         } else if (RoleCodes.ROLE_KEY_STRING.get("A") == proxyModel.getRoleGrade()
                 && userInfo.getRoleGrade() < RoleCodes.ROLE_KEY_STRING.get("S")) {//非添加员工，只能创建低于自己一级
             info.setRoleGrade(userInfo.getRoleGrade() + 1);
-        }/*else if (proxyModel.getRoleGrade()==100){   //后要注释，模拟注册系统管理员
-            info.setRoleGrade(RoleCodes.ROLE_KEY_STRING.get("M"));
-        }*/ else {
+        } else {
             throw new ProxyException(ResultCode.POWER_VISIT_ERR);
         }
         info.setStatus(AdminClientInfo.STATUS_EXIST);
@@ -164,6 +164,39 @@ public class ProxyService {
             commissionRepository.save(commission);
         }
         return "success";
+    }
+
+    //保存管理员
+    public void saveAdmin() throws Exception {
+        if (!(adminClientInfoRepository.countByRoleGradeAndDeleteFlag(RoleCodes.ROLE_KEY_STRING.get("M"), "0") > 0)) {
+            AdminClientInfo info = new AdminClientInfo();
+            info.setName("admin");
+            info.setRoleGrade(RoleCodes.ROLE_KEY_STRING.get("M"));
+            info.setStatus(AdminClientInfo.STATUS_EXIST);
+            info.setProxyNum(createdInvitCode(0, RoleCodes.ROLE_KEY_INTEGER.get(info.getRoleGrade())));
+            info.setCreatorId(adminUuid);
+            info.setUserName("Admin");
+            info.setCreatedTime(new Date());
+            info.setRemarks("管理员");
+            info.setCreatorName("admin");
+            info.setUpdatedTime(new Date());
+            info.setBornDay(bornday);
+            info.setUpdateUserId(adminUuid);
+            info.setSex(AdminClientInfo.SEX_MALE);
+            info.setUpdateUserName("admin");
+            info = adminClientInfoRepository.save(info);
+            AdminClientLoginInfo loginInfo = new AdminClientLoginInfo();
+            loginInfo.setAdminClientId(info.getUuid());
+            loginInfo.setLoginName(info.getUserName());
+            loginInfo.setPwd(changePwd(pwd));
+            loginInfo.setCreatedTime(new Date());
+            loginInfo.setCreatorId(adminUuid);
+            loginInfo.setCreatorName("admin");
+            loginInfo.setUpdatedTime(new Date());
+            loginInfo.setUpdateUserId(adminUuid);
+            loginInfo.setUpdateUserName("admin");
+            adminClientLoginInfoRepository.save(loginInfo);
+        }
     }
 
     //获取个人收佣信息
@@ -383,11 +416,12 @@ public class ProxyService {
         return "";
     }
 
-    public void saveUserSpread(UserTokenInfo userInfo) throws ProxyException {
+    public String saveUserSpread(UserTokenInfo userInfo) throws ProxyException {
         ProxySpread proxySpread = new ProxySpread();
         InputStream is = null;
         File file = null;
         ByteArrayOutputStream outputStream = null;
+        String code = "";
         try {
             proxySpread.setInviteCode(createdInvitCode(0, RoleCodes.ROLE_KEY_INTEGER.get(userInfo.getRoleGrade())));
             proxySpread.setSalemanId(userInfo.getUuid());
@@ -404,6 +438,7 @@ public class ProxyService {
             byte[] piccodes = outputStream.toByteArray();
             proxySpread.setSpreadCodePic(piccodes);
             spreadRepository.save(proxySpread);
+            code = proxySpread.getInviteCode();
         } catch (IOException e) {
             logger.error(e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -420,7 +455,7 @@ public class ProxyService {
                 file.delete();
             }
         }
-
+        return code;
     }
 
     //获取个人推广页面

@@ -1,46 +1,57 @@
 package cn.com.fintheircing.admin.business.service;
 
+import cn.com.fintheircing.admin.business.constant.ApplyStatus;
 import cn.com.fintheircing.admin.business.constant.BusinessStatus;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractControlMapper;
+import cn.com.fintheircing.admin.business.dao.mapper.IStockEquityRecordMapper;
 import cn.com.fintheircing.admin.business.dao.repository.IBusinessControlContractRepository;
-import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
 import cn.com.fintheircing.admin.business.dao.repository.IContactRecodeRepository;
-import cn.com.fintheircing.admin.business.dao.repository.IStockEntrustRecodeRespository;
+import cn.com.fintheircing.admin.business.dao.repository.IStockEquityRecordRepository;
 import cn.com.fintheircing.admin.business.entity.BusinessControlContract;
-import cn.com.fintheircing.admin.business.entity.BusinessStockEntrust;
-import cn.com.fintheircing.admin.business.entity.recode.ContactRecode;
-import cn.com.fintheircing.admin.business.entity.recode.StockEntrustRecode;
+import cn.com.fintheircing.admin.business.entity.record.ContactRecode;
+import cn.com.fintheircing.admin.business.entity.record.StockEquityRecord;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.model.ContractControlModel;
+import cn.com.fintheircing.admin.business.model.ContractModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import cn.com.fintheircing.admin.business.model.StockHoldingModel;
+import cn.com.fintheircing.admin.business.model.record.StockEquityModel;
+import cn.com.fintheircing.admin.business.utils.MappingModel2EntityConverter;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
+import cn.com.fintheircing.admin.common.model.EnumTypeModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
-import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
-import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
+import cn.com.fintheircing.admin.useritem.service.ItemService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ContractService {
     @Resource
     private IBusinessContractControlMapper iBusinessContractControlMapper;
     @Resource
-    private IBusinessStockEntrustRepository iBusinessStockEntrustRepository;
-    @Resource
-    private TransactionSummaryRepository transactionSummaryRepository;
-    @Resource
     private IBusinessControlContractRepository iBusinessControlContractRepository;
     @Resource
-    private IStockEntrustRecodeRespository iStockEntrustRecodeRespository;
-    @Resource
     private IContactRecodeRepository iContactRecodeRepository;
+    @Resource
+    private IStockEquityRecordRepository stockEquityRecordRepository;
+    @Resource
+    private BusinessService businessService;
+    @Resource
+    private IStockEquityRecordMapper stockEquityRecordMapper;
+    @Resource
+    private ItemService itemService;
+
     public List<ContractControlModel> findAllContact(String productStr) {
         List<ContractControlModel> allContact = iBusinessContractControlMapper.findAllContact(productStr);
         for (ContractControlModel m : allContact
-        ) {
+                ) {
             m.setTotalAssets(m.getBorrowMoney() + m.getPromisedMoney() + m.getCurrentWorth() + m.getLessMoney());
             m.setLessTime((m.getExpiredTime() - m.getBorrowTime()) / 1000 / 60 / 60 / 24);
             m.setVerifyStr(BusinessStatus.getName(m.getVerifyStatus()));
@@ -52,50 +63,17 @@ public class ContractService {
     public List<StockEntrustModel> updateContact(String contractId) {
         return iBusinessContractControlMapper.findAllStock(contractId);
     }
-//合约权益增 删 改操作
-    public boolean oparteStockInContact(UserTokenInfo userInfo, StockEntrustModel model) throws BusinessException {
-       //关联用户
-        String userName = iBusinessContractControlMapper.findNameByUserId(model.getUserId());
-        //冻结资金
-        double frezzeAmount = iBusinessContractControlMapper.findUserfrezzeAmountByUserId(model.getUserId());
-        //可用余额
-        double Amount = iBusinessContractControlMapper.findUserAmountByUserId(model.getUserId());
-        StockEntrustRecode stockEntrustRecode =new StockEntrustRecode();
-        stockEntrustRecode.setAmount(model.getAmount());
-        stockEntrustRecode.setBuyTime(model.getBuyTime());
-        stockEntrustRecode.setCheckStatus(0);
-        stockEntrustRecode.setContactId(model.getContractId());
-        stockEntrustRecode.setDealPrice(model.getDealPrice());
-        stockEntrustRecode.setPhone(userInfo.getPhone());
-        stockEntrustRecode.setStockName(model.getStockName());
-        stockEntrustRecode.setRemark(model.getRemark());
-        stockEntrustRecode.setStockId(model.getStockId());
-        stockEntrustRecode.setSubmitterName(userInfo.getUserName());
-        stockEntrustRecode.setSubmitterId(userInfo.getUuid());
-        stockEntrustRecode.setUserId(model.getUserId());
-        stockEntrustRecode.setUserName(userName);
-        stockEntrustRecode.setBusinessStockEntrustId(model.getBusinessStockEntrustId());
-        stockEntrustRecode.setCodeMoney(frezzeAmount);
-        stockEntrustRecode.setUserfulMoney(Amount);
-        stockEntrustRecode.setApplyType(model.getApplyType());
-        StockEntrustRecode save = iStockEntrustRecodeRespository.save(stockEntrustRecode);
-
-        if (StringUtils.isEmpty(save)){
-            return false;
-        }
-        return true;
-    }
-
 
     /**
      * 合约提交申请
+     *
      * @param model
      * @return
      */
-    public boolean applyList(UserTokenInfo userTokenInfo,ContractControlModel model) {
+    public boolean applyList(UserTokenInfo userTokenInfo, ContractControlModel model) {
         BusinessControlContract ControlContract = iBusinessControlContractRepository.findOneByUuid(model.getBusinessControlContractId());
         double funds = iBusinessContractControlMapper.findUserAmountByUserId(model.getUserId());
-        ContactRecode contactRecode =new ContactRecode();
+        ContactRecode contactRecode = new ContactRecode();
         contactRecode.setAbortLine(model.getAbortLine());
         contactRecode.setApplyType("修改");
         contactRecode.setContactId(model.getContractNo());
@@ -112,9 +90,80 @@ public class ContractService {
         contactRecode.setSubmitterId(userTokenInfo.getUuid());
         contactRecode.setSubmitterName(userTokenInfo.getUserName());
         ContactRecode save = iContactRecodeRepository.save(contactRecode);
-        if (StringUtils.isEmpty(save)){
+        if (StringUtils.isEmpty(save)) {
             return false;
         }
         return true;
+    }
+
+    //保存提交增减股份申请
+    public void saveStockRecode(UserTokenInfo userInfo, StockEquityModel model) throws BusinessException {
+        String stockId = itemService.getStockIdByStockNameAndStockCode(model.getStockName(),model.getStockCode());
+        if (StringUtils.isEmpty(stockId)){
+            throw new BusinessException(ResultCode.STOCK_NULL_ERR);
+        }
+        StockEquityRecord equityRecode = MappingModel2EntityConverter.CONVERTERFROMSTOCKEQUITYMODEL(model);
+        equityRecode.setCheckStatus(0);
+        equityRecode.setCreatedTime(new Date());
+        equityRecode.setSubmitterId(userInfo.getUuid());
+        equityRecode.setCreatorId(userInfo.getUuid());
+        equityRecode.setCreatorName(userInfo.getUserName());
+        equityRecode.setUpdateUserId(userInfo.getUuid());
+        equityRecode.setUpdateUserName(userInfo.getUserName());
+        equityRecode.setStockId(stockId);
+        stockEquityRecordRepository.save(equityRecode);
+    }
+
+    //获取增减股份时的查看的股份持仓
+    public PageInfo<StockHoldingModel> getEquityHolding(String contractId, int index, int size) {
+        return businessService.getEquityHolding(contractId, index, size);
+    }
+
+    //获取增减条件以及合约的资金
+    public Map<String, Object> getContractCondition(String contractId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<EnumTypeModel> enumTypeModels = new ArrayList<EnumTypeModel>();
+        ApplyStatus[] applyStatuses = ApplyStatus.values();
+        for (ApplyStatus status : applyStatuses) {
+            EnumTypeModel model = new EnumTypeModel();
+            model.setTypeStr(status.getName());
+            model.setType(status.getNum());
+            enumTypeModels.add(model);
+        }
+        map.put("condition", enumTypeModels);
+        ContractModel model = businessService.getContractById(contractId);
+        map.put("contract", model);
+        return map;
+    }
+
+    //获取待审核合约权益列表
+    public PageInfo<StockEquityModel> getEquityValidateList(int index, int size) {
+        PageHelper.startPage(index, size);
+        List<StockEquityModel> equityModels = stockEquityRecordMapper.getEquityValidateList();
+        PageInfo<StockEquityModel> pageInfo = new PageInfo<StockEquityModel>(equityModels);
+        return pageInfo;
+    }
+
+    //审核股票权益
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
+    public void validateContractStock(UserTokenInfo userInfo, String equityId, Integer result) throws BusinessException {
+        StockEquityRecord equityRecord = stockEquityRecordRepository.findByUuidAndDeleteFlag(equityId, "0");
+        if (1 == result || 2 == result) {
+            equityRecord.setCheckStatus(result);
+        } else {
+            throw new BusinessException(ResultCode.PARAM_ERR_MSG);
+        }
+        equityRecord.setUpdateUserName(userInfo.getUserName());
+        equityRecord.setUpdateUserId(userInfo.getUuid());
+        stockEquityRecordRepository.save(equityRecord);
+        if (1 == result){
+            if ("0".equals(equityRecord.getApplyType())){
+                //添加
+                businessService.addStockAfterValidate(equityRecord);
+            }else if ("1".equals(equityRecord.getApplyType())){
+                //删减
+                businessService.multStockAfterValidate(equityRecord);
+            }
+        }
     }
 }
