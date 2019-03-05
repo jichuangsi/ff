@@ -74,7 +74,7 @@ public class UserController {
 
     @ApiOperation(value = "用户列表-查看详情-修改所属代理", notes = "")
     @PostMapping("/changeProxyNum")
-    public ResponseModel changeProxyNum(@ModelAttribute UserTokenInfo userInfo, String userId, String proxyId) throws UserServiceException {
+    public ResponseModel changeProxyNum(@ModelAttribute UserTokenInfo userInfo,@RequestParam("userId") String userId,@RequestParam("proxyId") String proxyId) throws UserServiceException {
         return ResponseModel.sucess("", userService.changeProxyNum(userId, proxyId));
     }
 
@@ -86,14 +86,14 @@ public class UserController {
 
     @ApiOperation(value = "用户列表-查看详情-修改余额", notes = "")
     @PostMapping("/changeAmount")
-    public ResponseModel changeAmount(String id, double amount) throws UserServiceException {
+    public ResponseModel changeAmount(@RequestParam("id") String id,@RequestParam("amount") double amount) throws UserServiceException {
         return ResponseModel.sucess("", userService.changeAmount(id, amount));
     }
 
     @ApiOperation(value = "银行卡管理-银行卡全部信息", notes = "")
     @PostMapping("/bankCard")
-    public ResponseModel<PageInfo<BankCardModel>> bankCard(BankCardModel Model, int pageNum, int pageSize) throws UserServiceException {
-        PageHelper.startPage(pageNum, pageSize);
+    public ResponseModel<PageInfo<BankCardModel>> bankCard(@RequestBody BankCardModel Model) throws UserServiceException {
+        PageHelper.startPage(Model.getPageNum(), Model.getPageSize());
         List<BankCardModel> askMoneyInfoModels = userService.findAllBankCard(Model);
         PageInfo<BankCardModel> personPageInfo = new PageInfo<>(askMoneyInfoModels);
         return ResponseModel.sucess("", personPageInfo);
@@ -107,7 +107,7 @@ public class UserController {
 
     @ApiOperation(value = "管理员-短信记录", notes = "")
     @PostMapping("/findAllMessage")
-    public ResponseModel<PageInfo<MesModel>> findAllMessage(int pageNum, int pageSize) throws UserServiceException {
+    public ResponseModel<PageInfo<MesModel>> findAllMessage(@RequestParam("pageNum") int pageNum,@RequestParam("pageSize") int pageSize) throws UserServiceException {
         PageHelper.startPage(pageNum, pageSize);
         List<MesModel> allMessage = imesgService.findAllMessage();
         PageInfo<MesModel> personPageInfo = new PageInfo<>(allMessage);
@@ -116,8 +116,11 @@ public class UserController {
 
     @ApiOperation(value = "个人用户-短信记录", notes = "")
     @PostMapping("/findAllMesByUserId")
-    public ResponseModel<PageInfo<MesModel>> findAllMesByUserId(int pageNum, int pageSize, String id) throws UserServiceException {
+    public ResponseModel<PageInfo<MesModel>> findAllMesByUserId(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize")int pageSize,@RequestParam("id") String id) throws UserServiceException {
         PageHelper.startPage(pageNum, pageSize);
+        if (StringUtils.isEmpty(id)){
+            return ResponseModel.fail("", ResultCode.PARAM_MISS_MSG);
+        }
         List<MesModel> allMessage = iAdminRecodingMapper.findAllMesByUserId(id);
         PageInfo<MesModel> personPageInfo = new PageInfo<>(allMessage);
         return ResponseModel.sucess("", personPageInfo);
