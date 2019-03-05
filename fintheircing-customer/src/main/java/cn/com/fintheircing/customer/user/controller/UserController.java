@@ -16,8 +16,6 @@ import cn.com.fintheircing.customer.user.model.mes.MesInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
-import cn.com.fintheircing.customer.user.model.queryModel.Encode64;
-import cn.com.fintheircing.customer.user.model.queryModel.PassWordModel;
 import cn.com.fintheircing.customer.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -209,28 +207,6 @@ public class UserController {
         }
         return ResponseModel.sucessWithEmptyData("");
     }
-    @ApiOperation(value = "配置订单", notes = "")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
-    })
-    @GetMapping("/assignOrder")
-    public ResponseModel assignOrder(@ModelAttribute UserTokenInfo userInfo)throws LoginException{
-        try {
-           return ResponseModel.sucess("",userService.assignOrder(userInfo.getUuid()));
-        } catch (LoginException e) {
-            return ResponseModel.fail("",e.getMessage());
-        }
-    }
-    @ApiOperation(value = "账号管理", notes = "")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
-    })
-    @GetMapping("/accountManagement")
-    public ResponseModel accountManagement(@ModelAttribute UserTokenInfo userInfo)throws LoginException{
-        try {
-           return ResponseModel.sucess("",userService.accountManagement(userInfo.getUuid()));
-        } catch (LoginException e) {
-            return ResponseModel.fail("", e.getMessage());
-        }
-    }
+
+
 }

@@ -29,7 +29,7 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake" +
             ",t1.status as status " +
             " from  admin_transaction_summary t1 " +
-            "<where> t1.delete_flag=0  <if Test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if Test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=0</where> " +
+            "<where> t1.delete_flag=0  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=0</where> " +
             " </script>")
     List<TransactionModel> findAllByTemplateAndStockName(TransactionModel model);
     @Select("<script>select t1.stock_num as stockNum " +
@@ -40,7 +40,7 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake " +
             ",t1.status as status "+
             " from  admin_transaction_summary t1 " +
-            "<where> t1.delete_flag=0  <if Test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if Test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if></where> " +
+            "<where> t1.delete_flag=0  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if></where> " +
             " </script>")
     List<TransactionModel> findAll(TransactionModel model);
 
@@ -70,7 +70,7 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake" +
             ",t1.status as status " +
             " from  admin_transaction_summary t1 " +
-            "<where> t1.delete_flag=0 <if Test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if Test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=2</where> " +
+            "<where> t1.delete_flag=0 <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=2</where> " +
             " </script>")
     List<TransactionModel> findAllByBlack(TransactionModel model);
 
@@ -87,7 +87,7 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake" +
             ",t1.status as status " +
             " from  admin_transaction_summary t1 " +
-            "<where> t1.delete_flag=0  <if Test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if Test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=1</where> " +
+            "<where> t1.delete_flag=0  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=1</where> " +
             " </script>")
     List<TransactionModel> findAllByWhite(TransactionModel model);
 
@@ -104,7 +104,7 @@ public interface TransactionSummaryMapper {
             ",t1.remake as remake" +
             ",t1.status as status " +
             " from  admin_transaction_summary t1 " +
-            "<where> t1.delete_flag=0  <if Test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if Test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=3</where> " +
+            "<where> t1.delete_flag=0  <if test= \"martTemplate!=null and martTemplate!=''\"> and t1.mart_template=#{martTemplate} </if> <if test= \"stockNum!=null and stockNum!=''\"> and t1.stock_num like CONCAT('%',#{stockNum},'%') </if>  and t1.status=3</where> " +
             " </script>")
     List<TransactionModel> findAllBlackList(TransactionModel model);
 

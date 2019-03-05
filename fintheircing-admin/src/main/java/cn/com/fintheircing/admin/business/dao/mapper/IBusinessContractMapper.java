@@ -15,17 +15,17 @@ public interface IBusinessContractMapper {
     @Select("<script>select count(1) from business_contract t1 LEFT JOIN systemdetect_product t2 on t1.product_id=t2.id " +
             "<where>" +
             " t1.user_id=#{userId}" +
-            "<if Test='productNo!=null'> and t2.allot=#{productNo}  and not(t1.contract_status=2)  </if>" +
+            "<if test='productNo!=null'> and t2.allot=#{productNo}  and not(t1.contract_status=2)  </if>" +
             "</where></script>")
     int countSameContract(Map<String, Object> params);
 
     //策略
     @Select("<script>select t6.abort_line as downRate,t6.warning_line as warnRate,t5.rudeEnd,t5.borrowMoney,t5.borrowTime,t5.canUseMoney,t5.choseWay,t5.coldCash,t5.contractNum,t5.contractStatus,t5.createdTime,t5.floatMoney,t5.id,t5.promisedMoney,t5.userName,t5.userPhone,t5.worth,t5.product_id as productId  from (select sum(t4.current_worth) as worth,sum(t4.float_money) as floatMoney,t3.available_money as canUseMoney,t3.borrow_money as borrowMoney,t3.chose_way as choseWay,t3.cold_money as coldCash,t3.contract_num as contractNum,t3.contract_status as contractStatus,t3.created_time as createdTime,t3.displayname as userName,t3.expired_time as borrowTime,t3.phone as userPhone,t3.promised_money as promisedMoney,t3.rude_status as rudeEnd,t3.uuid as id,t3.risk_id,t3.product_id   from (select t1.contract_num,t2.phone,t2.displayname,t1.created_time,t1.chose_way,t1.borrow_money,t1.promised_money,t1.available_money,t1.cold_money,t1.uuid,t1.rude_status,t1.contract_status,t1.expired_time,t1.risk_id,t1.product_id from business_contract t1 left join user_client_info t2 on t1.user_id=t2.uuid) t3 left join business_stock_holding t4 on t3.uuid=t4.contract_id GROUP BY t3.uuid) t5 left join business_contract_risk t6 on t5.risk_id=t6.uuid " +
-            " <where><if Test='contractStatus!=null'> and t5.contractStatus=#{contractStatus}</if>" +
-            "<if Test='choseWay!=null'> and t5.choseWay=#{choseWay}</if>" +
-            "<if Test='contractNum!=null and contractNum!=\"\"'> and t5.contractNum like concat(\"%\",#{contractNum},\"%\")</if>" +
-            "<if Test='userPhone!=null and userPhone!=\"\"'> and t5.userPhone like concat(\"%\",#{userPhone},\"%\")</if>" +
-            "<if Test='userName!=null and userName!=\"\"'> and t5.userName like concat(\"%\",#{userName},\"%\")</if>" +
+            " <where><if test='contractStatus!=null'> and t5.contractStatus=#{contractStatus}</if>" +
+            "<if test='choseWay!=null'> and t5.choseWay=#{choseWay}</if>" +
+            "<if test='contractNum!=null and contractNum!=\"\"'> and t5.contractNum like concat(\"%\",#{contractNum},\"%\")</if>" +
+            "<if test='userPhone!=null and userPhone!=\"\"'> and t5.userPhone like concat(\"%\",#{userPhone},\"%\")</if>" +
+            "<if test='userName!=null and userName!=\"\"'> and t5.userName like concat(\"%\",#{userName},\"%\")</if>" +
             "</where>" +
             "</script>")
     List<TranferContractModel> selectPageContracts(TranferContractModel contractModel);
@@ -59,20 +59,20 @@ public interface IBusinessContractMapper {
 
     @Select("<script>select t6.warning_line as warnRate,t6.abort_line as downRate,t5.user_name as userName,t5.contract_num as contractNum,t5.phone as userPhone,t5.displayname as name,t5.chose_way as choseWay,t5.expired_time as expiredTime,t5.promised_money as promisedMoney,t5.borrow_money as borrowMoney,t5.available_money as canUseMoney,t5.worth as worth,t5.floatMoney as floatMoney,t5.warnning_status as warnningStatus,t5.contract_status as status,t5.contractId as id,t5.product_id as productId from (select t3.*,sum(t4.current_worth) as worth,sum(t4.float_money) as floatMoney from (select t2.user_name,t1.uuid as contractId,t1.contract_num,t2.phone,t2.displayname,t1.chose_way,t1.expired_time,t1.promised_money,t1.borrow_money,t1.available_money,t1.warnning_status,t1.contract_status,t1.product_id from business_contract t1 LEFT JOIN user_client_info t2 on t1.user_id=t2.uuid) t3 LEFT JOIN business_stock_holding t4 on t3.contractId=t4.contract_id GROUP BY t3.contractId) t5 LEFT JOIN business_contract_risk t6 on t5.contractId=t6.contract_id" +
             "<where>" +
-            "<if Test='userName!=null and userName!=\"\"'> and t5.user_name like concat(\"%\",#{userName},\"%\")</if>" +
-            "<if Test='contractNo!=null and contractNo!=\"\"'> and t5.contract_num like concat(\"%\",#{contractNo},\"%\")</if>" +
-            "<if Test='userPhone!=null and userPhone!=\"\"'> and t5.phone like concat(\"%\",#{userPhone},\"%\")</if>" +
-            "<if Test='name!=null and name!=\"\"'> and t5.displayname like concat(\"%\",#{name},\"%\")</if>" +
+            "<if test='userName!=null and userName!=\"\"'> and t5.user_name like concat(\"%\",#{userName},\"%\")</if>" +
+            "<if test='contractNo!=null and contractNo!=\"\"'> and t5.contract_num like concat(\"%\",#{contractNo},\"%\")</if>" +
+            "<if test='userPhone!=null and userPhone!=\"\"'> and t5.phone like concat(\"%\",#{userPhone},\"%\")</if>" +
+            "<if test='name!=null and name!=\"\"'> and t5.displayname like concat(\"%\",#{name},\"%\")</if>" +
             //添加一个预警状态
-            "<if Test='warnningStatus!=null'> and t5.warnning_status = #{warnningStatus} </if>" +
-            "<if Test='havingStock!=null and havingStock==0'> and t5.worth &gt; 0 </if>" +
-            "<if Test='havingStock!=null and havingStock==1'> and t5.worth is null </if>" +
+            "<if test='warnningStatus!=null'> and t5.warnning_status = #{warnningStatus} </if>" +
+            "<if test='havingStock!=null and havingStock==0'> and t5.worth &gt; 0 </if>" +
+            "<if test='havingStock!=null and havingStock==1'> and t5.worth is null </if>" +
             "</where>" +
             "</script>")
     List<RiskContractModel> getRiskContract(RiskControlModel model);
 
     @Select("<script>select t8.product_name as productName,t7.abort_line as abortLine,t7.warning_line as warningLine,t7.uuid as id,t7.contract_num as contractNum,t7.promised_money as promisedMoney,t7.borrow_money as borrowMoney,t7.available_money as canUseMoney,t7.amount as holdingAmount,t7.worth as worth,t7.expired_time as expiredTime,t7.canSell as canSell,t7.contract_status as status,t7.displayname as userName,t7.cold_money as coldCash from (select t5.*,t6.displayname from (select t3.*,t4.abort_line,t4.warning_line from (select t1.risk_id,t1.uuid,t1.contract_num,t1.product_id,t1.user_id,t1.promised_money,t1.borrow_money,t1.available_money,sum(t2.amount) as amount,sum(t2.current_worth) as worth,t1.expired_time,sum(t2.can_sell) as canSell,t1.contract_status,t1.cold_money from business_contract t1 left join business_stock_holding t2 on t1.uuid=t2.contract_id where t1.delete_flag=\"0\" GROUP BY t1.uuid) t3 LEFT JOIN business_contract_risk t4 on t3.risk_id=t4.uuid) t5 LEFT JOIN user_client_info t6 on t5.user_id=t6.uuid ) t7 left join systemdetect_product t8 on t7.product_id=t8.id" +
-            "<where><if Test='keyWord!=null and keyWord!=\"\"'> and t7.displayname like concat(\"%\",#{keyWord},\"%\")</if></where></script>")
+            "<where><if test='keyWord!=null and keyWord!=\"\"'> and t7.displayname like concat(\"%\",#{keyWord},\"%\")</if></where></script>")
     List<RiskContractModel> getDangerousContract(@Param("keyWord") String keyWord);
 
 

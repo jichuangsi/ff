@@ -429,7 +429,7 @@ public class BusinessService {
             if (responseModel == null) {
                 throw new BusinessException(ResultCode.STOCK_MSG_ERR);
             }
-            //responseModel.setCode(ResultCode.SUCESS);//Test
+            //responseModel.setCode(ResultCode.SUCESS);//test
             if (ResultCode.SUCESS.equals(responseModel.getCode())) {
                 logger.debug("code:" + responseModel.getCode() + "msg:" + responseModel.getMsg());
                 entrust.setEntrustStatus(EntrustStatus.ENTRUST_REPORT.getIndex());
@@ -810,7 +810,7 @@ public class BusinessService {
             if (null == response) {
                 throw new BusinessException(ResultCode.STOCK_MSG_ERR);
             }
-            response.setCode(ResultCode.SUCESS);//Test
+            response.setCode(ResultCode.SUCESS);//test
             if (ResultCode.SUCESS.equals(response.getCode())) {
                 logger.debug("code:" + response.getCode() + "msg:" + response.getMsg());
                 entrust.setEntrustStatus(EntrustStatus.ENTRUST_BACK_ING.getIndex());

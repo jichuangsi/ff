@@ -2,7 +2,6 @@ package cn.com.fintheircing.customer.user.service.Impl;
 
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.utils.CommonUtil;
-import cn.com.fintheircing.customer.user.dao.mapper.IContactMapper;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserClientInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
@@ -15,10 +14,7 @@ import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.AccountPayException;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.*;
-import cn.com.fintheircing.customer.user.model.contact.contactModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
-import cn.com.fintheircing.customer.user.model.queryModel.Encode64;
-import cn.com.fintheircing.customer.user.model.queryModel.PassWordModel;
 import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import cn.com.fintheircing.customer.user.service.RegisterService;
 import cn.com.fintheircing.customer.user.service.UserService;
@@ -33,7 +29,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -50,8 +45,6 @@ public class UserServiceImpl implements UserService {
     private RegisterService registerService;
     @Resource
     private IUserClientLoginInfoRepository userClientLoginInfoRepository;
-    @Resource
-    private IContactMapper iContactMapper;
     @Value("${custom.pay.url}")
     private String url;
     @Value("${custom.pay.reciveWay}")
@@ -235,36 +228,5 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return true;
-    }
-
-    /**
-     * 配置订单详情
-     *
-     * @param uuid
-     * @return
-     */
-    @Override
-    public List<contactModel> assignOrder(String uuid) throws LoginException{
-        if (StringUtils.isEmpty(uuid)){
-            throw new LoginException(ResultCode.PARAM_ERR_MSG);
-        }
-        return iContactMapper.QueryContractInfos(uuid);
-
-    }
-
-    /**
-     * 账号管理
-     *
-     * @param uuid
-     * @return
-     */
-    @Override
-    public List<contactModel> accountManagement(String uuid) throws LoginException{
-        List<contactModel> contactModels = iContactMapper.accountManagement(uuid);
-        for (contactModel m:contactModels
-             ) {
-            m.setAllValue(m.getMarketValue()+m.getAvailableMoney());
-        }
-        return contactModels;
     }
 }

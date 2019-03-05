@@ -1,4 +1,4 @@
-package cn.com.fintheircing.customer.user.model.queryModel;
+package cn.com.fintheircing.customer.user.model;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

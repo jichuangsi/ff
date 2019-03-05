@@ -104,7 +104,7 @@ custom:
     shenRegex:  ^((000)|(002)|(300)|(200))[0-9]*$
     chuangRegex:  ^3[0-9]*$
   pay:
-    url: http://Test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
+    url: http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
     reciveWay: gatewayCheckstandPay
     weChatOrAilpay: appPayPublic
     queryPayResult: queryPayResult

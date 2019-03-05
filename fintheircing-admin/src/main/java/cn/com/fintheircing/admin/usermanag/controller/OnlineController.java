@@ -9,10 +9,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -32,9 +30,7 @@ public class OnlineController {
     private IRecodeInfoMapper iRecodeInfoMapper;
     @GetMapping("/findAllInfo")
     @ApiOperation(value = "系统监控--在线人数", notes = "")
-    public ResponseModel<PageInfo<OnlineUserInfo>> findAllInfo(@RequestParam(value = "pageNum") int pageNum,
-                                                               @RequestParam (value = "pageSize")int pageSize,
-                                                               @Param(value = "userName") String userName) {
+    public ResponseModel<PageInfo<OnlineUserInfo>> findAllInfo(int pageNum, int pageSize,String userName) {
         PageHelper.startPage(pageNum,pageSize);
         List<OnlineUserInfo> allInfo = customerFeignService.findAllRecoding();
         List<OnlineUserInfo> allByName = onlineService.findAllByName(allInfo, userName);
