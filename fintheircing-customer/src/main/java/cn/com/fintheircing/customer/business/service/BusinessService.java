@@ -142,9 +142,7 @@ public class BusinessService {
         model.setProductModel(productModel);
         //保证数据安全，重新获取产品信息
         model.setFirst(getNeedMoney(model.getProductModel(), model.getPromisedMoney()));
-        /*if (!(userAccountRepository.updatePayAccount(model.getPromisedMoney()+model.getFirst(),userInfo.getUuid())>0)){
-            throw new BusinessException(ResultCode.ACCOUNT_PAY_ERR);
-        }//扣款先*/
+
         RecodeInfoPay payInfo = costAccount(userInfo, model);//扣款
         model.setBorrowMoney(model.getPromisedMoney() * model.getProductModel().getLeverRate());
         model.setContractNum(newContractNum());

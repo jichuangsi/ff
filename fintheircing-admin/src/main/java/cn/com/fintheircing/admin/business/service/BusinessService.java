@@ -972,7 +972,11 @@ public class BusinessService {
             entrust.setEntrustStatus(EntrustStatus.ENTRUST_FINSISH.getIndex());
             entrust.setUpdatedTime(new Date());
             entrust.setDealNum(BusinessUtils.addIntMethod((int) order.getActQuantity(), entrust.getDealNum()));
-            entrust.setDealPrice(BusinessUtils.avgMethod((double) order.getActPrice(), entrust.getDealPrice()));
+            if (entrust.getDealPrice()==0) {
+                entrust.setDealPrice(BusinessUtils.avgMethod((double) order.getActPrice(), entrust.getDealPrice()));
+            }else {
+                entrust.setDealPrice((double) order.getActPrice());
+            }
             entrust.setDealTime(System.currentTimeMillis());
             Double rate = 1 - (entrust.getDealNum() * entrust.getDealPrice()) / (entrust.getBusinessAmount() * entrust.getBusinessPrice());
             BusinessContract contract = businessContractRepository.findByUuid(entrust.getContractId());

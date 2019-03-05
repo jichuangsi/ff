@@ -6,10 +6,14 @@ import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.system.exception.SystemException;
+import cn.com.fintheircing.admin.system.model.agreement.AgreementModel;
+import cn.com.fintheircing.admin.system.model.bank.BankCardModel;
 import cn.com.fintheircing.admin.system.model.black.BlackModel;
 import cn.com.fintheircing.admin.system.model.brand.BrandModel;
+import cn.com.fintheircing.admin.system.model.company.CompanyModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidayModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidaySearchModel;
+import cn.com.fintheircing.admin.system.model.photo.PhotoModel;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -37,7 +41,6 @@ public class SystemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveHoliday")
-    @CrossOrigin
     public ResponseModel saveHoliday(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody HolidayModel model) {
         if (!IsManage(userInfo)) {
             return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
@@ -168,11 +171,11 @@ public class SystemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/saveBlack")
-    public ResponseModel saveBlack(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody BlackModel model){
+    public ResponseModel saveBlack(@ModelAttribute UserTokenInfo userInfo, @Validated @RequestBody BlackModel model) {
         try {
-            systemService.saveBlack(userInfo,model);
+            systemService.saveBlack(userInfo, model);
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
@@ -183,8 +186,8 @@ public class SystemController {
     })
     @GetMapping("/getBlacks/{index}/{size}")
     public ResponseModel<PageInfo<BlackModel>> getBlacks(@ModelAttribute UserTokenInfo userInfo
-            ,@PathVariable("index") int index,@PathVariable("size") int size){
-        return ResponseModel.sucess("",systemService.getPageBlack(index,size));
+            , @PathVariable("index") int index, @PathVariable("size") int size) {
+        return ResponseModel.sucess("", systemService.getPageBlack(index, size));
     }
 
     @ApiOperation(value = "移除黑名单", notes = "")
@@ -192,11 +195,11 @@ public class SystemController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @DeleteMapping("/deleteBlackIp/{id}")
-    public ResponseModel deleteBlackIp(@ModelAttribute UserTokenInfo userInfo,@PathVariable("id") String id){
+    public ResponseModel deleteBlackIp(@ModelAttribute UserTokenInfo userInfo, @PathVariable("id") String id) {
         try {
-            systemService.deleteBlack(userInfo,id);
+            systemService.deleteBlack(userInfo, id);
         } catch (SystemException e) {
-            return ResponseModel.fail("",e.getMessage());
+            return ResponseModel.fail("", e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
@@ -208,4 +211,202 @@ public class SystemController {
         return false;
     }
 
+    @ApiOperation(value = "获取图片列表", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getPhotos")
+    public ResponseModel<List<PhotoModel>> getPhotos(@ModelAttribute UserTokenInfo userInfo, @RequestParam("on") String on) {
+        if (!IsManage(userInfo)) {
+            return ResponseModel.fail("", ResultCode.POWER_VISIT_ERR);
+        }
+        try {
+            return ResponseModel.sucess("", systemService.getPhotos(on));
+        } catch (SystemException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "修改图片", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updatePhoto")
+    public ResponseModel updatePhoto(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, PhotoModel model) {
+        try {
+            systemService.updatePhoto(file, model, userInfo);
+        } catch (SystemException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "保存图片", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/savePhoto")
+    public ResponseModel savePhoto(@RequestParam MultipartFile file, @ModelAttribute UserTokenInfo userInfo, PhotoModel model) {
+        try {
+            systemService.savePhoto(userInfo, model, file);
+        } catch (SystemException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "删除图片", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @DeleteMapping("/deletePhotos")
+    public ResponseModel deletePhotos(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model) {
+        systemService.deletePhoto(userInfo, model);
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "保存线下", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/saveBankCard")
+    public ResponseModel saveBankCard(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody BankCardModel model) {
+        try {
+            systemService.saveBankCard(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "删除线下", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @DeleteMapping("/deleteBankCard")
+    public ResponseModel deleteBankCard(@ModelAttribute UserTokenInfo userInfo, @RequestBody IdModel model) {
+        try {
+            systemService.deleteBankCard(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "修改线下", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateBankCard")
+    public ResponseModel updateBankCard(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody BankCardModel model){
+        try {
+            systemService.updateBankCard(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "查看线下", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getBankCard")
+    public ResponseModel<List<BankCardModel>> getBankCard(@ModelAttribute UserTokenInfo userInfo){
+        return ResponseModel.sucess("",systemService.getBankCard());
+    }
+
+    @ApiOperation(value = "查看公司信息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getCompanyDetails")
+    public ResponseModel<List<CompanyModel>> getCompanyDetails(@ModelAttribute UserTokenInfo userInfo){
+        return ResponseModel.sucess("",systemService.getCompanyDetails());
+    }
+
+    @ApiOperation(value = "修改公司信息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateCompanyDetail")
+    public ResponseModel updateCompanyDetail(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody CompanyModel model){
+        try {
+            systemService.updateCompanyDetail(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "保存公司信息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/saveCompanyDetail")
+    public ResponseModel saveCompanyDetail(@ModelAttribute UserTokenInfo userInfo,@Validated @RequestBody CompanyModel model){
+        systemService.saveCompanyDetail(userInfo, model);
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "删除公司信息", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @DeleteMapping("/deleteCompanyDetail")
+    public ResponseModel deleteCompanyDetail(@ModelAttribute UserTokenInfo userInfo,@RequestBody IdModel model){
+        try {
+            systemService.deleteCompanyDetail(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "保存协议内容", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/saveAgreement")
+    public ResponseModel saveAgreement(@ModelAttribute UserTokenInfo userInfo, @RequestBody AgreementModel model){
+        systemService.saveAgreement(userInfo, model);
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "删除协议内容", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @DeleteMapping("/deleteAgreement")
+    public ResponseModel deleteAgreement(@ModelAttribute UserTokenInfo userInfo,@RequestBody IdModel model){
+        try {
+            systemService.deleteAgreement(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "修改协议内容", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateAgreement")
+    public ResponseModel updateAgreement(@ModelAttribute UserTokenInfo userInfo,@RequestBody AgreementModel model){
+        try {
+            systemService.updateAgreement(userInfo, model);
+        } catch (SystemException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return  ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "查看协议内容", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getAgreements")
+    public ResponseModel<List<AgreementModel>> getAgreements(@ModelAttribute UserTokenInfo userInfo){
+        return ResponseModel.sucess("",systemService.getAgreements());
+    }
 }
