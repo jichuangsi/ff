@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 合约权益调整记录表
+ */
 @Entity
 public class StockEquityRecord extends AbstractEntity{
     @Id
@@ -14,6 +17,7 @@ public class StockEquityRecord extends AbstractEntity{
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
     private String uuid;
     private String submitterId;//提交的人
+    private String submitterName;//提交的人
     private String contactId;//
     private String applyType;//申请类型,0为添加1为扣除
     private String remark;

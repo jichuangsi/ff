@@ -25,7 +25,7 @@ public interface IAdminRecodingMapper {
     @Select("<script>select t2.is_sucess AS isSucess,t2.content AS content,t2.create_time AS createTime from Recoding t2 where t2.user_id=#{id}</script>")
     List<MesModel> findAllMesByUserId(String id);
     @Select("<script>select t1.uuid as mesId ,t1.title as title,t1.content as content,t1.send_time as sendTime,t1.status as status from admin_mes_info t1 <where>" +
-            " <if test=\"title!=null and title !=''\"> and t1.title LIKE #{title} </if> and  t1.delete_flag=0</where></script>")
+            " <if Test=\"title!=null and title !=''\"> and t1.title LIKE #{title} </if> and  t1.delete_flag=0</where></script>")
     List<MesInfoModel> findMesBymark(Map<String, Object> parms);
     @Update("<script>update admin_mes_info t1 set t1.delete_flag=1 where t1.uuid=#{mesId}</script>")
     int deleteMesInfo(String mesId);

@@ -207,7 +207,6 @@ public class HttpUtils {
 
     @Test
     public void testDemoTest(){
-        Date parse = DateUtils.parse("2019-2-18 18:39:42");
-        System.out.println((System.currentTimeMillis()-parse.getTime())/1000/60/60/24);
+
     }
 }

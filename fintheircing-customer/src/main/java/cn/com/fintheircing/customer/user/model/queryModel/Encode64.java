@@ -1,4 +1,4 @@
-package cn.com.fintheircing.customer.user.model;
+package cn.com.fintheircing.customer.user.model.queryModel;
 
 public class Encode64 {
     private String base64;

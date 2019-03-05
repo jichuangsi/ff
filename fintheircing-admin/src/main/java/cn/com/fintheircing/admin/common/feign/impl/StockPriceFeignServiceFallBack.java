@@ -13,4 +13,9 @@ public class StockPriceFeignServiceFallBack implements IStockPriceFeignService {
     public ResponseModel<List<QuotesTenModel>> getQuotesTenList(GetQuotesTenListRequestModel model) {
         return ResponseModel.fail("");
     }
+
+    @Override
+    public ResponseModel<List<QuotesTenModel>> getQuotesTenListTest() {
+        return null;
+    }
 }

@@ -41,134 +41,6 @@ public class ContractControlModel {
     private String remark;//备注
     private String BusinessContractId;//合约Id
 
-    public String getBusinessContractId() {
-        return BusinessContractId;
-    }
-
-    public void setBusinessContractId(String businessContractId) {
-        BusinessContractId = businessContractId;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getBusinessControlContractId() {
-        return businessControlContractId;
-    }
-
-    public void setBusinessControlContractId(String businessControlContractId) {
-        this.businessControlContractId = businessControlContractId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public double getColdMoney() {
-        return coldMoney;
-    }
-
-    public void setColdMoney(double coldMoney) {
-        this.coldMoney = coldMoney;
-    }
-
-    public String getProxyNum() {
-        return proxyNum;
-    }
-
-    public void setProxyNum(String proxyNum) {
-        this.proxyNum = proxyNum;
-    }
-
-    public String getProxyName() {
-        return proxyName;
-    }
-
-    public void setProxyName(String proxyName) {
-        this.proxyName = proxyName;
-    }
-
-    public double getNetAssets() {
-        return netAssets;
-    }
-
-    public void setNetAssets(double netAssets) {
-        this.netAssets = netAssets;
-    }
-
-    public Long getLessTime() {
-        return lessTime;
-    }
-
-    public void setLessTime(Long lessTime) {
-        this.lessTime = lessTime;
-    }
-
-    public double getTotalAssets() {
-        return totalAssets;
-    }
-
-    public void setTotalAssets(double totalAssets) {
-        this.totalAssets = totalAssets;
-    }
-
-    public Long getExpiredTime() {
-        return expiredTime;
-    }
-
-    public void setExpiredTime(Long expiredTime) {
-        this.expiredTime = expiredTime;
-    }
-
-    public double getCurrentWorth() {
-        return currentWorth;
-    }
-
-    public void setCurrentWorth(double currentWorth) {
-        this.currentWorth = currentWorth;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public Double getFirstMoney() {
-        return firstMoney;
-    }
-
-    public void setFirstMoney(Double firstMoney) {
-        this.firstMoney = firstMoney;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
     public String getId() {
         return id;
     }
@@ -183,6 +55,14 @@ public class ContractControlModel {
 
     public void setContractNo(String contractNo) {
         this.contractNo = contractNo;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPhone() {
@@ -305,6 +185,30 @@ public class ContractControlModel {
         this.borrowTime = borrowTime;
     }
 
+    public Long getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(Long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    public Long getLessTime() {
+        return lessTime;
+    }
+
+    public void setLessTime(Long lessTime) {
+        this.lessTime = lessTime;
+    }
+
+    public Double getFirstMoney() {
+        return firstMoney;
+    }
+
+    public void setFirstMoney(Double firstMoney) {
+        this.firstMoney = firstMoney;
+    }
+
     public Double getLessMoney() {
         return lessMoney;
     }
@@ -327,5 +231,101 @@ public class ContractControlModel {
 
     public void setVerifyStr(String verifyStr) {
         this.verifyStr = verifyStr;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public double getCurrentWorth() {
+        return currentWorth;
+    }
+
+    public void setCurrentWorth(double currentWorth) {
+        this.currentWorth = currentWorth;
+    }
+
+    public double getTotalAssets() {
+        return totalAssets;
+    }
+
+    public void setTotalAssets(double totalAssets) {
+        this.totalAssets = totalAssets;
+    }
+
+    public double getNetAssets() {
+        return netAssets;
+    }
+
+    public void setNetAssets(double netAssets) {
+        this.netAssets = netAssets;
+    }
+
+    public String getProxyNum() {
+        return proxyNum;
+    }
+
+    public void setProxyNum(String proxyNum) {
+        this.proxyNum = proxyNum;
+    }
+
+    public String getProxyName() {
+        return proxyName;
+    }
+
+    public void setProxyName(String proxyName) {
+        this.proxyName = proxyName;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public double getColdMoney() {
+        return coldMoney;
+    }
+
+    public void setColdMoney(double coldMoney) {
+        this.coldMoney = coldMoney;
+    }
+
+    public String getBusinessControlContractId() {
+        return businessControlContractId;
+    }
+
+    public void setBusinessControlContractId(String businessControlContractId) {
+        this.businessControlContractId = businessControlContractId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getBusinessContractId() {
+        return BusinessContractId;
+    }
+
+    public void setBusinessContractId(String businessContractId) {
+        BusinessContractId = businessContractId;
     }
 }

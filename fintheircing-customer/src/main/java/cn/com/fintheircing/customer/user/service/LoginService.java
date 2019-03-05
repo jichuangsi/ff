@@ -43,8 +43,7 @@ public class LoginService {
 
     public String userLogin(UserTokenInfo model) throws LoginException {
         UserTokenInfo user = registerService.getUserForLogin(model);
-        //缓存到redis 用来显示在线人数
-        redisTemplate.opsForList().leftPush("0", user.getUuid());
+
         if (user == null) {
             throw new LoginException(ResultCode.LOGIN_USER_NOTEXIST);
         }
@@ -61,19 +60,24 @@ public class LoginService {
         if (StringUtils.isEmpty(token)) throw new LoginException(ResultCode.LOGIN_USER_ERR);
         if ("app".equalsIgnoreCase(model.getApplyOn())) {
             redisTemplate.opsForValue().set(tokrnPre + user.getUuid(), token, appLongTime, TimeUnit.DAYS);
+            redisTemplate.opsForValue().set(user.getUuid()+",", user.getUuid(), appLongTime, TimeUnit.DAYS);
+
         } else {
             redisTemplate.opsForValue().set(tokrnPre + user.getUuid(), token, longTime, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(user.getUuid()+",", user.getUuid(), longTime, TimeUnit.MINUTES);
         }
+
         return token;
     }
 
     public List<OnlineUserInfo> viewOnline() {
         List<OnlineUserInfo> list = new ArrayList<>();
-        List<String> range = redisTemplate.opsForList().range("0", 0, -1);
-        for (String id : range
+        String[] ids =redisTemplate.opsForValue().get("0", 0, -1).split(",");
+        for (String id : ids
         ) {
             OnlineUserInfo userForLogin = registerService.getUserForLogin(id);
             list.add(userForLogin);
+
         }
 
         return list;

@@ -4,11 +4,15 @@ import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.exception.AccountPayException;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.*;
+import cn.com.fintheircing.customer.user.model.contact.contactModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
+import cn.com.fintheircing.customer.user.model.queryModel.Encode64;
+import cn.com.fintheircing.customer.user.model.queryModel.PassWordModel;
 import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
 
@@ -68,4 +72,18 @@ public interface UserService {
      * @return
      */
     boolean checkTxPassword(String uuid);
+
+    /**
+     * 配置订单详情
+     * @param uuid
+     * @return
+     */
+    List<contactModel> assignOrder(String uuid)throws LoginException;
+
+    /**
+     * 账号管理
+     * @param uuid
+     * @return
+     */
+    List<contactModel> accountManagement(String uuid)throws LoginException;
 }

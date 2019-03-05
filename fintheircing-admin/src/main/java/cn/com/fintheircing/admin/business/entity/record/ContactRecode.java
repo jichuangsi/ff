@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.util.Date;
 /**
  * ContactRecode class
@@ -25,7 +26,7 @@ public class ContactRecode {
     private String userName;
     private String phone;
     private String applyType;//申请类型
-    private Date createTime;
+    private Date createTime=new Date();
     private String remark;
     private Integer checkStatus=0;//0为未审核,1为通过,2为未通过
     private double warnLine;//修改后的
@@ -35,6 +36,25 @@ public class ContactRecode {
     private double userFunds;//账户资金余额
     private double promiseMoney;//保证金
     private String goodsType;//产品类型
+    private String businessControlContractId;
+    @Version
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getBusinessControlContractId() {
+        return businessControlContractId;
+    }
+
+    public void setBusinessControlContractId(String businessControlContractId) {
+        this.businessControlContractId = businessControlContractId;
+    }
 
     public String getSubmitterId() {
         return submitterId;

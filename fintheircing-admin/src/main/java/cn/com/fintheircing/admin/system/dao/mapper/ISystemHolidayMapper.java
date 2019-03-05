@@ -23,8 +23,8 @@ public interface ISystemHolidayMapper {
             ",end_time as `end`,remarks as remarks," +
             "`status` as `status` from system_holiday" +
             " <where> `delete_flag` = '0' " +
-            "<if test='longtime!=0'> and begin_time &lt;= #{longtime} </if>" +
-            "<if test='longtime!=0'> and end_time &gt;= #{longtime}   </if>" +
+            "<if Test='longtime!=0'> and begin_time &lt;= #{longtime} </if>" +
+            "<if Test='longtime!=0'> and end_time &gt;= #{longtime}   </if>" +
             "</where></script>")
     List<HolidayModel> selectHolidays(HolidaySearchModel model);
 

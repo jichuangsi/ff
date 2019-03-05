@@ -32,6 +32,7 @@ public interface IBusinessContractControlMapper {
             "</where></script>")
     List<ContractControlModel> getContractControls(ContractControlModel model);
 
+
     @Select("<script>select t4.uuid as businessControlContractId, t1.user_id as userId,t6.phone as phone,t6.user_name as name" +
             " ,t1.uuid as BusinessContractId,t1.cold_money as coldMoney,t5.user_name as proxyName," +
             " t5.proxy_num as proxyNum, t1.first_interest as firstMoney ," +
@@ -44,16 +45,17 @@ public interface IBusinessContractControlMapper {
             "  ON t4.contract_id=t1.uuid left join admin_client_info t5 on t5.user_client_info_id=t1.user_id left join" +
             " user_client_info t6 on t6.uuid=t1.user_id" +
             " <where>" +
-            " <if test= \"productStr!=null and productStr!=''\"> and t2.product_name =#{productStr}</if>" +
-            " and t1.delete_flag=\"0\"</where></script>")
+            " <if test= \"productStr!=null\"> and t2.product_name =#{productStr}</if>" +
+            " and t1.delete_flag=\"0\" and t3.delete_flag=\"0\" and t4.delete_flag=\"0\"" +
+            " and t5.delete_flag=\"0\" and t6.delete_flag=\"0\"</where></script>")
     List<ContractControlModel> findAllContact(String productStr);
-    @Select("<script>select t3.user_id as userId,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_num as stockNum,t2.stock_name as stockName,t1.amount as dealNum,t1.cost_price as dealPrice," +
+    @Select("<script>select t1.user_id as userId,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_num as stockNum,stock_name as stockName,t1.deal_num as dealNum,t1.deal_price as dealPrice," +
             " t1.deal_time as buyTime, t1.uuid as BusinessStockEntrustId ,t3.account as userfulMoney," +
             " t3.frezze_amount as codeMoney" +
-            " from business_stock_entrust t1 left join admin_transaction_summary t2 left join" +
+            " from business_stock_entrust t1 left join admin_transaction_summary t2 on t1.stock_id =t2.id left join" +
             " user_account t3 on t1.user_id =t3.user_id" +
             " where t1.stock_id =t2.uuid and t1.entrust_status=3 and t1.business_to=0" +
-            " and t1.delete_falg=0" +
+            " and t1.delete_falg=\"0\" and t2.delete_falg=\"0\" " +
             "   </script>")
     List<StockEntrustModel> findAllStock(String contractId);
 

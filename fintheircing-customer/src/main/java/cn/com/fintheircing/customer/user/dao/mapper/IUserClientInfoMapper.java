@@ -40,7 +40,9 @@ public interface IUserClientInfoMapper {
 
 	@Select("<script>select inviter_id as inviterId from user_client_info where uuid=#{id}</script>")
 	UserClientInfo selectSaleMan(Map<String, Object> params);
-	@Select("<script>selcet t1.uuid as,t1.user_name as userName ,t2.ip_address as ipAddress ,t2.status as status　from user_client_info t1,user_client_login_info t2 where t1.uuid=t2.client_info_id and t1.uuid=#{id}</script>")
+	@Select("<script>selcet t2.login_time as loginTime,t2.logout_time as logoutTime,t1.uuid as,t1.user_name as userName ,t2.ip_address as ipAddress ,t2.status as status　" +
+			" from user_client_info t1,user_client_login_info t2 " +
+			"where t1.uuid=t2.client_info_id and t1.uuid=#{id}</script>")
 	OnlineUserInfo findAllOnline(String id);
 
 	/**
