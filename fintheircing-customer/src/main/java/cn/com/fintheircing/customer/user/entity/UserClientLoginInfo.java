@@ -3,6 +3,7 @@ package cn.com.fintheircing.customer.user.entity;
 import cn.com.fintheircing.customer.common.entity.AbstractEntity;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,6 +23,7 @@ public class UserClientLoginInfo extends AbstractEntity{
 	private String status;
 	private Date loginTime;
 	private Date logoutTime;
+	@Column(columnDefinition = "longblob")
 	private String photo;
 
 	public String getPhoto() {

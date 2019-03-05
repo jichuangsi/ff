@@ -15,7 +15,9 @@ import java.util.List;
 public interface IDistributService {
 
     List<ProductModel> findForDayAllot();
+
     List<ProductModel> findForMonthAllot();
+
     List<ProductModel> findForSpecialAllot();
 
     ProductModel updateProduce(ProductModel model);
@@ -25,4 +27,6 @@ public interface IDistributService {
     ProductModel getProduct(String productId);
 
     String getProductName(String productId);
+
+    void saveProduct();
 }

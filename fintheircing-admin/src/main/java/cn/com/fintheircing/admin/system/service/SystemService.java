@@ -6,23 +6,20 @@ import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
-import cn.com.fintheircing.admin.system.dao.mapper.IBlackListMapper;
-import cn.com.fintheircing.admin.system.dao.repository.IBlackListRepository;
-import cn.com.fintheircing.admin.system.dao.mapper.IAdminRoleMapper;
-import cn.com.fintheircing.admin.system.dao.mapper.ISystemBrandMapper;
-import cn.com.fintheircing.admin.system.dao.mapper.ISystemHolidayMapper;
-import cn.com.fintheircing.admin.system.dao.repository.IAdminRoleRepository;
-import cn.com.fintheircing.admin.system.dao.repository.ISystemBrandRepository;
-import cn.com.fintheircing.admin.system.dao.repository.ISystemHolidayRepository;
-import cn.com.fintheircing.admin.system.entity.SystemBlackList;
-import cn.com.fintheircing.admin.system.entity.SystemBrand;
-import cn.com.fintheircing.admin.system.entity.SystemHoliday;
+import cn.com.fintheircing.admin.system.dao.mapper.*;
+import cn.com.fintheircing.admin.system.dao.repository.*;
+import cn.com.fintheircing.admin.system.entity.*;
 import cn.com.fintheircing.admin.system.exception.SystemException;
+import cn.com.fintheircing.admin.system.model.agreement.AgreementModel;
+import cn.com.fintheircing.admin.system.model.bank.BankCardModel;
 import cn.com.fintheircing.admin.system.model.black.BlackModel;
 import cn.com.fintheircing.admin.system.model.brand.BrandModel;
+import cn.com.fintheircing.admin.system.model.company.CompanyModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidayModel;
 import cn.com.fintheircing.admin.system.model.holiday.HolidaySearchModel;
-import cn.com.fintheircing.admin.useritem.utils.MappingModel2EntityConverter;
+import cn.com.fintheircing.admin.system.model.photo.PhotoModel;
+import cn.com.fintheircing.admin.system.utils.MappingEntity2ModelConverter;
+import cn.com.fintheircing.admin.system.utils.MappingModel2EntityConverter;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -36,10 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SystemService {
@@ -65,6 +59,22 @@ public class SystemService {
     private IBlackListRepository blackListRepository;
     @Resource
     private IBlackListMapper blackListMapper;
+    @Resource
+    private ISystemPhotoRepository systemPhotoRepository;
+    @Resource
+    private ISystemPhotoMapper systemPhotoMapper;
+    @Resource
+    private ISystemBankCardRepository systemBankCardRepository;
+    @Resource
+    private ISystemBankCardMapper systemBankCardMapper;
+    @Resource
+    private ISystemCompanyRepository systemCompanyRepository;
+    @Resource
+    private ISystemCompanyMapper systemCompanyMapper;
+    @Resource
+    private ISystemAgreementRepository systemAgreementRepository;
+    @Resource
+    private ISystemAgreementMapper systemAgreementMapper;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -160,25 +170,6 @@ public class SystemService {
         params.put("list", ids.getIds());
         return systemBrandMapper.deleteBrands(params) > 0;
     }
-
-   /* //修改轮播图不修改图片，仅修改其他字段
-    public void updateBrand(UserTokenInfo userInfo,BrandModel model) throws SystemException{
-        SystemBrand systemBrand = systemBrandRepository.findByUuid(model.getUuid());
-        if ((SystemBrand.APPLYON_PC.equals(model.getApplyOn())
-                ||SystemBrand.APPLYON_APP.equals(model.getApplyOn()))
-                &&(SystemBrand.STATUS_ACTIVE.equals(model.getStatus())
-                ||SystemBrand.STATUS_DISABLED.equals(model.getStatus()))){
-            systemBrand.setApplyOn(model.getApplyOn());
-            systemBrand.setStatus(model.getStatus());
-        }else {
-            throw new SystemException(ResultCode.VISIT_VALIDITY_MSG);
-        }
-        systemBrand.setBrandName(model.getName());
-        systemBrand.setUpdateUserName(userInfo.getUserName());
-        systemBrand.setUpdateUserId(userInfo.getUuid());
-        systemBrand.setUpdatedTime(new Date());
-        systemBrandRepository.save(systemBrand);
-    }*/
 
     //修改轮播图
     public void updateBrand(MultipartFile file, BrandModel model, UserTokenInfo userInfo) throws SystemException {
@@ -291,9 +282,9 @@ public class SystemService {
     }
 
     //保存黑名单
-    @CacheEvict(value = "black_list",allEntries = true)
-    public void saveBlack(UserTokenInfo userInfo,BlackModel model) throws SystemException{
-        if (isExistBlackList(model.getIpAdress())){
+    @CacheEvict(value = "black_list", allEntries = true)
+    public void saveBlack(UserTokenInfo userInfo, BlackModel model) throws SystemException {
+        if (isExistBlackList(model.getIpAdress())) {
             throw new SystemException(ResultCode.BLACK_ALREAD_EXIST);
         }
         SystemBlackList systemBlackList = new SystemBlackList();
@@ -308,22 +299,240 @@ public class SystemService {
     }
 
     //分页获取黑名单
-    public PageInfo<BlackModel> getPageBlack(int index,int size){
-        PageHelper.startPage(index,size);
+    public PageInfo<BlackModel> getPageBlack(int index, int size) {
+        PageHelper.startPage(index, size);
         List<BlackModel> blackModels = blackListMapper.getPageBlack();
         PageInfo<BlackModel> pageInfo = new PageInfo<BlackModel>(blackModels);
         return pageInfo;
     }
 
     //移除黑名单
-    public void deleteBlack(UserTokenInfo userInfo,String id) throws SystemException{
+    public void deleteBlack(UserTokenInfo userInfo, String id) throws SystemException {
         SystemBlackList systemBlackList = blackListRepository.findByUuid(id);
-        if (null == systemBlackList){
-            throw  new SystemException(ResultCode.SELECT_NULL_MSG);
+        if (null == systemBlackList) {
+            throw new SystemException(ResultCode.SELECT_NULL_MSG);
         }
         systemBlackList.setUpdateUserName(userInfo.getUserName());
         systemBlackList.setUpdateUserId(userInfo.getUuid());
         systemBlackList.setDeleteFlag("1");
         blackListRepository.save(systemBlackList);
+    }
+
+    //获取图片列表
+    public List<PhotoModel> getPhotos(String on) throws SystemException {
+        IsTruePhotoAsk(on);
+        List<SystemPhoto> photos = systemPhotoRepository.findByStayOnAndDeleteFlag(on, "0");
+        List<PhotoModel> models = new ArrayList<PhotoModel>();
+        photos.forEach(photo -> {
+            models.add(MappingEntity2ModelConverter.CONVERTERFROMSYSTEMPHOTO(photo));
+        });
+        return models;
+    }
+
+    private void IsTruePhotoAsk(String on) throws SystemException {
+        if (!SystemPhoto.APPLE_ON_DOWN.equals(on) && !SystemPhoto.APPLY_ON_BANK.equals(on)
+                && !SystemPhoto.APPLY_ON_LOGO.equals(on)) {
+            throw new SystemException(ResultCode.PARAM_ERR_MSG);
+        }
+    }
+
+    //保存轮播图
+    public void savePhoto(UserTokenInfo userInfo, PhotoModel model, MultipartFile file) throws SystemException {
+        IsTruePhotoAsk(model.getOn());
+        SystemPhoto systemPhoto = MappingModel2EntityConverter.CONVERTERFROMPHOTOMODEL(model);
+        try {
+            /* systemBrand.setStatus(SystemBrand.STATUS_ACTIVE);*/
+            systemPhoto.setContent(file.getBytes());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new SystemException(ResultCode.PIC_UPLODE_MSG);
+        }
+        systemPhoto.setCreatedTime(new Date());
+        systemPhoto.setCreatorId(userInfo.getUuid());
+        systemPhoto.setCreatorName(userInfo.getUserName());
+        systemPhoto.setUpdateUserId(userInfo.getUuid());
+        systemPhoto.setUpdateUserName(userInfo.getUserName());
+        systemPhotoRepository.save(systemPhoto);
+    }
+
+    //删图
+    public Boolean deletePhoto(UserTokenInfo userInfo, IdModel ids) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", userInfo.getUserName());
+        params.put("id", userInfo.getUuid());
+        params.put("time", new Date());
+        params.put("list", ids.getIds());
+        return systemPhotoMapper.deletePhoto(params) > 0;
+    }
+
+    //修改图
+    public void updatePhoto(MultipartFile file, PhotoModel model, UserTokenInfo userInfo) throws SystemException {
+        IsTruePhotoAsk(model.getOn());
+        SystemPhoto systemPhoto = systemPhotoRepository.findByUuid(model.getId());
+        if (systemPhoto != null) {
+            try {
+                systemPhoto.setContent(file.getBytes());
+                systemPhoto.setUpdatedTime(new Date());
+                systemPhoto.setUpdateUserId(userInfo.getUuid());
+                systemPhoto.setUpdateUserName(userInfo.getUserName());
+                systemPhotoRepository.save(systemPhoto);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+                throw new SystemException(ResultCode.PIC_UPLODE_MSG);
+            }
+        } else {
+            throw new SystemException(ResultCode.SELECT_NULL_MSG);
+        }
+    }
+
+    //保存线下银行卡
+    public void saveBankCard(UserTokenInfo userInfo, BankCardModel model) throws SystemException {
+        if (!SystemBankCard.STATUS_ACTIVE.equals(model.getStatus()) && !SystemBankCard.STATUS_COLD.equals(model.getStatus())) {
+            throw new SystemException(ResultCode.PARAM_ERR_MSG);
+        }
+        SystemBankCard bankCard = MappingModel2EntityConverter.CONVERTERFROMBANKCARDMODEL(model);
+        bankCard.setCreatedTime(new Date());
+        bankCard.setCreatorId(userInfo.getUuid());
+        bankCard.setCreatorName(userInfo.getUserName());
+        bankCard.setUpdateUserId(userInfo.getUuid());
+        bankCard.setUpdateUserName(userInfo.getUserName());
+        systemBankCardRepository.save(bankCard);
+    }
+
+    //删除线下银行卡
+    public void deleteBankCard(UserTokenInfo userInfo, IdModel model) throws SystemException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", userInfo.getUserName());
+        params.put("id", userInfo.getUuid());
+        params.put("time", new Date());
+        params.put("list", model.getIds());
+        if (!(systemBankCardMapper.deleteCard(params) > 0)) {
+            throw new SystemException(ResultCode.DELETE_FAIL_MSG);
+        }
+    }
+
+    //修改线下银行卡
+    public void updateBankCard(UserTokenInfo userInfo, BankCardModel model) throws SystemException {
+        if (!SystemBankCard.STATUS_ACTIVE.equals(model.getStatus()) && !SystemBankCard.STATUS_COLD.equals(model.getStatus())) {
+            throw new SystemException(ResultCode.PARAM_ERR_MSG);
+        }
+        SystemBankCard bankCard = systemBankCardRepository.findByUuid(model.getId());
+        if (null == bankCard) {
+            throw new SystemException(ResultCode.SELECT_NULL_MSG);
+        }
+        bankCard.setUpdateUserName(userInfo.getUserName());
+        bankCard.setUpdateUserId(userInfo.getUuid());
+        bankCard.setStatus(model.getStatus());
+        bankCard.setName(model.getName());
+        bankCard.setBankName(model.getBankName());
+        bankCard.setBankCardNo(model.getBankCardNo());
+        systemBankCardRepository.save(bankCard);
+    }
+
+    //查看公司线下银行卡
+    public List<BankCardModel> getBankCard(){
+        List<SystemBankCard> bankCards = systemBankCardRepository.findByDeleteFlag("0");
+        List<BankCardModel> models = new ArrayList<BankCardModel>();
+        bankCards.forEach(card->{
+            models.add(MappingEntity2ModelConverter.CONVERTERFROMSYSTEMBANKCARD(card));
+        });
+        return models;
+    }
+
+    //查看公司信息
+    public List<CompanyModel> getCompanyDetails(){
+        List<SystemCompany> companies = systemCompanyRepository.findByDeleteFlag("0");
+        List<CompanyModel> models = new ArrayList<CompanyModel>();
+        companies.forEach(company->{
+            models.add(MappingEntity2ModelConverter.CONVERTERFROMSYSTEMCOMPANY(company));
+        });
+        return models;
+    }
+
+    //修改公司信息
+    public void updateCompanyDetail(UserTokenInfo userInfo,CompanyModel model) throws SystemException{
+        SystemCompany company = systemCompanyRepository.findByUuid(model.getId());
+        if (null == company){
+            throw new SystemException(ResultCode.SELECT_NULL_MSG);
+        }
+        company.setCompanyName(model.getCompanyName());
+        company.setCopyright(model.getCopyright());
+        company.setEmail(model.getEmail());
+        company.setHotLine(model.getHotLine());
+        company.setIcpNo(model.getIcpNo());
+        company.setQqAccount(model.getQqAccount());
+        company.setServerTime(model.getServerTime());
+        company.setWechatAccount(model.getWechatAccount());
+        company.setUpdateUserId(userInfo.getUuid());
+        company.setUpdateUserName(userInfo.getUserName());
+        systemCompanyRepository.save(company);
+    }
+
+    //保存公司信息
+    public void saveCompanyDetail(UserTokenInfo userInfo,CompanyModel model){
+        SystemCompany company = MappingModel2EntityConverter.CONVERTERFROMCOMPANYMODEL(model);
+        company.setUpdateUserName(userInfo.getUserName());
+        company.setUpdateUserId(userInfo.getUuid());
+        company.setCreatedTime(new Date());
+        company.setCreatorId(userInfo.getUuid());
+        company.setCreatorName(userInfo.getUserName());
+        systemCompanyRepository.save(company);
+    }
+
+    //删除公司信息
+    public void deleteCompanyDetail(UserTokenInfo userInfo,IdModel model) throws SystemException{
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", userInfo.getUserName());
+        params.put("id", userInfo.getUuid());
+        params.put("time", new Date());
+        params.put("list", model.getIds());
+        if (!(systemCompanyMapper.deleteCompanies(params) > 0)) {
+            throw new SystemException(ResultCode.DELETE_FAIL_MSG);
+        }
+    }
+
+    //保存协议内容
+    public void saveAgreement(UserTokenInfo userInfo, AgreementModel model){
+        SystemAgreement agreement = MappingModel2EntityConverter.CONVERTERFROMAGREEMENTMODEL(model);
+        agreement.setCreatedTime(new Date());
+        agreement.setCreatorId(userInfo.getUuid());
+        agreement.setCreatorName(userInfo.getUserName());
+        agreement.setUpdateUserId(userInfo.getUuid());
+        agreement.setUpdateUserName(userInfo.getUserName());
+        systemAgreementRepository.save(agreement);
+    }
+
+    //删除协议内容
+    public void deleteAgreement(UserTokenInfo userInfo,IdModel model) throws SystemException{
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", userInfo.getUserName());
+        params.put("id", userInfo.getUuid());
+        params.put("time", new Date());
+        params.put("list", model.getIds());
+        if (!(systemAgreementMapper.deleteAgreement(params) > 0)) {
+            throw new SystemException(ResultCode.DELETE_FAIL_MSG);
+        }
+    }
+
+    //修改协议内容
+    public void updateAgreement(UserTokenInfo userInfo,AgreementModel model) throws SystemException{
+        SystemAgreement agreement = systemAgreementRepository.findByUuid(model.getId());
+        if (null == agreement){
+            throw new SystemException(ResultCode.SELECT_NULL_MSG);
+        }
+        agreement.setContent(model.getContent());
+        agreement.setUpdateUserName(userInfo.getUserName());
+        agreement.setUpdateUserId(userInfo.getUuid());
+        systemAgreementRepository.save(agreement);
+    }
+
+    //查看协议内容
+    public List<AgreementModel> getAgreements(){
+        List<SystemAgreement> agreements = systemAgreementRepository.findByDeleteFlag("0");
+        List<AgreementModel> models = new ArrayList<AgreementModel>();
+        agreements.forEach(agreement->{
+            models.add(MappingEntity2ModelConverter.CONVERTERFROMSYSTEMAGREEMENT(agreement));
+        });
+        return models;
     }
 }

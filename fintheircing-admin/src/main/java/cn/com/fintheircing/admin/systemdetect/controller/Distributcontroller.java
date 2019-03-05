@@ -27,42 +27,46 @@ import java.util.List;
 public class Distributcontroller {
     @Resource
     private IDistributService iDistributService;
+
     @ApiOperation(value = "产品列表-日配", notes = "")
     @ApiImplicitParams({
     })
     @GetMapping("/findDay")
-    public ResponseModel<PageInfo<ProductModel>> findForDayAllot(int pageNum ,int pageSize){
+    public ResponseModel<PageInfo<ProductModel>> findForDayAllot(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<ProductModel> allUserInfo =iDistributService.findForDayAllot();
+        List<ProductModel> allUserInfo = iDistributService.findForDayAllot();
         PageInfo<ProductModel> personPageInfo = new PageInfo<>(allUserInfo);
-        return ResponseModel.sucess("",personPageInfo);
+        return ResponseModel.sucess("", personPageInfo);
     }
+
     @ApiOperation(value = "产品列表-月配", notes = "")
     @ApiImplicitParams({
     })
     @GetMapping("/findmonth")
-    public ResponseModel<PageInfo<ProductModel>> findForMonthAllot(int pageNum ,int pageSize){
+    public ResponseModel<PageInfo<ProductModel>> findForMonthAllot(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<ProductModel> allUserInfo =iDistributService.findForMonthAllot();
+        List<ProductModel> allUserInfo = iDistributService.findForMonthAllot();
         PageInfo<ProductModel> personPageInfo = new PageInfo<>(allUserInfo);
-        return ResponseModel.sucess("",personPageInfo);
+        return ResponseModel.sucess("", personPageInfo);
     }
+
     @ApiOperation(value = "产品列表-特殊", notes = "")
     @ApiImplicitParams({
     })
     @GetMapping("/findspec")
-    public ResponseModel<PageInfo<ProductModel>> findForSpecialAllot(int pageNum ,int pageSize){
+    public ResponseModel<PageInfo<ProductModel>> findForSpecialAllot(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<ProductModel> allUserInfo =iDistributService.findForSpecialAllot();
+        List<ProductModel> allUserInfo = iDistributService.findForSpecialAllot();
         PageInfo<ProductModel> personPageInfo = new PageInfo<>(allUserInfo);
-        return ResponseModel.sucess("",personPageInfo);
+        return ResponseModel.sucess("", personPageInfo);
     }
+
     @ApiOperation(value = "产品列表-修改", notes = "")
     @ApiImplicitParams({
     })
     @PostMapping("/update")
-    public ResponseModel<ProductModel> findForSpecialAllot(@Validated @RequestBody ProductModel model){
-        return ResponseModel.sucess("",iDistributService.updateProduce(model));
+    public ResponseModel<ProductModel> findForSpecialAllot(@Validated @RequestBody ProductModel model) {
+        return ResponseModel.sucess("", iDistributService.updateProduce(model));
     }
 
 }

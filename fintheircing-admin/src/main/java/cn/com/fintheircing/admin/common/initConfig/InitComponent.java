@@ -3,6 +3,7 @@ package cn.com.fintheircing.admin.common.initConfig;
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
 import cn.com.fintheircing.admin.system.service.SystemService;
+import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,8 @@ public class InitComponent {
     private RedisTemplate<String,String> redisTemplate;
     @Resource
     private ProxyService proxyService;
+    @Resource
+    private IDistributService distributService;
 
     @Value("${custom.system.autoBuy}")
     private String autoBuy;
@@ -48,9 +51,18 @@ public class InitComponent {
     }
 
     @PostConstruct
-    public void saveAdmin(){
+    public void saveAdmin(){    //保存管理员
         try {
             proxyService.saveAdmin();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    @PostConstruct
+    public void saveProduct(){  //保存产品
+        try {
+            distributService.saveProduct();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

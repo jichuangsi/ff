@@ -61,7 +61,11 @@ public class UserServiceImpl implements UserService {
     public String getSaleManId(String id) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("id", id);
-        return userClientInfoMapper.selectSaleMan(params).getInviterId();
+        UserClientInfo userClientInfo = userClientInfoMapper.selectSaleMan(params);
+        if (null != userClientInfo) {
+            return userClientInfoMapper.selectSaleMan(params).getInviterId();
+        }
+        return "";
     }
 
     @Override
@@ -95,7 +99,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean addOrUseMoney(RecodeInfoPayModel model) {
-        if (model.getCostCount() >=iUserAccountRepository.findAccountByUserId(model.getUserId())) {
+        if (model.getCostCount() >= iUserAccountRepository.findAccountByUserId(model.getUserId())) {
             return false;
         } else {
             UserAccount byId = iUserAccountRepository.findOneByUserId(model.getUserId());
@@ -111,10 +115,11 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
+
     @Override
-    public void updatePass(UserTokenInfo userInfo, PassWordModel model) throws LoginException{
-        validatePass(userInfo,model);
-        UserClientLoginInfo loginInfo = userClientLoginInfoRepository.findByDeleteFlagAndLoginNameAndPwd("0",userInfo.getUserName(), CommonUtil.toSha256(model.getOldPassWord()));
+    public void updatePass(UserTokenInfo userInfo, PassWordModel model) throws LoginException {
+        validatePass(userInfo, model);
+        UserClientLoginInfo loginInfo = userClientLoginInfoRepository.findByDeleteFlagAndLoginNameAndPwd("0", userInfo.getUserName(), CommonUtil.toSha256(model.getOldPassWord()));
         loginInfo.setUpdatedTime(new Date());
         loginInfo.setUpdateUserId(userInfo.getUuid());
         loginInfo.setUpdateUserName(userInfo.getUserName());
@@ -128,10 +133,10 @@ public class UserServiceImpl implements UserService {
         userInfo.setPwd(model.getOldPassWord());
         userInfo.setLoginName(userInfo.getUserName());
         UserTokenInfo user = registerService.getUserForLogin(userInfo);
-        if(user==null){
+        if (user == null) {
             throw new LoginException(ResultCode.LOGIN_USER_NOTEXIST);
         }
-        if(UserClientInfo.STATUS_STOP.equals(user.getStatus())){
+        if (UserClientInfo.STATUS_STOP.equals(user.getStatus())) {
             throw new LoginException(ResultCode.LOGIN_USER_STOP);
         }
     }
@@ -153,11 +158,12 @@ public class UserServiceImpl implements UserService {
         UserClientLoginInfo oneByAndClientInfoId = userClientLoginInfoRepository.findOneByAndClientInfoId(uuid);
         oneByAndClientInfoId.setPhoto(base64.getBase64());
         UserClientLoginInfo save = userClientLoginInfoRepository.save(oneByAndClientInfoId);
-        if (StringUtils.isEmpty(save)){
+        if (StringUtils.isEmpty(save)) {
             return false;
         }
         return true;
     }
+
     @Override
     public UserTokenInfo getUserTokenInfo(String id) {
         return userClientInfoMapper.findByUuid(id);
@@ -169,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
         if (!model.getTxPassword().equalsIgnoreCase(byUuid.getTxPassword())) {
             throw new AccountPayException(ResultCode.PASSWORD_IS_MISTAKE);
-        }else {
+        } else {
             if (iUserAccountRepository.findAccountByUserId(uuid) < model.getAmount()) {
                 throw new AccountPayException(ResultCode.ACCOUNT_LESS_ERR);
             }
@@ -185,25 +191,27 @@ public class UserServiceImpl implements UserService {
             return model1;
         }
     }
+
     /**
      * 增加或者修改支付密码
-     *  @param uuid
+     *
+     * @param uuid
      * @param txPassword
      */
     @Override
-    public boolean addOrChangePassword(String uuid, String txPassword)throws AccountPayException{
-       if (StringUtils.isEmpty(uuid)){
-           throw new  AccountPayException(ResultCode.ENTRUST_VALIDATE_ERR);
-       }
-       if (StringUtils.isEmpty(txPassword)){
-           throw new AccountPayException(ResultCode.PASSWORD_NOT_EMPTY);
-       }
-       Map<String,Object> parms =new HashMap<>();
-       parms.put("uuid",uuid);
-       parms.put("txPassword",txPassword);
-       if (userClientInfoMapper.addOrChangePassword(parms)==1){
-           return true;
-       }
+    public boolean addOrChangePassword(String uuid, String txPassword) throws AccountPayException {
+        if (StringUtils.isEmpty(uuid)) {
+            throw new AccountPayException(ResultCode.ENTRUST_VALIDATE_ERR);
+        }
+        if (StringUtils.isEmpty(txPassword)) {
+            throw new AccountPayException(ResultCode.PASSWORD_NOT_EMPTY);
+        }
+        Map<String, Object> parms = new HashMap<>();
+        parms.put("uuid", uuid);
+        parms.put("txPassword", txPassword);
+        if (userClientInfoMapper.addOrChangePassword(parms) == 1) {
+            return true;
+        }
         return false;
     }
 
@@ -216,7 +224,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkTxPassword(String uuid) {
         String txPassword = userInfoRepository.findByUuid(uuid).getTxPassword();
-        if (StringUtils.isEmpty(txPassword)){
+        if (StringUtils.isEmpty(txPassword)) {
             return false;
         }
         return true;

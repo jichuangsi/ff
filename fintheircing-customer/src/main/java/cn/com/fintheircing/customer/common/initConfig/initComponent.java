@@ -1,9 +1,7 @@
 package cn.com.fintheircing.customer.common.initConfig;
 
-import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.constant.RoleCodes;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
-import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.common.utils.CommonUtil;
 import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
@@ -11,7 +9,6 @@ import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
 import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
-import cn.com.fintheircing.customer.user.exception.RegisterheckExistException;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,12 +59,7 @@ public class initComponent {
                 UserTokenInfo userInfo = new UserTokenInfo();
                 userInfo.setUuid(userClientInfo.getUuid());
                 userInfo.setRoleGrade(userClientInfo.getRoleGrade());
-                ResponseModel<String> response = adminFeignService.saveUserSpread(userInfo);
-                if (!ResultCode.SUCESS.equals(response.getCode())) {
-                    throw new RegisterheckExistException(response.getMsg());
-                }
 
-                userClientInfo.setUserCode(response.getData());
                 userClientInfo = userInfoRepository.save(userClientInfo);
 
                 //新增登录信息
