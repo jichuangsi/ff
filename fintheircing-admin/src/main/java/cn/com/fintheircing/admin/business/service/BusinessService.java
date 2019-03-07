@@ -6,10 +6,7 @@ import cn.com.fintheircing.admin.business.constant.RudeStatus;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessContractMapper;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockEntrustMapper;
 import cn.com.fintheircing.admin.business.dao.mapper.IBusinessStockHoldingMapper;
-import cn.com.fintheircing.admin.business.dao.repository.IBusinessContractRepository;
-import cn.com.fintheircing.admin.business.dao.repository.IBusinessControlContractRepository;
-import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockEntrustRepository;
-import cn.com.fintheircing.admin.business.dao.repository.IBusinessStockHoldingRepository;
+import cn.com.fintheircing.admin.business.dao.repository.*;
 import cn.com.fintheircing.admin.business.entity.BusinessContract;
 import cn.com.fintheircing.admin.business.entity.BusinessControlContract;
 import cn.com.fintheircing.admin.business.entity.BusinessStockEntrust;
@@ -24,6 +21,7 @@ import cn.com.fintheircing.admin.business.model.tranfer.TranferHoldingModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferStockEntrustModel;
 import cn.com.fintheircing.admin.business.synchronize.SynchronizeComponent;
 import cn.com.fintheircing.admin.business.utils.BusinessUtils;
+import cn.com.fintheircing.admin.business.utils.MappingModel2EntityConverter;
 import cn.com.fintheircing.admin.common.constant.ControlCode;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.constant.VerifyCode;
@@ -36,7 +34,6 @@ import cn.com.fintheircing.admin.common.model.MotherAccount;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.CommonUtil;
-import cn.com.fintheircing.admin.common.utils.MappingModel2EntityConverter;
 import cn.com.fintheircing.admin.dividend.model.DividendHoldingModel;
 import cn.com.fintheircing.admin.risk.dao.repository.IBusinessContractRiskRepository;
 import cn.com.fintheircing.admin.risk.entity.BusinessContractRisk;
@@ -557,12 +554,8 @@ public class BusinessService {
         }
         holding.setCanSell(canSell - model.getAmount());
         holding.setColdAmount(cold + model.getAmount());
-        try {
-            businessStockHoldingRepository.save(holding);
-        } catch (Exception e) {
-            logger.error("userId:" + model.getUserId() + ",msg:持仓修改失败");
-            throw new BusinessException(e.getMessage());
-        }
+        businessStockHoldingRepository.save(holding);
+
         BusinessStockEntrust entrust = new BusinessStockEntrust();
         entrust.setEntrustStatus(EntrustStatus.ENTRUST_NOT_DEAL.getIndex());
         entrust.setDealFrom(model.getDealFrom());
@@ -655,16 +648,16 @@ public class BusinessService {
     //分页获取申报
     public TranferStockEntrustModel getPageEntrust(StockEntrustModel model) {
         PageHelper.startPage(model.getPageIndex(), model.getPageSize());
-        Map<String,Object> params = new HashMap<String, Object>();
-        params.put("status",model.getStatus());
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("status", model.getStatus());
         List<String> contractIds = new ArrayList<String>();
-        if (StockEntrustModel.ENTRUST_RUDE.equals(model.getRudeStatus())){
+        if (StockEntrustModel.ENTRUST_RUDE.equals(model.getRudeStatus())) {
             List<BusinessContract> contracts = businessContractRepository.findByDeleteFlagAndRudeStatus("0", RudeStatus.BUSINESS_RUDE.getNum());
-            for (BusinessContract contract:contracts){
+            for (BusinessContract contract : contracts) {
                 contractIds.add(contract.getUuid());
             }
         }
-        params.put("list",contractIds);
+        params.put("list", contractIds);
         List<StockEntrustModel> models = businessStockEntrustMapper.selectPageEntrusts(params);
         models.forEach(stockEntrust -> {
             if (stockEntrust.getBusiness() == BusinessStockEntrust.STOCK_BUY) {
@@ -972,9 +965,9 @@ public class BusinessService {
             entrust.setEntrustStatus(EntrustStatus.ENTRUST_FINSISH.getIndex());
             entrust.setUpdatedTime(new Date());
             entrust.setDealNum(BusinessUtils.addIntMethod((int) order.getActQuantity(), entrust.getDealNum()));
-            if (entrust.getDealPrice()==0) {
+            if (entrust.getDealPrice() == 0) {
                 entrust.setDealPrice(BusinessUtils.avgMethod((double) order.getActPrice(), entrust.getDealPrice()));
-            }else {
+            } else {
                 entrust.setDealPrice((double) order.getActPrice());
             }
             entrust.setDealTime(System.currentTimeMillis());
@@ -1030,10 +1023,10 @@ public class BusinessService {
     public void dealSellMethod(TodayAcceptOrder order, String account) throws BusinessException {
         BusinessStockEntrust entrust = businessStockEntrustRepository
                 .findByDeleteFlagAndMontherAccountAndDealNo("0", account, order.getOrderNumber());
-        if (entrust.getDealNum() == entrust.getBusinessAmount()) {
-            return;
-        }
         if (null != entrust) {
+            if (entrust.getDealNum() == entrust.getBusinessAmount()) {
+                return;
+            }
             entrust.setEntrustStatus(EntrustStatus.ENTRUST_FINSISH.getIndex());
             entrust.setDealPrice(BusinessUtils.avgMethod(entrust.getDealPrice(), (double) order.getActPrice()));
             entrust.setDealNum(BusinessUtils.addIntMethod(entrust.getDealNum(), (int) order.getActQuantity()));
@@ -1190,7 +1183,6 @@ public class BusinessService {
             }
             List<BusinessStockHolding> holdings = businessStockHoldingRepository.findByDeleteFlagAndContractId("0", contract.getUuid());
             for (BusinessStockHolding holding : holdings) {
-                holding.setAmount(BusinessUtils.addIntMethod(holding.getColdAmount(), holding.getAmount()));
                 holding.setCanSell(holding.getAmount());
                 holding.setColdAmount(0);
             }
@@ -1250,7 +1242,7 @@ public class BusinessService {
         businessContractRepository.save(contract);
         BusinessControlContract controlContract = new BusinessControlContract();
         controlContract.setCreatedTime(new Date());
-        controlContract.setLessMoney(contract.getAvailableMoney() + contract.getColdMoney());
+        controlContract.setLessMoney(avaliable + coldMoney);
         controlContract.setVerifyStatus(VerifyCode.VERIFY_S.getIndex());
         controlContract.setControlType(ControlCode.CONTROL_SHUT.getIndex());
         controlContract.setCreatorId(model.getUserId());
@@ -1637,7 +1629,7 @@ public class BusinessService {
     }
 
     //获取查询委托相关条件
-    public Map<String, Object> getEntrustCondition(TranferEntrustModel model) throws BusinessException{
+    public Map<String, Object> getEntrustCondition(TranferEntrustModel model) throws BusinessException {
         Map<String, Object> map = new HashMap<String, Object>();
         ProductStatus[] productStatuses = ProductStatus.values();
         List<EnumTypeModel> products = new ArrayList<EnumTypeModel>();
@@ -1657,16 +1649,16 @@ public class BusinessService {
         }
         PageInfo<TranferEntrustModel> pageInfo = getSystemEntrusts(model);
         Set<String> entrustIds = new HashSet<String>();
-        for (TranferEntrustModel entrustModel:pageInfo.getList()){
+        for (TranferEntrustModel entrustModel : pageInfo.getList()) {
             entrustIds.add(entrustModel.getId());
         }
         List<TaxationModel> taxationModels = businessTaxationMapper.selectEntrustTaxIn(new ArrayList<String>(entrustIds));
         map.put("products", products);
         map.put("entrusts", entrusts);
         map.put("taxations", taxationModels);
-        map.put("index",pageInfo.getPageNum());
-        map.put("size",pageInfo.getPageSize());
-        map.put("total",pageInfo.getTotal());
+        map.put("index", pageInfo.getPageNum());
+        map.put("size", pageInfo.getPageSize());
+        map.put("total", pageInfo.getTotal());
         return map;
     }
 
@@ -1674,7 +1666,7 @@ public class BusinessService {
     public PageInfo<TranferHoldingModel> getPageHolding(TranferHoldingModel model) throws BusinessException {
         PageHelper.startPage(model.getPageIndex(), model.getPageSize());
         List<TranferHoldingModel> tranferHoldingModels = businessStockHoldingMapper.getAllHolding(model);
-        if (0 == tranferHoldingModels.size()){
+        if (0 == tranferHoldingModels.size()) {
             throw new BusinessException(ResultCode.SELECT_NULL_MSG);
         }
         for (TranferHoldingModel tranferHoldingModel : tranferHoldingModels) {
@@ -1693,9 +1685,9 @@ public class BusinessService {
         List<String> stockCodes = new ArrayList<String>();
         Map<String, Integer> quantitiesCanSell = new HashMap<String, Integer>();
         List<StockHoldingModel> holdings = businessStockHoldingMapper.selectStockNum(contractId, "", "");
-        if (0 == holdings.size()){
-            BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0",contractId);
-            if (null == contract){
+        if (0 == holdings.size()) {
+            BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0", contractId);
+            if (null == contract) {
                 throw new BusinessException(ResultCode.CONTRACT_ALREAD_ABORT);
             }
             contract.setRudeStatus(RudeStatus.BUSINESS_RUDE.getNum());
@@ -1752,12 +1744,12 @@ public class BusinessService {
     //分页获取危险股票列表
     public PageInfo<DangerousStockModel> getPageDangerousStock(String keyWord, Integer index, Integer size, Integer orderBy) throws BusinessException {
         Set<String> contractIds = JSONObject.parseObject(redisTemplate.opsForValue().get(controlContractKey), ContractJsonModel.class).getContractIds();
-        if (0 == contractIds.size()){
+        if (0 == contractIds.size()) {
             throw new BusinessException(ResultCode.SELECT_NULL_MSG);
         }
-        Map<String,Object> params = new HashMap<String, Object>();
-        params.put("keyWord",keyWord);
-        params.put("list",new ArrayList<String>(contractIds) );
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("keyWord", keyWord);
+        params.put("list", new ArrayList<String>(contractIds));
         List<DangerousStockModel> dangerousStockModels = businessStockHoldingMapper.getDangerousStockModels(params);
         List<DangerousStockModel> holdingStockModels = businessStockHoldingMapper.getAllStockModles();
         Map<String, Double> sumWorth = new HashMap<String, Double>();
@@ -1770,30 +1762,30 @@ public class BusinessService {
         }
         Map<String, Double> dangerousWorth = new HashMap<String, Double>();
         for (DangerousStockModel holding : holdingStockModels) {
-            if (dangerousWorth.containsKey(holding.getStockCode()+"dangerousWorth")){
-                dangerousWorth.put(holding.getStockCode()+"dangerousWorth",dangerousWorth.get(holding.getStockCode()+"dangerousWorth")+holding.getHoldingWorth());
-            }else {
-                dangerousWorth.put(holding.getStockCode()+"dangerousWorth",holding.getHoldingWorth());
+            if (dangerousWorth.containsKey(holding.getStockCode() + "dangerousWorth")) {
+                dangerousWorth.put(holding.getStockCode() + "dangerousWorth", dangerousWorth.get(holding.getStockCode() + "dangerousWorth") + holding.getHoldingWorth());
+            } else {
+                dangerousWorth.put(holding.getStockCode() + "dangerousWorth", holding.getHoldingWorth());
             }
         }
         for (int i = 0; i < dangerousStockModels.size(); i++) {//排序
             String stockCode = dangerousStockModels.get(i).getStockCode();
             dangerousStockModels.get(i).setGlobalAmount(sumamounts);
             dangerousStockModels.get(i).setGlobalWorth(summoneys);
-            dangerousStockModels.get(i).setDangerousRate(dangerousWorth.get(stockCode+"dangerousWorth")/sumWorth.get(stockCode+"sumWorth"));
-            dangerousStockModels.get(i).setGlobalRate(sumWorth.get(stockCode+"sumWorth")/summoneys);
-            if (TransactionSummaryStatus.DYNAMIC_BLACKLIST.getIndex() == dangerousStockModels.get(i).getStockStatus()){
+            dangerousStockModels.get(i).setDangerousRate(dangerousWorth.get(stockCode + "dangerousWorth") / sumWorth.get(stockCode + "sumWorth"));
+            dangerousStockModels.get(i).setGlobalRate(sumWorth.get(stockCode + "sumWorth") / summoneys);
+            if (TransactionSummaryStatus.DYNAMIC_BLACKLIST.getIndex() == dangerousStockModels.get(i).getStockStatus()) {
                 dangerousStockModels.get(i).setToBlack("no");
             }
         }
-        List<DangerousStockModel> pageModels =  sortDangerousList(dangerousStockModels,orderBy);
-        int i = (index-1)*size;
-        if (i>pageModels.size()-1){
-            throw new  BusinessException(ResultCode.SELECT_NULL_MSG);
+        List<DangerousStockModel> pageModels = sortDangerousList(dangerousStockModels, orderBy);
+        int i = (index - 1) * size;
+        if (i > pageModels.size() - 1) {
+            throw new BusinessException(ResultCode.SELECT_NULL_MSG);
         }
-        int j = i+size>=pageModels.size()?pageModels.size():i+size;
+        int j = i + size >= pageModels.size() ? pageModels.size() : i + size;
         List<DangerousStockModel> page = new ArrayList<DangerousStockModel>();
-        for (int z = i; z < j ;z++){
+        for (int z = i; z < j; z++) {
             page.add(pageModels.get(z));
         }
         PageInfo<DangerousStockModel> pageInfo = new PageInfo<DangerousStockModel>(page);
@@ -1806,7 +1798,7 @@ public class BusinessService {
     }
 
     //排序危险股票列表
-    private List<DangerousStockModel> sortDangerousList(List<DangerousStockModel> models,Integer orderBy){
+    private List<DangerousStockModel> sortDangerousList(List<DangerousStockModel> models, Integer orderBy) {
         switch (orderBy) {
             case 1:
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
@@ -1821,7 +1813,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o1.getHoldingWorth() - o2.getHoldingWorth());
+                        int i = (int) (o1.getHoldingWorth() - o2.getHoldingWorth());
                         return i;
                     }
                 });
@@ -1839,7 +1831,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o1.getGlobalWorth() - o2.getGlobalWorth());
+                        int i = (int) (o1.getGlobalWorth() - o2.getGlobalWorth());
                         return i;
                     }
                 });
@@ -1848,7 +1840,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o1.getDangerousRate() - o2.getDangerousRate());
+                        int i = (int) (o1.getDangerousRate() - o2.getDangerousRate());
                         return i;
                     }
                 });
@@ -1857,7 +1849,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o1.getGlobalRate() - o2.getGlobalRate());
+                        int i = (int) (o1.getGlobalRate() - o2.getGlobalRate());
                         return i;
                     }
                 });
@@ -1875,7 +1867,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o2.getHoldingWorth() - o1.getHoldingWorth());
+                        int i = (int) (o2.getHoldingWorth() - o1.getHoldingWorth());
                         return i;
                     }
                 });
@@ -1893,7 +1885,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o2.getGlobalWorth() - o1.getGlobalWorth());
+                        int i = (int) (o2.getGlobalWorth() - o1.getGlobalWorth());
                         return i;
                     }
                 });
@@ -1902,7 +1894,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o2.getDangerousRate() - o1.getDangerousRate());
+                        int i = (int) (o2.getDangerousRate() - o1.getDangerousRate());
                         return i;
                     }
                 });
@@ -1911,7 +1903,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<DangerousStockModel>() {
                     @Override
                     public int compare(DangerousStockModel o1, DangerousStockModel o2) {
-                        int i = (int)(o2.getGlobalRate() - o1.getGlobalRate());
+                        int i = (int) (o2.getGlobalRate() - o1.getGlobalRate());
                         return i;
                     }
                 });
@@ -1921,37 +1913,37 @@ public class BusinessService {
     }
 
     //判断剩余多少天
-    private Integer lessDay(long time){
-        int days = (int) (time - new Date().getTime()) / (1000*3600*24);
+    private Integer lessDay(long time) {
+        int days = (int) (time - new Date().getTime()) / (1000 * 3600 * 24);
         return days;
     }
 
     //获取高危合约清单
-    public PageInfo<RiskContractModel> getDangerousContract(String keyWord,int index,int size,int orderBy,double warnRate1,double warnRate2) throws BusinessException{
+    public PageInfo<RiskContractModel> getDangerousContract(String keyWord, int index, int size, int orderBy, double warnRate1, double warnRate2) throws BusinessException {
         List<RiskContractModel> contractModels = businessContractMapper.getDangerousContract(keyWord);
-        if (0 == contractModels.size()){
+        if (0 == contractModels.size()) {
             throw new BusinessException(ResultCode.SELECT_NULL_MSG);
         }
         List<RiskContractModel> pageModels = new ArrayList<RiskContractModel>();
-        for (RiskContractModel contractModel:contractModels){
-            contractModel.setRiskRate(BusinessUtils.addMethod(contractModel.getCanUseMoney(),contractModel.getColdCash(),contractModel.getWorth())/BusinessUtils.addMethod(contractModel.getPromisedMoney(),contractModel.getBorrowMoney()));
-            contractModel.setWarnSafeRate(contractModel.getRiskRate()-contractModel.getWarningLine());
-            if (!(warnRate1<contractModel.getWarnSafeRate() && warnRate2>contractModel.getWarnSafeRate())){
+        for (RiskContractModel contractModel : contractModels) {
+            contractModel.setRiskRate(BusinessUtils.addMethod(contractModel.getCanUseMoney(), contractModel.getColdCash(), contractModel.getWorth()) / BusinessUtils.addMethod(contractModel.getPromisedMoney(), contractModel.getBorrowMoney()));
+            contractModel.setWarnSafeRate(contractModel.getRiskRate() - contractModel.getWarningLine());
+            if (!(warnRate1 < contractModel.getWarnSafeRate() && warnRate2 > contractModel.getWarnSafeRate())) {
                 continue;
             }
             contractModel.setLessDay(lessDay(contractModel.getExpiredTime()));
             contractModel.setContractStatus(BusinessStatus.getName(contractModel.getStatus()));
-            contractModel.setAbortSafeRate(contractModel.getRiskRate()-contractModel.getAbortLine());
+            contractModel.setAbortSafeRate(contractModel.getRiskRate() - contractModel.getAbortLine());
             pageModels.add(contractModel);
         }
-        pageModels = sortRiskContract(pageModels,orderBy);
-        int i = (index-1)*size;
-        if (i>pageModels.size()-1){
-            throw new  BusinessException(ResultCode.SELECT_NULL_MSG);
+        pageModels = sortRiskContract(pageModels, orderBy);
+        int i = (index - 1) * size;
+        if (i > pageModels.size() - 1) {
+            throw new BusinessException(ResultCode.SELECT_NULL_MSG);
         }
-        int j = i+size>=pageModels.size()?pageModels.size():i+size;
+        int j = i + size >= pageModels.size() ? pageModels.size() : i + size;
         List<RiskContractModel> page = new ArrayList<RiskContractModel>();
-        for (int z = i; z < j; z++){
+        for (int z = i; z < j; z++) {
             page.add(pageModels.get(z));
         }
         PageInfo<RiskContractModel> pageInfo = new PageInfo<RiskContractModel>(page);
@@ -1964,13 +1956,13 @@ public class BusinessService {
     }
 
     //高危合约清单排序
-    private List<RiskContractModel> sortRiskContract(List<RiskContractModel> models,int orderBy){
-        switch (orderBy){
+    private List<RiskContractModel> sortRiskContract(List<RiskContractModel> models, int orderBy) {
+        switch (orderBy) {
             case 1:
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getPromisedMoney() - o2.getPromisedMoney());
+                        int i = (int) (o1.getPromisedMoney() - o2.getPromisedMoney());
                         return i;
                     }
                 });
@@ -1979,7 +1971,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getBorrowMoney() - o2.getBorrowMoney());
+                        int i = (int) (o1.getBorrowMoney() - o2.getBorrowMoney());
                         return i;
                     }
                 });
@@ -1988,7 +1980,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getCanUseMoney() - o2.getCanUseMoney());
+                        int i = (int) (o1.getCanUseMoney() - o2.getCanUseMoney());
                         return i;
                     }
                 });
@@ -1997,7 +1989,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getWorth() - o2.getWorth());
+                        int i = (int) (o1.getWorth() - o2.getWorth());
                         return i;
                     }
                 });
@@ -2006,7 +1998,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getExpiredTime() - o2.getExpiredTime());
+                        int i = (int) (o1.getExpiredTime() - o2.getExpiredTime());
                         return i;
                     }
                 });
@@ -2015,7 +2007,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getLessDay() - o2.getLessDay());
+                        int i = (int) (o1.getLessDay() - o2.getLessDay());
                         return i;
                     }
                 });
@@ -2024,7 +2016,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getRiskRate() - o2.getRiskRate());
+                        int i = (int) (o1.getRiskRate() - o2.getRiskRate());
                         return i;
                     }
                 });
@@ -2033,7 +2025,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getAbortLine() - o2.getAbortLine());
+                        int i = (int) (o1.getAbortLine() - o2.getAbortLine());
                         return i;
                     }
                 });
@@ -2042,7 +2034,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o1.getAbortSafeRate() - o2.getAbortSafeRate());
+                        int i = (int) (o1.getAbortSafeRate() - o2.getAbortSafeRate());
                         return i;
                     }
                 });
@@ -2051,7 +2043,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getPromisedMoney() - o1.getPromisedMoney());
+                        int i = (int) (o2.getPromisedMoney() - o1.getPromisedMoney());
                         return i;
                     }
                 });
@@ -2060,7 +2052,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getBorrowMoney() - o1.getBorrowMoney());
+                        int i = (int) (o2.getBorrowMoney() - o1.getBorrowMoney());
                         return i;
                     }
                 });
@@ -2069,7 +2061,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getCanUseMoney() - o1.getCanUseMoney());
+                        int i = (int) (o2.getCanUseMoney() - o1.getCanUseMoney());
                         return i;
                     }
                 });
@@ -2078,7 +2070,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getWorth() - o1.getWorth());
+                        int i = (int) (o2.getWorth() - o1.getWorth());
                         return i;
                     }
                 });
@@ -2087,7 +2079,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getExpiredTime() - o1.getExpiredTime());
+                        int i = (int) (o2.getExpiredTime() - o1.getExpiredTime());
                         return i;
                     }
                 });
@@ -2096,7 +2088,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getLessDay() - o1.getLessDay());
+                        int i = (int) (o2.getLessDay() - o1.getLessDay());
                         return i;
                     }
                 });
@@ -2105,7 +2097,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getRiskRate() - o1.getRiskRate());
+                        int i = (int) (o2.getRiskRate() - o1.getRiskRate());
                         return i;
                     }
                 });
@@ -2114,7 +2106,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getAbortLine() - o1.getAbortLine());
+                        int i = (int) (o2.getAbortLine() - o1.getAbortLine());
                         return i;
                     }
                 });
@@ -2123,7 +2115,7 @@ public class BusinessService {
                 Collections.sort(models, new Comparator<RiskContractModel>() {
                     @Override
                     public int compare(RiskContractModel o1, RiskContractModel o2) {
-                        int i = (int)(o2.getAbortSafeRate() - o1.getAbortSafeRate());
+                        int i = (int) (o2.getAbortSafeRate() - o1.getAbortSafeRate());
                         return i;
                     }
                 });
@@ -2133,65 +2125,65 @@ public class BusinessService {
     }
 
     //根据股票id获取列表
-    public List<BusinessStockHolding> getHoldingByStockId(String stockId){
+    public List<BusinessStockHolding> getHoldingByStockId(String stockId) {
         List<BusinessStockHolding> holdings = businessStockHoldingRepository.findByStockId(stockId);
         return holdings;
     }
 
     //根据合约id和stockId获取持有
-    public BusinessStockHolding getHoldingByContractIdAndStockId(String contractId,String stockId){
-        return businessStockHoldingRepository.findByContractIdAndStockId(contractId,stockId);
+    public BusinessStockHolding getHoldingByContractIdAndStockId(String contractId, String stockId) {
+        return businessStockHoldingRepository.findByContractIdAndStockId(contractId, stockId);
     }
 
     //保存持有
-    public void saveHolding(BusinessStockHolding holding){
+    public void saveHolding(BusinessStockHolding holding) {
         businessStockHoldingRepository.save(holding);
     }
 
     //根据id获取合约
-    public BusinessContract getContractByContractId(String contractId){
+    public BusinessContract getContractByContractId(String contractId) {
         return businessContractRepository.findByUuid(contractId);
     }
 
     //保存合约
-    public void saveContract(BusinessContract contract){
+    public void saveContract(BusinessContract contract) {
         businessContractRepository.save(contract);
     }
 
     //保存合约操作
-    public void saveContractControl(BusinessControlContract controlContract){
+    public void saveContractControl(BusinessControlContract controlContract) {
         businessControlContractRepository.save(controlContract);
     }
 
     //根据股票代码获取持有
-    public PageInfo<DividendHoldingModel> getPageHolding(int index,int size,String keyWord){
-        PageHelper.startPage(index,size);
+    public PageInfo<DividendHoldingModel> getPageHolding(int index, int size, String keyWord) {
+        PageHelper.startPage(index, size);
         List<DividendHoldingModel> models = businessStockHoldingMapper.getPageDividendHolding(keyWord);
         PageInfo<DividendHoldingModel> pageInfo = new PageInfo<DividendHoldingModel>(models);
         return pageInfo;
     }
 
     //根据合约id 获取持仓分页
-    public PageInfo<StockHoldingModel> getEquityHolding(String contractId,int index,int size){
-        PageHelper.startPage(index,size);
+    public PageInfo<StockHoldingModel> getEquityHolding(String contractId, int index, int size) {
+        PageHelper.startPage(index, size);
         List<StockHoldingModel> holdingModels = businessStockHoldingMapper.getPageHolding(contractId);
         PageInfo<StockHoldingModel> pageInfo = new PageInfo<StockHoldingModel>(holdingModels);
         return pageInfo;
     }
 
     //根据合约id查询合约
-    public ContractModel getContractById(String contractId){
+    public ContractModel getContractById(String contractId) {
         return businessContractMapper.selectContractById(contractId);
     }
 
     //审核后添加股份
-    public void addStockAfterValidate(StockEquityRecord record) throws BusinessException{
-        BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0",record.getContactId());
-        if (null == contract){
+    public void addStockAfterValidate(StockEquityRecord record) throws BusinessException {
+        BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0", record.getContactId());
+        if (null == contract) {
             throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
         }
-        BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(),record.getStockId());
-        if (null == holding){
+        BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(), record.getStockId());
+        if (null == holding) {
             holding = new BusinessStockHolding();
             holding.setCreatedTime(new Date());
             holding.setCreatorId(record.getCreatorId());
@@ -2208,10 +2200,10 @@ public class BusinessService {
             holding.setStockId(record.getStockId());
         }
         int amount = holding.getAmount();
-        contract.setAvailableMoney(contract.getAvailableMoney()+record.getBalance());
-        holding.setAmount(holding.getAmount()+record.getAmount());
-        holding.setColdAmount(holding.getColdAmount()+record.getAmount());
-        holding.setCostPrice((amount*holding.getCostPrice()+record.getDealPrice()*record.getAmount())/(record.getAmount()+amount));
+        contract.setAvailableMoney(contract.getAvailableMoney() + record.getBalance());
+        holding.setAmount(holding.getAmount() + record.getAmount());
+        holding.setColdAmount(holding.getColdAmount() + record.getAmount());
+        holding.setCostPrice((amount * holding.getCostPrice() + record.getDealPrice() * record.getAmount()) / (record.getAmount() + amount));
         businessContractRepository.save(contract);
         businessStockHoldingRepository.save(holding);
 
@@ -2226,26 +2218,26 @@ public class BusinessService {
         controlContract.setCreatorId(record.getUpdateUserId());
         controlContract.setUpdateUserId(record.getUpdateUserId());
         controlContract.setControlType(ControlCode.CONTROL_EQUITY.getIndex());
-        if (0 > record.getBalance()){
+        if (0 > record.getBalance()) {
             controlContract.setCostMoney(Math.abs(record.getBalance()));
-        }else{
+        } else {
             controlContract.setAddMoney(Math.abs(record.getBalance()));
         }
         businessControlContractRepository.save(controlContract);
     }
 
     //审核后删减股份
-    public void multStockAfterValidate(StockEquityRecord record) throws BusinessException{
-        BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0",record.getContactId());
-        if (null == contract){
+    public void multStockAfterValidate(StockEquityRecord record) throws BusinessException {
+        BusinessContract contract = businessContractRepository.findByDeleteFlagAndUuid("0", record.getContactId());
+        if (null == contract) {
             throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
         }
-        BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(),record.getStockId());
+        BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(), record.getStockId());
         int amount = holding.getAmount();
-        if (amount<record.getAmount()){
+        if (amount < record.getAmount()) {
             throw new BusinessException(ResultCode.STOCK_SELL_LESS_ERR);
         }
-        holding.setAmount(holding.getAmount()-record.getAmount());
+        holding.setAmount(holding.getAmount() - record.getAmount());
         if (0 != holding.getAmount()) {
             if (record.getAmount() > holding.getColdAmount()) {
                 int less = record.getAmount() - holding.getColdAmount();
@@ -2255,10 +2247,10 @@ public class BusinessService {
                 holding.setColdAmount(holding.getColdAmount() - record.getAmount());
             }
             businessStockHoldingRepository.save(holding);
-        }else {
+        } else {
             businessStockHoldingRepository.delete(holding);
         }
-        contract.setAvailableMoney(contract.getAvailableMoney()+record.getBalance());
+        contract.setAvailableMoney(contract.getAvailableMoney() + record.getBalance());
         businessContractRepository.save(contract);
 
         BusinessControlContract controlContract = new BusinessControlContract();
@@ -2272,9 +2264,9 @@ public class BusinessService {
         controlContract.setCreatorId(record.getUpdateUserId());
         controlContract.setUpdateUserId(record.getUpdateUserId());
         controlContract.setControlType(ControlCode.CONTROL_EQUITY.getIndex());
-        if (0 > record.getBalance()){
+        if (0 > record.getBalance()) {
             controlContract.setCostMoney(Math.abs(record.getBalance()));
-        }else{
+        } else {
             controlContract.setAddMoney(Math.abs(record.getBalance()));
         }
         businessControlContractRepository.save(controlContract);

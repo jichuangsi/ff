@@ -7,13 +7,13 @@ import java.util.Date;
 public class BankCardModel {
 
     private String id;
-    private String name;
+    private String name;    //姓名
     @NotBlank(message = "银行卡号不能为空")
     @Pattern(regexp = "^([1-9]{1})(\\d{14}|\\d{18})$",message = "银行卡号格式不正确")
-    private String bankCardNo;
-    private String bankName;
-    private String status;
-    private Date updateTime;
+    private String bankCardNo;  //银行卡号
+    private String bankName;    //银行名
+    private String status;  //状态
+    private Date updateTime;    //修改时间
 
     public Date getUpdateTime() {
         return updateTime;

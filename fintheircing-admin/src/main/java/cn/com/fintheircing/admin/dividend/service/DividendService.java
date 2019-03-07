@@ -68,9 +68,9 @@ public class DividendService {
                 dividend.setActiveTimeMoney(CommonUtil.getlongTime(model.getActiveTimeMoney() + hms, sdformat));
             }
             dividend.setStatus(Dividend.STATUS_WAIT);   //未到启动日期
-            dividend.setTenStockAmount(model.getAmount());
-            dividend.setTenStockCost(model.getCost());
-            dividend.setTenStockMoney(model.getMoney());
+            dividend.setTenStockAmount(model.getAmount()==null?0:model.getAmount());
+            dividend.setTenStockCost(model.getCost()==null?0:model.getCost());
+            dividend.setTenStockMoney(model.getMoney()==null?0:model.getMoney());
             dividend.setCreatedTime(new Date());
             dividend.setCreatorId(userInfo.getUuid());
             dividend.setCreatorName(userInfo.getUserName());

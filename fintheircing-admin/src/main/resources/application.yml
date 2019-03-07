@@ -39,6 +39,10 @@ feign:
   httpclient:
     enabled: true
 
+logging:
+    level:
+      cn.com.fintheircing.admin.*.dao.mapper: DEBUG
+
 hystrix:
   command:
     default:

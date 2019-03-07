@@ -8,6 +8,11 @@ eureka:
 server:
   port: 8082
 
+logging:
+    level:
+      cn.com.fintheircing.customer.user.dao.mapper: DEBUG
+
+
 spring:
   profiles:
     active:

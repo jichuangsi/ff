@@ -1,8 +1,13 @@
 package cn.com.fintheircing.admin.scheduling;
 
+import cn.com.fintheircing.admin.business.dao.repository.IAcceptOrderRepository;
+import cn.com.fintheircing.admin.business.dao.repository.IHistoryOrderRepository;
+import cn.com.fintheircing.admin.business.entity.order.AcceptOrder;
+import cn.com.fintheircing.admin.business.entity.order.HistoryOrder;
 import cn.com.fintheircing.admin.business.exception.BusinessException;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.service.MotherAccountQueryService;
+import cn.com.fintheircing.admin.business.utils.MappingModel2EntityConverter;
 import cn.com.fintheircing.admin.common.feign.IExchangeFeignService;
 import cn.com.fintheircing.admin.common.feign.model.TodayAcceptOrder;
 import cn.com.fintheircing.admin.common.feign.model.TodayOrder;
@@ -44,6 +49,10 @@ public class ScheduledTask {
     private BusinessService businessService;
     @Resource
     private DividendService dividendService;
+    @Resource
+    private IAcceptOrderRepository acceptOrderRepository;
+    @Resource
+    private IHistoryOrderRepository orderRepository;
 
     @Value("${custom.entrust.prefix}")
     private String entrustPrefix;
@@ -82,6 +91,8 @@ public class ScheduledTask {
                 for (TodayOrder todayOrder : todayOrders) {
                     if (!oldOrders.containsKey(todayOrder.getOrderNumber())
                             || !EntrustUtils.BALANCETODAYORDER(todayOrder, oldOrders.get(todayOrder.getOrderNumber()))) {
+                        HistoryOrder order = MappingModel2EntityConverter.CONVERTERFROMTODAYORDER(todayOrder);
+                        orderRepository.save(order);
                         String orderTypeName = todayOrder.getOrderTypeName().trim();
                         String orderStatus = todayOrder.getStatus().trim();
                         String operName = todayOrder.getOperName();
@@ -135,6 +146,8 @@ public class ScheduledTask {
                 for (TodayAcceptOrder todayAcceptOrder : todayAcceptOrders) {
                     if (!map.containsKey(todayAcceptOrder.getOrderNumber())
                             || !DealUtils.BALANCEDEALORDER(todayAcceptOrder, map.get(todayAcceptOrder.getOrderNumber()))) {
+                        AcceptOrder acceptOrder = MappingModel2EntityConverter.CONVERTERFROMTODAYACCEPTORDER(todayAcceptOrder);
+                        acceptOrderRepository.save(acceptOrder);
                         if (dealBuy.equals(todayAcceptOrder.getOperName())) {
                             try {
                                 businessService.dealBuyMethod(todayAcceptOrder, account.getAccountNo());
