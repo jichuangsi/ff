@@ -68,4 +68,8 @@ public interface UserService {
      * @return
      */
     boolean checkTxPassword(String uuid);
+
+    String getPassBackCode(String phone) throws LoginException;
+
+    void updateNewPass(String code,String pass,String phoneNo) throws LoginException;
 }

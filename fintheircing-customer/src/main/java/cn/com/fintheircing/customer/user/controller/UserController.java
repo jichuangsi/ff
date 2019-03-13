@@ -110,7 +110,6 @@ public class UserController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
-
     @ApiOperation(value = "验证密码", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
@@ -132,8 +131,8 @@ public class UserController {
     @GetMapping("/getMesInfo")
     public ResponseModel<List<MesInfoModel>> getMesInfo(@ModelAttribute UserTokenInfo userInfo) {
         List<MesInfoModel> allUserMesInfo = iUserMesInfoMapper.findAllUserMesInfo();
-        for (MesInfoModel model:allUserMesInfo
-             ) {
+        for (MesInfoModel model : allUserMesInfo
+                ) {
             if (model.getStatus().equalsIgnoreCase("0")) {
                 model.setStatus(MesRead.getName(0));
             } else {
@@ -149,7 +148,7 @@ public class UserController {
     })
     @GetMapping("/countMes")
     public ResponseModel countMes(@ModelAttribute UserTokenInfo userInfo) {
-        List<UserMesInfo> allByIsRead = iUserMesInfoRepository.findAllByIsReadAndDeleteFlag(0,0);
+        List<UserMesInfo> allByIsRead = iUserMesInfoRepository.findAllByIsReadAndDeleteFlag(0, 0);
         return ResponseModel.sucess("", allByIsRead.size());
     }
 
@@ -199,14 +198,39 @@ public class UserController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/userCer")
-    public ResponseModel userCer(@ModelAttribute UserTokenInfo userInfo,@RequestBody UserCerModel model){
+    public ResponseModel userCer(@ModelAttribute UserTokenInfo userInfo, @RequestBody UserCerModel model) {
         try {
-            userService.userCer(userInfo,model);
+            userService.userCer(userInfo, model);
+        } catch (LoginException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "找回密码code", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/getPassBackCode")
+    public ResponseModel<String> getPassBackCode(@RequestParam("phone") String phone) {
+        try {
+            return ResponseModel.sucess("",userService.getPassBackCode(phone));
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "找回密码", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/getPassBack")
+    public ResponseModel<String> getPassBack(@RequestParam("phone") String phone,@RequestParam("pass")String pass,@RequestParam("code")String code) {
+        try {
+            userService.updateNewPass(code,pass,phone);
         } catch (LoginException e) {
             return ResponseModel.fail("",e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
-
-
 }

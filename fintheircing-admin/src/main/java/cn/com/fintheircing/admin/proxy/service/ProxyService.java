@@ -437,6 +437,11 @@ public class ProxyService {
             }
             byte[] piccodes = outputStream.toByteArray();
             proxySpread.setSpreadCodePic(piccodes);
+            proxySpread.setCreatedTime(new Date());
+            proxySpread.setCreatorId(userInfo.getUuid());
+            proxySpread.setCreatorName(userInfo.getUserName());
+            proxySpread.setUpdateUserId(userInfo.getUuid());
+            proxySpread.setUpdateUserName(userInfo.getUserName());
             spreadRepository.save(proxySpread);
             code = proxySpread.getInviteCode();
         } catch (IOException e) {
@@ -460,6 +465,7 @@ public class ProxyService {
 
     //获取个人推广页面
     public SpreadModel getOwnSpread(String userId) {
-        return spreadMapper.getOwnSpread(userId);
+        SpreadModel model = spreadMapper.getOwnSpread(userId);
+        return model;
     }
 }

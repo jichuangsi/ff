@@ -2,26 +2,27 @@ package cn.com.fintheircing.admin.usermanag.service.Impl;
 
 import cn.com.fintheircing.admin.account.dao.repository.IAdminClientInfoRepository;
 import cn.com.fintheircing.admin.account.entity.AdminClientInfo;
+import cn.com.fintheircing.admin.business.exception.BusinessException;
+import cn.com.fintheircing.admin.business.model.tranfer.TranferEntrustModel;
+import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
-
-import cn.com.fintheircing.admin.useritem.utils.DateUtils;
+import cn.com.fintheircing.admin.common.utils.CommonUtil;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IBankMapper;
 import cn.com.fintheircing.admin.usermanag.dao.mapper.IUserMapper;
-
-
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
+import cn.com.fintheircing.admin.usermanag.model.UserStockHoldingModel;
 import cn.com.fintheircing.admin.usermanag.service.IUserService;
-
+import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,11 @@ public class UserServiceImpl implements IUserService {
 
     @Resource
     IBankMapper iBankMapper;
+    @Resource
+    private BusinessService businessService;
 
+    @Value("${custom.pattern.entrustPattern}")
+    private String entrustPattern;
 
     @Override
     public List<AdminClientInfoModel> findAllUserInfo(AdminClientInfoModel Model
@@ -45,11 +50,11 @@ public class UserServiceImpl implements IUserService {
         List<AdminClientInfo> users = null;
         try {
             List<AdminClientInfoModel> all = usermapper.findAll(Model);
-            for (AdminClientInfoModel m :all
+            for (AdminClientInfoModel m : all
                     ) {
-                if (StringUtils.isEmpty(m.getBossId())){
+                if (StringUtils.isEmpty(m.getBossId())) {
                     m.setBelongs("无");
-                }else{
+                } else {
                     m.setBelongs("有");
                 }
             }
@@ -153,7 +158,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean updatebankCard(String id) throws UserServiceException {
-        if(iBankMapper.UpdateBankCard(id)>0){
+        if (iBankMapper.UpdateBankCard(id) > 0) {
             return true;
         }
         return false;
@@ -185,5 +190,22 @@ public class UserServiceImpl implements IUserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public PageInfo<TranferEntrustModel> getPageEntrusts(TranferEntrustModel model) throws BusinessException{
+        if (TranferEntrustModel.HISTORY_BEFORE.equals(model.getHistoryFlag())) {
+            model.setBeginTime(CommonUtil.getStringDate(entrustPattern,new Date(0)));
+        }else if (TranferEntrustModel.HISTORY_TODAY.equals(model.getHistoryFlag())){
+            model.setBeginTime(CommonUtil.getStringDate(entrustPattern,new Date()));
+        }else {
+            throw new BusinessException(ResultCode.PARAM_ERR_MSG);
+        }
+        return businessService.getSystemEntrusts(model);
+    }
+
+    @Override
+    public PageInfo<UserStockHoldingModel> getPageHolding(String userId, int index, int size) {
+        return businessService.getPageHoldingByUser(index, size, userId);
     }
 }

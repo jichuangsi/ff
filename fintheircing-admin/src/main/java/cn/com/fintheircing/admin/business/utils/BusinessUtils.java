@@ -17,14 +17,13 @@ import java.util.regex.Pattern;
 
 public final class BusinessUtils {
 
-
     //单股最大买入
     public static final Boolean maxBuyOneStock(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
-                                               ContractModel contractModel) throws BusinessException{
+                                               ContractModel contractModel) throws BusinessException {
         Double C0 = stockHoldingModel.getCurrentWorth();
-        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
-        Double A = addMethod(contractModel.getColdCash(),contractModel.getWorth(),contractModel.getCanUseMoney());
-        if (!(addMethod(C0,C1)/A<contractModel.getCustomerMaxAccount())){
+        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(), stockEntrustModel.getAmount().doubleValue());
+        Double A = addMethod(contractModel.getColdCash(), contractModel.getWorth(), contractModel.getCanUseMoney());
+        if (!(addMethod(C0, C1) / A < contractModel.getCustomerMaxAccount())) {
             throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
         }
         return true;
@@ -32,52 +31,52 @@ public final class BusinessUtils {
 
     //创业股最大买入
     public static final Boolean venturEditionMax(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
-                                                 ContractModel contractModel) throws BusinessException{
+                                                 ContractModel contractModel) throws BusinessException {
         Double C0 = stockHoldingModel.getCurrentWorth();
-        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
-        Double A = BusinessUtils.addMethod(contractModel.getColdCash(),contractModel.getWorth(),contractModel.getCanUseMoney());
-        if (!(addMethod(C0,C1)/A<contractModel.getVenturEditionMaxAccount())){
+        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(), stockEntrustModel.getAmount().doubleValue());
+        Double A = BusinessUtils.addMethod(contractModel.getColdCash(), contractModel.getWorth(), contractModel.getCanUseMoney());
+        if (!(addMethod(C0, C1) / A < contractModel.getVenturEditionMaxAccount())) {
             throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
         }
         return true;
     }
 
     //五日平均，暂无接口
-    public static final Boolean holdOverFiveAvg(StockHoldingModel stockHoldingModel,StockEntrustModel stockEntrustModel) throws BusinessException{
-        Double avgFive = avgMethod(stockHoldingModel.getOneDay(),stockHoldingModel.getTwoDay(),stockHoldingModel.getThreeDay(),stockHoldingModel.getFourDay(),stockHoldingModel.getFiveDay());
+    public static final Boolean holdOverFiveAvg(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel) throws BusinessException {
+        Double avgFive = avgMethod(stockHoldingModel.getOneDay(), stockHoldingModel.getTwoDay(), stockHoldingModel.getThreeDay(), stockHoldingModel.getFourDay(), stockHoldingModel.getFiveDay());
         Double C0 = stockHoldingModel.getCurrentWorth();
-        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
-        if (avgFive!=0) {
+        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(), stockEntrustModel.getAmount().doubleValue());
+        if (avgFive != 0) {
             if (!(addMethod(C0, C1) < avgFive)) {
                 throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
             }
         }
-        return  true;
+        return true;
     }
 
     //获取流通市值，暂无接口
     public static final Boolean holdOverCurrency(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
-                                                 ContractModel contractModel) throws BusinessException{
+                                                 ContractModel contractModel) throws BusinessException {
         Double C0 = stockHoldingModel.getCurrentWorth();
-        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(),stockEntrustModel.getAmount().doubleValue());
-        if (!(addMethod(C0,C1)<contractModel.getHoldOverCurrency())){
+        Double C1 = multiplicationMethod(stockEntrustModel.getPrice(), stockEntrustModel.getAmount().doubleValue());
+        if (!(addMethod(C0, C1) < contractModel.getHoldOverCurrency())) {
             throw new BusinessException(ResultCode.STOCK_ENTRUST_MAX);
         }
         return true;
     }
 
     //跌停能否购买
-    public static final Boolean stockShutDown(QuotesTenModel quotesTenModel,ContractModel contractModel) throws BusinessException{
+    public static final Boolean stockShutDown(QuotesTenModel quotesTenModel, ContractModel contractModel) throws BusinessException {
         Boolean shutDown = false;
-        Double todayMin = (double)quotesTenModel.getBottomPrice();
-        Double yesterdayClose = (double)quotesTenModel.getClosePrice();
-        BigDecimal b = new BigDecimal(exceptMethod(yesterdayClose,todayMin));
-        double rate = b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-        if (rate<0.90){
+        Double todayMin = (double) quotesTenModel.getBottomPrice();
+        Double yesterdayClose = (double) quotesTenModel.getClosePrice();
+        BigDecimal b = new BigDecimal(exceptMethod(yesterdayClose, todayMin));
+        double rate = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        if (rate < 0.90) {
             shutDown = true;
         }
-        if (shutDown){
-            if (BusinessContractRisk.SHUTDOWN_NOT_BUY==contractModel.getStockShutDown()){
+        if (shutDown) {
+            if (BusinessContractRisk.SHUTDOWN_NOT_BUY == contractModel.getStockShutDown()) {
                 throw new BusinessException(ResultCode.STOCK_ENTRUST_DANGER);
             }
         }
@@ -85,37 +84,36 @@ public final class BusinessUtils {
     }
 
     public static final Boolean throughRisk(StockHoldingModel stockHoldingModel, StockEntrustModel stockEntrustModel,
-                                            ContractModel contractModel, QuotesTenModel quotesTenModel, String chuangRegex) throws BusinessException{
-        if (stockEntrustModel==null){
+                                            ContractModel contractModel, QuotesTenModel quotesTenModel, String chuangRegex) throws BusinessException {
+        if (stockEntrustModel == null) {
             throw new BusinessException(ResultCode.STOCK_ENTRUST_NULL);
         }
-        if (stockHoldingModel==null){
+        if (stockHoldingModel == null) {
             stockHoldingModel = new StockHoldingModel();
         }
-        if (quotesTenModel==null){
+        if (quotesTenModel == null) {
             throw new BusinessException(ResultCode.STOCK_NULL_FIND);
         }
-        if (contractModel==null){
+        if (contractModel == null) {
             throw new BusinessException(ResultCode.CONTRACT_NULL_FIND);
         }
-        Double yesterdayClose = (double)quotesTenModel.getClosePrice();
-        if (stockEntrustModel.getPrice()/yesterdayClose>1.1
-                ||stockEntrustModel.getPrice()/yesterdayClose<0.9){
+        Double yesterdayClose = (double) quotesTenModel.getClosePrice();
+        if (stockEntrustModel.getPrice() / yesterdayClose > 1.1
+                || stockEntrustModel.getPrice() / yesterdayClose < 0.9) {
             throw new BusinessException(ResultCode.STOCK_BAD_ERR);
         }
         Pattern pattern = Pattern.compile(chuangRegex);
         Matcher matcher = pattern.matcher(stockEntrustModel.getStockNum());
-        if (matcher.find()){
-            Boolean venturEditionMax = venturEditionMax(stockHoldingModel,stockEntrustModel,contractModel);
-        }else {
-            Boolean maxBuyOneStock = maxBuyOneStock(stockHoldingModel,stockEntrustModel,contractModel);
+        if (matcher.find()) {
+            Boolean venturEditionMax = venturEditionMax(stockHoldingModel, stockEntrustModel, contractModel);
+        } else {
+            Boolean maxBuyOneStock = maxBuyOneStock(stockHoldingModel, stockEntrustModel, contractModel);
         }
-        Boolean holdOverFiveAvg  = holdOverFiveAvg(stockHoldingModel,stockEntrustModel);
-        Boolean holdOverCurrency = holdOverCurrency(stockHoldingModel,stockEntrustModel,contractModel);
-        Boolean shockShutDown = stockShutDown(quotesTenModel,contractModel);
+        Boolean holdOverFiveAvg = holdOverFiveAvg(stockHoldingModel, stockEntrustModel);
+        Boolean holdOverCurrency = holdOverCurrency(stockHoldingModel, stockEntrustModel, contractModel);
+        Boolean shockShutDown = stockShutDown(quotesTenModel, contractModel);
         return true;
     }
-
 
     public static UUID fromStringWhitoutHyphens(String str) {
         if (str.length() != 32) {
@@ -140,57 +138,56 @@ public final class BusinessUtils {
         return new UUID(mostSigBits, leastSigBits);
     }
 
-
-    public static  Double addMethod(Double... doubles){
+    public static Double addMethod(Double... doubles) {
         Double sum = 0.0;
-        for (int i = 0; i<doubles.length; i++){
-            if (doubles[i]!=null){
-                sum+=doubles[i];
+        for (int i = 0; i < doubles.length; i++) {
+            if (doubles[i] != null) {
+                sum += doubles[i];
             }
         }
         return sum;
     }
 
-    public static Double exceptMethod(Double mother,Double son) throws BusinessException{
-        if (son==null){
+    public static Double exceptMethod(Double mother, Double son) throws BusinessException {
+        if (son == null) {
             return 0.0;
         }
-        if (mother==null){
+        if (mother == null) {
             throw new BusinessException("无法计算");
         }
-        if (mother==0){
+        if (mother == 0) {
             throw new BusinessException("by /zero");
         }
-        return son/mother;
+        return son / mother;
     }
 
-    public static  Double minusMethod(Double mother,Double... doubles) throws BusinessException{
-        if (mother==null){
+    public static Double minusMethod(Double mother, Double... doubles) throws BusinessException {
+        if (mother == null) {
             throw new BusinessException("无法计算");
         }
-        for (int i = 0; i<doubles.length; i++){
-            if (doubles[i]!=null){
-                mother-=doubles[i];
+        for (int i = 0; i < doubles.length; i++) {
+            if (doubles[i] != null) {
+                mother -= doubles[i];
             }
         }
         return mother;
     }
 
-    public static Double multiplicationMethod(Double... doubles){
+    public static Double multiplicationMethod(Double... doubles) {
         Double sum = 0.0;
         Boolean flag = true;
         Double method = 0.0;
-        for (int i = 0; i<doubles.length; i++){
-            if (flag){
-                if (doubles[i]!=null){
+        for (int i = 0; i < doubles.length; i++) {
+            if (flag) {
+                if (doubles[i] != null) {
                     sum = doubles[i];
                     flag = false;
                     continue;
                 }
             }
-            if (doubles[i]==null){
+            if (doubles[i] == null) {
                 method = 0.0;
-            }else {
+            } else {
                 method = doubles[i];
             }
             sum = sum * method;
@@ -198,46 +195,43 @@ public final class BusinessUtils {
         return sum;
     }
 
-
-    public static Double avgMethod(Double... doubles){
+    public static Double avgMethod(Double... doubles) {
         Double sum = 0.0;
         Integer num = 0;
-        for (int i = 0; i<doubles.length; i++){
-            if (null != doubles[i]){
+        for (int i = 0; i < doubles.length; i++) {
+            if (null != doubles[i]) {
                 sum += doubles[i];
-                num ++;
+                num++;
             }
         }
-        if (0 == num){
+        if (0 == num) {
             return 0.0;
-        }else {
-            return sum/num;
+        } else {
+            return sum / num;
         }
     }
-    public static int addIntMethod(Integer... nums){
+
+    public static int addIntMethod(Integer... nums) {
         Integer sum = 0;
-        for (int i = 0; i< nums.length; i++){
-            if (null != nums[i]){
-                sum+=nums[i];
+        for (int i = 0; i < nums.length; i++) {
+            if (null != nums[i]) {
+                sum += nums[i];
             }
         }
         return sum;
     }
 
-
-
-    public static  Integer minusIntMethod(Integer mother,Integer... doubles) {
-        if (mother==null){
+    public static Integer minusIntMethod(Integer mother, Integer... doubles) {
+        if (mother == null) {
             mother = 0;
         }
-        for (int i = 0; i<doubles.length; i++){
-            if (doubles[i]!=null){
-                mother-=doubles[i];
+        for (int i = 0; i < doubles.length; i++) {
+            if (doubles[i] != null) {
+                mother -= doubles[i];
             }
         }
         return mother;
     }
-
 
     public static List<String[]> getListStringArray(String[] dd, int b) {
         List<String[]> aa = new ArrayList<String[]>();
@@ -251,22 +245,20 @@ public final class BusinessUtils {
             aa.add(bbb);
         }
         int z = dd.length % b;
-        if (z != 0){
+        if (z != 0) {
             String[] ccc = new String[z];
-            for (int p = 0; p < z; p++){
-                ccc[p] = dd[p+f*b];
+            for (int p = 0; p < z; p++) {
+                ccc[p] = dd[p + f * b];
             }
             aa.add(ccc);
         }
         return aa;
     }
 
-    public static Double avgStockPrice(Double costPrice,Integer costAmount,Double dealPrice,Integer dealAmount){
-        Double cost = multiplicationMethod(costPrice , costAmount.doubleValue());
-        Double deal = multiplicationMethod(dealPrice , dealAmount.doubleValue());
-        return (cost + deal)/(costAmount +dealAmount);
+    public static Double avgStockPrice(Double costPrice, Integer costAmount, Double dealPrice, Integer dealAmount) {
+        Double cost = multiplicationMethod(costPrice, costAmount.doubleValue());
+        Double deal = multiplicationMethod(dealPrice, dealAmount.doubleValue());
+        return (cost + deal) / (costAmount + dealAmount);
     }
-
-
 
 }

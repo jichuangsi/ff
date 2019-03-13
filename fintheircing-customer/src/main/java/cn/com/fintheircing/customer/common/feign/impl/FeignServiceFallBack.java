@@ -1,6 +1,7 @@
 package cn.com.fintheircing.customer.common.feign.impl;
 
 import cn.com.fintheircing.customer.business.model.ContractModel;
+import cn.com.fintheircing.customer.business.model.FlowModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
@@ -186,6 +187,18 @@ public class FeignServiceFallBack implements IAdminFeignService {
     @Override
     public ResponseModel<PageInfo<StockEntrustModel>> getContractEntrusts(StockEntrustModel model) {
         logger.error("调用feign失败，未获取委托单");
+        return ResponseModel.fail("");
+    }
+
+    @Override
+    public ResponseModel endContractAndSell(String userId,String contractId) {
+        logger.error("调用feign失败，未自助平仓");
+        return ResponseModel.fail("");
+    }
+
+    @Override
+    public ResponseModel<PageInfo<FlowModel>> getMoneyFlow(String contractId, int index, int size) {
+        logger.error("调用feign失败，未获取资金流水");
         return ResponseModel.fail("");
     }
 }

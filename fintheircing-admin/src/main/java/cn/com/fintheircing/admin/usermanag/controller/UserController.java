@@ -1,5 +1,7 @@
 package cn.com.fintheircing.admin.usermanag.controller;
 
+import cn.com.fintheircing.admin.business.exception.BusinessException;
+import cn.com.fintheircing.admin.business.model.tranfer.TranferEntrustModel;
 import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.common.feign.IMsgFeignService;
@@ -11,12 +13,15 @@ import cn.com.fintheircing.admin.usermanag.dao.repsitory.IMesInfoRepository;
 import cn.com.fintheircing.admin.usermanag.entity.MesInfo;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
+import cn.com.fintheircing.admin.usermanag.model.UserStockHoldingModel;
 import cn.com.fintheircing.admin.usermanag.model.ｍes.MesInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.ｍes.MesModel;
 import cn.com.fintheircing.admin.usermanag.service.IUserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +47,7 @@ public class UserController {
     private IMesInfoRepository iMesInfoRepository;
     @Resource
     private ICustomerFeignService iCustomerFeignService;
+
     @ApiOperation(value = "用户列表-查询所有用户信息", notes = "")
     @PostMapping("/findAll")
     public ResponseModel<PageInfo<AdminClientInfoModel>> findAllUserInfo(@RequestBody AdminClientInfoModel queryModel) throws UserServiceException {
@@ -74,7 +80,7 @@ public class UserController {
 
     @ApiOperation(value = "用户列表-查看详情-修改所属代理", notes = "")
     @PostMapping("/changeProxyNum")
-    public ResponseModel changeProxyNum(@ModelAttribute UserTokenInfo userInfo,@RequestParam("userId") String userId,@RequestParam("proxyId") String proxyId) throws UserServiceException {
+    public ResponseModel changeProxyNum(@ModelAttribute UserTokenInfo userInfo, @RequestParam("userId") String userId, @RequestParam("proxyId") String proxyId) throws UserServiceException {
         return ResponseModel.sucess("", userService.changeProxyNum(userId, proxyId));
     }
 
@@ -86,7 +92,7 @@ public class UserController {
 
     @ApiOperation(value = "用户列表-查看详情-修改余额", notes = "")
     @PostMapping("/changeAmount")
-    public ResponseModel changeAmount(@RequestParam("id") String id,@RequestParam("amount") double amount) throws UserServiceException {
+    public ResponseModel changeAmount(@RequestParam("id") String id, @RequestParam("amount") double amount) throws UserServiceException {
         return ResponseModel.sucess("", userService.changeAmount(id, amount));
     }
 
@@ -107,7 +113,7 @@ public class UserController {
 
     @ApiOperation(value = "管理员-短信记录", notes = "")
     @PostMapping("/findAllMessage")
-    public ResponseModel<PageInfo<MesModel>> findAllMessage(@RequestParam("pageNum") int pageNum,@RequestParam("pageSize") int pageSize) throws UserServiceException {
+    public ResponseModel<PageInfo<MesModel>> findAllMessage(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws UserServiceException {
         PageHelper.startPage(pageNum, pageSize);
         List<MesModel> allMessage = imesgService.findAllMessage();
         PageInfo<MesModel> personPageInfo = new PageInfo<>(allMessage);
@@ -116,9 +122,9 @@ public class UserController {
 
     @ApiOperation(value = "个人用户-短信记录", notes = "")
     @PostMapping("/findAllMesByUserId")
-    public ResponseModel<PageInfo<MesModel>> findAllMesByUserId(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize")int pageSize,@RequestParam("id") String id) throws UserServiceException {
+    public ResponseModel<PageInfo<MesModel>> findAllMesByUserId(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize, @RequestParam("id") String id) throws UserServiceException {
         PageHelper.startPage(pageNum, pageSize);
-        if (StringUtils.isEmpty(id)){
+        if (StringUtils.isEmpty(id)) {
             return ResponseModel.fail("", ResultCode.PARAM_MISS_MSG);
         }
         List<MesModel> allMessage = iAdminRecodingMapper.findAllMesByUserId(id);
@@ -128,11 +134,10 @@ public class UserController {
 
     @ApiOperation(value = "系统管理-信息发布-查询信息", notes = "")
     @PostMapping("/findMesBymark")
-    @CrossOrigin
     public ResponseModel<PageInfo<MesInfoModel>> findMesBymark(@RequestBody MesInfoModel mesInfoModel) throws UserServiceException {
         PageHelper.startPage(mesInfoModel.getPageNum(), mesInfoModel.getPageSize());
-        Map<String,Object> parms =new HashMap<>();
-        if (mesInfoModel.getTitle()==null){
+        Map<String, Object> parms = new HashMap<>();
+        if (mesInfoModel.getTitle() == null) {
             mesInfoModel.setTitle("");
         }
         parms.put("title", mesInfoModel.getTitle());
@@ -166,7 +171,7 @@ public class UserController {
     public ResponseModel updateMesInfo(@RequestBody MesInfoModel model) throws UserServiceException {
         model.setSendTime(new Date());
         model.setStatus("1");
-        if (iAdminRecodingMapper.updateMesInfo(model)>0) {
+        if (iAdminRecodingMapper.updateMesInfo(model) > 0) {
             return iCustomerFeignService.sendMesg(model);
         }
         return ResponseModel.fail("", ResultCode.MESSAGE_SEND_FAILED);
@@ -176,9 +181,31 @@ public class UserController {
     @PostMapping("/resetMes")
     public ResponseModel resetMes(@RequestBody MesInfoModel mesInfoModel) throws UserServiceException {
         int i = iAdminRecodingMapper.resetMes(mesInfoModel);
-        if (i>0){
+        if (i > 0) {
             return ResponseModel.sucess("", i);
         }
         return ResponseModel.fail("", ResultCode.SEND_MES_FAILED);
+    }
+
+    @ApiOperation(value = "查看用户委托", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/getUserEntrusts")
+    public ResponseModel<PageInfo<TranferEntrustModel>> getUserEntrusts(@ModelAttribute UserTokenInfo userInfo, @RequestBody TranferEntrustModel model) {
+        try {
+            return ResponseModel.sucess("", userService.getPageEntrusts(model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "查看用户持仓", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getUserHolding")
+    public ResponseModel<PageInfo<UserStockHoldingModel>> getUserHolding(@ModelAttribute UserTokenInfo userInfo, @RequestParam("userId") String userId, @RequestParam("index") int index, @RequestParam("size") int size) {
+        return ResponseModel.sucess("",userService.getPageHolding(userId, index, size));
     }
 }

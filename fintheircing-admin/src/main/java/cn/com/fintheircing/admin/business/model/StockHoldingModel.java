@@ -23,6 +23,7 @@ public class StockHoldingModel {
     private String dealFrom;
     private Integer version;
 
+
     private Date createdTime;
 
     private Double oneDay;  //风控
@@ -31,6 +32,7 @@ public class StockHoldingModel {
     private Double fourDay; //风控
     private Double fiveDay; //风控
     private Integer rudeEnd;    //是否在强平
+
 
     public Date getCreatedTime() {
         return createdTime;

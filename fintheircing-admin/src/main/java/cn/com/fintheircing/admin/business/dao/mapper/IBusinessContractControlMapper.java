@@ -2,9 +2,9 @@ package cn.com.fintheircing.admin.business.dao.mapper;
 
 import cn.com.fintheircing.admin.business.model.ContractControlModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
-import cn.com.fintheircing.admin.business.model.StockHoldingModel;
+import cn.com.fintheircing.admin.common.feign.model.FlowModel;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -47,6 +47,7 @@ public interface IBusinessContractControlMapper {
             " <if test= \"productStr!=null and productStr!=''\"> and t2.product_name =#{productStr}</if>" +
             " and t1.delete_flag=\"0\"</where></script>")
     List<ContractControlModel> findAllContact(String productStr);
+
     @Select("<script>select t3.user_id as userId,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_num as stockNum,t2.stock_name as stockName,t1.amount as dealNum,t1.cost_price as dealPrice," +
             " t1.deal_time as buyTime, t1.uuid as BusinessStockEntrustId ,t3.account as userfulMoney," +
             " t3.frezze_amount as codeMoney" +
@@ -59,6 +60,7 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 根据用户ID查询用户余额
+     *
      * @param userId
      * @return
      */
@@ -67,6 +69,7 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 查询冻结资金
+     *
      * @param userId
      * @return
      */
@@ -75,9 +78,17 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 查询名字
+     *
      * @param userId
      * @return
      */
     @Select("<script>select t1.user_name from user_client_info t1 where t1.uuid=#{userId}</script>")
     String findNameByUserId(String userId);
+
+    //查看资金流水
+    @Select("<script>select t1.uuid as id,t1.created_time as createdTime,(t1.add_money-t1.cost_money) as happenMoney,(t1.business_money+t1.taxation_money) as businessMoney,t1.less_money as afterMoney,t1.control_type as control,t2.stock_num as stockCode,t2.stock_name as stockName,(t1.cost_money-t1.add_money+t1.less_money+t1.business_money+t1.taxation_money) as beforeMoney from business_control_contract t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id <where> t1.contract_id=#{contractId}" +
+            "<if test='list!=null and list.size>0'> and t1.control_type in <foreach collection=\"list\" index=\"index\" item=\"item\" open=\"(\" separator=\",\" close=\")\"> " +
+            "      #{item}   </foreach></if></where>" +
+            "  ORDER BY t1.created_time desc</script>")
+    List<FlowModel> getFlwoMoney(@Param("contractId") String contractId,@Param("list") List<Integer> list);
 }

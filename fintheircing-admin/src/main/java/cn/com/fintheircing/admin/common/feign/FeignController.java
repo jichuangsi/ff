@@ -6,6 +6,7 @@ import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.synchronize.SynchronizeComponent;
+import cn.com.fintheircing.admin.common.feign.model.FlowModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
@@ -273,4 +274,24 @@ public class FeignController {
             return ResponseModel.fail("",e.getMessage());
         }
     }
+
+    @ApiOperation(value = "自助平仓", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/endContractAndSell")
+    public ResponseModel endContractAndSell(@RequestParam("userId") String userId,@RequestParam("contractId")String contractId){
+        try {
+            businessService.endContractAndSell(userId,contractId);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "获取资金流水", notes = "")
+    @ApiImplicitParams({})
+    @RequestMapping("/getMoneyFlow")
+    ResponseModel<PageInfo<FlowModel>> getMoneyFlow(@RequestParam("contractId") String contractId, @RequestParam("index") int index, @RequestParam("size") int size){
+        return  ResponseModel.sucess("",businessService.getFlowPage(index, size, contractId));
+    }
+
 }

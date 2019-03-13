@@ -54,5 +54,7 @@ public class ResultCode {
 	public static final String ENTRUST_VALIDATE_ERR = "非正常访问";
 	public static final String CER_VALIDATE_ERR = "该身份证已注册";
     public static final String PASSWORD_NOT_EMPTY ="支付密码不能为空" ;
-    public static final String PASSWORD_IS_MISTAKE ="支付密码错误" ;
+    public static final String PASSWORD_IS_MISTAKE ="支付密码错误";
+
+    public static final String SELECT_NULL_MSG = "查无此信息";
 }

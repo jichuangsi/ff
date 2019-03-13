@@ -83,7 +83,7 @@ custom:
     codeWidth: 300
     codeHeight: 300
     picFormat: jpg
-    picSavePath: F://codeImg
+    picSavePath: D://codeImg
     bornday: 1970-01-01
     #一定要有admin
     uuid: adminControl_id
@@ -93,6 +93,7 @@ custom:
     entrustCancel:  已撤
     entrustCancelBuy: 买入
     entrustCancelSell: 卖出
+    entrustBadOrder: 废单
   deal:
     prefix: deal_val_
     dealBuy: 买入

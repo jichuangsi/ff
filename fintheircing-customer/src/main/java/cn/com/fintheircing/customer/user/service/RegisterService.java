@@ -52,32 +52,32 @@ public class RegisterService {
     private int valCodeLength = 4;
     private String valsmsPre = "sms_val_";
     private long valZSendInterSeconds = 60;// 通知发送时间间隔
-    private String notifyType = "valCode";// 短信类型
+    private String notifyType = "passCode";// 短信类型
     @Value("${custom.mq.producer.queue-name.sendSms}")
     private String smsMqDestName;
 
     // 根据手机号获取验证码
     public String getValCode(String phoneNo) throws RegisterheckExistException {
-
-        // 使用手机号作为用户名
-//			if (null != userInfoRepository.findOneByUserName(phoneNo)) {
-//				throw new RegisterheckExistException(phoneNo + "已存在");
-//			}
-        // 看缓存中是否存在发送验证码记录
-        if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
-            throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
+        synchronized (phoneNo) {
+            // 使用手机号作为用户名
+            if (null != userInfoRepository.findOneByUserName(phoneNo)) {
+                throw new RegisterheckExistException(phoneNo + "已存在");
+            }
+            // 看缓存中是否存在发送验证码记录
+            if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
+                throw new RegisterheckExistException(valZSendInterSeconds + "秒内只能发送一次");
+            }
+            String code = getRandomNumCode(valCodeLength);
+            Map<String, String> dataMap = new HashMap<>();
+            dataMap.put("phoneNo", phoneNo);
+            dataMap.put("type", notifyType);
+            dataMap.put("content", code);
+            // 发送MQ消息
+            rabbitTemplate.convertAndSend(smsMqDestName, JSONObject.toJSONString(dataMap));
+            // 记录短信发送记录在缓存
+            redisTemplate.opsForValue().set(valsmsPre + phoneNo, code, valZSendInterSeconds, TimeUnit.SECONDS);
+            return code;
         }
-        String code = getRandomNumCode(valCodeLength);
-        Map<String, String> dataMap = new HashMap<>();
-        dataMap.put("phoneNo", phoneNo);
-        dataMap.put("type", notifyType);
-        dataMap.put("content", code);
-        // 发送MQ消息
-        rabbitTemplate.convertAndSend(smsMqDestName, JSONObject.toJSONString(dataMap));
-        // 记录短信发送记录在缓存
-        redisTemplate.opsForValue().set(valsmsPre + phoneNo, code, valZSendInterSeconds, TimeUnit.SECONDS);
-        return code;
-
     }
 
     // 新增注册
@@ -120,10 +120,12 @@ public class RegisterService {
         userClientInfo.setCreatedTime(new Date());
         userClientInfo.setUpdatedTime(new Date());
         userClientInfo.setInviterId(invitId);   //添加邀请人
+        userClientInfo = userInfoRepository.save(userClientInfo);
 
         UserTokenInfo userInfo = new UserTokenInfo();
         userInfo.setUuid(userClientInfo.getUuid());
         userInfo.setRoleGrade(userClientInfo.getRoleGrade());
+        userInfo.setUserName(userClientInfo.getUserName());
         ResponseModel<String> response = adminFeignService.saveUserSpread(userInfo);
         if (!ResultCode.SUCESS.equals(response.getCode())) {
             throw new RegisterheckExistException(response.getMsg());

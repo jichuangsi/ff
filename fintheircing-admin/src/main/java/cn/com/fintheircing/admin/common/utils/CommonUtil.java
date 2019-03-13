@@ -126,4 +126,9 @@ public class CommonUtil {
         }
         return result;
     }
+
+    public static String getStringDate(String sdf,Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(sdf);
+        return simpleDateFormat.format(date);
+    }
 }

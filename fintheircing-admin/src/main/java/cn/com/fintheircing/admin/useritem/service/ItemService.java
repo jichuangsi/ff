@@ -56,4 +56,6 @@ public interface ItemService {
     String getStockIdByStockNameAndStockCode(String stockName, String stockCode);
 
     Map<String,String> getStockNameAndStockCodeById(String id);
+
+    String getStockCodeByStockId(String stockId);
 }

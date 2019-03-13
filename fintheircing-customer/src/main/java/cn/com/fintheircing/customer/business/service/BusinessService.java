@@ -2,6 +2,7 @@ package cn.com.fintheircing.customer.business.service;
 
 import cn.com.fintheircing.customer.business.exception.BusinessException;
 import cn.com.fintheircing.customer.business.model.ContractModel;
+import cn.com.fintheircing.customer.business.model.FlowModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
@@ -123,6 +124,9 @@ public class BusinessService {
     public void saveContract(UserTokenInfo userInfo, ContractModel model) throws BusinessException {
         //判断是否实名
         UserClientInfo userClientInfo = registerService.getUserInfoByUuid(userInfo.getUuid());
+        if (null == userClientInfo) {
+            throw new BusinessException(ResultCode.SELECT_NULL_MSG);
+        }
         if (!UserClientInfo.CER_PASS.equals(userClientInfo.getCer())) {
             throw new BusinessException(ResultCode.CER_NOT_ERR);
         }
@@ -337,5 +341,20 @@ public class BusinessService {
             throw new BusinessException(response.getMsg());
         }
         return response.getData();
+    }
+
+    public void endContractAndSell(UserTokenInfo userInfo,String contractId) throws BusinessException {
+        ResponseModel responseModel = adminFeignService.endContractAndSell(userInfo.getUuid(),contractId);
+        if (!responseModel.getCode().equals(ResultCode.SUCESS)) {
+            throw new BusinessException(responseModel.getMsg());
+        }
+    }
+
+    public PageInfo<FlowModel> getMoneyFlow(int index, int size, String contractId) throws BusinessException {
+        ResponseModel<PageInfo<FlowModel>> responseModel = adminFeignService.getMoneyFlow(contractId, index, size);
+        if (!ResultCode.SUCESS.equals(responseModel.getCode())) {
+            throw new BusinessException(ResultCode.SELECT_NULL_MSG);
+        }
+        return responseModel.getData();
     }
 }

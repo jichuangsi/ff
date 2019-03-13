@@ -1,6 +1,7 @@
 package cn.com.fintheircing.customer.common.feign;
 
 import cn.com.fintheircing.customer.business.model.ContractModel;
+import cn.com.fintheircing.customer.business.model.FlowModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.common.feign.impl.FeignServiceFallBack;
@@ -135,5 +136,11 @@ public interface IAdminFeignService {
 
     @RequestMapping(value = "adminF/getContractEntrusts")
     ResponseModel<PageInfo<StockEntrustModel>> getContractEntrusts(@RequestBody StockEntrustModel model);
+
+    @RequestMapping("adminF/endContractAndSell")
+    ResponseModel endContractAndSell(@RequestParam("userId") String userId,@RequestParam("contractId")String contractId);
+
+    @RequestMapping("adminF/getMoneyFlow")
+    ResponseModel<PageInfo<FlowModel>> getMoneyFlow(@RequestParam("contractId") String contractId,@RequestParam("index") int index,@RequestParam("size") int size);
 
 }

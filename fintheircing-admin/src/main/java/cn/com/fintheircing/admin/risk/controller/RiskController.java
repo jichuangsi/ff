@@ -7,6 +7,7 @@ import cn.com.fintheircing.admin.risk.exception.RiskException;
 import cn.com.fintheircing.admin.risk.model.DangerousStockModel;
 import cn.com.fintheircing.admin.risk.model.RiskContractModel;
 import cn.com.fintheircing.admin.risk.model.RiskControlModel;
+import cn.com.fintheircing.admin.risk.model.RiskModel;
 import cn.com.fintheircing.admin.risk.service.RiskService;
 import cn.com.fintheircing.admin.taxation.exception.TaxationException;
 import com.github.pagehelper.PageInfo;
@@ -92,6 +93,25 @@ public class RiskController {
         } catch (RiskException e) {
             return ResponseModel.fail("",e.getMessage());
         }
+    }
+
+    @ApiOperation(value = "获取风险策略", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getSystemRisk")
+    public ResponseModel<RiskModel> getSystemRisk(@ModelAttribute UserTokenInfo userInfo){
+        return  ResponseModel.sucess("",riskService.getRiskModel());
+    }
+
+    @ApiOperation(value = "修改风险策略", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/updateSystemRisk")
+    public ResponseModel updateSystemRisk(@ModelAttribute UserTokenInfo userInfo,@RequestBody RiskModel model){
+        riskService.updateSystemRisk(model);
+        return ResponseModel.sucessWithEmptyData("");
     }
 
 }

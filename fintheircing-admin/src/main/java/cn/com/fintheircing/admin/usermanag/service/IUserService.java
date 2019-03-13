@@ -1,10 +1,12 @@
 package cn.com.fintheircing.admin.usermanag.service;
 
-import cn.com.fintheircing.admin.common.model.UserTokenInfo;
+import cn.com.fintheircing.admin.business.exception.BusinessException;
+import cn.com.fintheircing.admin.business.model.tranfer.TranferEntrustModel;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
 import cn.com.fintheircing.admin.usermanag.model.AdminClientInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.BankCardModel;
-import org.springframework.web.bind.annotation.RequestParam;
+import cn.com.fintheircing.admin.usermanag.model.UserStockHoldingModel;
+import com.github.pagehelper.PageInfo;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -39,4 +41,8 @@ public interface IUserService {
 //    AskMoneyInfoModel insideMoneyHandel(AskMoneyInfoModel model);
 
 //    List<ContactInfoModel> contactRecode(String goodsType);
+
+    PageInfo<TranferEntrustModel> getPageEntrusts(TranferEntrustModel model) throws BusinessException;
+
+    PageInfo<UserStockHoldingModel> getPageHolding(String userId, int index, int size);
 }

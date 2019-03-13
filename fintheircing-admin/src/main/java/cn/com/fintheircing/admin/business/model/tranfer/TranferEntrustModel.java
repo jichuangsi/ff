@@ -9,6 +9,10 @@ public class TranferEntrustModel extends StockEntrustModel {
 
     public static final String ENTRUST_FLAG = "0";
     public static final String ENTRUST_DEAL_FLAG = "1";
+    public static final String ENTRUST_DEAL_FLOW_FLAG = "2";
+
+    public static final String HISTORY_TODAY = "0";
+    public static final String HISTORY_BEFORE = "1";
 
     private Double businessMoney;   //交易产生的费用
     private Double taxationMoney;   //总税收
@@ -28,7 +32,17 @@ public class TranferEntrustModel extends StockEntrustModel {
     private String productName;     //产品名
     private List<TaxationModel> list = new ArrayList<TaxationModel>();     //税收全部分类
 
+    private String historyFlag; //判断查询种类，今日0，成交1
+
     private long entrustTime;
+
+    public String getHistoryFlag() {
+        return historyFlag;
+    }
+
+    public void setHistoryFlag(String historyFlag) {
+        this.historyFlag = historyFlag;
+    }
 
     public String getProductId() {
         return productId;

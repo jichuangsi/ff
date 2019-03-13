@@ -2,6 +2,7 @@ package cn.com.fintheircing.admin.common.initConfig;
 
 import cn.com.fintheircing.admin.promisedUrls.service.UrlService;
 import cn.com.fintheircing.admin.proxy.service.ProxyService;
+import cn.com.fintheircing.admin.risk.service.RiskService;
 import cn.com.fintheircing.admin.system.service.SystemService;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public class InitComponent {
     private ProxyService proxyService;
     @Resource
     private IDistributService distributService;
+    @Resource
+    private RiskService riskService;
 
     @Value("${custom.system.autoBuy}")
     private String autoBuy;
@@ -63,6 +66,15 @@ public class InitComponent {
     public void saveProduct(){  //保存产品
         try {
             distributService.saveProduct();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    @PostConstruct
+    public void saveSystemRisk(){
+        try {
+            riskService.saveSystemRisk();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

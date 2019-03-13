@@ -20,8 +20,11 @@ import cn.com.fintheircing.customer.user.service.RegisterService;
 import cn.com.fintheircing.customer.user.service.UserService;
 import cn.com.fintheircing.customer.user.utlis.Entity2Model;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,6 +33,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -45,12 +50,24 @@ public class UserServiceImpl implements UserService {
     private RegisterService registerService;
     @Resource
     private IUserClientLoginInfoRepository userClientLoginInfoRepository;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private AmqpTemplate rabbitTemplate;
+
+
     @Value("${custom.pay.url}")
     private String url;
     @Value("${custom.pay.reciveWay}")
     private String reciveWay;
     @Value("${custom.pay.weChatOrAilpay}")
     private String weChatOrAilpay;
+    private String valsmsPre = "backPass_val_";
+    private long valZSendInterSeconds = 60;// 通知发送时间间隔
+    private int valCodeLength = 4;
+    private String notifyType = "valCode";// 短信类型
+    @Value("${custom.mq.producer.queue-name.sendSms}")
+    private String smsMqDestName;
 
     @Override
     public UserClientInfo findOneByUserName(String userName) {
@@ -228,5 +245,64 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String getPassBackCode(String phoneNo) throws LoginException {
+        synchronized (phoneNo) {
+            // 使用手机号作为用户名
+            if (null == userInfoRepository.findOneByUserName(phoneNo)) {
+                throw new LoginException(phoneNo + "不存在");
+            }
+            // 看缓存中是否存在发送验证码记录
+            if (null != redisTemplate.opsForValue().get(valsmsPre + phoneNo)) {
+                throw new LoginException(valZSendInterSeconds + "秒内只能发送一次");
+            }
+            String code = getRandomNumCode(valCodeLength);
+            Map<String, String> dataMap = new HashMap<>();
+            dataMap.put("phoneNo", phoneNo);
+            dataMap.put("type", notifyType);
+            dataMap.put("content", code);
+            // 发送MQ消息
+            rabbitTemplate.convertAndSend(smsMqDestName, JSONObject.toJSONString(dataMap));
+            // 记录短信发送记录在缓存
+            redisTemplate.opsForValue().set(valsmsPre + phoneNo, code, valZSendInterSeconds, TimeUnit.SECONDS);
+            return code;
+        }
+    }
+
+    // 生成随机数字
+    private String getRandomNumCode(int number) {
+        String codeNum = "";
+        int[] numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        Random random = new Random();
+        for (int i = 0; i < number; i++) {
+            int next = random.nextInt(10000);
+            codeNum += numbers[next % 10];
+        }
+        return codeNum;
+    }
+
+    @Override
+    public void updateNewPass(String code, String pass,String phoneNo) throws LoginException {
+        UserClientInfo clientInfo = userInfoRepository.findOneByUserName(phoneNo);
+        if (null == clientInfo) {
+            throw new LoginException(phoneNo + "不存在");
+        }
+        // 取缓存中是否存在发送验证码记录
+        String valCodeInCache = redisTemplate.opsForValue().get(valsmsPre + phoneNo);
+        // 对比验证码
+        if (StringUtils.isEmpty(valCodeInCache)) {
+            throw new LoginException("验证码不存在或已过期");
+        }
+        if (!valCodeInCache.equals(code)) {
+            throw new LoginException("验证码不正确");
+        }
+        //删除验证码缓存
+        redisTemplate.delete(valsmsPre + phoneNo);
+
+        UserClientLoginInfo loginInfo = userClientLoginInfoRepository.findByDeleteFlagAndClientInfoId("0",clientInfo.getUuid());
+        loginInfo.setPwd(CommonUtil.toSha256(pass));
+        userClientLoginInfoRepository.save(loginInfo);
     }
 }

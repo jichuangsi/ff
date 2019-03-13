@@ -60,6 +60,8 @@ public class ScheduledTask {
     private String entrustBusiness;
     @Value("${custom.entrust.entrustCancel}")
     private String entrustCancel;
+    @Value("${custom.entrust.entrustBadOrder}")
+    private String entrustBadOrder;
     @Value("${custom.deal.prefix}")
     private String dealPrefix;
     @Value("${custom.deal.dealBuy}")
@@ -79,7 +81,7 @@ public class ScheduledTask {
                 ResponseModel<List<TodayOrder>> responseModel
                         = exchangeFeignService.getTodayOrderList(account.getAccountNo());
                 List<TodayOrder> todayOrders = responseModel.getData();
-                if (null == todayOrders){
+                if (null == todayOrders) {
                     return;
                 }
                 String oldOrdersJson = redisTemplate.opsForValue().get(entrustPrefix + account.getAccountNo());
@@ -97,7 +99,7 @@ public class ScheduledTask {
                         String orderStatus = todayOrder.getStatus().trim();
                         String operName = todayOrder.getOperName();
                         if (entrustBusiness.trim().equals(orderTypeName)) {
-                            if (entrustCancel.trim().equals(orderStatus)) {
+                            if (entrustCancel.trim().equals(orderStatus) || entrustBadOrder.equals(orderStatus)) {
                                 if (entrustCancelBuy.trim().equals(operName)) {
                                     try {
                                         businessService.updateColdMoneyAndSaveEntrust(todayOrder, account.getAccountNo());
@@ -134,7 +136,7 @@ public class ScheduledTask {
             for (MotherAccount account : motherAccounts) {
                 ResponseModel<List<TodayAcceptOrder>> responseModel = exchangeFeignService.getTodayAcceptOrderList(account.getAccountNo());
                 List<TodayAcceptOrder> todayAcceptOrders = responseModel.getData();
-                if (null == todayAcceptOrders){
+                if (null == todayAcceptOrders) {
                     return;
                 }
                 String oldDeal = redisTemplate.opsForValue().get(dealPrefix + account.getAccountNo());
@@ -144,27 +146,30 @@ public class ScheduledTask {
                     map = jsonModel.getTodayAcceptOrders();
                 }
                 for (TodayAcceptOrder todayAcceptOrder : todayAcceptOrders) {
+                    int flag = 0;
                     if (!map.containsKey(todayAcceptOrder.getOrderNumber())
                             || !DealUtils.BALANCEDEALORDER(todayAcceptOrder, map.get(todayAcceptOrder.getOrderNumber()))) {
                         AcceptOrder acceptOrder = MappingModel2EntityConverter.CONVERTERFROMTODAYACCEPTORDER(todayAcceptOrder);
                         acceptOrderRepository.save(acceptOrder);
                         if (dealBuy.equals(todayAcceptOrder.getOperName())) {
                             try {
-                                businessService.dealBuyMethod(todayAcceptOrder, account.getAccountNo());
+                                flag = businessService.dealBuyMethod(todayAcceptOrder, account.getAccountNo());
                             } catch (BusinessException e) {
                                 logger.error(e.getMessage());
                                 continue;
                             }
                         } else if (dealSell.equals(todayAcceptOrder.getOperName())) {
                             try {
-                                businessService.dealSellMethod(todayAcceptOrder, account.getAccountNo());
+                                flag = businessService.dealSellMethod(todayAcceptOrder, account.getAccountNo());
                             } catch (BusinessException e) {
                                 logger.error(e.getMessage());
                                 continue;
                             }
                         }
                     }
-                    jsonMap.put(todayAcceptOrder.getOrderNumber(), todayAcceptOrder);
+                    if (flag == 0) {
+                        jsonMap.put(todayAcceptOrder.getOrderNumber(), todayAcceptOrder);
+                    }
                 }
                 DealJsonModel jsonModel = new DealJsonModel();
                 jsonModel.setTodayAcceptOrders(jsonMap);
@@ -221,7 +226,7 @@ public class ScheduledTask {
     }
 
     @Scheduled(cron = "${custom.scheduled.contractRudeEnd}")
-    public void contractRudeEnd(){
+    public void contractRudeEnd() {
         try {
             businessService.contractRudeEnd();
         } catch (Exception e) {
@@ -230,7 +235,7 @@ public class ScheduledTask {
     }
 
     @Scheduled(cron = "${custom.scheduled.dividend}")
-    public void dividend(){
+    public void dividend() {
         try {
             dividendService.scheduledDividend();
         } catch (Exception e) {

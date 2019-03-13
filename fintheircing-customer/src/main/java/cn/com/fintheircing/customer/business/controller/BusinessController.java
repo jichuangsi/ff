@@ -2,6 +2,7 @@ package cn.com.fintheircing.customer.business.controller;
 
 import cn.com.fintheircing.customer.business.exception.BusinessException;
 import cn.com.fintheircing.customer.business.model.ContractModel;
+import cn.com.fintheircing.customer.business.model.FlowModel;
 import cn.com.fintheircing.customer.business.model.ProductModel;
 import cn.com.fintheircing.customer.business.model.StockHoldingModel;
 import cn.com.fintheircing.customer.business.model.tranfer.TranferProductModel;
@@ -177,7 +178,7 @@ public class BusinessController {
     @PostMapping("/endContract")
     public ResponseModel endContract(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractModel model) {
         try {
-            return ResponseModel.sucess("","当前结余："+businessService.endContract(userInfo, model));
+            return ResponseModel.sucess("", "当前结余：" + businessService.endContract(userInfo, model));
         } catch (BusinessException e) {
             return ResponseModel.fail("", e.getMessage());
         }
@@ -188,10 +189,37 @@ public class BusinessController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @PostMapping("/getContractEntrusts")
-    public ResponseModel<PageInfo<StockEntrustModel>> getContractEntrusts(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockEntrustModel model){
+    public ResponseModel<PageInfo<StockEntrustModel>> getContractEntrusts(@ModelAttribute UserTokenInfo userInfo, @RequestBody StockEntrustModel model) {
         try {
             return ResponseModel.sucess("",
-                    businessService.getContractEntrusts(userInfo,model));
+                    businessService.getContractEntrusts(userInfo, model));
+        } catch (BusinessException e) {
+            return ResponseModel.fail("", e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "平仓结算", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/endContractAndSell")
+    public ResponseModel endContractAndSell(@ModelAttribute UserTokenInfo userInfo,@RequestParam("contractId") String contractId ){
+        try {
+            businessService.endContractAndSell(userInfo,contractId);
+        } catch (BusinessException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+        return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "资金流水", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @GetMapping("/getMoneyFlow")
+    public ResponseModel<PageInfo<FlowModel>> getMoneyFlow(@ModelAttribute UserTokenInfo userInfo, @RequestParam("index")int index, @RequestParam("size") int size,@RequestParam("contractId") String contractId){
+        try {
+            return ResponseModel.sucess("",businessService.getMoneyFlow(index, size, contractId));
         } catch (BusinessException e) {
             return ResponseModel.fail("",e.getMessage());
         }

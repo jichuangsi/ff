@@ -4,6 +4,7 @@ import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.model.tranfer.TranferHoldingModel;
 import cn.com.fintheircing.admin.dividend.model.DividendHoldingModel;
 import cn.com.fintheircing.admin.risk.model.DangerousStockModel;
+import cn.com.fintheircing.admin.usermanag.model.UserStockHoldingModel;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -29,7 +30,7 @@ public interface IBusinessStockHoldingMapper {
     @Select("<script>select t2.stock_num as stockNo,t2.id as stockId,t1.version as version from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id where t1.delete_flag=\"0\"</script>")
     List<StockHoldingModel> selectHoldStockAll();
 
-    @Update("<script>UPDATE business_stock_holding set current_price=#{currentPrice},current_worth=#{currentPrice}*amount,float_money=(#{currentPrice}-cost_price)*amount,float_rate=((#{currentPrice}/cost_price)-1),version=#{version}+1  where stock_id=#{stockId} and delete_flag=\"0\" and version=#{version}</script>")
+    @Update("<script>UPDATE business_stock_holding set current_price=#{currentPrice},current_worth=#{currentPrice}*amount,float_money=(#{currentPrice}-cost_price)*amount,float_rate=((#{currentPrice}/cost_price)-1)  where stock_id=#{stockId} and delete_flag=\"0\" and version=#{version}</script>")
     int updateHoldingStockPrice(StockHoldingModel model);
 
     @Select("<script>select t1.uuid as id,t1.stock_id as stockId,t2.stock_num as stockNo,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as costPrice,t1.current_worth as currentWorth,t1.can_sell as canSell,t1.float_money as floatMoney,t1.float_rate as floatRate,t1.current_price as currentPrice,t1.mother_account as motherAccount,t1.rude_end as rudeEnd,t1.contract_num as contractNum,t1.user_name as userName,t1.phone as userPhone,t1.displayname as name,t1.chose_way as choseWay from (select t3.contract_id,t3.uuid,t3.stock_id,t3.amount,t3.cost_price,t3.current_worth,t3.can_sell,t3.float_money,t3.float_rate,t3.current_price,t3.mother_account,t3.rude_end,t4.* from business_stock_holding t3 LEFT JOIN (select t6.user_name,t6.phone,t5.uuid as contractId,t6.displayname,t5.contract_num,t5.chose_way from business_contract t5 LEFT JOIN user_client_info t6 on t5.user_id=t6.uuid where t5.contract_status=1) t4 on t3.contract_id=t4.contractId) t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id" +
@@ -58,4 +59,7 @@ public interface IBusinessStockHoldingMapper {
 
     @Select("<script>select t1.uuid as id,t2.stock_num as stockNo,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as costPrice,t1.created_time as createdTime from business_stock_holding t1 LEFT JOIN admin_transaction_summary t2 on t1.stock_id=t2.id where t1.delete_flag=\"0\" and t1.contract_id=#{contractId}</script>")
     List<StockHoldingModel> getPageHolding(@Param("contractId") String contractId);
+
+    @Select("<script>select t2.contract_num as contractNo,t2.phone as phone,t2.displayname as userName,t1.stock_id as stockId,t1.cost_price costPrice,t1.amount as amount,t1.can_sell as canSell,t1.current_price as currentPrice,t1.current_worth as currentWorth,t1.mother_account as motherAccount from business_stock_holding t1 right JOIN (select t3.uuid as contract_id,t4.displayname,t4.phone,t3.contract_num,t4.uuid as user_id from business_contract t3 left join user_client_info t4 on t3.user_id=t4.uuid) t2 on t1.contract_id = t2.contract_id where t2.user_id=#{userId}</script>")
+    List<UserStockHoldingModel> getPageHoldingByUserId(@Param("userId") String userId);
 }

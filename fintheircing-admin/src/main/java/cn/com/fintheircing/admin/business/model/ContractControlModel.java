@@ -21,7 +21,7 @@ public class ContractControlModel {
     private Double warnningLine;    //预警线
     private Double abortLine;   //平仓线
     private Double borrowRate;  //借款利率
-    private long borrowTime;    //借款时间
+    private Date borrowTime;    //借款时间
     private Long expiredTime; //还款时间
     private Long lessTime;
     private Double firstMoney;
@@ -297,11 +297,11 @@ public class ContractControlModel {
         this.borrowRate = borrowRate;
     }
 
-    public long getBorrowTime() {
+    public Date getBorrowTime() {
         return borrowTime;
     }
 
-    public void setBorrowTime(long borrowTime) {
+    public void setBorrowTime(Date borrowTime) {
         this.borrowTime = borrowTime;
     }
 

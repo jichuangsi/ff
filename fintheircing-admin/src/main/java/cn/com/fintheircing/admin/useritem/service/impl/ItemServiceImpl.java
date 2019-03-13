@@ -326,4 +326,13 @@ public class ItemServiceImpl implements ItemService {
         }
         return map;
     }
+
+    @Override
+    public String getStockCodeByStockId(String stockId) {
+        TransactionSummary summary = transactionSummaryRepository.findOneById(stockId);
+        if (null != summary){
+           return summary.getStockNum();
+        }
+        return "";
+    }
 }

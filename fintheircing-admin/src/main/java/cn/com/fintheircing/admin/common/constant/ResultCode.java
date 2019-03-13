@@ -97,4 +97,6 @@ public class ResultCode {
     public static final String CONTRACT_ALREAD_ABORT = "合约已经结束";
     public static final String STOCK_VALIDATE_ERR ="股票名称和代码不匹配" ;
     public static final String BLACK_ALREAD_EXIST ="黑名单已存在" ;
+
+    public static final String HOLDING_CANNOT_SELL ="尚持有不能出售股份,请关注是否存在未撤委托单，或当天购入股票" ;
 }
