@@ -33,7 +33,7 @@ public class ContractService {
     private IStockEquityRecordMapper iStockEquityRecordMapper;
     @Resource
     private BusinessService businessService;
-    public boolean ContactDetails(UserTokenInfo userInfo, ContractControlModel model) {
+    public boolean ContactDetails(UserTokenInfo userInfo, ContractControlModel model)throws BusinessException  {
         ContactRecode c =new ContactRecode();
         c.setApplyType("调整息费");
         c.setContactId(model.getBusinessContractId());
@@ -47,6 +47,9 @@ public class ContractService {
         c.setWarnLine(model.getWarnningLine());
         c.setExWarnLine(model.getExWarnningLine());
         c.setAbortLine(model.getAbortLine());
+        if (StringUtils.isEmpty(model.getUserId())){
+            throw new BusinessException("用户Id不存在");
+        }
         double userAmountByUserId = iBusinessContractControlMapper.findUserAmountByUserId(model.getUserId());
         iBusinessContractControlMapper.findUserfrezzeAmountByUserId(model.getUserId());
 
@@ -65,12 +68,13 @@ public class ContractService {
         r.setAmount(model.getAmount());
         r.setContactId(model.getContractId());
         r.setApplyType(model.getApplyType());
-        r.setRemark(model.getApplyType());
+        r.setRemark(model.getRemarks());
         r.setStockName(model.getStockName());
         r.setStockCode(model.getStockCode());
         r.setBalance(model.getBalance());
         r.setDealPrice(model.getDealPrice());
         r.setUserId(model.getUserCode());
+        r.setBuyTime(model.getBuyTime());
         StockEquityRecord save = iStockEquityRecordRepository.save(r);
         if (!StringUtils.isEmpty(save)){
             return true;

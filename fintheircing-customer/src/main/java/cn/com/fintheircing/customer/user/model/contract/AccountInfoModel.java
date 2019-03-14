@@ -1,8 +1,10 @@
 package cn.com.fintheircing.customer.user.model.contract;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class AccountInfoModel {
+
     private Date createdTime;//发生时间
     private String payway;//支付宝或者微信
     private double amount;//支付或者收入金额

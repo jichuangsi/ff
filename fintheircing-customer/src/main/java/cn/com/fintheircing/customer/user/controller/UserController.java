@@ -26,6 +26,7 @@ import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import cn.com.fintheircing.customer.user.model.queryModel.NetQueryModel;
 import cn.com.fintheircing.customer.user.service.UserPayService;
 import cn.com.fintheircing.customer.user.service.UserService;
+import cn.com.fintheircing.customer.user.utlis.DateUtils;
 import cn.com.fintheircing.customer.user.utlis.GsonUtil;
 import cn.com.fintheircing.customer.user.utlis.HttpUtils;
 import io.swagger.annotations.Api;
@@ -37,6 +38,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -243,12 +246,22 @@ public class UserController {
     }
     @ApiOperation(value = "资金明细", notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
     @GetMapping("/checkPayInfo")
-    public ResponseModel<List<AccountInfoModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo) {
-
-        return  ResponseModel.sucess("",iPayMapper.QueryListForAccountInfo(userInfo.getUuid()));
+    public ResponseModel<List<AccountInfoModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo,@RequestParam(value = "week",required = false) String week)throws LoginException {
+        Map<String,Object> parms =new HashMap<>();
+        parms.put("userId", userInfo.getUuid());
+        if ("null".equalsIgnoreCase(week)){
+            week="";
+        }else {
+            Long aLong = Long.valueOf(week);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date(aLong);
+            week = sdf.format(date);
+        }
+        parms.put("week",week);
+        return  ResponseModel.sucess("",iPayMapper.QueryListForAccountInfo(parms));
 
     }
     @ApiOperation(value = "找回密码code", notes = "")

@@ -11,23 +11,24 @@ public class ContractControlModel {
     private String name;    //姓名
     private String controlStr;  //操作
     private Integer controlNum;     //操作num
-    private Date createdTime;   //操作时间
+    private String createdTime;   //创建时间
+    private String updateTime;//修改时间
     private String productStr;  //产品
     private Integer productNum; //产品num
-    private Double borrowMoney; //借款
-    private Double promisedMoney;   //保证金
-    private Double gainMoney;   //收益
-    private Double endMoney;    //结算
-    private Double warnningLine;    //预警线
-    private Double exWarnningLine;//修改后的预警线
-    private Double abortLine;   //平仓线
-    private Double exAbortLine;//修改后的平仓线
-    private Double borrowRate;  //借款利率
-    private Date borrowTime;    //借款时间
+    private double borrowMoney; //借款
+    private double promisedMoney;   //保证金
+    private double gainMoney;   //收益
+    private double endMoney;    //结算
+    private double warnningLine;    //预警线
+    private double exWarnningLine;//修改后的预警线
+    private double abortLine;   //平仓线
+    private double exAbortLine;//修改后的平仓线
+    private double borrowRate;  //借款利率
+    private Long borrowTime;    //借款时间
     private Long expiredTime; //还款时间
     private Long lessTime;//剩余天数
-    private Double firstMoney;
-    private Double lessMoney;   //剩余金额 /可用金额
+    private double firstMoney;//初次利息
+    private double lessMoney;   //剩余金额 /可用金额
     private Integer verifyStatus;   //审核num
     private String verifyStr;   //审核
     private String productId;
@@ -45,6 +46,14 @@ public class ContractControlModel {
     private int stockAmount;//股票持仓
     private double firstInterest;//初次利息
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public double getFirstInterest() {
         return firstInterest;
     }
@@ -53,19 +62,19 @@ public class ContractControlModel {
         this.firstInterest = firstInterest;
     }
 
-    public Double getExWarnningLine() {
+    public double getExWarnningLine() {
         return exWarnningLine;
     }
 
-    public void setExWarnningLine(Double exWarnningLine) {
+    public void setExWarnningLine(double exWarnningLine) {
         this.exWarnningLine = exWarnningLine;
     }
 
-    public Double getExAbortLine() {
+    public double getExAbortLine() {
         return exAbortLine;
     }
 
-    public void setExAbortLine(Double exAbortLine) {
+    public void setExAbortLine(double exAbortLine) {
         this.exAbortLine = exAbortLine;
     }
 
@@ -157,13 +166,7 @@ public class ContractControlModel {
         this.totalAssets = totalAssets;
     }
 
-    public Long getExpiredTime() {
-        return expiredTime;
-    }
 
-    public void setExpiredTime(Long expiredTime) {
-        this.expiredTime = expiredTime;
-    }
 
     public double getCurrentWorth() {
         return currentWorth;
@@ -181,11 +184,11 @@ public class ContractControlModel {
         this.productId = productId;
     }
 
-    public Double getFirstMoney() {
+    public double getFirstMoney() {
         return firstMoney;
     }
 
-    public void setFirstMoney(Double firstMoney) {
+    public void setFirstMoney(double firstMoney) {
         this.firstMoney = firstMoney;
     }
 
@@ -253,11 +256,11 @@ public class ContractControlModel {
         this.controlNum = controlNum;
     }
 
-    public Date getCreatedTime() {
+    public String getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
     }
 
@@ -277,75 +280,83 @@ public class ContractControlModel {
         this.productNum = productNum;
     }
 
-    public Double getBorrowMoney() {
+    public double getBorrowMoney() {
         return borrowMoney;
     }
 
-    public void setBorrowMoney(Double borrowMoney) {
+    public void setBorrowMoney(double borrowMoney) {
         this.borrowMoney = borrowMoney;
     }
 
-    public Double getPromisedMoney() {
+    public double getPromisedMoney() {
         return promisedMoney;
     }
 
-    public void setPromisedMoney(Double promisedMoney) {
+    public void setPromisedMoney(double promisedMoney) {
         this.promisedMoney = promisedMoney;
     }
 
-    public Double getGainMoney() {
+    public double getGainMoney() {
         return gainMoney;
     }
 
-    public void setGainMoney(Double gainMoney) {
+    public void setGainMoney(double gainMoney) {
         this.gainMoney = gainMoney;
     }
 
-    public Double getEndMoney() {
+    public double getEndMoney() {
         return endMoney;
     }
 
-    public void setEndMoney(Double endMoney) {
+    public void setEndMoney(double endMoney) {
         this.endMoney = endMoney;
     }
 
-    public Double getWarnningLine() {
+    public double getWarnningLine() {
         return warnningLine;
     }
 
-    public void setWarnningLine(Double warnningLine) {
+    public void setWarnningLine(double warnningLine) {
         this.warnningLine = warnningLine;
     }
 
-    public Double getAbortLine() {
+    public double getAbortLine() {
         return abortLine;
     }
 
-    public void setAbortLine(Double abortLine) {
+    public void setAbortLine(double abortLine) {
         this.abortLine = abortLine;
     }
 
-    public Double getBorrowRate() {
+    public double getBorrowRate() {
         return borrowRate;
     }
 
-    public void setBorrowRate(Double borrowRate) {
+    public void setBorrowRate(double borrowRate) {
         this.borrowRate = borrowRate;
     }
 
-    public Date getBorrowTime() {
+    public Long getBorrowTime() {
         return borrowTime;
     }
 
-    public void setBorrowTime(Date borrowTime) {
+    public void setBorrowTime(Long borrowTime) {
         this.borrowTime = borrowTime;
     }
 
-    public Double getLessMoney() {
+    public Long getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(Long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    public double getLessMoney() {
         return lessMoney;
     }
 
-    public void setLessMoney(Double lessMoney) {
+    public void setLessMoney(double lessMoney) {
         this.lessMoney = lessMoney;
     }
 

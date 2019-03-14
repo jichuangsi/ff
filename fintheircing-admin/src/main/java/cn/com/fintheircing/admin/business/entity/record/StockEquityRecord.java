@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Entity
 public class StockEquityRecord extends AbstractEntity{
@@ -16,6 +17,7 @@ public class StockEquityRecord extends AbstractEntity{
     private String submitterId;//提交的人
     private String contactId;//
     private String applyType;//申请类型,0为添加1为扣除
+    private Date buyTime;
     private String remark;
     private Integer checkStatus = 0;//0为未审核,1为通过,2为未通过
     private String stockName;
@@ -25,6 +27,14 @@ public class StockEquityRecord extends AbstractEntity{
     private double dealPrice;   //成交单价
     private String stockId;
     private String userId;
+
+    public Date getBuyTime() {
+        return buyTime;
+    }
+
+    public void setBuyTime(Date buyTime) {
+        this.buyTime = buyTime;
+    }
 
     public String getUserId() {
         return userId;

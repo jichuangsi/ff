@@ -37,11 +37,11 @@ public interface IBusinessContractControlMapper {
             "</where></script>")
     List<ContractControlModel> getContractControls(ContractControlModel model);
 
-    @Select("<script>select t1.first_interest as firstInterest,t3.amount as stockAmount,t4.uuid as businessControlContractId, " +
+    @Select("<script>select t3.amount as stockAmount,t4.uuid as businessControlContractId, " +
             "t1.user_id as userId,t6.phone as phone,t6.user_name as name" +
             " ,t1.uuid as BusinessContractId,t1.cold_money as coldMoney,t5.user_name as proxyName," +
             " t5.proxy_num as proxyNum, t1.first_interest as firstMoney ," +
-            " t1.contract_num as contractNo,t1.updated_time as createdTime,t2.product_name as productStr, " +
+            " t1.contract_num as contractNo,t1.created_time as createdTime,t1.updated_time as updateTime,t2.product_name as productStr, " +
             " t1.borrow_money as borrowMoney ,t1.promised_money as promisedMoney ,t4.warning_line as warnningLine," +
             " t4.abort_line as abortLine,t1.available_money as lessMoney ,t3.current_worth as currentWorth ,t3.float_money as gainMoney ," +
             " t1.borrow_time as borrowTime,t1.expired_time as expiredTime,t1.contract_status as verifyStatus " +
@@ -50,16 +50,17 @@ public interface IBusinessContractControlMapper {
             "  ON t4.contract_id=t1.uuid left join admin_client_info t5 on t5.user_client_info_id=t1.user_id left join" +
             " user_client_info t6 on t6.uuid=t1.user_id" +
             " <where>" +
-            " <if test= \"productStr!=null and productStr!=''\"> and t2.product_name =#{productStr}</if>" +
+            " <if test= \"productStr!=null \"> and t2.product_name =#{productStr}</if>" +
             " and t1.delete_flag=\"0\"</where></script>")
     List<ContractControlModel> findAllContact(@Param("productStr") String productStr);
-    @Select("<script>select t1.uuid as srId,t3.user_id as userCode,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_code as stockNum,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as dealPrice," +
+    @Select("<script>select t1.uuid as srId,t3.user_id as userCode,t1.contract_id as contractId,t2.id as stockId," +
+            " t2.stock_num as stockCode,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as dealPrice," +
             " t1.created_time as buyTime ,t3.account as userfulMoney," +
             " t3.frezze_amount as codeMoney" +
-            " from business_stock_holding t1 left join admin_transaction_summary t2 left join" +
-            " user_account t3 on t1.user_id =t3.user_id" +
-            " where t1.stock_id =t2.uuid and  t1.contract_id=#{contractId}" +
-            " and t1.delete_flag=0" +
+            " from business_stock_holding t1 left join admin_transaction_summary t2 on t1.stock_id=t2.id " +
+            " left join user_account t3 on t3.user_id =(select t4.user_id from business_contract t4 where t4.contract_num =t1.contract_id)" +
+            " <where><if test= \"contractId!=null and contractId!=''\">and t1.contract_id=#{contractId} </if>" +
+            " and t1.delete_flag=0 </where>" +
             "   </script>")
     List<StockEquityModel> findAllStock(String contractId);
 

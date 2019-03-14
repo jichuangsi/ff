@@ -48,7 +48,7 @@ public class ContractController {
             model.setNetAssets(model.getPromisedMoney());
             model.setTotalAssets(model.getLessMoney()+model.getPromisedMoney()+model.getStockAmount()*model.getCurrentWorth());
             model.setVerifyStr(BusinessStatus.getName(model.getVerifyStatus()));
-            model.setLessTime((model.getExpiredTime() - model.getBorrowTime().getTime()) / 1000 / 60 / 60 / 24);
+            model.setLessTime((model.getExpiredTime() - model.getBorrowTime()) / 1000 / 60 / 60 / 24);
 
         }
         PageInfo<ContractControlModel> pageInfo=new PageInfo<ContractControlModel>(allContact);
@@ -60,7 +60,7 @@ public class ContractController {
     })
     @PostMapping("/ContactDetails")
     public ResponseModel ContactDetails(@ModelAttribute UserTokenInfo userInfo,
-                                        @RequestBody ContractControlModel model) {
+                                        @RequestBody ContractControlModel model) throws BusinessException {
 
        if (contractService.ContactDetails(userInfo,model)){
            return ResponseModel.sucessWithEmptyData("");
@@ -71,9 +71,10 @@ public class ContractController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
     })
-    @PostMapping("/deleteStock")
-    public ResponseModel deleteStock(@ModelAttribute UserTokenInfo userInfo,@Param("contractId") String contractId) {
-        return ResponseModel.sucess("",iBusinessContractControlMapper.findAllStock(contractId));
+    @GetMapping("/findAllStock")
+    public ResponseModel findAllStock(@ModelAttribute UserTokenInfo userInfo,@RequestParam(value = "contractId",required = false) String contractId) {
+        List<StockEquityModel> allStock = iBusinessContractControlMapper.findAllStock(contractId);
+        return ResponseModel.sucess("",allStock);
 
     }
     @ApiOperation(value = "合约信息-合约权益调整-申请增加股票", notes = "")
@@ -110,7 +111,6 @@ public class ContractController {
     @PostMapping("/agreeApply")
     public ResponseModel agreeApply(@ModelAttribute UserTokenInfo userInfo, @RequestBody ContractEquityModel model)throws BusinessException  {
         return ResponseModel.sucess("",contractService.agreeApply(model));
-
     }
     @ApiOperation(value = "审核申请-合约操作-驳回申请", notes = "")
     @ApiImplicitParams({

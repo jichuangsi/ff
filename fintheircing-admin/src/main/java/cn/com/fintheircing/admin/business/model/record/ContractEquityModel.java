@@ -19,6 +19,15 @@ public class ContractEquityModel {
     private double promisedMoney;//保证金金额
     private Date createdTime;//提交时间
     private String contactRecodeId;//合约申请记录Id
+    private Date buyTime;//购入时间
+
+    public Date getBuyTime() {
+        return buyTime;
+    }
+
+    public void setBuyTime(Date buyTime) {
+        this.buyTime = buyTime;
+    }
 
     public String getContactRecodeId() {
         return contactRecodeId;

@@ -23,6 +23,15 @@ public class StockEquityModel {
     private double codeMoney;//冻结资金
     private Date createdTime;   //创建时间
     private Integer falg;//增减标识符
+    private Date buyTime;
+
+    public Date getBuyTime() {
+        return buyTime;
+    }
+
+    public void setBuyTime(Date buyTime) {
+        this.buyTime = buyTime;
+    }
 
     public String getSrId() {
         return srId;

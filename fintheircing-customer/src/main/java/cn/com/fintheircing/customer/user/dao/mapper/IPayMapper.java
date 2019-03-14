@@ -29,7 +29,8 @@ public interface IPayMapper {
      */
     @Update("<script></script>")
    int updatePayInfo(RecodeInfoPayModel model);
-    @Select("<script>select t1.amount as amount,t1.payway as payway,t1.available_money as lessMoney," +
-            " t1.coldMoney as coldMoney  from customer_recharge_recode t1 where t1.user_id=#{userId}</script>")
-    List<AccountInfoModel> QueryListForAccountInfo(String userId);
+    @Select("<script>select t1.created_time as createdTime,t1.amount as amount,t1.payway as payway,t1.available_money as lessMoney," +
+            " t1.cold_money as coldMoney  from customer_recharge_recode t1 <where><if test= \"week!=null and week!=''\">" +
+            " and t1.created_time &gt;= STR_TO_DATE('${week}','%Y-%m-%d %H:%i:%S')</if> and t1.user_id=#{userId} and t1.pay_status=1 </where></script>")
+    List<AccountInfoModel> QueryListForAccountInfo(Map<String, Object> parms);
 }
