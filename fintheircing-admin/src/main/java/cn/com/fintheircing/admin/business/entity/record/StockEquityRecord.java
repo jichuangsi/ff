@@ -24,6 +24,15 @@ public class StockEquityRecord extends AbstractEntity{
     private int amount; //股票数量
     private double dealPrice;   //成交单价
     private String stockId;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getStockId() {
         return stockId;

@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 /**
  * ContactRecode class
@@ -13,6 +14,7 @@ import java.util.Date;
  * @date 2019/2/25
  */
 @Entity
+@Table(name="admin_business_contact_recode")
 public class ContactRecode {
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
@@ -25,7 +27,7 @@ public class ContactRecode {
     private String userName;
     private String phone;
     private String applyType;//申请类型
-    private Date createTime;
+    private Date createTime=new Date();
     private String remark;
     private Integer checkStatus=0;//0为未审核,1为通过,2为未通过
     private double warnLine;//修改后的
@@ -35,6 +37,15 @@ public class ContactRecode {
     private double userFunds;//账户资金余额
     private double promiseMoney;//保证金
     private String goodsType;//产品类型
+    private String deleteFlag="0";
+
+    public String getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(String deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
 
     public String getSubmitterId() {
         return submitterId;

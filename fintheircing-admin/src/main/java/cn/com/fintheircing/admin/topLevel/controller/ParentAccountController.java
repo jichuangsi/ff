@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ import java.util.List;
  */
 @RestController
 @Api("ParentAccountController 母账户的相关Controller")
+@CrossOrigin
 public class ParentAccountController {
     @Resource
     private IParentAccountRepository iParentAccountRepository;
@@ -79,7 +81,6 @@ public class ParentAccountController {
         List<ParentAccountModel> models =new ArrayList<>();
         for (ParentAccount p:all
              ) {
-
             models.add( EntityToModel.CoverParentAccount(p));
         }
         return ResponseModel.sucess("",models);
@@ -105,13 +106,13 @@ public class ParentAccountController {
 
     /**
      * //差个持仓数量差额, 差额市值
-     * @param id
+     * @param
      * @return
      */
     @ApiOperation(value = "持仓差异表", notes = "")
     @ApiResponse(code = 200, message = "返回是否修改成功")
     @PostMapping("/hodingStock")
-    public ResponseModel<List<HodingStockModel>> hodingStock(String id ) {
+    public ResponseModel<List<HodingStockModel>> hodingStock() {
         ResponseModel<List<QuotesTenModel>> quotesTenListTest = iStockPriceFeignService.getQuotesTenListTest();
         List<QuotesTenModel> data = quotesTenListTest.getData();
         List<HodingStockModel> list=new ArrayList<>();

@@ -6,7 +6,7 @@ package cn.com.fintheircing.customer.common.constant;
  * @date 2019/1/15
  */
 public enum  PayStatus {
-    UN_DEFRAY("未支付",0),DEFRAY("以支付",1)
+    UN_DEFRAY("未支付",0),DEFRAY("已支付",1),FAILEPay("支付失败",2)
     ;
 
     private String name;

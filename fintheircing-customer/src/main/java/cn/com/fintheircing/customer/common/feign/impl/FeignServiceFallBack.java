@@ -13,6 +13,7 @@ import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
@@ -114,17 +115,23 @@ public class FeignServiceFallBack implements IAdminFeignService {
         return false;
     }
 
+    /**
+     * 读取第三方支付配置信息
+     *
+     * @return
+     */
+    @Override
+    public PayInfoModel recodPayInfo() {
+        return new PayInfoModel();
+    }
+
     @Override
     public ResponseModel<String> saveStockEntrust(StockEntrustModel model) {
         logger.error("调用feign失败，保存买入申请单失败");
         return ResponseModel.fail("", ResultCode.SYS_ERROR_MSG);
     }
 
-    @Override
-    public ResultModel getWayToPay() {
-        logger.error("读取第三方支付信息失败");
-        return null;
-    }
+
 
     /**
      * 返回二维码支付地址

@@ -1,13 +1,7 @@
-package cn.com.fintheircing.admin.usermanag.uilts;
+package cn.com.fintheircing.customer.user.utlis;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.logging.SimpleFormatter;
 
-import cn.com.fintheircing.admin.useritem.utils.DateUtils;
-import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
-import cn.com.fintheircing.admin.usermanag.service.IPayService;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -27,7 +21,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSONObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * 调用第三方工具类
  *
@@ -36,7 +36,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class HttpUtils {
 
-    private static Logger log = LoggerFactory.getLogger(IPayService.class);
+    private static Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     private static RequestConfig requestConfig = null;
 
@@ -204,9 +204,5 @@ public class HttpUtils {
         }
         return jsonResult;
     }
-    @Test
-    public void testDemoTest(){
-        Date parse = DateUtils.parse("2019-2-18 18:39:42");
-        System.out.println((System.currentTimeMillis()-parse.getTime())/1000/60/60/24);
-    }
+
 }

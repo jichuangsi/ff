@@ -3,7 +3,7 @@ package cn.com.fintheircing.admin.business.model.record;
 import java.util.Date;
 
 public class StockEquityModel {
-
+    private String srId;//股票操作记录Id(StockEquityRecord)
     private String id;
     private String contractId;  //合约id
     private String applyType;   //增还是减
@@ -14,11 +14,56 @@ public class StockEquityModel {
     private Double dealPrice;   //成交价格
     private Double balance; //差额
     private String submitterName;   //提交人姓名
+    private String submitterId;   //提交人ID
     private String contractNo;  //合约编号
     private String userCode;    //用户编号
     private String userName;    //用户名
     private String userPhone;   //用户电话
+    private double userfulMoney;//账户可用余额
+    private double codeMoney;//冻结资金
     private Date createdTime;   //创建时间
+    private Integer falg;//增减标识符
+
+    public String getSrId() {
+        return srId;
+    }
+
+    public void setSrId(String srId) {
+        this.srId = srId;
+    }
+
+    public String getSubmitterId() {
+        return submitterId;
+    }
+
+    public void setSubmitterId(String submitterId) {
+        this.submitterId = submitterId;
+    }
+
+    public Integer getFalg() {
+        return falg;
+    }
+
+    public void setFalg(Integer falg) {
+        this.falg = falg;
+    }
+
+    public double getUserfulMoney() {
+        return userfulMoney;
+    }
+
+    public void setUserfulMoney(double userfulMoney) {
+        this.userfulMoney = userfulMoney;
+    }
+
+    public double getCodeMoney() {
+        return codeMoney;
+    }
+
+    public void setCodeMoney(double codeMoney) {
+        this.codeMoney = codeMoney;
+    }
+
 
     public String getSubmitterName() {
         return submitterName;

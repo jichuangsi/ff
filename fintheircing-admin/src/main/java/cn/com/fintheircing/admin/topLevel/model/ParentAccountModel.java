@@ -10,6 +10,7 @@ import java.util.Date;
  * @date 2019/1/18
  */
 public class ParentAccountModel {
+    private String paId;//母账户Id
     private String tradeAccount;//交易账号
     private String passWord;
     private String jyPassword;//交易密码
@@ -34,6 +35,14 @@ public class ParentAccountModel {
     private String szAccout;// 深圳股东账户
     private String shAccout;// 上海股东账户
     private String status;
+
+    public String getPaId() {
+        return paId;
+    }
+
+    public void setPaId(String paId) {
+        this.paId = paId;
+    }
 
     public String getJyPassword() {
         return jyPassword;

@@ -16,6 +16,9 @@ import java.util.List;
 
 @FeignClient(name = "ffcostomer", fallback = CustomerFeignServiceFallBack.class)
 public interface ICustomerFeignService {
+    @RequestMapping("/pay/recodPayInfo")
+    ResponseModel recodPayInfo();
+
     @RequestMapping("/findAllOnline")
     List<OnlineUserInfo> findAllInfo();
 
@@ -45,13 +48,6 @@ public interface ICustomerFeignService {
     @RequestMapping("/pay/getPayConfig")
     PayConfigModel getPayConfig();
 
-    /**
-     * 获得待确认所有的 信息
-     *
-     * @return
-     */
-    @RequestMapping("/pay/recodPayInfo")
-    RecodeInfoPayModel recodPayInfo();
 
     @RequestMapping("/rudeEndContract")
     ResponseModel<String> rudeEndContract(@RequestBody ContractModel model);

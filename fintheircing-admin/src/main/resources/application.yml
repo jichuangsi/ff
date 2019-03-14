@@ -109,12 +109,16 @@ custom:
     shenRegex:  ^((000)|(002)|(300)|(200))[0-9]*$
     chuangRegex:  ^3[0-9]*$
   pay:
-    url: http://test.rongxintong.com:9259/rxtCashierDeskWebservice/gateway/
-    reciveWay: gatewayCheckstandPay
-    weChatOrAilpay: appPayPublic
-    queryPayResult: queryPayResult
-    queryReconTrans: queryReconTrans
-    QRcode: gatewayPayByQRcode
+    method: https://service.rongxintong.com:18444/gateway/
+    netQuery: gatewayCheckstandPay
+    appPayPublic: appPayPublic
+    url: 111
+    reciveWay:
+    weChatOrAilpay :
+    queryPayResult:
+    queryReconTrans:
+    gatewayPayByQRcode:
+    QRcode:
   risk:
     maxBuyOne: 0.8
     venturEditionMax: 0.5

@@ -8,13 +8,14 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * 生成待确认记录 class
+ * 针对合约资金出入的记录 class
  *
  * @author yaoxiong
  * @date 2019/1/14
  */
 @Entity
 public class RecodeInfoPay {
+
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
     @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
@@ -26,9 +27,6 @@ public class RecodeInfoPay {
     private Integer status=0;
     private String way;
     private Date createTime =new Date();
-    /**
-     * 用户自己看是充值完成时间,管理员看是操作时间
-     */
     private Date updateTime;
     /**
      * 合约id

@@ -6,7 +6,6 @@ import cn.com.fintheircing.admin.business.model.StockEntrustModel;
 import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.service.BusinessService;
 import cn.com.fintheircing.admin.business.synchronize.SynchronizeComponent;
-import cn.com.fintheircing.admin.common.feign.model.FlowModel;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.RoleModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
@@ -21,10 +20,7 @@ import cn.com.fintheircing.admin.systemdetect.model.ProductModel;
 import cn.com.fintheircing.admin.systemdetect.service.IDistributService;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
-import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.NetQueryModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
+import cn.com.fintheircing.admin.usermanag.model.pay.*;
 import cn.com.fintheircing.admin.usermanag.model.result.AppResultModel;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
 import com.github.pagehelper.PageInfo;
@@ -33,6 +29,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +63,12 @@ public class FeignController {
     private IPayService iPayService;
     @Resource
     private SynchronizeComponent synchronizeComponent;
-
+    @Value("${custom.pay.method}")
+    private String method;
+    @Value("${custom.pay.netQuery}")
+    private String netQuery;
+    @Value("${custom.pay.appPayPublic}")
+    private String appPayPublic;
     @ApiOperation(value = "判断是否是允许的url", notes = "")
     @ApiImplicitParams({
     })
@@ -178,20 +180,6 @@ public class FeignController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
-    @RequestMapping("/showPayInfo")
-    @ApiOperation(value = "展示第三方支付网关信息", notes = "")
-    public ResultModel getWayToPay(@RequestBody NetQueryModel model) throws UserServiceException {
-        PayConfigModel payConfig = iCustomerFeignService.getPayConfig();
-        return iPayService.getWayToPay(model, payConfig);
-    }
-
-    @RequestMapping("/payForQRCode")
-    @ApiOperation(value = "展示第三方支付二维码信息", notes = "")
-    public AppResultModel payForQRCode(@RequestBody AppQueryModel model) throws UserServiceException {
-        PayConfigModel payConfig = iCustomerFeignService.getPayConfig();
-        return iPayService.payForQRCode(model, payConfig);
-    }
-
     @ApiOperation(value = "获取当前持仓", notes = "")
     @ApiImplicitParams({})
     @RequestMapping("/getCurrentHolding")
@@ -274,24 +262,12 @@ public class FeignController {
             return ResponseModel.fail("",e.getMessage());
         }
     }
+    @RequestMapping("/recodPayInfo")
+    public PayInfoModel recodPayInfo(){
+        PayInfoModel model =new PayInfoModel();
+        model.setMethod(method);
+        model.setPayWay(appPayPublic);
+        return model;
 
-    @ApiOperation(value = "自助平仓", notes = "")
-    @ApiImplicitParams({})
-    @RequestMapping("/endContractAndSell")
-    public ResponseModel endContractAndSell(@RequestParam("userId") String userId,@RequestParam("contractId")String contractId){
-        try {
-            businessService.endContractAndSell(userId,contractId);
-        } catch (BusinessException e) {
-            return ResponseModel.fail("",e.getMessage());
-        }
-        return ResponseModel.sucessWithEmptyData("");
     }
-
-    @ApiOperation(value = "获取资金流水", notes = "")
-    @ApiImplicitParams({})
-    @RequestMapping("/getMoneyFlow")
-    ResponseModel<PageInfo<FlowModel>> getMoneyFlow(@RequestParam("contractId") String contractId, @RequestParam("index") int index, @RequestParam("size") int size){
-        return  ResponseModel.sucess("",businessService.getFlowPage(index, size, contractId));
-    }
-
 }

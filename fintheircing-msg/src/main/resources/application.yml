@@ -11,7 +11,7 @@ server:
 spring:
   profiles:
     active:
-      prod
+      dev
   application:
     name: ffmsg
   datasource:
@@ -89,3 +89,4 @@ custom:
     accessKeySecret: IguokmddfOjip4UExmH4ddsViFvuk5
     signName: 集创思短信通知
     templateCode: SMS_152405275
+

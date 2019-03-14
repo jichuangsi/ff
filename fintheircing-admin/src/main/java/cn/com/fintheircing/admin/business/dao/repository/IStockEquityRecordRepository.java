@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IStockEquityRecordRepository extends JpaRepository<StockEquityRecord,String>{
 
-    StockEquityRecord findByUuidAndDeleteFlag(String uuid,String delete);
+    StockEquityRecord findByUuidAndDeleteFlag(String uuid, int delete);
 }

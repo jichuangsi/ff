@@ -6,9 +6,13 @@ import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.common.utils.EntityToModel;
 import cn.com.fintheircing.admin.usermanag.Excption.UserServiceException;
+import cn.com.fintheircing.admin.usermanag.dao.mapper.IPayMapper;
 import cn.com.fintheircing.admin.usermanag.dao.repsitory.IPayInfoRepository;
 import cn.com.fintheircing.admin.usermanag.entity.pay.RecodeInfo;
+import cn.com.fintheircing.admin.usermanag.model.pay.AppQueryModel;
+import cn.com.fintheircing.admin.usermanag.model.pay.PayInfoModel;
 import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
+import cn.com.fintheircing.admin.usermanag.model.pay.ResultModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillQueryModel;
 import cn.com.fintheircing.admin.usermanag.model.result.BillResponseModel;
 import cn.com.fintheircing.admin.usermanag.service.IPayService;
@@ -33,37 +37,11 @@ public class AdminPayController {
     private IPayService ipayService;
 
     @Resource
-    private ICustomerFeignService iCustomerFeignService;
-
-    @Resource
     private IPayInfoRepository iPayInfoRepository;
     @Resource
     private IBusinessContractMapper iBusinessContractMapper;
-
-    @PostMapping("/getBill")
-    @ApiOperation(value = "支付结果查询", notes = "")
-    public ResponseModel<BillResponseModel> getBill(@RequestBody BillQueryModel model) throws UserServiceException {
-        return ResponseModel.sucess("", ipayService.queryPayResult(model));
-
-    }
-
-    @GetMapping("/recodePayInfo")
-    @ApiOperation(value = "保存待确认信息", notes = "")
-    public ResponseModel recodePayInfo(@ModelAttribute UserTokenInfo userInfo) throws UserServiceException {
-        RecodeInfoPayModel recodeInfoPayModel = iCustomerFeignService.recodPayInfo();
-        RecodeInfo save = iPayInfoRepository.save(ModelToEntity.CoverPayInfo(recodeInfoPayModel));
-        RecodeInfoPayModel model = EntityToModel.CoverPayInfo(save);
-        return ResponseModel.sucess("", model);
-    }
-
-    @GetMapping("/updatePayInfo")
-    @ApiOperation(value = "更新用户充值记录", notes = "")
-    public RecodeInfoPayModel updatePayInfo(@ModelAttribute UserTokenInfo userInfo, @RequestBody RecodeInfoPayModel model) throws UserServiceException {
-        model.setOperator(userInfo.getUserName());//操作人的名字
-        model.setOperatorId(userInfo.getUuid());//操作人的Id
-        ipayService.updatePayInfo(model);
-        return model;
-    }
+    @Resource
+    private IPayMapper iPayMapper;
 
     @GetMapping("/findAllPayInfo")
     @ApiOperation(value = "查询所有合约未审核的", notes = "")

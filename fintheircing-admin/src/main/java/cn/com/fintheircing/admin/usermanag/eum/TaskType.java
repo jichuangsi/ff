@@ -17,7 +17,7 @@ public enum  TaskType {
         this.name = name;
     }
 
-    TaskType(String name, Integer index) {
+     TaskType(String name, Integer index) {
         this.name = name;
         this.index = index;
     }

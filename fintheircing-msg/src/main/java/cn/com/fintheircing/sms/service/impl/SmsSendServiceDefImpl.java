@@ -36,7 +36,7 @@ public class SmsSendServiceDefImpl implements ISmsSendService{
 	@Autowired
 	private IRecodingMapper iRecodingMapper;
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void sendValCodeSms(String phone,String code ,String taskType) {
 		String message=SmsSendUtil.send(phone, code,signName,templateCode,accessKeyId,accessKeySecret);
 		MesModel model =new MesModel();

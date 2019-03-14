@@ -45,33 +45,15 @@ public class UserPayController {
     private IAdminFeignService iAdminFeignService;
 
 
-    @ApiOperation(value = "生成待确认充值记录", notes = "")
+    @ApiOperation(value = "进入第三方充值页面", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/recodPayInfo")
-    public RecodeInfoPayModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo, @RequestBody PayInfoModel model) {
-        RecodeInfoPayModel m = new RecodeInfoPayModel();
-        m.setAddCount(model.getAmount());
-        m.setRemark("充值了" + model.getAmount());
-        m.setUserId(userInfo.getUuid());
-        m.setWay(model.getWay());
-        m.setPhone(userInfo.getPhone());
-        m.setUserName(userInfo.getUserName());
-        RecodeInfoPayModel model1 = Entity2Model.CoverRecodInfoPay(iRecodInfoPayRepository.save(Model2Entity.CoverRecodInfoPayModel(m)));
-        return model1;
+    public ResponseModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo) {
+      return  ResponseModel.sucess("",userService.recodPayInfo());
     }
 
-    @ApiOperation(value = "查看自己的充值记录", notes = "")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
-    })
-    @RequestMapping("/checkPayInfo")
-    public ResponseModel<List<RecodeInfoPayModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo) {
-
-        return ResponseModel.sucess("", iPayMapper.findAllRecodeInfo(userInfo.getUuid()));
-
-    }
 
     @ApiOperation(value = "更新充值记录", notes = "")
     @ApiImplicitParams({

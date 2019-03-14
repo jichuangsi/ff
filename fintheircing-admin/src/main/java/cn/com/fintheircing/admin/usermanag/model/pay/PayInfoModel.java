@@ -1,6 +1,4 @@
-package cn.com.fintheircing.customer.user.model.payresultmodel;
-
-import java.util.Date;
+package cn.com.fintheircing.admin.usermanag.model.pay;
 
 /**
  * 充值model class
@@ -19,16 +17,9 @@ public class PayInfoModel {
     private String userName;
     private String userId;
     private String remark;
-    private Integer status;
-    private String payStatus;
+    private String payStatus;//支付状态
 
-    public Integer getStatus() {
-        return status;
-    }
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public String getPayStatus() {
         return payStatus;

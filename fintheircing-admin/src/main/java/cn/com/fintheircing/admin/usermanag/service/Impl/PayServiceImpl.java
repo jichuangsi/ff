@@ -65,64 +65,31 @@ public class PayServiceImpl implements IPayService {
     @Resource
     private IBusinessStockEntrustRepository iBusinessStockEntrustRepository;
 
-    /**
-     * 获取第三方支付信息并且返回支付地址
-     *
-     * @return
-     */
-    @Override
-    public ResultModel getWayToPay(NetQueryModel model, PayConfigModel payConfig) throws UserServiceException {
-        Map<String, String> formData = new HashMap<>();
-        formData.put("orderId", model.getOrderId());
-        formData.put("orderName", model.getOrderName());
-        formData.put("payerNo", payConfig.getUserId());
-        formData.put("payerName", payConfig.getUserName());
-        formData.put("amount", model.getAmount());
-        formData.put("tradeId", model.getTradeId());
-        formData.put("noticeUrl", model.getNoticeUrl());
-        formData.put("encryptionParams", model.getEncryptionParams());
 
-        try {
-            String s = HttpUtils.doPost(payConfig.getUrl() + reciveWay, formData);
-            ResultModel resultModel = GsonUtil.jsonToObject(s, ResultModel.class);
 
-            if (!ResultCode.PAY_INFO_EXIT.equalsIgnoreCase(resultModel.getResult())) {
-                throw new UserServiceException(resultModel.getFailReason());
-            }
-
-            return resultModel;
-        } catch (Exception exp) {
-            throw new UserServiceException(exp.getMessage());
-        }
-
-    }
     /**
      * 支付宝微信支付信息并且返回支付
-     *
      * @param model
      */
     @Override
-    public ResultModel getWechatOrAilpayInfo(AppQueryModel model) throws UserServiceException {
-        Map<String, String> formData = new HashMap<>();
+    public ResultModel getWechatOrAilpayInfo(PayInfoModel allPayInfo1, AppQueryModel model) throws UserServiceException {
+        Map<String, Object> formData = new HashMap<>();
         formData.put("orderId", model.getOrderId());
         formData.put("payerNo", model.getPayerNo());
         formData.put("payerName", model.getPayerName());
-        formData.put("amount", model.getAmount());
+        formData.put("amount", allPayInfo1.getAmount());
         formData.put("tradeId", model.getTradeId());
         formData.put("encryptionParams", model.getEncryptionParams());
         formData.put("appId ", model.getAppId());
         try {
-            String s = HttpUtils.doPost(url + reciveWay, formData);
+            String s = HttpUtils.doPost(allPayInfo1.getMethod() + allPayInfo1.getPayWay(), formData);
             ResultModel resultModel = GsonUtil.jsonToObject(s, ResultModel.class);
             if (!ResultCode.PAY_INFO_EXIT.equalsIgnoreCase(resultModel.getResult())) {
                 throw new UserServiceException(resultModel.getFailReason());
-            }
-//                payResponseModel.setResult(ResultCode.PAY_INFO_EXIT);
-            return resultModel;
+            }return resultModel;
         } catch (Exception exp) {
             throw new UserServiceException(exp.getMessage());
         }
-
     }
 
 
@@ -135,7 +102,7 @@ public class PayServiceImpl implements IPayService {
      */
     @Override
     public BillResponseModel queryPayResult(BillQueryModel model) throws UserServiceException {
-        Map<String, String> formData = new HashMap<>();
+        Map<String, Object> formData = new HashMap<>();
         formData.put("orderId", model.getOrderId());
         formData.put("encryptionParams", model.getEncryptionParams());
         formData.put("tradeId", model.getTradeId());
@@ -162,7 +129,7 @@ public class PayServiceImpl implements IPayService {
      */
     @Override
     public boolean queryReconTrans(BillQueryModel model, String orderId) throws UserServiceException {
-        Map<String, String> formData = new HashMap<>();
+        Map<String, Object> formData = new HashMap<>();
         formData.put("transDate", model.getTransDate());
         formData.put("tradeId", model.getTradeId());
         formData.put("encryptionParams", model.getEncryptionParams());
@@ -186,45 +153,6 @@ public class PayServiceImpl implements IPayService {
             throw new UserServiceException(exp.getMessage());
         }
 
-    }
-
-    /**
-     * 展示支付二维码
-     *
-     * @param model
-     * @param payConfig
-     * @return
-     * @throws UserServiceException
-     */
-    @Override
-    public AppResultModel payForQRCode(AppQueryModel model, PayConfigModel payConfig) throws UserServiceException {
-        Map<String, String> formData = new HashMap<>();
-        formData.put("amount", model.getAmount());
-        formData.put("orderId", model.getOrderId());
-        formData.put("orderName", model.getOrderName());
-        formData.put("payerNo", model.getPayerNo());
-        formData.put("payerName", model.getPayerName());
-        formData.put("tradeId", model.getTradeId());
-        formData.put("noticeUrl", model.getNoticeUrl());
-        formData.put("encryptionParams", model.getEncryptionParams());
-        formData.put("payType", model.getPayType());
-        formData.put("remark", model.getRemark());
-        try {
-            String s = HttpUtils.doPost(payConfig.getUrl() + gatewayPayByQRcode, formData);
-            AppResultModel appResultModel = GsonUtil.jsonToObject(s, AppResultModel.class);
-            if (!ResultCode.PAY_INFO_EXIT.equalsIgnoreCase(appResultModel.getResult())) {
-                throw new UserServiceException(appResultModel.getFailReason());
-            }
-            if ("1".equalsIgnoreCase(model.getPayType())) {
-                appResultModel.setPayType("微信");
-            }
-            if ("2".equalsIgnoreCase(model.getPayType())) {
-                appResultModel.setPayType("支付宝");
-            }
-            return appResultModel;
-        } catch (Exception exp) {
-            throw new UserServiceException(exp.getMessage());
-        }
     }
 
     /**

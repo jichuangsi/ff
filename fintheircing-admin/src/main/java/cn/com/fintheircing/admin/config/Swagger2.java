@@ -51,7 +51,8 @@ public class Swagger2 {
 						"cn.com.fintheircing.admin.taxation.controller"+splitor+
 						"cn.com.fintheircing.admin.risk.controller"+splitor+
 						"cn.com.fintheircing.admin.account.controller"+splitor+
-						"cn.com.fintheircing.admin.dividend.controller"))
+						"cn.com.fintheircing.admin.dividend.controller"+splitor+
+						"cn.com.fintheircing.admin.topLevel.controller"))
 				.paths(PathSelectors.any()).build();
 	}
 

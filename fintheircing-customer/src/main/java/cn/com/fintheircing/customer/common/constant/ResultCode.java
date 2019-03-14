@@ -57,4 +57,5 @@ public class ResultCode {
     public static final String PASSWORD_IS_MISTAKE ="支付密码错误";
 
     public static final String SELECT_NULL_MSG = "查无此信息";
+    public static final String PAY_INFO_EXIT = "1";
 }

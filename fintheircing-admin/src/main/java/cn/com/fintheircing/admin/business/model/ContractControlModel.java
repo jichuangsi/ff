@@ -19,11 +19,13 @@ public class ContractControlModel {
     private Double gainMoney;   //收益
     private Double endMoney;    //结算
     private Double warnningLine;    //预警线
+    private Double exWarnningLine;//修改后的预警线
     private Double abortLine;   //平仓线
+    private Double exAbortLine;//修改后的平仓线
     private Double borrowRate;  //借款利率
     private Date borrowTime;    //借款时间
     private Long expiredTime; //还款时间
-    private Long lessTime;
+    private Long lessTime;//剩余天数
     private Double firstMoney;
     private Double lessMoney;   //剩余金额 /可用金额
     private Integer verifyStatus;   //审核num
@@ -40,6 +42,40 @@ public class ContractControlModel {
     private String businessControlContractId;
     private String remark;//备注
     private String BusinessContractId;//合约Id
+    private int stockAmount;//股票持仓
+    private double firstInterest;//初次利息
+
+    public double getFirstInterest() {
+        return firstInterest;
+    }
+
+    public void setFirstInterest(double firstInterest) {
+        this.firstInterest = firstInterest;
+    }
+
+    public Double getExWarnningLine() {
+        return exWarnningLine;
+    }
+
+    public void setExWarnningLine(Double exWarnningLine) {
+        this.exWarnningLine = exWarnningLine;
+    }
+
+    public Double getExAbortLine() {
+        return exAbortLine;
+    }
+
+    public void setExAbortLine(Double exAbortLine) {
+        this.exAbortLine = exAbortLine;
+    }
+
+    public int getStockAmount() {
+        return stockAmount;
+    }
+
+    public void setStockAmount(int stockAmount) {
+        this.stockAmount = stockAmount;
+    }
 
     public String getBusinessContractId() {
         return BusinessContractId;

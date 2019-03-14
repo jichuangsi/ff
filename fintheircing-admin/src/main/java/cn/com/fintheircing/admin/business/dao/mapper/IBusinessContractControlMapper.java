@@ -1,12 +1,17 @@
 package cn.com.fintheircing.admin.business.dao.mapper;
 
+import cn.com.fintheircing.admin.business.entity.record.StockEquityRecord;
 import cn.com.fintheircing.admin.business.model.ContractControlModel;
 import cn.com.fintheircing.admin.business.model.StockEntrustModel;
+import cn.com.fintheircing.admin.business.model.StockHoldingModel;
+import cn.com.fintheircing.admin.business.model.record.StockEquityModel;
 import cn.com.fintheircing.admin.common.feign.model.FlowModel;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBusinessContractControlMapper {
 
@@ -32,35 +37,34 @@ public interface IBusinessContractControlMapper {
             "</where></script>")
     List<ContractControlModel> getContractControls(ContractControlModel model);
 
-    @Select("<script>select t4.uuid as businessControlContractId, t1.user_id as userId,t6.phone as phone,t6.user_name as name" +
+    @Select("<script>select t1.first_interest as firstInterest,t3.amount as stockAmount,t4.uuid as businessControlContractId, " +
+            "t1.user_id as userId,t6.phone as phone,t6.user_name as name" +
             " ,t1.uuid as BusinessContractId,t1.cold_money as coldMoney,t5.user_name as proxyName," +
             " t5.proxy_num as proxyNum, t1.first_interest as firstMoney ," +
             " t1.contract_num as contractNo,t1.updated_time as createdTime,t2.product_name as productStr, " +
-            " t1.borrow_money as borrowMoney ,t1.promised_money as promisedMoney ,t4.warnning_line as warnningLine," +
+            " t1.borrow_money as borrowMoney ,t1.promised_money as promisedMoney ,t4.warning_line as warnningLine," +
             " t4.abort_line as abortLine,t1.available_money as lessMoney ,t3.current_worth as currentWorth ,t3.float_money as gainMoney ," +
             " t1.borrow_time as borrowTime,t1.expired_time as expiredTime,t1.contract_status as verifyStatus " +
             "FROM business_contract t1 LEFT JOIN business_stock_holding t3 ON t3.contract_id=t1.uuid LEFT JOIN systemdetect_product " +
-            " t2 ON t1.product_id=t2.id LEFT JOIN business_control_contract t4 " +
+            " t2 ON t1.product_id=t2.id LEFT JOIN business_contract_risk t4 " +
             "  ON t4.contract_id=t1.uuid left join admin_client_info t5 on t5.user_client_info_id=t1.user_id left join" +
             " user_client_info t6 on t6.uuid=t1.user_id" +
             " <where>" +
             " <if test= \"productStr!=null and productStr!=''\"> and t2.product_name =#{productStr}</if>" +
             " and t1.delete_flag=\"0\"</where></script>")
-    List<ContractControlModel> findAllContact(String productStr);
-
-    @Select("<script>select t3.user_id as userId,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_num as stockNum,t2.stock_name as stockName,t1.amount as dealNum,t1.cost_price as dealPrice," +
-            " t1.deal_time as buyTime, t1.uuid as BusinessStockEntrustId ,t3.account as userfulMoney," +
+    List<ContractControlModel> findAllContact(@Param("productStr") String productStr);
+    @Select("<script>select t1.uuid as srId,t3.user_id as userCode,t1.contract_id as contractId,t2.uuid as stockId, t2.stock_code as stockNum,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as dealPrice," +
+            " t1.created_time as buyTime ,t3.account as userfulMoney," +
             " t3.frezze_amount as codeMoney" +
-            " from business_stock_entrust t1 left join admin_transaction_summary t2 left join" +
+            " from business_stock_holding t1 left join admin_transaction_summary t2 left join" +
             " user_account t3 on t1.user_id =t3.user_id" +
-            " where t1.stock_id =t2.uuid and t1.entrust_status=3 and t1.business_to=0" +
-            " and t1.delete_falg=0" +
+            " where t1.stock_id =t2.uuid and  t1.contract_id=#{contractId}" +
+            " and t1.delete_flag=0" +
             "   </script>")
-    List<StockEntrustModel> findAllStock(String contractId);
+    List<StockEquityModel> findAllStock(String contractId);
 
     /**
      * 根据用户ID查询用户余额
-     *
      * @param userId
      * @return
      */
@@ -69,7 +73,6 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 查询冻结资金
-     *
      * @param userId
      * @return
      */
@@ -78,7 +81,6 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 查询名字
-     *
      * @param userId
      * @return
      */
@@ -90,5 +92,11 @@ public interface IBusinessContractControlMapper {
             "<if test='list!=null and list.size>0'> and t1.control_type in <foreach collection=\"list\" index=\"index\" item=\"item\" open=\"(\" separator=\",\" close=\")\"> " +
             "      #{item}   </foreach></if></where>" +
             "  ORDER BY t1.created_time desc</script>")
-    List<FlowModel> getFlwoMoney(@Param("contractId") String contractId,@Param("list") List<Integer> list);
+    List<FlowModel> getFlwoMoney(@Param("contractId") String contractId, @Param("list") List<Integer> list);
+    @Update("<script>update business_contract_risk t1 set t1.warning_line=#{exWarnLine},t1.abort_line=#{exAbortLine} where t1.contract_id=#{contractId}</script>")
+    int updateContractRisk(Map<String, Object> parms);
+    @Update("<script>update admin_business_contact_recode t1 set t1.check_status=1 where t1.uuid =#{contactRecodeId}</script>")
+    int updateContactRecode(String contactRecodeId);
+    @Update("<script>update admin_business_contact_recode t1 set t1.check_status=2 where t1.uuid =#{contactRecodeId}</script>")
+    int disagreeContactRecode(String contactRecodeId);
 }

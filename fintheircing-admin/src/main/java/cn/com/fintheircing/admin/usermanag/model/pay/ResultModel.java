@@ -10,15 +10,6 @@ public class ResultModel {
     private String returnUrl;
     private String failReason;
     private Object payInfo;
-    @Override
-    public String toString() {
-        return "ResultModel{" +
-                "result='" + result + '\'' +
-                ", returnUrl='" + returnUrl + '\'' +
-                ", failReason='" + failReason + '\'' +
-                ", payInfo=" + payInfo +
-                '}';
-    }
 
     public Object getPayInfo() {
         return payInfo;

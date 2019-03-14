@@ -9,13 +9,6 @@ import cn.com.fintheircing.admin.usermanag.model.result.*;
 import java.util.List;
 
 public interface IPayService {
-    /**
-     * 获取网关支付信息并且返回支付地址
-     * @param model
-     * @return
-     * @throws UserServiceException
-     */
-   ResultModel getWayToPay(NetQueryModel model, PayConfigModel payConfig) throws UserServiceException;
 
     /**
      * 第支付宝微信支付信息并且返回支付
@@ -23,7 +16,7 @@ public interface IPayService {
      * @return
      * @throws UserServiceException
      */
-    ResultModel getWechatOrAilpayInfo(AppQueryModel model)throws UserServiceException;
+    ResultModel getWechatOrAilpayInfo(PayInfoModel allPayInfo1,AppQueryModel model)throws UserServiceException;
 
 
     /**
@@ -41,15 +34,6 @@ public interface IPayService {
      * @throws UserServiceException
      */
     boolean queryReconTrans(BillQueryModel modelList, String orderId)throws UserServiceException;
-
-    /**
-     * 展示支付二维码
-     * @param model
-     * @param payConfig
-     * @return
-     * @throws UserServiceException
-     */
-    AppResultModel payForQRCode(AppQueryModel model, PayConfigModel payConfig) throws UserServiceException;
 
 
     /**

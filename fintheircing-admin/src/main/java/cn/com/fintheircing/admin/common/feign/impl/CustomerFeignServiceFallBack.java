@@ -57,9 +57,9 @@ public class CustomerFeignServiceFallBack implements ICustomerFeignService {
      * @return
      */
     @Override
-    public RecodeInfoPayModel recodPayInfo() {
+    public ResponseModel recodPayInfo() {
         logger.debug("获得待确认所有的 信息失败");
-        return new RecodeInfoPayModel();
+        return new ResponseModel();
     }
 
     @Override

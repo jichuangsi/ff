@@ -10,7 +10,6 @@ public class AppQueryModel {
     private String orderName;
     private String tradeId;
 
-    private String amount;
     /**
      * 支付方名称
      */
@@ -20,16 +19,11 @@ public class AppQueryModel {
      * 非必填
      */
     private String noticeUrl;
-    /**
-     *必填，WXPAY|ALIPAY
-     * */
-    private String payType;
     private String appId;
     /**
      * 进行MD5加密 加密参数
      */
     private String encryptionParams;
-    private String remark;
 
     public String getOrderName() {
         return orderName;
@@ -39,13 +33,6 @@ public class AppQueryModel {
         this.orderName = orderName;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 
     public String getOrderId() {
         return orderId;
@@ -63,13 +50,6 @@ public class AppQueryModel {
         this.tradeId = tradeId;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
 
     public String getPayerName() {
         return payerName;
@@ -93,14 +73,6 @@ public class AppQueryModel {
 
     public void setNoticeUrl(String noticeUrl) {
         this.noticeUrl = noticeUrl;
-    }
-
-    public String getPayType() {
-        return payType;
-    }
-
-    public void setPayType(String payType) {
-        this.payType = payType;
     }
 
     public String getAppId() {

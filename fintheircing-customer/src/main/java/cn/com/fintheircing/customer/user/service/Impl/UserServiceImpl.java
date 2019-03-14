@@ -2,11 +2,9 @@ package cn.com.fintheircing.customer.user.service.Impl;
 
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.utils.CommonUtil;
+import cn.com.fintheircing.customer.user.dao.mapper.IContactMapper;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserClientInfoMapper;
-import cn.com.fintheircing.customer.user.dao.repository.IRecodInfoPayRepository;
-import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
-import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
-import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
+import cn.com.fintheircing.customer.user.dao.repository.*;
 import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
 import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
@@ -14,6 +12,8 @@ import cn.com.fintheircing.customer.user.entity.UserClientLoginInfo;
 import cn.com.fintheircing.customer.user.exception.AccountPayException;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.*;
+import cn.com.fintheircing.customer.user.model.contract.contactModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import cn.com.fintheircing.customer.user.service.RegisterService;
@@ -30,10 +30,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -54,14 +51,16 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate<String, String> redisTemplate;
     @Resource
     private AmqpTemplate rabbitTemplate;
-
-
-    @Value("${custom.pay.url}")
-    private String url;
-    @Value("${custom.pay.reciveWay}")
-    private String reciveWay;
-    @Value("${custom.pay.weChatOrAilpay}")
-    private String weChatOrAilpay;
+    @Resource
+    private IRechargeRecodeRepository iRechargeRecodeRepository;
+    @Resource
+    private IContactMapper iContactMapper;
+    @Value("${custom.pay.method}")
+    private String method;
+    @Value("${custom.pay.netQuery}")
+    private String netQuery;
+    @Value("${custom.pay.appPayPublic}")
+    private String appPayPublic;
     private String valsmsPre = "backPass_val_";
     private long valZSendInterSeconds = 60;// 通知发送时间间隔
     private int valCodeLength = 4;
@@ -85,15 +84,7 @@ public class UserServiceImpl implements UserService {
         return "";
     }
 
-    @Override
-    public PayConfigModel payForNet(UserTokenInfo userInfo) {
-        PayConfigModel model = new PayConfigModel();
-        model.setPhone(userInfo.getPhone());
-        model.setUserId(userInfo.getUuid());
-        model.setUserName(userInfo.getUserName());
-        model.setWay(url);
-        return model;
-    }
+
 
     @Override
     public UserInfoModel getUserInfo(UserTokenInfo userInfo) {
@@ -247,6 +238,14 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * 生成待确认充值记录
+     */
+    @Override
+    public PayInfoModel recodPayInfo() {
+        return null;
+    }
+
     @Override
     public String getPassBackCode(String phoneNo) throws LoginException {
         synchronized (phoneNo) {
@@ -284,7 +283,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateNewPass(String code, String pass,String phoneNo) throws LoginException {
+    public void updateNewPass(String code, String pass, String phoneNo) throws LoginException {
         UserClientInfo clientInfo = userInfoRepository.findOneByUserName(phoneNo);
         if (null == clientInfo) {
             throw new LoginException(phoneNo + "不存在");
@@ -301,8 +300,35 @@ public class UserServiceImpl implements UserService {
         //删除验证码缓存
         redisTemplate.delete(valsmsPre + phoneNo);
 
-        UserClientLoginInfo loginInfo = userClientLoginInfoRepository.findByDeleteFlagAndClientInfoId("0",clientInfo.getUuid());
+        UserClientLoginInfo loginInfo = userClientLoginInfoRepository.findByDeleteFlagAndClientInfoId("0", clientInfo.getUuid());
         loginInfo.setPwd(CommonUtil.toSha256(pass));
         userClientLoginInfoRepository.save(loginInfo);
+    }
+
+    /**
+     * 配置订单详情
+     *
+     * @param uuid
+     * @return
+     */
+    @Override
+    public List<contactModel> assignOrder(String uuid) throws LoginException {
+        if (StringUtils.isEmpty(uuid)) {
+            throw new LoginException(ResultCode.PARAM_ERR_MSG);
+        }
+        return iContactMapper.QueryContractInfos(uuid);
+
+    }
+
+    /**
+     * 账号管理
+     *
+     * @param uuid
+     * @return
+     */
+    @Override
+    public List<contactModel> accountManagement(String uuid) throws LoginException {
+        return iContactMapper.accountManagement(uuid);
+
     }
 }

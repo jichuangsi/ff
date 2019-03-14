@@ -11,8 +11,8 @@ public class BankCardModel {
     private String userName;
     private String bankName;
     private String bankId;
-    int pageNum ;
-    int pageSize;
+    private int pageNum ;
+    private int pageSize;
 
     public int getPageNum() {
         return pageNum;

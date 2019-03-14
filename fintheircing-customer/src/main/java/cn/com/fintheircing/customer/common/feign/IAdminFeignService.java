@@ -12,9 +12,11 @@ import cn.com.fintheircing.customer.common.model.RoleModel;
 import cn.com.fintheircing.customer.user.model.SpreadModel;
 import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
+import cn.com.fintheircing.customer.user.model.queryModel.NetQueryModel;
 import com.github.pagehelper.PageInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,13 +82,13 @@ public interface IAdminFeignService {
     Boolean isExistWhiteList(@RequestParam("stockNum") String stockNum);
 
     /**
-     * 返回一个第三方网关接口
+     * 读取第三方支付配置信息
      *
      * @param
      * @return
      */
-    @RequestMapping(value = "adminF/getWayToPay")
-    ResultModel getWayToPay();
+    @RequestMapping("/recodPayInfo")
+     PayInfoModel recodPayInfo();
 
     /**
      * 返回二维码支付地址

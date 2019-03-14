@@ -4,19 +4,30 @@ import cn.com.fintheircing.customer.common.constant.MesRead;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
+import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserMesInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IBankRepository;
+import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
+import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserMesInfoRepository;
 import cn.com.fintheircing.customer.user.entity.BankCard;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
 import cn.com.fintheircing.customer.user.entity.UserMesInfo;
+import cn.com.fintheircing.customer.user.exception.AccountPayException;
 import cn.com.fintheircing.customer.user.exception.LoginException;
 import cn.com.fintheircing.customer.user.model.*;
+import cn.com.fintheircing.customer.user.model.contract.AccountInfoModel;
 import cn.com.fintheircing.customer.user.model.mes.MesInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
+import cn.com.fintheircing.customer.user.model.queryModel.NetQueryModel;
+import cn.com.fintheircing.customer.user.service.UserPayService;
 import cn.com.fintheircing.customer.user.service.UserService;
+import cn.com.fintheircing.customer.user.utlis.GsonUtil;
+import cn.com.fintheircing.customer.user.utlis.HttpUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -26,7 +37,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -36,6 +49,8 @@ public class UserController {
     @Resource
     private UserService userService;
     @Resource
+    private UserPayService userPayService;
+    @Resource
     private IAdminFeignService adminFeignService;
     @Resource
     private IUserMesInfoRepository iUserMesInfoRepository;
@@ -43,7 +58,16 @@ public class UserController {
     private IUserMesInfoMapper iUserMesInfoMapper;
     @Resource
     private IBankRepository iBankRepository;
+    @Resource
+    private IPayMapper iPayMapper;
+    @ApiOperation(value = "获取第三方指定支付信息返回支付地址", notes = "")
+    @GetMapping("/recodPayInfo")
+    public ResponseModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo ,@RequestBody NetQueryModel model)throws  AccountPayException {
+        PayInfoModel payInfoModel = adminFeignService.recodPayInfo();
+        ResultModel resultModel = userPayService.recodPayInfo(userInfo, model, payInfoModel);
+        return ResponseModel.sucess("",resultModel);
 
+    }
     @ApiOperation(value = "获取指定用户信息", notes = "")
     @GetMapping("/getUserClientInfoByPhone")
     public UserClientInfo findOneByUserName(@RequestParam(value = "userName") String userName) {
@@ -59,14 +83,7 @@ public class UserController {
         return ResponseModel.sucess("", adminFeignService.getOwnSpread(userInfo.getUuid()));
     }
 
-    @ApiOperation(value = "返回第三方配置信息", notes = "")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
-    })
-    @RequestMapping("/payForNet")
-    public PayConfigModel payForNet(@ModelAttribute UserTokenInfo userInfo) {
-        return userService.payForNet(userInfo);
-    }
+
 
     @ApiOperation(value = "第三方二维码支付地址", notes = "")
     @ApiImplicitParams({
@@ -75,15 +92,6 @@ public class UserController {
     @PostMapping("/payForQRCode")
     public ResponseModel<AppResultModel> payForQRCode(@ModelAttribute UserTokenInfo userInfo, @RequestBody AppQueryModel model) {
         return ResponseModel.sucess("", adminFeignService.payForQRCode(model));
-    }
-
-    @ApiOperation(value = "第三方网关支付地址", notes = "")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
-    })
-    @RequestMapping("/getWayToPay")
-    public ResponseModel<ResultModel> getWayToPay(@ModelAttribute UserTokenInfo userInfo) {
-        return ResponseModel.sucess("", adminFeignService.getWayToPay());
     }
 
     @ApiOperation(value = "我的页面信息", notes = "")
@@ -110,6 +118,7 @@ public class UserController {
         return ResponseModel.sucessWithEmptyData("");
     }
 
+
     @ApiOperation(value = "验证密码", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
@@ -131,8 +140,8 @@ public class UserController {
     @GetMapping("/getMesInfo")
     public ResponseModel<List<MesInfoModel>> getMesInfo(@ModelAttribute UserTokenInfo userInfo) {
         List<MesInfoModel> allUserMesInfo = iUserMesInfoMapper.findAllUserMesInfo();
-        for (MesInfoModel model : allUserMesInfo
-                ) {
+        for (MesInfoModel model:allUserMesInfo
+             ) {
             if (model.getStatus().equalsIgnoreCase("0")) {
                 model.setStatus(MesRead.getName(0));
             } else {
@@ -148,7 +157,7 @@ public class UserController {
     })
     @GetMapping("/countMes")
     public ResponseModel countMes(@ModelAttribute UserTokenInfo userInfo) {
-        List<UserMesInfo> allByIsRead = iUserMesInfoRepository.findAllByIsReadAndDeleteFlag(0, 0);
+        List<UserMesInfo> allByIsRead = iUserMesInfoRepository.findAllByIsReadAndDeleteFlag(0,0);
         return ResponseModel.sucess("", allByIsRead.size());
     }
 
@@ -198,15 +207,50 @@ public class UserController {
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
     })
     @PostMapping("/userCer")
-    public ResponseModel userCer(@ModelAttribute UserTokenInfo userInfo, @RequestBody UserCerModel model) {
+    public ResponseModel userCer(@ModelAttribute UserTokenInfo userInfo,@RequestBody UserCerModel model){
         try {
-            userService.userCer(userInfo, model);
+            userService.userCer(userInfo,model);
         } catch (LoginException e) {
-            return ResponseModel.fail("", e.getMessage());
+            return ResponseModel.fail("",e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
     }
+    @ApiOperation(value = "配置订单", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/assignOrder")
+    public ResponseModel assignOrder(@ModelAttribute UserTokenInfo userInfo)throws LoginException{
+        try {
+            return ResponseModel.sucess("",userService.assignOrder(userInfo.getUuid()));
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+//        return ResponseModel.sucessWithEmptyData("");
+    }
+    @ApiOperation(value = "账号管理", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/accountManagement")
+    public ResponseModel accountManagement(@ModelAttribute UserTokenInfo userInfo)throws LoginException{
+        try {
+            return ResponseModel.sucess("",userService.accountManagement(userInfo.getUuid()));
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
+//        return ResponseModel.sucessWithEmptyData("");
+    }
+    @ApiOperation(value = "资金明细", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/checkPayInfo")
+    public ResponseModel<List<AccountInfoModel>> checkPayInfo(@ModelAttribute UserTokenInfo userInfo) {
 
+        return  ResponseModel.sucess("",iPayMapper.QueryListForAccountInfo(userInfo.getUuid()));
+
+    }
     @ApiOperation(value = "找回密码code", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")

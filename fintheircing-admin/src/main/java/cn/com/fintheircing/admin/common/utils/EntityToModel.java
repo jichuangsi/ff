@@ -35,6 +35,7 @@ public class EntityToModel {
       p.setShAccout(model.getShAccout());
       p.setSecurities(model.getSecurities());
       p.setStatus(AccountStatus.getName(model.getStatus()));
+      p.setPaId(model.getUuid());
       return p;
   }
     public static TodoTaskInfo CoverTodoTaskInfoModel(CreateRegTodoTaskModel model){

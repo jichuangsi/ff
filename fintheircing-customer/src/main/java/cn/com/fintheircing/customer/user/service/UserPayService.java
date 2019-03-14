@@ -7,12 +7,20 @@ import cn.com.fintheircing.customer.user.dao.repository.IUserAccountRepository;
 import cn.com.fintheircing.customer.user.entity.RecodeInfoPay;
 import cn.com.fintheircing.customer.user.entity.UserAccount;
 import cn.com.fintheircing.customer.user.exception.AccountPayException;
+import cn.com.fintheircing.customer.user.model.UserTokenInfo;
+import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
+import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
+import cn.com.fintheircing.customer.user.model.queryModel.NetQueryModel;
+import cn.com.fintheircing.customer.user.utlis.GsonUtil;
+import cn.com.fintheircing.customer.user.utlis.HttpUtils;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserPayService {
@@ -53,5 +61,29 @@ public class UserPayService {
 
     public void saveRecodeInfoPay(RecodeInfoPay payInfo){
         iRecodInfoPayRepository.save(payInfo);
+    }
+
+    public ResultModel recodPayInfo(UserTokenInfo userInfo, NetQueryModel model, PayInfoModel payInfoModel) throws AccountPayException{
+        Map<String, Object> formData = new HashMap<>();
+        formData.put("orderId", model.getOrderId());
+        formData.put("orderName", model.getOrderName());
+        formData.put("payerNo", userInfo.getUuid());
+        formData.put("payerName", userInfo.getUserName());
+        formData.put("amount", model.getAmount());
+        formData.put("tradeId", model.getTradeId());
+        formData.put("noticeUrl", model.getNoticeUrl());
+        formData.put("encryptionParams", model.getEncryptionParams());
+        try {
+            String s = HttpUtils.doPost(payInfoModel.getMethod() + payInfoModel.getPayWay(), formData);
+            ResultModel resultModel = GsonUtil.jsonToObject(s, ResultModel.class);
+
+            if (!ResultCode.PAY_INFO_EXIT.equalsIgnoreCase(resultModel.getResult())) {
+                throw new AccountPayException(resultModel.getFailReason());
+            }
+
+            return resultModel;
+        } catch (Exception exp) {
+            throw new AccountPayException(exp.getMessage());
+        }
     }
 }
