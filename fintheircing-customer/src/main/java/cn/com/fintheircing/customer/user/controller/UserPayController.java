@@ -1,6 +1,7 @@
 package cn.com.fintheircing.customer.user.controller;
 
 import cn.com.fintheircing.customer.business.model.ContractModel;
+import cn.com.fintheircing.customer.common.constant.ProductStatus;
 import cn.com.fintheircing.customer.common.constant.ResultCode;
 import cn.com.fintheircing.customer.common.feign.IAdminFeignService;
 import cn.com.fintheircing.customer.common.model.ResponseModel;
@@ -139,14 +140,64 @@ public class UserPayController {
         p.setUserId(userInfo.getUuid());
         p.setWay(model.getWay());
         p.setRemark(model.getRemark());
-        p.setAddCount(model.getCash());
+        p.setCostCount(model.getCash());
         p.setTaskType("扩大融资");
+        p.setTaskId("0");
+        if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
+            return ResponseModel.fail("", ResultCode.APPLY_FAIL);
+        } else {
+            return ResponseModel.sucessWithEmptyData("");
+        }
+    }
+    @ApiOperation(value = "减少融资", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/releaseMoney")
+    public ResponseModel releaseMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody AddPromiseMoneyModel model) {
+        RecodeInfoPay p = new RecodeInfoPay();
+        p.setUserId(userInfo.getUuid());
+        p.setWay(model.getWay());
+        p.setRemark(model.getRemark());
+        p.setCostCount(model.getCash());
+        p.setTaskType("减少融资");
         p.setTaskId("1");
         if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
             return ResponseModel.fail("", ResultCode.APPLY_FAIL);
         } else {
             return ResponseModel.sucessWithEmptyData("");
         }
+    }
+    @ApiOperation(value = "结算申请-我要提盈", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/earnMoney")
+    public ResponseModel earnMoney(@ModelAttribute UserTokenInfo userInfo, @RequestBody AddPromiseMoneyModel model) {
+        RecodeInfoPay p = new RecodeInfoPay();
+        p.setUserId(userInfo.getUuid());
+        p.setRemark(model.getRemark());
+        p.setAddCount(model.getCash());
+        p.setBusinessContractId(model.getBusinessContractId());
+        p.setTaskType("提盈");
+        p.setTaskId("2");
+        if (StringUtils.isEmpty(iRecodInfoPayRepository.save(p))) {
+            return ResponseModel.fail("", ResultCode.APPLY_FAIL);
+        } else {
+            return ResponseModel.sucessWithEmptyData("");
+        }
+    }
+    @ApiOperation(value = "结算申请-提盈记录", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @PostMapping("/QueryRecodeFor")
+    public ResponseModel QueryRecodeForInfo(@ModelAttribute UserTokenInfo userInfo) {
+        List<RecodeInfoPayModel> recodeInfoPayModels = iPayMapper.QueryRecodeForInfo(userInfo.getUuid());
+        for (RecodeInfoPayModel model:recodeInfoPayModels){
+            model.setAllotStr(ProductStatus.getName(model.getAllot()));
+        }
+        return ResponseModel.sucess("", recodeInfoPayModels);
     }
 
     @ApiOperation(value = "修改或增加支付密码", notes = "")

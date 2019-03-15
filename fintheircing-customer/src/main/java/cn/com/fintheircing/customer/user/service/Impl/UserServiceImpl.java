@@ -84,9 +84,6 @@ public class UserServiceImpl implements UserService {
         }
         return "";
     }
-
-
-
     @Override
     public UserInfoModel getUserInfo(UserTokenInfo userInfo) {
         UserInfoModel model = new UserInfoModel();

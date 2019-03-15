@@ -58,15 +58,18 @@ public class UserController {
     @Resource
     private IPayMapper iPayMapper;
     @ApiOperation(value = "获取第三方指定支付信息返回支付地址", notes = "")
-    @GetMapping("/recodPayInfo")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = true, dataType = "String")
+    })
+    @PostMapping("/recodPayInfo")
     public ResponseModel recodPayInfo(@ModelAttribute UserTokenInfo userInfo ,@RequestBody NetQueryModel model)throws  AccountPayException {
-        PayInfoModel payInfoModel = adminFeignService.recodPayInfo();
-        ResultModel resultModel = userPayService.recodPayInfo(userInfo, model, payInfoModel);
+//        PayInfoModel payInfoModel = adminFeignService.recodPayInfo();
+        ResultModel resultModel = userPayService.recodPayInfo(userInfo, model);
         return ResponseModel.sucess("",resultModel);
 
     }
     @ApiOperation(value = "获取指定用户信息", notes = "")
-    @GetMapping("/getUserClientInfoByPhone")
+    @GetMapping("/getUserClientInfoByUserName")
     public UserClientInfo findOneByUserName(@RequestParam(value = "userName") String userName) {
         return userService.findOneByUserName(userName);
     }

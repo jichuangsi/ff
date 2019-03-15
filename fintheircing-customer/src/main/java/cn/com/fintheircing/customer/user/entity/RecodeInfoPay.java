@@ -36,6 +36,15 @@ public class RecodeInfoPay {
     private String taskType;
     private String taskId;
     private double exBlance;//扣款前的余额
+    private Integer allot;//日月配
+
+    public Integer getAllot() {
+        return allot;
+    }
+
+    public void setAllot(Integer allot) {
+        this.allot = allot;
+    }
 
     public double getExBlance() {
         return exBlance;

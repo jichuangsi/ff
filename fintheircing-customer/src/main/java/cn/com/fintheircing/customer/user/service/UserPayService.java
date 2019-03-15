@@ -63,7 +63,7 @@ public class UserPayService {
         iRecodInfoPayRepository.save(payInfo);
     }
 
-    public ResultModel recodPayInfo(UserTokenInfo userInfo, NetQueryModel model, PayInfoModel payInfoModel) throws AccountPayException{
+    public ResultModel recodPayInfo(UserTokenInfo userInfo, NetQueryModel model) throws AccountPayException{
         Map<String, Object> formData = new HashMap<>();
         formData.put("orderId", model.getOrderId());
         formData.put("orderName", model.getOrderName());
@@ -74,7 +74,7 @@ public class UserPayService {
         formData.put("noticeUrl", model.getNoticeUrl());
         formData.put("encryptionParams", model.getEncryptionParams());
         try {
-            String s = HttpUtils.doPost(payInfoModel.getMethod() + payInfoModel.getPayWay(), formData);
+            String s = HttpUtils.doPost("https://service.rongxintong.com:18444/gateway/" + "gatewayCheckstandPay", formData);
             ResultModel resultModel = GsonUtil.jsonToObject(s, ResultModel.class);
 
             if (!ResultCode.PAY_INFO_EXIT.equalsIgnoreCase(resultModel.getResult())) {

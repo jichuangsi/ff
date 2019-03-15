@@ -62,4 +62,6 @@ public interface IBusinessStockHoldingMapper {
 
     @Select("<script>select t2.contract_num as contractNo,t2.phone as phone,t2.displayname as userName,t1.stock_id as stockId,t1.cost_price costPrice,t1.amount as amount,t1.can_sell as canSell,t1.current_price as currentPrice,t1.current_worth as currentWorth,t1.mother_account as motherAccount from business_stock_holding t1 right JOIN (select t3.uuid as contract_id,t4.displayname,t4.phone,t3.contract_num,t4.uuid as user_id from business_contract t3 left join user_client_info t4 on t3.user_id=t4.uuid) t2 on t1.contract_id = t2.contract_id where t2.user_id=#{userId}</script>")
     List<UserStockHoldingModel> getPageHoldingByUserId(@Param("userId") String userId);
+
+
 }

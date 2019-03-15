@@ -30,6 +30,24 @@ public class RecodeInfoPayModel {
     private String taskType;
     private String taskId;
     private double exBlance;//扣款前的钱
+    private int allot;//日配月配 特殊
+    private String allotStr;//日配月配 特殊字符串
+
+    public String getAllotStr() {
+        return allotStr;
+    }
+
+    public void setAllotStr(String allotStr) {
+        this.allotStr = allotStr;
+    }
+
+    public int getAllot() {
+        return allot;
+    }
+
+    public void setAllot(int allot) {
+        this.allot = allot;
+    }
 
     public double getExBlance() {
         return exBlance;
