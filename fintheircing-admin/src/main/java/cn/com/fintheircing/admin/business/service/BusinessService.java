@@ -1107,7 +1107,7 @@ public class BusinessService {
     }
 
     //排队访问股价接口
-    private List<QuotesTenModel> getQuotesTenModel(String... stockNo) {
+    public List<QuotesTenModel> getQuotesTenModel(String... stockNo) {
         List<String[]> strings = BusinessUtils.getListStringArray(stockNo, 50);
         List<QuotesTenModel> quotesTenModels = new ArrayList<QuotesTenModel>();
         for (int j = 0; j < strings.size(); j++) {
@@ -2254,6 +2254,9 @@ public class BusinessService {
             throw new BusinessException(ResultCode.CONTACT_NOT_EXITS);
         }
         BusinessStockHolding holding = businessStockHoldingRepository.findByContractIdAndStockId(record.getContactId(), record.getStockId());
+        if (null == holding){
+            throw new BusinessException(ResultCode.STOCK_HOLDING_ERR);
+        }
         int amount = holding.getAmount();
         if (amount < record.getAmount()) {
             throw new BusinessException(ResultCode.STOCK_SELL_LESS_ERR);

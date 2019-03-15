@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(value = "ffstockprice",fallback = StockPriceFeignServiceFallBack.class)
+@FeignClient(value = "ffstockprice", fallback = StockPriceFeignServiceFallBack.class)
 public interface IStockPriceFeignService {
 
     @PostMapping("/getQuotesTenList")
     public ResponseModel<List<QuotesTenModel>> getQuotesTenList(@RequestBody GetQuotesTenListRequestModel model);
+
     @PostMapping("/getQuotesTenListTest")
     public ResponseModel<List<QuotesTenModel>> getQuotesTenListTest();
 }

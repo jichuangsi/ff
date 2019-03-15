@@ -39,6 +39,7 @@ public class ContactRecode {
     private String goodsType;//产品类型
     private String deleteFlag="0";
 
+
     public String getDeleteFlag() {
         return deleteFlag;
     }

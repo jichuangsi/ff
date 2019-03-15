@@ -14,9 +14,7 @@ import cn.com.fintheircing.customer.user.model.UserTokenInfo;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
-import cn.com.fintheircing.customer.user.model.queryModel.NetQueryModel;
 import com.github.pagehelper.PageInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -144,5 +142,7 @@ public interface IAdminFeignService {
 
     @RequestMapping("adminF/getMoneyFlow")
     ResponseModel<PageInfo<FlowModel>> getMoneyFlow(@RequestParam("contractId") String contractId,@RequestParam("index") int index,@RequestParam("size") int size);
+
+
 
 }

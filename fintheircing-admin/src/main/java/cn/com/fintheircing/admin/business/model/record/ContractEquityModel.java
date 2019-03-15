@@ -29,6 +29,16 @@ public class ContractEquityModel {
         this.buyTime = buyTime;
     }
 
+    private String contractNo;
+
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
     public String getContactRecodeId() {
         return contactRecodeId;
     }

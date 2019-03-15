@@ -2,13 +2,11 @@ package cn.com.fintheircing.admin.common.feign.impl;
 
 
 import cn.com.fintheircing.admin.business.model.ContractModel;
+import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
 import cn.com.fintheircing.admin.common.model.ResponseModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
-import cn.com.fintheircing.admin.common.feign.ICustomerFeignService;
-import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
-
+import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
 import cn.com.fintheircing.admin.usermanag.model.ｍes.MesInfoModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,5 +68,10 @@ public class CustomerFeignServiceFallBack implements ICustomerFeignService {
     @Override
     public ResponseModel sendMesg(MesInfoModel model) {
         return new ResponseModel();
+    }
+
+    @Override
+    public UserTokenInfo findUserByUserId(String userId) {
+        return null;
     }
 }

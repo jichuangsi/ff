@@ -208,4 +208,6 @@ public class FeignServiceFallBack implements IAdminFeignService {
         logger.error("调用feign失败，未获取资金流水");
         return ResponseModel.fail("");
     }
+
+
 }

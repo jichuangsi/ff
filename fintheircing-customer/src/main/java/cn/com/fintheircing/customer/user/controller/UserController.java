@@ -7,8 +7,6 @@ import cn.com.fintheircing.customer.common.model.ResponseModel;
 import cn.com.fintheircing.customer.user.dao.mapper.IPayMapper;
 import cn.com.fintheircing.customer.user.dao.mapper.IUserMesInfoMapper;
 import cn.com.fintheircing.customer.user.dao.repository.IBankRepository;
-import cn.com.fintheircing.customer.user.dao.repository.IUserClientLoginInfoRepository;
-import cn.com.fintheircing.customer.user.dao.repository.IUserInfoRepository;
 import cn.com.fintheircing.customer.user.dao.repository.IUserMesInfoRepository;
 import cn.com.fintheircing.customer.user.entity.BankCard;
 import cn.com.fintheircing.customer.user.entity.UserClientInfo;
@@ -20,15 +18,11 @@ import cn.com.fintheircing.customer.user.model.contract.AccountInfoModel;
 import cn.com.fintheircing.customer.user.model.mes.MesInfoModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.AppResultModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.PayInfoModel;
-import cn.com.fintheircing.customer.user.model.payresultmodel.RecodeInfoPayModel;
 import cn.com.fintheircing.customer.user.model.payresultmodel.ResultModel;
 import cn.com.fintheircing.customer.user.model.queryModel.AppQueryModel;
 import cn.com.fintheircing.customer.user.model.queryModel.NetQueryModel;
 import cn.com.fintheircing.customer.user.service.UserPayService;
 import cn.com.fintheircing.customer.user.service.UserService;
-import cn.com.fintheircing.customer.user.utlis.DateUtils;
-import cn.com.fintheircing.customer.user.utlis.GsonUtil;
-import cn.com.fintheircing.customer.user.utlis.HttpUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -289,5 +283,18 @@ public class UserController {
             return ResponseModel.fail("",e.getMessage());
         }
         return ResponseModel.sucessWithEmptyData("");
+    }
+
+    @ApiOperation(value = "查看密码设置状态", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "accessToken", value = "用户token", required = false, dataType = "String")
+    })
+    @GetMapping("/getPassStatus")
+    public ResponseModel<Map<String,String>> getPassStatus(@ModelAttribute UserTokenInfo userInfo){
+        try {
+            return ResponseModel.sucess("",userService.getPassStatus(userInfo));
+        } catch (LoginException e) {
+            return ResponseModel.fail("",e.getMessage());
+        }
     }
 }

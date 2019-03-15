@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -90,4 +91,8 @@ public interface UserService {
     String getPassBackCode(String phone) throws LoginException;
 
     void updateNewPass(String code, String pass, String phone) throws LoginException;
+
+    Map<String,String> getPassStatus(UserTokenInfo userInfo) throws LoginException;
+
+    UserTokenInfo findUserByUserId(String userId);
 }

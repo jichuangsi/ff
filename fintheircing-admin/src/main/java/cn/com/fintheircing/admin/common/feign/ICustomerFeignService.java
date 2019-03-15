@@ -6,11 +6,11 @@ import cn.com.fintheircing.admin.common.model.ResponseModel;
 import cn.com.fintheircing.admin.common.model.UserTokenInfo;
 import cn.com.fintheircing.admin.usermanag.model.OnlineUserInfo;
 import cn.com.fintheircing.admin.usermanag.model.pay.PayConfigModel;
-import cn.com.fintheircing.admin.usermanag.model.pay.RecodeInfoPayModel;
 import cn.com.fintheircing.admin.usermanag.model.ｍes.MesInfoModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -48,11 +48,12 @@ public interface ICustomerFeignService {
     @RequestMapping("/pay/getPayConfig")
     PayConfigModel getPayConfig();
 
-
     @RequestMapping("/rudeEndContract")
     ResponseModel<String> rudeEndContract(@RequestBody ContractModel model);
 
-
     @RequestMapping(value = "/updateMesInfo")
     public ResponseModel sendMesg(@RequestBody MesInfoModel model);
+
+    @RequestMapping(value = "/Cu/findUserByUserId")
+    UserTokenInfo findUserByUserId(@RequestParam("userId") String userId);
 }

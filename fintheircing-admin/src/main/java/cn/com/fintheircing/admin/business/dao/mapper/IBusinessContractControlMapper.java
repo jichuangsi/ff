@@ -1,9 +1,6 @@
 package cn.com.fintheircing.admin.business.dao.mapper;
 
-import cn.com.fintheircing.admin.business.entity.record.StockEquityRecord;
 import cn.com.fintheircing.admin.business.model.ContractControlModel;
-import cn.com.fintheircing.admin.business.model.StockEntrustModel;
-import cn.com.fintheircing.admin.business.model.StockHoldingModel;
 import cn.com.fintheircing.admin.business.model.record.StockEquityModel;
 import cn.com.fintheircing.admin.common.feign.model.FlowModel;
 import org.apache.ibatis.annotations.Param;
@@ -37,7 +34,8 @@ public interface IBusinessContractControlMapper {
             "</where></script>")
     List<ContractControlModel> getContractControls(ContractControlModel model);
 
-    @Select("<script>select t3.amount as stockAmount,t4.uuid as businessControlContractId, " +
+
+    @Select("<script>select t1.uuid as id,t3.amount as stockAmount,t4.uuid as businessControlContractId, " +
             "t1.user_id as userId,t6.phone as phone,t6.user_name as name" +
             " ,t1.uuid as BusinessContractId,t1.cold_money as coldMoney,t5.user_name as proxyName," +
             " t5.proxy_num as proxyNum, t1.first_interest as firstMoney ," +
@@ -50,9 +48,11 @@ public interface IBusinessContractControlMapper {
             "  ON t4.contract_id=t1.uuid left join admin_client_info t5 on t5.user_client_info_id=t1.user_id left join" +
             " user_client_info t6 on t6.uuid=t1.user_id" +
             " <where>" +
-            " <if test= \"productStr!=null \"> and t2.product_name =#{productStr}</if>" +
-            " and t1.delete_flag=\"0\"</where></script>")
-    List<ContractControlModel> findAllContact(@Param("productStr") String productStr);
+            " <if test= \"productStr!=null and productStr!=''\"> and t2.product_name =#{productStr}</if>" +
+            " and t1.delete_flag=\"0\" and t1.user_id=#{userId}</where></script>")
+    List<ContractControlModel> findAllContact(@Param("productStr") String productStr,@Param("userId") String userId);
+
+
     @Select("<script>select t1.uuid as srId,t3.user_id as userCode,t1.contract_id as contractId,t2.id as stockId," +
             " t2.stock_num as stockCode,t2.stock_name as stockName,t1.amount as amount,t1.cost_price as dealPrice," +
             " t1.created_time as buyTime ,t3.account as userfulMoney," +
@@ -62,10 +62,11 @@ public interface IBusinessContractControlMapper {
             " <where><if test= \"contractId!=null and contractId!=''\">and t1.contract_id=#{contractId} </if>" +
             " and t1.delete_flag=0 </where>" +
             "   </script>")
-    List<StockEquityModel> findAllStock(String contractId);
+    List<StockEquityModel> findAllStock(@Param("contractId") String contractId);
 
     /**
      * 根据用户ID查询用户余额
+     *
      * @param userId
      * @return
      */
@@ -74,6 +75,7 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 查询冻结资金
+     *
      * @param userId
      * @return
      */
@@ -82,6 +84,7 @@ public interface IBusinessContractControlMapper {
 
     /**
      * 查询名字
+     *
      * @param userId
      * @return
      */
@@ -94,10 +97,13 @@ public interface IBusinessContractControlMapper {
             "      #{item}   </foreach></if></where>" +
             "  ORDER BY t1.created_time desc</script>")
     List<FlowModel> getFlwoMoney(@Param("contractId") String contractId, @Param("list") List<Integer> list);
+
     @Update("<script>update business_contract_risk t1 set t1.warning_line=#{exWarnLine},t1.abort_line=#{exAbortLine} where t1.contract_id=#{contractId}</script>")
     int updateContractRisk(Map<String, Object> parms);
+
     @Update("<script>update admin_business_contact_recode t1 set t1.check_status=1 where t1.uuid =#{contactRecodeId}</script>")
-    int updateContactRecode(String contactRecodeId);
+    int updateContactRecode(@Param("contactRecodeId") String contactRecodeId);
+
     @Update("<script>update admin_business_contact_recode t1 set t1.check_status=2 where t1.uuid =#{contactRecodeId}</script>")
     int disagreeContactRecode(String contactRecodeId);
 }

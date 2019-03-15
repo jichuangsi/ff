@@ -1,7 +1,5 @@
 package cn.com.fintheircing.admin.business.model;
 
-import java.util.Date;
-
 public class ContractControlModel {
 
     private String id;
@@ -24,9 +22,9 @@ public class ContractControlModel {
     private double abortLine;   //平仓线
     private double exAbortLine;//修改后的平仓线
     private double borrowRate;  //借款利率
-    private Long borrowTime;    //借款时间
-    private Long expiredTime; //还款时间
-    private Long lessTime;//剩余天数
+    private long borrowTime;    //借款时间
+    private long expiredTime; //还款时间
+    private long lessTime;//剩余天数
     private double firstMoney;//初次利息
     private double lessMoney;   //剩余金额 /可用金额
     private Integer verifyStatus;   //审核num
@@ -150,11 +148,11 @@ public class ContractControlModel {
         this.netAssets = netAssets;
     }
 
-    public Long getLessTime() {
+    public long getLessTime() {
         return lessTime;
     }
 
-    public void setLessTime(Long lessTime) {
+    public void setLessTime(long lessTime) {
         this.lessTime = lessTime;
     }
 
@@ -336,19 +334,21 @@ public class ContractControlModel {
         this.borrowRate = borrowRate;
     }
 
-    public Long getBorrowTime() {
+
+    public long getBorrowTime() {
         return borrowTime;
     }
 
-    public void setBorrowTime(Long borrowTime) {
+    public void setBorrowTime(long borrowTime) {
+
         this.borrowTime = borrowTime;
     }
 
-    public Long getExpiredTime() {
+    public long getExpiredTime() {
         return expiredTime;
     }
 
-    public void setExpiredTime(Long expiredTime) {
+    public void setExpiredTime(long expiredTime) {
         this.expiredTime = expiredTime;
     }
 

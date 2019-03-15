@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.types.RedisClientInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -75,7 +74,6 @@ public class LoginService {
             OnlineUserInfo userForLogin = registerService.getUserForLogin(id);
             list.add(userForLogin);
         }
-
         return list;
     }
 

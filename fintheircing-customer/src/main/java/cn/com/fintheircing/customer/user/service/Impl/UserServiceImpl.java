@@ -19,6 +19,7 @@ import cn.com.fintheircing.customer.user.model.withdraw.WithdrawModel;
 import cn.com.fintheircing.customer.user.service.RegisterService;
 import cn.com.fintheircing.customer.user.service.UserService;
 import cn.com.fintheircing.customer.user.utlis.Entity2Model;
+import cn.com.fintheircing.customer.user.utlis.MappingEntity2ModelConverter;
 import cn.com.fintheircing.customer.user.utlis.Model2Entity;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -330,5 +331,27 @@ public class UserServiceImpl implements UserService {
     public List<contactModel> accountManagement(String uuid) throws LoginException {
         return iContactMapper.accountManagement(uuid);
 
+    }
+
+    @Override
+    public Map<String, String> getPassStatus(UserTokenInfo userInfo) throws LoginException{
+        UserClientInfo clientInfo = userInfoRepository.findByUuid(userInfo.getUuid());
+        if (null == clientInfo){
+            throw new LoginException(ResultCode.SELECT_NULL_MSG);
+        }
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("txPass",String.valueOf(!StringUtils.isEmpty(clientInfo.getTxPassword())));
+        map.put("cer",String.valueOf(UserClientInfo.CER_PASS.equals(clientInfo.getCer())));
+        return map;
+    }
+
+    @Override
+    public UserTokenInfo findUserByUserId(String userId) {
+        UserClientInfo clientInfo = userInfoRepository.findByUuid(userId);
+        if (null == clientInfo){
+            return null;
+        }
+        UserTokenInfo userInfo = MappingEntity2ModelConverter.CONVERTERFROMUSERCLIENTINFO(clientInfo);
+        return userInfo;
     }
 }

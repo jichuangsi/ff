@@ -106,4 +106,6 @@ public class ResultCode {
     public static final String DELETE_FAILED = "删除股票失败";
     public static final String CREATE_FAILED = "添加股票失败";
     public static final String HOLDING_CANNOT_SELL = "已持仓不能卖";
+
+    public static final String RISK_NULL_UPDATE = "风控无修改";
 }
