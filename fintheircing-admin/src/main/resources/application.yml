@@ -61,7 +61,7 @@ ribbon:
   # 对下一个实例重试的次数
   MaxAutoRetriesNextServer: 0
   restclient:
-    enabled: true
+    enabled: false
 
 custom:
   swagger:

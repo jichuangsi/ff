@@ -14,7 +14,7 @@ public interface IBusinessContractMapper {
 
     @Select("<script>select count(1) from business_contract t1 LEFT JOIN systemdetect_product t2 on t1.product_id=t2.id " +
             "<where>" +
-            " t1.user_id=#{userId}" +
+            " t1.user_id=#{userId} and delete_flag = \"0\" " +
             "<if test='productNo!=null'> and t2.allot=#{productNo}  and not(t1.contract_status=2)  </if>" +
             "</where></script>")
     int countSameContract(Map<String, Object> params);
