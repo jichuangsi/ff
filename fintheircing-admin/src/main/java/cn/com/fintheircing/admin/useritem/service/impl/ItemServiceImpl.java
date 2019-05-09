@@ -5,11 +5,11 @@ import cn.com.fintheircing.admin.common.constant.ResultCode;
 import cn.com.fintheircing.admin.common.feign.model.QuotesTenModel;
 import cn.com.fintheircing.admin.common.model.IdModel;
 import cn.com.fintheircing.admin.system.utils.MappingEntity2ModelConverter;
-import cn.com.fintheircing.admin.useritem.exception.ImportException;
 import cn.com.fintheircing.admin.useritem.common.TransactionSummaryStatus;
 import cn.com.fintheircing.admin.useritem.dao.mapper.TransactionSummaryMapper;
 import cn.com.fintheircing.admin.useritem.dao.repository.TransactionSummaryRepository;
 import cn.com.fintheircing.admin.useritem.entity.TransactionSummary;
+import cn.com.fintheircing.admin.useritem.exception.ImportException;
 import cn.com.fintheircing.admin.useritem.exception.TransactionSummaryException;
 import cn.com.fintheircing.admin.useritem.model.TransactionModel;
 import cn.com.fintheircing.admin.useritem.service.ItemService;
@@ -22,7 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Demo class
@@ -166,8 +169,7 @@ public class ItemServiceImpl implements ItemService {
     public boolean importExcel(MultipartFile[] files) throws ImportException {
         Map<Integer, Map<Integer, Object>> map = new HashMap<>();
         try {
-            for (MultipartFile file : files
-                    ) {
+            for (MultipartFile file : files) {
                 map = ReadExcelUtil.readExcelContentz(file);
                 if (map.size() < 0) {
                     return false;
@@ -319,10 +321,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Map<String, String> getStockNameAndStockCodeById(String id) {
         TransactionSummary summary = transactionSummaryRepository.findOneById(id);
-        Map<String,String> map = new HashMap<String, String>();
-        if (null != summary){
-            map.put("name",summary.getStockName());
-            map.put("code",summary.getStockNum());
+        Map<String, String> map = new HashMap<String, String>();
+        if (null != summary) {
+            map.put("name", summary.getStockName());
+            map.put("code", summary.getStockNum());
         }
         return map;
     }
@@ -330,8 +332,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public String getStockCodeByStockId(String stockId) {
         TransactionSummary summary = transactionSummaryRepository.findOneById(stockId);
-        if (null != summary){
-           return summary.getStockNum();
+        if (null != summary) {
+            return summary.getStockNum();
         }
         return "";
     }

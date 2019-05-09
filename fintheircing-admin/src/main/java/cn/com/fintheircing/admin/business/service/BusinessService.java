@@ -249,7 +249,7 @@ public class BusinessService {
         control.setWarnningLine(businessContractRisk.getWarningLine());
         control.setAbortLine(businessContractRisk.getAbortLine());
         control.setBorrowRate(contract.getOnceServerMoney());
-        control.setBorrowTime(new Date());
+        control.setBorrowTime(new Date().getTime());
         control.setFirstInterest(contract.getFirstInterest());
         control.setCreatorId(contract.getUserId());
         control.setAbortingLine(model.getAbortingLine());

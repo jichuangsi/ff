@@ -6,7 +6,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
 
 @Entity
 public class BusinessControlContract extends AbstractEntity{
@@ -35,7 +34,7 @@ public class BusinessControlContract extends AbstractEntity{
     private double warnningLine;
     private double abortLine;
     private double borrowRate;
-    private Date borrowTime;
+    private long borrowTime;
     private double firstInterest;
     private double abortingLine;//预警平仓线
 
@@ -103,11 +102,11 @@ public class BusinessControlContract extends AbstractEntity{
         this.borrowRate = borrowRate;
     }
 
-    public Date getBorrowTime() {
+    public long getBorrowTime() {
         return borrowTime;
     }
 
-    public void setBorrowTime(Date borrowTime) {
+    public void setBorrowTime(long borrowTime) {
         this.borrowTime = borrowTime;
     }
 

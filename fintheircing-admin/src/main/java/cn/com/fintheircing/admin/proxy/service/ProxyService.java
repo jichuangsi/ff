@@ -168,12 +168,12 @@ public class ProxyService {
 
     //保存管理员
     public void saveAdmin() throws Exception {
-        if (!(adminClientInfoRepository.countByRoleGradeAndDeleteFlag(RoleCodes.ROLE_KEY_STRING.get("M"), "0") > 0)) {
+        if (!(adminClientInfoRepository.countByRoleGradeAndDeleteFlag(0, "0") > 0)) {
             AdminClientInfo info = new AdminClientInfo();
             info.setName("admin");
-            info.setRoleGrade(RoleCodes.ROLE_KEY_STRING.get("M"));
+            info.setRoleGrade(0);
             info.setStatus(AdminClientInfo.STATUS_EXIST);
-            info.setProxyNum(createdInvitCode(0, RoleCodes.ROLE_KEY_INTEGER.get(info.getRoleGrade())));
+            info.setProxyNum(createdInvitCode(0, "M"));
             info.setCreatorId(adminUuid);
             info.setUserName("Admin");
             info.setCreatedTime(new Date());
